@@ -143,7 +143,7 @@ struct DeteilView: View {
                 } // Ende ToolbarItemGroup
                 
         } // Ende toolbar
-        
+        //.toolbarRole(.editor) // Bei dieser Rolle ist der back Button < ohne Text
         
         
         

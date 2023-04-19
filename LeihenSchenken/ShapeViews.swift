@@ -49,15 +49,12 @@ struct ShapeViewAddUser: View {
                         .disableAutocorrection(true)
                     
                     Picker("Geschlecht:", selection: $selectedPerson_sexInt, content: {
-                        ForEach(0..<$globaleVariable.person_sex.count, id: \.self) { index in
-                            Text("\(globaleVariable.person_sex[index])")//.tag(index)
+                        ForEach(0..<$globaleVariable.parameterPersonSex.count, id: \.self) { index in
+                            Text("\(globaleVariable.parameterPersonSex[index])")//.tag(index)
                         } // Ende ForEach
                         
                     })
                     
-                   
-                    
-                            
                 } // Ende Section
         
                 Button(action: {

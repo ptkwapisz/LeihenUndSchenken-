@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB3C9E9729E877F000C449C9 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C9E9629E877F000C449C9 /* Test.swift */; };
 		DBCEF7FA29D1ED770017A728 /* LeihenSchenkenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF7F929D1ED770017A728 /* LeihenSchenkenApp.swift */; };
 		DBCEF7FC29D1ED770017A728 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF7FB29D1ED770017A728 /* ContentView.swift */; };
 		DBCEF7FE29D1ED790017A728 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBCEF7FD29D1ED790017A728 /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 		DBDF0BBC29D2195D0054F765 /* TabViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDF0BBB29D2195D0054F765 /* TabViews.swift */; };
 		DBDF0BBE29D21C590054F765 /* ColorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDF0BBD29D21C590054F765 /* ColorData.swift */; };
 		DBDF0BC029D222260054F765 /* ShapeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDF0BBF29D222260054F765 /* ShapeViews.swift */; };
+		DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF6A33029E6D489001A01BC /* SqlManagement.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DB3C9E9629E877F000C449C9 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		DBCEF7F629D1ED770017A728 /* LeihenSchenken.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeihenSchenken.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCEF7F929D1ED770017A728 /* LeihenSchenkenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeihenSchenkenApp.swift; sourceTree = "<group>"; };
 		DBCEF7FB29D1ED770017A728 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -58,6 +61,7 @@
 		DBDF0BBB29D2195D0054F765 /* TabViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViews.swift; sourceTree = "<group>"; };
 		DBDF0BBD29D21C590054F765 /* ColorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorData.swift; sourceTree = "<group>"; };
 		DBDF0BBF29D222260054F765 /* ShapeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeViews.swift; sourceTree = "<group>"; };
+		DBF6A33029E6D489001A01BC /* SqlManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqlManagement.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,10 +117,12 @@
 				DBCEF7FB29D1ED770017A728 /* ContentView.swift */,
 				DBDF0BB329D213ED0054F765 /* Funktionen.swift */,
 				DBDF0BB529D2144A0054F765 /* ParameterView.swift */,
+				DB3C9E9629E877F000C449C9 /* Test.swift */,
 				DBDF0BB729D2147E0054F765 /* DetailView.swift */,
 				DBDF0BBB29D2195D0054F765 /* TabViews.swift */,
 				DBDF0BBD29D21C590054F765 /* ColorData.swift */,
 				DBDF0BBF29D222260054F765 /* ShapeViews.swift */,
+				DBF6A33029E6D489001A01BC /* SqlManagement.swift */,
 				DBCEF7FD29D1ED790017A728 /* Assets.xcassets */,
 				DBCEF7FF29D1ED790017A728 /* Preview Content */,
 			);
@@ -281,7 +287,9 @@
 				DBCEF7FC29D1ED770017A728 /* ContentView.swift in Sources */,
 				DBCEF7FA29D1ED770017A728 /* LeihenSchenkenApp.swift in Sources */,
 				DBDF0BB629D2144A0054F765 /* ParameterView.swift in Sources */,
+				DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */,
 				DBDF0BBE29D21C590054F765 /* ColorData.swift in Sources */,
+				DB3C9E9729E877F000C449C9 /* Test.swift in Sources */,
 				DBDF0BB829D2147E0054F765 /* DetailView.swift in Sources */,
 				DBDF0BB429D213ED0054F765 /* Funktionen.swift in Sources */,
 				DBDF0BBC29D2195D0054F765 /* TabViews.swift in Sources */,
