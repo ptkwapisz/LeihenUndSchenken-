@@ -33,9 +33,11 @@ func ifDatabaseExist() -> Bool {
 
 func erstellenDatenbankUndTabellen() -> Bool {
     
-    let createTableGegenstand = "CREATE TABLE IF NOT EXISTS Gegenstaende (perKey TEXT PRIMARY KEY, gegenstand TEXT, gegenstandText TEXT, gegenstandBild TEXT, preisWert TEXT, datum TEXT, vorgang TEXT, personSpitzname TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT, allgemeinerText TEXT)"
+    let createTableObjekte = "CREATE TABLE IF NOT EXISTS Objekte (perKey TEXT PRIMARY KEY, gegenstand TEXT, gegenstandText TEXT, gegenstandBild TEXT, preisWert TEXT, datum TEXT, vorgang TEXT, personSpitzname TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT, allgemeinerText TEXT)"
     
     let createTablePersonen = "CREATE TABLE IF NOT EXISTS Personen (perKey TEXT PRIMARY KEY, personSpitzname TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT)"
+    
+    let createTableGegenstaende = "CREATE TABLE IF NOT EXISTS Gegenstaende (perKey TEXT PRIMARY KEY, personSpitzname TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT)"
     
     let fileUrl = try!
     FileManager.default.url(for: .documentDirectory,
@@ -53,9 +55,9 @@ func erstellenDatenbankUndTabellen() -> Bool {
     } // Ende if
     
     // Bei der Erstellung der Datenbank werden hier die Tabellen kreiert
-    if sqlite3_exec(db, createTableGegenstand, nil, nil, nil) !=
+    if sqlite3_exec(db, createTableObjekte, nil, nil, nil) !=
         SQLITE_OK {
-        print("Error creating table Gegenstand")
+        print("Error creating table Objekte")
         sqlite3_close(db)
         db = nil
         return false
@@ -66,8 +68,15 @@ func erstellenDatenbankUndTabellen() -> Bool {
         db = nil
         return false
     
+    } else if sqlite3_exec(db, createTableGegenstaende, nil, nil, nil) !=
+                SQLITE_OK {
+        print("Error creating table Gegenstaende")
+        sqlite3_close(db)
+        db = nil
+        return false
+        
     }else{
-        print("Tabellen wurde erstellt")
+        print("Tabellen wurden erstellt")
         
     } // Ende if
     
@@ -76,3 +85,43 @@ func erstellenDatenbankUndTabellen() -> Bool {
     return true
     
 } // Ende func erstellenDatenbankUndTabellen
+
+func querySQLAbfrage(queryTmp: String) -> Array<String>  {
+    
+    var resultatArray = [String]()
+    var statement: OpaquePointer?
+    
+    if sqlite3_prepare_v2(db, "\(queryTmp)", -1, &statement, nil) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error preparing query select: \(errmsg)")
+    } // End if
+
+    while sqlite3_step(statement) == SQLITE_ROW {
+
+        if let cString0 = sqlite3_column_text(statement, 0) {
+            let name0 = String(cString: cString0)
+            // print("Das erste Feld die Summe = \(name0) ", terminator: "")
+            if name0 != "" {
+               resultatArray.append(name0)
+            }
+        } else {
+            print("Die Werte in der Tabelle Gegenstaende not found")
+        } // End if else
+
+    } // Ende while
+    
+    if sqlite3_finalize(statement) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error finalizing prepared statement: \(errmsg)")
+    } // End if
+
+    statement = nil
+    
+    // Ende der Abfrage aus der Datenbank
+    // print("Ende der Abfrage aus der Datenbank")
+    
+    
+    return resultatArray
+    
+} // Ende querySQLAbfrage
+

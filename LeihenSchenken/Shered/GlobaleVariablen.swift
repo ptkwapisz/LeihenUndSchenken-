@@ -30,6 +30,7 @@ class GlobaleVariable: ObservableObject {
     
     @Published var refreshViews: Bool = false
     
+    @Published var selectedGegenstand = "Neuer Gegenstand"
     
     
 } // ende class
@@ -53,13 +54,15 @@ class UserSettingsDefaults: ObservableObject {
 // Address Book Tutorial in Swift and iOS
 // https://www.kodeco.com/1786-address-book-tutorial-in-swift-and-ios
 
-class Parameter: Identifiable {
+class GegenstaendeVariable: Identifiable {
+    //static let shared = UserSettingsDefaults()
+    
     @Published var perKey: String
     @Published var gegenstand: String
     @Published var gegenstandText: String
     @Published var gegenstandBild: String
     @Published var preisWert: String
-    @Published var datum: String
+    @Published var datum: Date
     @Published var vorgang: String
     @Published var personSpitzname: String
     @Published var personVorname: String
@@ -67,7 +70,7 @@ class Parameter: Identifiable {
     @Published var personSex: String
     @Published var allgemeinerText: String
 
-    init(perKey: String, gegenstand: String, gegenstandTex: String, gegenstandBild: String, preisWert: String, datum: String, vorgang: String, personSpitzname: String, personVorname: String, personNachname: String, personSex: String, allgemeinerText: String) {
+    init(perKey: String, gegenstand: String, gegenstandTex: String, gegenstandBild: String, preisWert: String, datum: Date, vorgang: String, personSpitzname: String, personVorname: String, personNachname: String, personSex: String, allgemeinerText: String) {
         
         self.perKey = perKey
         self.gegenstand = gegenstand

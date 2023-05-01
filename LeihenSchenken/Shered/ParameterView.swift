@@ -8,30 +8,36 @@
 import SwiftUI
 import PhotosUI
 import UIKit
+import SQLite3
 
 struct ParameterView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    //@ObservedObject var gegenstaendeVariable = GegenstaendeVariable.shared
+    
     @State var showParameterHilfe: Bool = false
     @State var showAlerOKButton: Bool = false
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
     
-    //@FocusState var datumIsFocused: Bool
-    //@FocusState var preisWertIsFocused: Bool
+    //@State var showMenue1_1: Bool = false
+    
+    @State var showSheetPerson: Bool = false
+    @State var showSheetGegenstand: Bool = false
+    
     
     @FocusState private var focusedField: Field?
+    
     private enum Field: Int, CaseIterable {
         case amount
-        case str1
-        case str2
+        case str1 // Für gegenstandbeschreibung
+        case str2 // Für allgemeine Informationen
     } // Ende private enum
     
     @State private var datum = Date()
  
     @State private var calendarId: Int = 0
-    //@State var gegenstand: String = ""
-    //@State var gegenstandText: String = ""
-    @State var gegenstandPreis: Double = 0.0
+    
+    //@State var gegenstandPreis: Double = 0.0
     @State var textGegenstandbeschreibung: String = ""
    
     @State var textAllgemeineNotizen: String = ""
@@ -41,35 +47,93 @@ struct ParameterView: View {
     @State var selectedVorgangInt: Int = 0
     @State var selectedGegenstandInt: Int = 0
     @State var selectedPersonInt: Int = 0
+    @State var selectedGegenstand: String = ""
+    @State var selectedPerson: String = ""
     
     @State private var text: String = ""
     @State private var platz: String = ""
     
     @State var imageData = UIImage()
     
-    @State var exampleText: String = ""
+    @State var preisWert: String = ""
+    
     
     private let numberFormatter: NumberFormatter
-        
+    private let perKeyFormatter: DateFormatter
+    
     init() {
           numberFormatter = NumberFormatter()
           numberFormatter.numberStyle = .currency
           numberFormatter.maximumFractionDigits = 2
         
+          perKeyFormatter = DateFormatter()
+          perKeyFormatter.dateFormat = "y MM dd, HH:mm"
+        
+        
+        
     } // Ende init
     
+    
     var body: some View {
+        
+        let tapOptionGegenstand = Binding<Int>(
+            get: { selectedGegenstandInt }, set: { selectedGegenstandInt = $0
+                
+                //Add the onTapGesture contents here
+                if globaleVariable.parameterGegenstand[selectedGegenstandInt] == "Neuer Gegenstand" {
+                   showSheetGegenstand = true
+                   selectedGegenstand = "Neuer Gegenstand"
+                }else{
+                   selectedGegenstand = globaleVariable.parameterGegenstand[selectedGegenstandInt]
+                } // Ende if
+            } // Ende set
+        ) // Ende let
+        
+        let tapOptionPerson = Binding<Int>(
+            get: { selectedPersonInt }, set: { selectedPersonInt = $0
+                
+                //Add the onTapGesture contents here
+                if globaleVariable.parameterPerson[selectedPersonInt] == "Neue Person" {
+                   showSheetPerson = true
+                   selectedPerson = "Neue Person"
+                }else{
+                   selectedPerson = globaleVariable.parameterPerson[selectedPersonInt]
+                } // Ende if
+            } // Ende set
+        ) // Ende let
         
         GeometryReader { geometry in
             VStack {
                 
                 Form {
+                
+                    Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
+                        ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
+                            Text("\(globaleVariable.parameterGegenstand[index])").tag(index)
+                        } // Ende ForEach
+                        
+                    }).sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand) })
                     
+                /*
                     Picker("Gegenstand: ", selection: $selectedGegenstandInt, content: {
                         ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
-                            Text("\(globaleVariable.parameterGegenstand[index])")//.tag(index)
+                            Text("\(globaleVariable.parameterGegenstand[index])").tag(index)
                         } // Ende ForEach
-                    })
+                        
+                    }).onChange(of: selectedGegenstandInt){ _ in
+                        print("\(globaleVariable.parameterGegenstand[selectedGegenstandInt])")
+                    } // Ende Picker Gegenstand
+                */
+                /*
+                    Picker("Gegenstand: ", selection: $globaleVariable.selectedGegenstand) {
+                    ForEach(globaleVariable.parameterGegenstand, id: \.self) {Text($0)}
+                    }.onChange(of: globaleVariable.selectedGegenstand){ _ in
+                        print("\(globaleVariable.selectedGegenstand)")
+                    } // Ende Picker Mannschaften
+                */
+                    
+                                    
+                    
                     
                     TextEditorWithPlaceholder(text: $textGegenstandbeschreibung, platz: $platzText1)
                         //.focused($preisWertIsFocused)
@@ -80,6 +144,7 @@ struct ParameterView: View {
                             .frame(height: 60)
                         
                         PhotosSelector()
+                        //TestPhoto()
                         
                         Text(" ")
                         
@@ -108,39 +173,18 @@ struct ParameterView: View {
                             .frame(height: 35, alignment: .leading)  // width: 190,
                         
                         Text("                ")
-                        TextField("0.00 €", text: $exampleText)
+                        TextField("0.00 €", text: $preisWert)
                         
-                                                .modifier(TextFieldClearButton(textParameter: $exampleText))
-                                                .multilineTextAlignment(.trailing)
-                                                .frame(width: 115, height: 35, alignment: .trailing)
-                                                .background(Color(.systemGray6))
-                                                .cornerRadius(5)
-                                                .font(.system(size: 18, weight: .regular))
-                                                .keyboardType(.decimalPad)
-                                                //.focused($preisWertIsFocused)
-                                                .focused($focusedField, equals: .amount)
-                        /*
-                                                .toolbar {ToolbarItemGroup(placement: .keyboard) {
-                                                        Spacer()
-                                                    if focusedField == .amount {
-                                                        Button("OK") {
-                                                            //preisWertIsFocused = false
-                                                            focusedField = nil
-                                                            print("OK Button wurde gedrückt!")
-                                                        } // Ende Button
-                                                    }else{
-                                                        Button("Abbrechen") {
-                                                            //preisWertIsFocused = false
-                                                            focusedField = nil
-                                                            print("OK Button wurde gedrückt!")
-                                                        } // Ende Button
-                                                        
-                                                    }
-                                                    
-                                                    } // Ende ItemGroup
-                                                } // Ende toolbar
+                            .modifier(TextFieldEuro(textParameter: $preisWert))
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 115, height: 35, alignment: .trailing)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(5)
+                            .font(.system(size: 18, weight: .regular))
+                            .keyboardType(.decimalPad)
+                            //.focused($preisWertIsFocused)
+                            .focused($focusedField, equals: .amount)
                         
-                    */
                         
                     } // Ende HStack
                  
@@ -163,11 +207,13 @@ struct ParameterView: View {
                         } // Ende ForEach
                     }) // Picker
                     
-                    Picker("Person: ", selection: $selectedPersonInt, content: {
+                    Picker("Person: ", selection: tapOptionPerson, content: {
                         ForEach(0..<$globaleVariable.parameterPerson.count, id: \.self) { index in
                             Text("\(globaleVariable.parameterPerson[index])")//.tag(index)
                         } // Ende ForEach
                     }) // Picker
+                    .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson) })
+                    
                     
                     TextEditorWithPlaceholder(text: $textAllgemeineNotizen, platz: $platzText2)
                         //.focused($preisWertIsFocused)
@@ -180,43 +226,55 @@ struct ParameterView: View {
                                 
                             Button(action: {showAlertSpeichernButton = true}) { Label("Speichern", systemImage: "pencil.and.outline")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
                                 .alert(isPresented:$showAlertSpeichernButton) {
-                                            Alert(
-                                                title: Text("Möchten Sie alle Angaben speichern?"),
-                                                message: Text("Die Daten werden in die Datenbank gespeichert!"),
-                                                primaryButton: .destructive(Text("Speichern")) {
-                                                    // Hier kommt speicher Routine
-                                                    print("Gespeichert...")
-                                                },
-                                                secondaryButton: .cancel(Text("Abbrechen")){
-                                                    print("Abgebrochen ....")
-                                                }
-                                            ) // Ende Alert
-                                        } // Ende alert
+                                    Alert(
+                                        title: Text("Möchten Sie alle Angaben speichern?"),
+                                        message: Text("Die Daten werden in die Datenbank gespeichert!"),
+                                        primaryButton: .destructive(Text("Speichern")) {
+                                            // Hier kommt speicher Routine
+                                            let perKey = erstellePerKey(par1: perKeyFormatter.string(from: datum))
+                                            
+                                            let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personSpitzname, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(preisWert)', '\(datum)', '\(globaleVariable.parameterVorgang[selectedVorgangInt])', 'Spitzname', 'Vorname', 'Nachname', 'Sex', '\(textAllgemeineNotizen)')"
+                                       
+                                            if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
+                                               SQLITE_OK {
+                                                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                                                print("error -->: \(errmsg)")
+                                                print("Daten wurden nicht hinzugefügt")
+                                            } // End if
+
+                                            
+                                            print("Gespeichert...")
+                                        },
+                                        secondaryButton: .cancel(Text("Abbrechen")){
+                                            print("Abgebrochen ....")
+                                        }
+                                    ) // Ende Alert
+                                } // Ende alert
                                 
                             Button(action: {showAlertAbbrechenButton = true}) { Label("Abbrechen", systemImage: "pencil.slash") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                                 .alert(isPresented:$showAlertAbbrechenButton) {
-                                            Alert(
-                                                title: Text("Möchten Sie alle Angaben unwiederfuflich löschen?"),
-                                                message: Text("Man kann den Vorgang nicht rückgängich machen!"),
-                                                primaryButton: .destructive(Text("Löschen")) {
-                                                    globaleVariable.parameterImageString = ""
-                                                    selectedGegenstandInt = 0
-                                                    selectedVorgangInt = 0
-                                                    selectedPersonInt = 0
-                                                    textGegenstandbeschreibung = ""
-                                                    gegenstandPreis = 0.0
-                                                    exampleText = ""
-                                                    datum = Date()
-                                                    textAllgemeineNotizen = ""
-                                                    
-                                                    // Hier kommt löschen der Angaben Routine
-                                                    print("Gelöscht...")
-                                                },
-                                                secondaryButton: .cancel(Text("Abbrechen")){
-                                                    print("Abgebrochen ....")
-                                                }
-                                            ) // Ende Alert
-                                        } // Ende alert
+                                    Alert(
+                                        title: Text("Möchten Sie alle Angaben unwiederfuflich löschen?"),
+                                        message: Text("Man kann den Vorgang nicht rückgängich machen!"),
+                                        primaryButton: .destructive(Text("Löschen")) {
+                                            globaleVariable.parameterImageString = ""
+                                            selectedGegenstandInt = 0
+                                            selectedVorgangInt = 0
+                                            selectedPersonInt = 0
+                                            textGegenstandbeschreibung = ""
+                                            //gegenstandPreis = 0.0
+                                            preisWert = ""
+                                            datum = Date()
+                                            textAllgemeineNotizen = ""
+                                            
+                                            // Hier kommt löschen der Angaben Routine
+                                            print("Gelöscht...")
+                                        },
+                                        secondaryButton: .cancel(Text("Abbrechen")){
+                                            print("Abgebrochen ....")
+                                        }
+                                    ) // Ende Alert
+                                } // Ende alert
                             
                             } // Ende HStack
                     
@@ -342,10 +400,19 @@ struct PhotosSelector: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @State private var selectedItem: PhotosPickerItem?
     @State private var selectedPhotoData: Data?
+    let filter: PHPickerFilter = .not(.all(of: [
+        .videos,
+        .slomoVideos,
+        .bursts,
+        .livePhotos,
+        .screenRecordings,
+        .cinematicVideos,
+        .timelapseVideos
+    ]))
     
     var body: some View {
         
-        PhotosPicker(selection: $selectedItem, matching: .any(of: [.images, .not(.screenshots)]), photoLibrary: .shared()) {
+        PhotosPicker(selection: $selectedItem, matching: filter, photoLibrary: .shared()) {
                     Image(systemName: "photo.fill.on.rectangle.fill")
                         .symbolRenderingMode(.multicolor)
                         .font(.system(size: 30))
@@ -354,17 +421,20 @@ struct PhotosSelector: View {
                 .buttonStyle(.borderless)
                 .onChange(of: selectedItem) { newItem in
                     Task {
+                        
                         if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                            selectedPhotoData = data
+                           selectedPhotoData = data
+                           
                         } // Ende if let
                         
-                        if let selectedPhotoData,
-                           let _ = UIImage(data: selectedPhotoData) {
+                        if let selectedPhotoData, let _ = UIImage(data: selectedPhotoData) {
+                            // Transferiere Photo in ein jpgPhoto
+                            let tmpPhoto = UIImage(data: selectedPhotoData)?.jpegData(compressionQuality: 0.5)
+                            // transferiere jpgPhoto in String
+                            globaleVariable.parameterImageString = tmpPhoto!.base64EncodedString ()
                          
-                               globaleVariable.parameterImageString = selectedPhotoData.base64EncodedString ()
-                         
-                                print("Photo ausgewählt")
-                            } // Ende let
+                            print("Photo wurde ausgewählt")
+                        } // Ende if
                         
                     } // Ende Task
                 } // Ende onChange
@@ -372,23 +442,13 @@ struct PhotosSelector: View {
 } //Ende struckt PhotoSelector
 
 
-struct TextFieldClearButton: ViewModifier {
+struct TextFieldEuro: ViewModifier {
     @Binding var textParameter: String
    
     func body(content: Content) -> some View {
         HStack {
             content
-            
             if !textParameter.isEmpty {
-                /*
-                Button(
-                    action: { self.textParameter = "" },
-                    label: {
-                        Image(systemName: "delete.left")
-                            .foregroundColor(Color(UIColor.opaqueSeparator))
-                    } // Ende label
-                ) // Ende Button
-                */
                 Text("€")
                     .foregroundColor(Color(UIColor.opaqueSeparator))
                     
@@ -396,3 +456,6 @@ struct TextFieldClearButton: ViewModifier {
         } // Ende HStack
     } // Ende func body
 } // Ende struc
+
+
+

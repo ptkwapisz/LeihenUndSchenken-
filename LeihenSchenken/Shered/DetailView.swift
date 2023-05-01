@@ -23,8 +23,9 @@ struct DeteilView: View {
     @State var showAppInfo: Bool = false
     @State var showTabHilfe: Bool = false
     
+    
     var body: some View {
-        
+    
         VStack(spacing: 10) {
             
             TabView(selection: $globaleVariable.navigationTabView) {
@@ -72,9 +73,9 @@ struct DeteilView: View {
             ToolbarItemGroup(placement: .navigationBarLeading) {
                 Menu(content: {
                     
-                    Menu("Neu") { // Menue 1
+                    Menu("Hinzufügen") { // Menue 1
                         Button("Person", action: {showMenue1_1 = true}) // Menue 1.1
-                        Button("Menue 1.2", action: {showMenue1_2 = true})
+                        Button("Gegenstand", action: {showMenue1_2 = true}) // Menue 1.2
                     } // Ende Menu
                     
                     
@@ -100,7 +101,7 @@ struct DeteilView: View {
                       }, message: { Text("Durch das Zurücksetzen der Settings werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Sprache: Deutsch, Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
                     ) // Ende alert
                 .sheet(isPresented: $showMenue1_1, content: { ShapeViewAddUser(isPresented: $showMenue1_1) })
-                //.sheet(isPresented: $showMenue1_2, content: { ShapeViewAddUntersuchung(isPresented: $showMenue1_2) })
+                .sheet(isPresented: $showMenue1_2, content: { ShapeViewAddGegenstand(isPresented: $showMenue1_2) })
                 
             } // Ende ToolbarItemGroup
                         

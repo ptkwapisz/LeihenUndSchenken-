@@ -13,16 +13,23 @@ struct Tab1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     let heightFaktor: Double = 0.99
+    let test = addDataGegenstaende()
     
 var body: some View {
     GeometryReader { geometry in
         VStack {
             
-            Text("DeteilView Tab1")
-                .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
-                .cornerRadius(10)
-            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                IphoneTable1()
+                .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+               
+            } else {
+                
+                Text("DeteilView Tab1")
+                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .background(globaleVariable.farbenEbene1)
+                    .cornerRadius(10)
+            }
         } // Ende VStack
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
         .background(globaleVariable.farbenEbene0)
