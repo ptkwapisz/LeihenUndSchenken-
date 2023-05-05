@@ -23,6 +23,7 @@ struct ParameterView: View {
     
     @State var showSheetPerson: Bool = false
     @State var showSheetGegenstand: Bool = false
+    @State var isParameterBereich: Bool = true
     
     
     @FocusState private var focusedField: Field?
@@ -33,20 +34,20 @@ struct ParameterView: View {
         case str2 // Für allgemeine Informationen
     } // Ende private enum
     
-    @State private var datum = Date()
+    //@State private var datum = Date()
  
     @State private var calendarId: Int = 0
     
     //@State var gegenstandPreis: Double = 0.0
-    @State var textGegenstandbeschreibung: String = ""
+    //@State var textGegenstandbeschreibung: String = ""
    
-    @State var textAllgemeineNotizen: String = ""
+    //@State var textAllgemeineNotizen: String = ""
     
     @State var platzText1: String = "Gegenstandbeschreibung"
     @State var platzText2: String = "Allgemeine Notizen"
-    @State var selectedVorgangInt: Int = 0
-    @State var selectedGegenstandInt: Int = 0
-    @State var selectedPersonInt: Int = 0
+    //@State var selectedVorgangInt: Int = 0
+    //@State var selectedGegenstandInt: Int = 0
+    //@State var selectedPersonInt: Int = 0
     @State var selectedGegenstand: String = ""
     @State var selectedPerson: String = ""
     
@@ -55,21 +56,26 @@ struct ParameterView: View {
     
     @State var imageData = UIImage()
     
-    @State var preisWert: String = ""
+    //@State var preisWert: String = ""
     
     
     private let numberFormatter: NumberFormatter
     private let perKeyFormatter: DateFormatter
+    private let germanDateFormatter: DateFormatter
     
     init() {
-          numberFormatter = NumberFormatter()
-          numberFormatter.numberStyle = .currency
-          numberFormatter.maximumFractionDigits = 2
+        numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.maximumFractionDigits = 2
         
-          perKeyFormatter = DateFormatter()
-          perKeyFormatter.dateFormat = "y MM dd, HH:mm"
+        perKeyFormatter = DateFormatter()
+        perKeyFormatter.dateFormat = "y MM dd, HH:mm"
         
-        
+        germanDateFormatter = DateFormatter()
+        germanDateFormatter.locale = .init(identifier: "de")
+        germanDateFormatter.dateFormat = "d MMM yyyy"
+        germanDateFormatter.dateStyle = .short
+        germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         
     } // Ende init
     
@@ -77,27 +83,27 @@ struct ParameterView: View {
     var body: some View {
         
         let tapOptionGegenstand = Binding<Int>(
-            get: { selectedGegenstandInt }, set: { selectedGegenstandInt = $0
+            get: { globaleVariable.selectedGegenstandInt }, set: { globaleVariable.selectedGegenstandInt = $0
                 
                 //Add the onTapGesture contents here
-                if globaleVariable.parameterGegenstand[selectedGegenstandInt] == "Neuer Gegenstand" {
+                if globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt] == "Neuer Gegenstand" {
                    showSheetGegenstand = true
                    selectedGegenstand = "Neuer Gegenstand"
                 }else{
-                   selectedGegenstand = globaleVariable.parameterGegenstand[selectedGegenstandInt]
+                    selectedGegenstand = globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt]
                 } // Ende if
             } // Ende set
         ) // Ende let
         
         let tapOptionPerson = Binding<Int>(
-            get: { selectedPersonInt }, set: { selectedPersonInt = $0
+            get: { globaleVariable.selectedPersonInt }, set: { globaleVariable.selectedPersonInt = $0
                 
                 //Add the onTapGesture contents here
-                if globaleVariable.parameterPerson[selectedPersonInt] == "Neue Person" {
+                if globaleVariable.parameterPerson[globaleVariable.selectedPersonInt] == "Neue Person" {
                    showSheetPerson = true
                    selectedPerson = "Neue Person"
                 }else{
-                   selectedPerson = globaleVariable.parameterPerson[selectedPersonInt]
+                    selectedPerson = globaleVariable.parameterPerson[globaleVariable.selectedPersonInt]
                 } // Ende if
             } // Ende set
         ) // Ende let
@@ -112,30 +118,9 @@ struct ParameterView: View {
                             Text("\(globaleVariable.parameterGegenstand[index])").tag(index)
                         } // Ende ForEach
                         
-                    }).sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand) })
+                    }).sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich )})
                     
-                /*
-                    Picker("Gegenstand: ", selection: $selectedGegenstandInt, content: {
-                        ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
-                            Text("\(globaleVariable.parameterGegenstand[index])").tag(index)
-                        } // Ende ForEach
-                        
-                    }).onChange(of: selectedGegenstandInt){ _ in
-                        print("\(globaleVariable.parameterGegenstand[selectedGegenstandInt])")
-                    } // Ende Picker Gegenstand
-                */
-                /*
-                    Picker("Gegenstand: ", selection: $globaleVariable.selectedGegenstand) {
-                    ForEach(globaleVariable.parameterGegenstand, id: \.self) {Text($0)}
-                    }.onChange(of: globaleVariable.selectedGegenstand){ _ in
-                        print("\(globaleVariable.selectedGegenstand)")
-                    } // Ende Picker Mannschaften
-                */
-                    
-                                    
-                    
-                    
-                    TextEditorWithPlaceholder(text: $textGegenstandbeschreibung, platz: $platzText1)
+                    TextEditorWithPlaceholder(text: $globaleVariable.textGegenstandbeschreibung, platz: $platzText1)
                         //.focused($preisWertIsFocused)
                         .focused($focusedField, equals: .str1)
                     
@@ -161,9 +146,7 @@ struct ParameterView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
                                
-                            
                         } // Ende if
-                        
                         
                     } // Ende HStack
                     
@@ -173,9 +156,9 @@ struct ParameterView: View {
                             .frame(height: 35, alignment: .leading)  // width: 190,
                         
                         Text("                ")
-                        TextField("0.00 €", text: $preisWert)
+                        TextField("0.00 €", text: $globaleVariable.preisWert)
                         
-                            .modifier(TextFieldEuro(textParameter: $preisWert))
+                            .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
                             .multilineTextAlignment(.trailing)
                             .frame(width: 115, height: 35, alignment: .trailing)
                             .background(Color(.systemGray6))
@@ -185,23 +168,20 @@ struct ParameterView: View {
                             //.focused($preisWertIsFocused)
                             .focused($focusedField, equals: .amount)
                         
-                        
                     } // Ende HStack
                  
-                    
-                    DatePicker("Datum: ", selection: $datum, displayedComponents: [.date])
+                    DatePicker("Datum: ", selection: $globaleVariable.datum, displayedComponents: [.date])
                         .accentColor(Color.black)
                         .multilineTextAlignment (.center)
                         .id(calendarId)
-                        .onChange(of: datum, perform: { _ in
+                        .onChange(of: globaleVariable.datum, perform: { _ in
                           calendarId += 1
                         }) // Ende onChange...
                         .onTapGesture {
                           calendarId += 1
                         } // Ende onTap....
-                    
-                    
-                    Picker("Was möchten Sie tun?", selection: $selectedVorgangInt, content: {
+                                        
+                    Picker("Was möchten Sie tun?", selection: $globaleVariable.selectedVorgangInt, content: {
                         ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
                             Text("\(globaleVariable.parameterVorgang[index])")//.tag(index)
                         } // Ende ForEach
@@ -212,10 +192,10 @@ struct ParameterView: View {
                             Text("\(globaleVariable.parameterPerson[index])")//.tag(index)
                         } // Ende ForEach
                     }) // Picker
-                    .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson) })
+                    .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
                     
                     
-                    TextEditorWithPlaceholder(text: $textAllgemeineNotizen, platz: $platzText2)
+                    TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
                         //.focused($preisWertIsFocused)
                         .focused($focusedField, equals: .str2)
                     
@@ -228,12 +208,13 @@ struct ParameterView: View {
                                 .alert(isPresented:$showAlertSpeichernButton) {
                                     Alert(
                                         title: Text("Möchten Sie alle Angaben speichern?"),
-                                        message: Text("Die Daten werden in die Datenbank gespeichert!"),
+                                        message: Text("Die Daten werden in die Datenbank gespeichert und die Angabemaske wird geleert!"),
                                         primaryButton: .destructive(Text("Speichern")) {
-                                            // Hier kommt speicher Routine
-                                            let perKey = erstellePerKey(par1: perKeyFormatter.string(from: datum))
+                                            // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
                                             
-                                            let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personSpitzname, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(preisWert)', '\(datum)', '\(globaleVariable.parameterVorgang[selectedVorgangInt])', 'Spitzname', 'Vorname', 'Nachname', 'Sex', '\(textAllgemeineNotizen)')"
+                                            let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
+                                            
+                                            let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personSpitzname, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', 'Spitzname', 'Vorname', 'Nachname', 'Sex', '\(globaleVariable.textAllgemeineNotizen)')"
                                        
                                             if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
                                                SQLITE_OK {
@@ -257,22 +238,14 @@ struct ParameterView: View {
                                         title: Text("Möchten Sie alle Angaben unwiederfuflich löschen?"),
                                         message: Text("Man kann den Vorgang nicht rückgängich machen!"),
                                         primaryButton: .destructive(Text("Löschen")) {
-                                            globaleVariable.parameterImageString = ""
-                                            selectedGegenstandInt = 0
-                                            selectedVorgangInt = 0
-                                            selectedPersonInt = 0
-                                            textGegenstandbeschreibung = ""
-                                            //gegenstandPreis = 0.0
-                                            preisWert = ""
-                                            datum = Date()
-                                            textAllgemeineNotizen = ""
                                             
-                                            // Hier kommt löschen der Angaben Routine
-                                            print("Gelöscht...")
+                                            // Die Parameterwerte werden gelöscht.
+                                            cleanEingabeMaske()
+                                            
                                         },
                                         secondaryButton: .cancel(Text("Abbrechen")){
                                             print("Abgebrochen ....")
-                                        }
+                                        } // Ende secondary Button
                                     ) // Ende Alert
                                 } // Ende alert
                             
@@ -290,14 +263,14 @@ struct ParameterView: View {
                         }else if focusedField == .str1 {
                             Button("Abbrechen") {
                                 //preisWertIsFocused = false
-                                textGegenstandbeschreibung = ""
+                                globaleVariable.textGegenstandbeschreibung = ""
                                 focusedField = nil
                                 print("Abbrechen Button Str1 wurde gedrückt!")
                             } // Ende Button
                         }else {
                             Button("Abbrechen") {
                                 //preisWertIsFocused = false
-                                textAllgemeineNotizen = ""
+                                globaleVariable.textAllgemeineNotizen = ""
                                 focusedField = nil
                                 print("Abbrechen Button Str2 wurde gedrückt!")
                             } // Ende Button
@@ -312,7 +285,7 @@ struct ParameterView: View {
             } // Ende VStack
             
         } // Ende GeometryReader
-        .navigationTitle("Parameter")
+        .navigationTitle("Angabemaske")
         .toolbar {ToolbarItem(placement: .navigationBarLeading) {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
@@ -330,9 +303,9 @@ struct ParameterView: View {
         .navigationBarItems(trailing: Button( action: {
             showParameterHilfe = true
         }) {Image(systemName: "questionmark.circle").imageScale(.large)} )
-        .alert("Hilfe zu Parameter", isPresented: $showParameterHilfe, actions: {
+        .alert("Hilfe zu Angabemaske", isPresented: $showParameterHilfe, actions: {
               Button(" - OK - ") {}
-              }, message: { Text("Das ist die Beschreibung für den Bereich Parameter.") } // Ende message
+              }, message: { Text("Das ist die Beschreibung für den Bereich Angabemaske.") } // Ende message
             ) // Ende alert
         
     } // Ende var body

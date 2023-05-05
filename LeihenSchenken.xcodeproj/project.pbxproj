@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		DB3C9E9729E877F000C449C9 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C9E9629E877F000C449C9 /* Test.swift */; };
+		DB4329AF2A003E91006874E8 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4329AE2A003E91006874E8 /* ChartView.swift */; };
+		DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E9F32A023BB000CBC354 /* Extention.swift */; };
 		DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */; };
 		DBCEF7FA29D1ED770017A728 /* LeihenSchenkenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF7F929D1ED770017A728 /* LeihenSchenkenApp.swift */; };
 		DBCEF7FC29D1ED770017A728 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF7FB29D1ED770017A728 /* ContentView.swift */; };
@@ -45,6 +47,8 @@
 
 /* Begin PBXFileReference section */
 		DB3C9E9629E877F000C449C9 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		DB4329AE2A003E91006874E8 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		DB51E9F32A023BB000CBC354 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneViews.swift; sourceTree = "<group>"; };
 		DBCEF7F629D1ED770017A728 /* LeihenSchenken.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeihenSchenken.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCEF7F929D1ED770017A728 /* LeihenSchenkenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeihenSchenkenApp.swift; sourceTree = "<group>"; };
@@ -99,7 +103,9 @@
 				DBDF0BB529D2144A0054F765 /* ParameterView.swift */,
 				DBF6A33029E6D489001A01BC /* SqlManagement.swift */,
 				DBDF0BBF29D222260054F765 /* ShapeViews.swift */,
+				DB51E9F32A023BB000CBC354 /* Extention.swift */,
 				DBDF0BBD29D21C590054F765 /* ColorData.swift */,
+				DB4329AE2A003E91006874E8 /* ChartView.swift */,
 				DBDF0BBB29D2195D0054F765 /* TabViews.swift */,
 				DBDF0BB729D2147E0054F765 /* DetailView.swift */,
 				DB3C9E9629E877F000C449C9 /* Test.swift */,
@@ -312,10 +318,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBCEF7FC29D1ED770017A728 /* ContentView.swift in Sources */,
+				DB4329AF2A003E91006874E8 /* ChartView.swift in Sources */,
 				DBCEF7FA29D1ED770017A728 /* LeihenSchenkenApp.swift in Sources */,
 				DBDF0BB629D2144A0054F765 /* ParameterView.swift in Sources */,
 				DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */,
 				DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */,
+				DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */,
 				DBDF0BBE29D21C590054F765 /* ColorData.swift in Sources */,
 				DB3C9E9729E877F000C449C9 /* Test.swift in Sources */,
 				DBDF0BB829D2147E0054F765 /* DetailView.swift in Sources */,

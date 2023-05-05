@@ -12,6 +12,7 @@ struct DeteilView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     @State var showInfoModalView: Bool = false
+    @State var isParameterBereich: Bool = false
     
     @State var showMenue1: Bool = false
     @State var showMenue1_1: Bool = false
@@ -31,15 +32,15 @@ struct DeteilView: View {
             TabView(selection: $globaleVariable.navigationTabView) {
                 
                 Tab1(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Image(systemName: "tablecells")
-                    Text("Tab1")
+                    Image(systemName: "doc.text.magnifyingglass")
+                    Text("Filter")
                 }
                 .tag(1) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 
                 
                 Tab2(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                     Image(systemName: "tablecells.fill")
-                    Text("Tab2")
+                    Text("Liste")
                     
                 }
                 .tag(2) // Die Tags identifizieren die Tab und füren zum richtigen Titel
@@ -100,8 +101,8 @@ struct DeteilView: View {
                       Button("Ausführen") {deleteUserDefaults()}; Button("Abbrechen") {}
                       }, message: { Text("Durch das Zurücksetzen der Settings werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Sprache: Deutsch, Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
                     ) // Ende alert
-                .sheet(isPresented: $showMenue1_1, content: { ShapeViewAddUser(isPresented: $showMenue1_1) })
-                .sheet(isPresented: $showMenue1_2, content: { ShapeViewAddGegenstand(isPresented: $showMenue1_2) })
+                .sheet(isPresented: $showMenue1_1, content: { ShapeViewAddUser(isPresented: $showMenue1_1, isParameterBereich: $isParameterBereich )})
+                .sheet(isPresented: $showMenue1_2, content: { ShapeViewAddGegenstand(isPresented: $showMenue1_2, isParameterBereich: $isParameterBereich) })
                 
             } // Ende ToolbarItemGroup
                         
@@ -157,10 +158,9 @@ func naviTitleText(tabNummer: Int) -> String {
     
     switch tabNummer {
         case 1:
-             
-            returnWert = "Tab1"
+            returnWert = "Abfragenfilter"
         case 2:
-            returnWert = "Tab2 "
+            returnWert = "Liste der Datensätze"
         case 3:
             returnWert = "Tab3 "
         case 4:

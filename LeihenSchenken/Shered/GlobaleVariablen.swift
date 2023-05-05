@@ -13,7 +13,9 @@ class GlobaleVariable: ObservableObject {
     
     @Published var parameterPersonSex: [String] =  ["Frau", "Mann", "Divers"]
     @Published var parameterVorgang: [String] =  ["Leihen", "Schänken"]
-    @Published var parameterGegenstand: [String] =  ["Neuer Gegenstand", "Geld", "Buch", "CD/DVD", "Werkzeug"]
+    @Published var parameterGegenstand: [String] = querySQLAbfrage(queryTmp: "select gegenstandName FROM Gegenstaende")
+    
+    
     @Published var parameterDatum: Date = Date()
     @Published var parameterImageString: String = ""
     
@@ -30,7 +32,14 @@ class GlobaleVariable: ObservableObject {
     
     @Published var refreshViews: Bool = false
     
-    @Published var selectedGegenstand = "Neuer Gegenstand"
+    @Published var selectedGegenstand: String = "Neuer Gegenstand"
+    @Published var selectedGegenstandInt: Int = 0
+    @Published var textGegenstandbeschreibung: String = ""
+    @Published var selectedVorgangInt: Int = 0
+    @Published var selectedPersonInt: Int = 0
+    @Published var preisWert: String = ""
+    @Published var textAllgemeineNotizen: String = ""
+    @Published var datum: Date = Date()
     
     
 } // ende class
@@ -62,7 +71,7 @@ class GegenstaendeVariable: Identifiable {
     @Published var gegenstandText: String
     @Published var gegenstandBild: String
     @Published var preisWert: String
-    @Published var datum: Date
+    @Published var datum: String
     @Published var vorgang: String
     @Published var personSpitzname: String
     @Published var personVorname: String
@@ -70,7 +79,7 @@ class GegenstaendeVariable: Identifiable {
     @Published var personSex: String
     @Published var allgemeinerText: String
 
-    init(perKey: String, gegenstand: String, gegenstandTex: String, gegenstandBild: String, preisWert: String, datum: Date, vorgang: String, personSpitzname: String, personVorname: String, personNachname: String, personSex: String, allgemeinerText: String) {
+    init(perKey: String, gegenstand: String, gegenstandTex: String, gegenstandBild: String, preisWert: String, datum: String, vorgang: String, personSpitzname: String, personVorname: String, personNachname: String, personSex: String, allgemeinerText: String) {
         
         self.perKey = perKey
         self.gegenstand = gegenstand

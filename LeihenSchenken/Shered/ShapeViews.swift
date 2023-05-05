@@ -102,7 +102,8 @@ struct ShapeViewAddUser: View {
 struct ShapeViewAddUser: View {
    @ObservedObject var globaleVariable = GlobaleVariable.shared
    @Binding var isPresented: Bool
-
+   @Binding var isParameterBereich: Bool
+    
    @State var showSettingsHilfe: Bool = false
 
    @State var selectedPerson_sexInt: Int = 0
@@ -136,17 +137,17 @@ struct ShapeViewAddUser: View {
                    Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
                        ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
                            Text("\(globaleVariable.parameterPersonSex[index])")
-                       }
-                   }
-               }
+                       } // Ende index
+                   } // Ende Picker
+               } // Ende Section
                
                Button(action: {
-                   print("Benutzer hinzufügen!")
+                   print("Person hinzufügen!")
                }) {
                    HStack {
                        Image(systemName: "square.and.arrow.down.fill")
                            .font(.title3)
-                       Text("Benutzer hinzufügen")
+                       Text("Person hinzufügen")
                            .fontWeight(.semibold)
                            .font(.title3)
                        
@@ -158,10 +159,17 @@ struct ShapeViewAddUser: View {
                    .cornerRadius(10)
                } // Ende Button
                
-               Text("Mit drücken von 'Benutzer hinzufügen' werden Personendaten in die Datenbank geschrieben. ")
-                   //.background(Color(.systemGray6))
-                   .font(.system(size: 14, weight: .regular))
-                   .foregroundColor(.gray)
+               if isParameterBereich {
+                   
+                   Text("Mit drücken von 'Person hinzufügen' werden die Daten zur Auswahl hinzugefügt.")
+                       .font(.system(size: 14, weight: .regular))
+                       .foregroundColor(.gray)
+               }else{
+                   Text("Mit drücken von 'Person hinzufügen' werden die Daten in die Datenbank hinzugefügt.")
+                       .font(.system(size: 14, weight: .regular))
+                       .foregroundColor(.gray)
+                   
+               } // Ende if/else
                
            } // Ende Form
            .navigationBarItems(trailing:
@@ -179,19 +187,16 @@ struct ShapeViewAddUser: View {
 
 
 
-
-
 struct ShapeViewAddGegenstand: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @Binding var isPresented: Bool
+    @Binding var isParameterBereich: Bool
     
     @State var showSettingsHilfe: Bool = false
     
     @State var gegenstandNeu: String = ""
     
-    
     var body: some View {
-        
         
         NavigationView {
             
@@ -203,20 +208,14 @@ struct ShapeViewAddGegenstand: View {
                         .cornerRadius(5)
                         .disableAutocorrection(true)
                     
-                    
-                    /*
-                    Text("Bitte geben sie den Namen des Gegenständes.")
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .disableAutocorrection(true)
-                    */
-                    
-                    
                 } // Ende Section
         
                 Button(action: {
-                    print("Gegenstand hinzufügen!")
+                    if gegenstandNeu != "" {
+                        globaleVariable.parameterGegenstand.append(gegenstandNeu)
+                        print("Gegenstand hinzufügen!")
+                        isPresented = false
+                    } // Ende if
                 }) {
                     HStack {
                         Image(systemName: "square.and.arrow.down.fill")
@@ -224,17 +223,25 @@ struct ShapeViewAddGegenstand: View {
                         Text("Gegenstand hinzufügen")
                             .fontWeight(.semibold)
                             .font(.title3)
-                    }
+                    } // Ende HStack
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .center)
                     .foregroundColor(.white)
                     .background(Color.blue)
                     .cornerRadius(10)
-                }
-                Text("Mit drücken von 'Gegenstand hinzufügen' wird der neue Gegenstand in die Datenbank geschrieben.")
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(.gray)
-
+                } // Ende Button
+                
+                if isParameterBereich {
+                    
+                    Text("Mit drücken von 'Gegenstand hinzufügen' wird der neue Gegenstand zur Auswahl hinzugefügt.")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                }else{
+                    Text("Mit drücken von 'Gegenstand hinzufügen' wird der neue Gegenstand in die Datenbank hinzugefügt.")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                    
+                } // Ende if/else
                 
             } // Ende Form
             .scrollContentBackground(.hidden)
@@ -259,9 +266,6 @@ struct ShapeViewAddGegenstand: View {
     
     } // Ende var body
 } // Ende struct ShapeViewAddUser
-
-
-
 
 
 struct ShapeViewSettings: View {

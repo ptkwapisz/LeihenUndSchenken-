@@ -11,6 +11,68 @@ import Foundation
 struct IphoneTable1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
+    @State var operatorZeichen: [String] = ["gleicht", "ungleicht"]
+    @State private var selectedOperatorZeichen = "gleicht"
+    
+    @State var tabellenFeld1: [String] = ["gegenstand", "vorgang","name", "vorname"]
+    @State private var selectedTabellenFeld1 = "gegenstand"
+    
+    @State var tabellenFeld2: [String] = ["Buch", "Geld","CD/DVD", "Werkzeug"]
+    @State private var selectedTabellenFeld2 = "Buch"
+    
+    var body: some View {
+        
+        VStack {
+            Text("Abfragenfilter").bold()
+            Form {
+                
+                Picker("Bedinung 1", selection: $selectedTabellenFeld1, content: {
+                                ForEach(tabellenFeld1, id: \.self, content: { index1 in
+                                    Text(index1)
+                                })
+                })
+                .frame(height: 50)
+                
+                Picker("", selection: $selectedOperatorZeichen, content: {
+                                ForEach(operatorZeichen, id: \.self, content: { index2 in
+                                    Text(index2)
+                                })
+                })
+                .pickerStyle(.wheel)
+                .frame(height: 50)
+                
+                Picker("Bedinung 2", selection: $selectedTabellenFeld2, content: {
+                                ForEach(tabellenFeld2, id: \.self, content: { index3 in
+                                    Text(index3)
+                                })
+                })
+                .frame(height: 50)
+                
+                /*
+                HStack {
+                    Text("Feld 1 ")
+                    Text("Feld 2 ")
+                } // Ende HStack
+              
+                HStack {
+                    Text("Feld 3 ")
+                    Text("Feld 4 ")
+                } // Ende HStack
+                */
+                
+            } // Ende Form
+            .background(globaleVariable.farbenEbene1)
+            .cornerRadius(10)
+            //.frame(width: 360, height: 570)
+                           
+        } // Ende VStack
+    } // Ende var body
+} // Ende struct
+
+
+struct IphoneTable2: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
     let titleErsteSpalte: CGFloat = 190
     let titleZweiteSpalte: CGFloat = 95
 
@@ -19,30 +81,31 @@ struct IphoneTable1: View {
     
     var body: some View {
         
-        //let bluKat1 = distingtArray(par1: globaleVariable.badania, par2: "Kategorie1")
         let gegenstaende = addDataGegenstaende()
+        let gegVorgang = distingtArray(par1: gegenstaende, par2: "Vorgang")
+        
         
         let anzahl: Int = gegenstaende.count
       
             VStack {
-                Text("Datensätze ").bold()  //+ "\(globaleVariable.selecteduntDate)").bold()
+                Text("Alle Vorgänge").bold()  //+ "\(globaleVariable.selecteduntDate)").bold()
                 
                     List {
-                        /*
-                            ForEach(bluKat1.indices, id: \.self) { idx in
+                        
+                            ForEach(gegVorgang.indices, id: \.self) { idx in
                                 
-                                Section(header: Text("Kategorie " + "\(bluKat1[idx])")
+                                Section(header: Text("Vorgang: " + "\(gegVorgang[idx])")
                                     .font(.system(size: 15, weight: .medium)).bold()) {
-                          */
+                          
                                         ForEach(0..<anzahl, id: \.self) { item in
                                             
-                                            //if bluKat1[idx] == globaleVariable.badania[item].bluKategorie1 {
+                                            if gegVorgang[idx] == gegenstaende[item].vorgang {
                                                 
                                                 VStack() {
                                                     
                                                     HStack {
                                                         
-                                                        Text("\(gegenstaende[item].perKey)")
+                                                        //Text("\(gegenstaende[item].perKey)")
                                                         
                                                         Text("\(gegenstaende[item].gegenstand)")
                                                         
@@ -53,20 +116,20 @@ struct IphoneTable1: View {
                                                     .font(.system(size: 18, weight: .medium)).bold()
                                                     
                                                     HStack {
-                                                        /*
-                                                        NavigationLink(destination: ChartView(par1: globaleVariable.badania[item].bluNameL + " " + globaleVariable.badania[item].bluNameS)) {
+                                                        NavigationLink(destination: ChartView(par1: gegenstaende, par2: item)) {
                                                             
-                                                            Text(String(globaleVariable.badania[item].bluWert))
+                                                            
+                                                            Text(String(gegenstaende[item].personVorname))
                                                                 .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
                                                                 .font(.system(size: 15, weight: .medium)).bold()
                                                             
-                                                            Text(String(globaleVariable.badania[item].bluEinheit))
+                                                            Text(String(gegenstaende[item].personNachname))
                                                                 .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
                                                                 .font(.system(size: 15, weight: .medium)).bold()
                                                             
                                                             Spacer()
                                                             
-                                                            Label{} icon: { Image(systemName: "chart.xyaxis.line") .font(.system(size: 12, weight: .medium))
+                                                            Label{} icon: { Image(systemName: "list.bullet") .font(.system(size: 12, weight: .medium))
                                                             } // Ende Label
                                                             .frame(width:35, height: 25, alignment: .center)
                                                             .background(.gray)
@@ -77,25 +140,28 @@ struct IphoneTable1: View {
                                                             
                                                             
                                                         } // Ende NavigationLink
-                                                        */
+                                                    
                                                     } // Ende HStack
                                                     
                                                 } // Ende VStack
                                                 
-                                            //} // Ende if blutKat1
+                                            } // Ende if blutKat1
                                         } // Ende ForEach
                                         .listRowBackground(globaleVariable.farbenEbene0)
                                         .listRowSeparatorTint(.white)
                                         
-                                   // } // Ende Section
+                                   } // Ende Section
                                 
-                            //} // Ende ForEach
+                            } // Ende ForEach
                         
                     } // Ende List
                     .cornerRadius(10)
                    
             } // Ende VStack
-            .frame(width: 360, height: 570)
+            //.frame(width: 360, height: 570)
+            //.background(globaleVariable.farbenEbene1)
+            .cornerRadius(10)
+            .shadow(radius: 10)
        
     } // Ende var body
     

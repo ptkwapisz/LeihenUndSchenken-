@@ -34,9 +34,9 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            //TestKeyboard()
+            
             ParameterView()
-      //  } detail: {
+            
             DeteilView()
            
         } // Ende NavigationView
@@ -44,7 +44,6 @@ struct ContentView: View {
         .environmentObject(globaleVariable)
         .phoneOnlyStackNavigationView()
        
-        
     } // Ende var body
 } // Ende struct ContentView
 

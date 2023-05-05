@@ -22,6 +22,8 @@ func ifDatabaseExist() -> Bool {
             } else {
                 print("File not available")
                 let erstellenDB = erstellenDatenbankUndTabellen()
+                let _ = standartWerteSchreiben()
+                
                 return erstellenDB
             }
         } else {
@@ -30,6 +32,33 @@ func ifDatabaseExist() -> Bool {
         } // Ende if/Else
 } // Return func i
 
+func standartWerteSchreiben() {
+    
+    let perKeyFormatter: DateFormatter
+    perKeyFormatter = DateFormatter()
+    perKeyFormatter.dateFormat = "y MM dd, HH:mm"
+    
+    
+    let standartWerte: [String] = ["Neuer Gegenstand", "Geld", "Buch", "CD/DVD", "Werkzeug"]
+    
+    for n in 0...4 {
+        let perKey = erstellePerKey(par1: perKeyFormatter.string(from: Date()))
+        let myInt1 = Int(perKey) ?? 0
+        let myInt2 = myInt1 + n
+        let myString = String(myInt2)
+       
+        let insertDataToGegenstaende = "INSERT INTO Gegenstaende(perKey, gegenstandName) VALUES('\(myString)', '\(standartWerte[n])')"
+        
+        if sqlite3_exec(db, insertDataToGegenstaende, nil, nil, nil) !=
+           SQLITE_OK {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("error -->: \(errmsg)")
+            print("Daten wurden nicht hinzugefügt")
+        } // End if
+    
+    } // Ende for n
+    
+} // Ende func
 
 func erstellenDatenbankUndTabellen() -> Bool {
     
@@ -37,7 +66,7 @@ func erstellenDatenbankUndTabellen() -> Bool {
     
     let createTablePersonen = "CREATE TABLE IF NOT EXISTS Personen (perKey TEXT PRIMARY KEY, personSpitzname TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT)"
     
-    let createTableGegenstaende = "CREATE TABLE IF NOT EXISTS Gegenstaende (perKey TEXT PRIMARY KEY, personSpitzname TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT)"
+    let createTableGegenstaende = "CREATE TABLE IF NOT EXISTS Gegenstaende (perKey TEXT PRIMARY KEY, gegenstandName TEXT)"
     
     let fileUrl = try!
     FileManager.default.url(for: .documentDirectory,

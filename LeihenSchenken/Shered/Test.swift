@@ -31,8 +31,29 @@ func compressImage(image: UIImage) -> UIImage {
 }
 */
 
+func dateToString(parDatum: Date) -> String {
+    
+    var result: String = ""
+    
+    let inputDateString = parDatum
 
-// Just an example function below
- func doSomethingWith(value: String) {
-        print(value)
-  }
+    let germanDateFormatter = DateFormatter()
+    germanDateFormatter.locale = .init(identifier: "de")
+    germanDateFormatter.dateFormat = "d MMM yyyy"
+    germanDateFormatter.dateStyle = .short
+    germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+    if inputDateString != nil {
+
+        result = germanDateFormatter.string(from: inputDateString)
+
+        print(result) //16.08.19, 07:04:12
+    }else{
+        
+        result = "Keine umwandlung"
+    }
+    
+    return result
+}
+
+
