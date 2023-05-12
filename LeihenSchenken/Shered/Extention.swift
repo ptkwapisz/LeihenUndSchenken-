@@ -12,7 +12,6 @@ import Foundation
 
 // Diese Erweiterung endcodiert Image-String in ein Image
 // Benutzung: Image(base64Str: imgString)
-
 extension Image {
     init?(base64Str: String) {
         guard let data = Data(base64Encoded: base64Str) else { return nil }
@@ -20,3 +19,14 @@ extension Image {
         self = Image(uiImage: uiImg)
     } // Ende init
 } // Ende extension
+
+
+
+// Diese Extention entfernt in einem Array alle Duplicate
+// Benutzung: array.unique()
+extension Sequence where Iterator.Element: Hashable {
+    func unique() -> [Iterator.Element] {
+        var seen: Set<Iterator.Element> = []
+        return filter { seen.insert($0).inserted }
+    } // Ende func unique
+} // Ende extensiopn

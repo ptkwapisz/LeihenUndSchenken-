@@ -16,22 +16,28 @@ struct ChartView: View {
     @State var showChartHilfe: Bool = false
     
     
-    
     var body: some View {
         
         VStack {
-    
-            //Text("\(dateToString(parDatum: par1[par2].datum))")
-            Text("\(par1[par2].datum)")
             
-            Image(base64Str: par1[par2].gegenstandBild)!
+            Text("\(par1[par2].datum)")
+            if par1[par2].gegenstandBild != "Kein Bild" {
+                Image(base64Str: par1[par2].gegenstandBild)!
                 .resizable()
-                .cornerRadius(100)
-                .padding(.all, 4)
-                .frame(width: 100, height: 100)
-                .background(Color.black.opacity(0.2))
-                .aspectRatio(contentMode: .fill)
-                .clipShape(Circle())
+                .scaledToFit()
+                .cornerRadius(25)
+                .padding(20)
+                .frame(width: 350, height: 200)
+                .shadow(color: Color.black, radius: 5, x: 5, y: 5)
+            }else{
+                Text("Kein Bild")
+                    .scaledToFit()
+                    .padding(20)
+                    .frame(width: 150, height: 100)
+                    .background(Color.gray.gradient)
+                    .cornerRadius(25)
+            
+            } // Ende if/else
             
             Text("\(par1[par2].gegenstandText)")
             

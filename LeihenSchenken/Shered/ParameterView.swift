@@ -12,14 +12,11 @@ import SQLite3
 
 struct ParameterView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@ObservedObject var gegenstaendeVariable = GegenstaendeVariable.shared
     
     @State var showParameterHilfe: Bool = false
     @State var showAlerOKButton: Bool = false
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
-    
-    //@State var showMenue1_1: Bool = false
     
     @State var showSheetPerson: Bool = false
     @State var showSheetGegenstand: Bool = false
@@ -34,20 +31,12 @@ struct ParameterView: View {
         case str2 // Für allgemeine Informationen
     } // Ende private enum
     
-    //@State private var datum = Date()
+    
  
     @State private var calendarId: Int = 0
     
-    //@State var gegenstandPreis: Double = 0.0
-    //@State var textGegenstandbeschreibung: String = ""
-   
-    //@State var textAllgemeineNotizen: String = ""
-    
     @State var platzText1: String = "Gegenstandbeschreibung"
     @State var platzText2: String = "Allgemeine Notizen"
-    //@State var selectedVorgangInt: Int = 0
-    //@State var selectedGegenstandInt: Int = 0
-    //@State var selectedPersonInt: Int = 0
     @State var selectedGegenstand: String = ""
     @State var selectedPerson: String = ""
     
@@ -129,11 +118,10 @@ struct ParameterView: View {
                             .frame(height: 60)
                         
                         PhotosSelector()
-                        //TestPhoto()
                         
                         Text(" ")
                         
-                        if globaleVariable.parameterImageString != "" {
+                        if globaleVariable.parameterImageString != "Kein Bild" {
                             let imageData = Data (base64Encoded: globaleVariable.parameterImageString)!
                             let image = UIImage (data: imageData)!
                             
@@ -200,37 +188,9 @@ struct ParameterView: View {
                         .focused($focusedField, equals: .str2)
                     
                     VStack{
-                        Text("----------").frame(height: 50)
-                        
+                        Text("").frame(height: 20)
+                       
                         HStack {
-                                
-                            Button(action: {showAlertSpeichernButton = true}) { Label("Speichern", systemImage: "pencil.and.outline")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
-                                .alert(isPresented:$showAlertSpeichernButton) {
-                                    Alert(
-                                        title: Text("Möchten Sie alle Angaben speichern?"),
-                                        message: Text("Die Daten werden in die Datenbank gespeichert und die Angabemaske wird geleert!"),
-                                        primaryButton: .destructive(Text("Speichern")) {
-                                            // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
-                                            
-                                            let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
-                                            
-                                            let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personSpitzname, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', 'Spitzname', 'Vorname', 'Nachname', 'Sex', '\(globaleVariable.textAllgemeineNotizen)')"
-                                       
-                                            if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
-                                               SQLITE_OK {
-                                                let errmsg = String(cString: sqlite3_errmsg(db)!)
-                                                print("error -->: \(errmsg)")
-                                                print("Daten wurden nicht hinzugefügt")
-                                            } // End if
-
-                                            
-                                            print("Gespeichert...")
-                                        },
-                                        secondaryButton: .cancel(Text("Abbrechen")){
-                                            print("Abgebrochen ....")
-                                        }
-                                    ) // Ende Alert
-                                } // Ende alert
                                 
                             Button(action: {showAlertAbbrechenButton = true}) { Label("Abbrechen", systemImage: "pencil.slash") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                                 .alert(isPresented:$showAlertAbbrechenButton) {
@@ -246,6 +206,39 @@ struct ParameterView: View {
                                         secondaryButton: .cancel(Text("Abbrechen")){
                                             print("Abgebrochen ....")
                                         } // Ende secondary Button
+                                    ) // Ende Alert
+                                } // Ende alert
+                            
+                            Button(action: {showAlertSpeichernButton = true}) { Label("Speichern", systemImage: "pencil.and.outline")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
+                                .alert(isPresented:$showAlertSpeichernButton) {
+                                    Alert(
+                                        title: Text("Möchten Sie alle Angaben speichern?"),
+                                        message: Text("Die Daten werden in die Datenbank gespeichert und die Angabemaske wird geleert!"),
+                                        primaryButton: .destructive(Text("Speichern")) {
+                                            // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
+                                            
+                                            let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
+                                            
+                                            let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(globaleVariable.selectedPersonVariable[0].personVorname)', '\(globaleVariable.selectedPersonVariable[0].personNachname)', '\(globaleVariable.selectedPersonVariable[0].personSex)', '\(globaleVariable.textAllgemeineNotizen)')"
+                                       
+                                            if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
+                                               SQLITE_OK {
+                                                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                                                print("error -->: \(errmsg)")
+                                                print("Daten wurden nicht hinzugefügt")
+                                            }else{
+                                                
+                                                // Die Parameterwerte werden gelöscht.
+                                                cleanEingabeMaske()
+                                                
+                                                print("Gespeichert...")
+                                                
+                                            } // End if/else
+
+                                        },
+                                        secondaryButton: .cancel(Text("Abbrechen")){
+                                            print("Abgebrochen ....")
+                                        }
                                     ) // Ende Alert
                                 } // Ende alert
                             
@@ -285,15 +278,22 @@ struct ParameterView: View {
             } // Ende VStack
             
         } // Ende GeometryReader
-        .navigationTitle("Angabemaske")
+        .navigationTitle("Eingabemaske")
         .toolbar {ToolbarItem(placement: .navigationBarLeading) {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
-        
-                NavigationLink(destination: DeteilView()){
-                    Label("Test", systemImage: "sidebar.left")
+                if anzahlDerDatensaetze(tableName: "Objekte") == 0 {
+                    NavigationLink(destination: EmptyView()){
+                        Label("", systemImage: "sidebar.left")
+                        
+                    } // Ende NavigationLink
+                }else{
+                    NavigationLink(destination: DeteilView()){
+                        Label("", systemImage: "sidebar.left")
+                        
+                    } // Ende NavigationLink
                     
-                } // Ende NavigationLink
+                } // Ende if/else
                 
            } // Ende UIDevice
                 
@@ -404,7 +404,7 @@ struct PhotosSelector: View {
                             // Transferiere Photo in ein jpgPhoto
                             let tmpPhoto = UIImage(data: selectedPhotoData)?.jpegData(compressionQuality: 0.5)
                             // transferiere jpgPhoto in String
-                            globaleVariable.parameterImageString = tmpPhoto!.base64EncodedString ()
+                            globaleVariable.parameterImageString = tmpPhoto!.base64EncodedString()
                          
                             print("Photo wurde ausgewählt")
                         } // Ende if

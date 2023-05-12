@@ -13,13 +13,16 @@ class GlobaleVariable: ObservableObject {
     
     @Published var parameterPersonSex: [String] =  ["Frau", "Mann", "Divers"]
     @Published var parameterVorgang: [String] =  ["Leihen", "Schänken"]
-    @Published var parameterGegenstand: [String] = querySQLAbfrage(queryTmp: "select gegenstandName FROM Gegenstaende")
+    @Published var parameterGegenstand: [String] = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
     
+    @Published var abfrageFilter: Bool = false
+    @Published var abfrageQueryString: String = ""
     
     @Published var parameterDatum: Date = Date()
-    @Published var parameterImageString: String = ""
+    @Published var parameterImageString: String = "Kein Bild"
     
-    @Published var parameterPerson: [String] = ["Neue Person", "Kwapisz, Piotr","Stehle, Angelika","Stehle, Elena","Kwapisz, Zofia","Hanisch, Witold"]
+    //@Published var parameterPerson: [String] = ["Neue Person", "Kwapisz, Piotr","Stehle, Angelika","Stehle, Elena","Kwapisz, Zofia","Hanisch, Witold"]
+    @Published var parameterPerson: [String] = personenArray()
     
     @Published var navigationTabView = 1
     @Published var farbenEbene0: Color = loadColor0A()
@@ -37,13 +40,16 @@ class GlobaleVariable: ObservableObject {
     @Published var textGegenstandbeschreibung: String = ""
     @Published var selectedVorgangInt: Int = 0
     @Published var selectedPersonInt: Int = 0
-    @Published var preisWert: String = ""
+    @Published var selectedPersonVariable: [PersonVariable] = [PersonVariable(personVorname: "", personNachname: "", personSex: "")]
+    
+    
+    @Published var preisWert: String = "0.00"
     @Published var textAllgemeineNotizen: String = ""
     @Published var datum: Date = Date()
     
     
 } // ende class
-
+/*
 class UserSettingsDefaults: ObservableObject {
     static let shared = UserSettingsDefaults()
     
@@ -59,7 +65,8 @@ class UserSettingsDefaults: ObservableObject {
         
     } // Ende init
 } // Ende class
-
+*/
+ 
 // Address Book Tutorial in Swift and iOS
 // https://www.kodeco.com/1786-address-book-tutorial-in-swift-and-ios
 
@@ -73,13 +80,12 @@ class GegenstaendeVariable: Identifiable {
     @Published var preisWert: String
     @Published var datum: String
     @Published var vorgang: String
-    @Published var personSpitzname: String
     @Published var personVorname: String
     @Published var personNachname: String
     @Published var personSex: String
     @Published var allgemeinerText: String
 
-    init(perKey: String, gegenstand: String, gegenstandTex: String, gegenstandBild: String, preisWert: String, datum: String, vorgang: String, personSpitzname: String, personVorname: String, personNachname: String, personSex: String, allgemeinerText: String) {
+    init(perKey: String, gegenstand: String, gegenstandTex: String, gegenstandBild: String, preisWert: String, datum: String, vorgang: String, personVorname: String, personNachname: String, personSex: String, allgemeinerText: String) {
         
         self.perKey = perKey
         self.gegenstand = gegenstand
@@ -88,7 +94,6 @@ class GegenstaendeVariable: Identifiable {
         self.preisWert = preisWert
         self.datum = datum
         self.vorgang = vorgang
-        self.personSpitzname = personSpitzname
         self.personVorname = personVorname
         self.personNachname = personNachname
         self.personSex = personSex
@@ -99,21 +104,19 @@ class GegenstaendeVariable: Identifiable {
     
 } // Ende class
 
-class Person: Identifiable {
-    @Published var perKey: String
-    @Published var personSpitzname: String
+class PersonVariable: Identifiable {
+    
     @Published var personVorname: String
     @Published var personNachname: String
-    @Published var personsex: String
+    @Published var personSex: String
     
-    init(perKey: String, personSpitzname: String, personenVorname: String, personenNachname: String, personenSex: String) {
+    init(personVorname: String, personNachname: String, personSex: String) {
         
-        self.perKey = perKey
-        self.personSpitzname = personSpitzname
-        self.personVorname = personenVorname
-        self.personNachname = personenNachname
-        self.personsex = personenSex
+        self.personVorname = personVorname
+        self.personNachname = personNachname
+        self.personSex = personSex
         
     } // Ende init
     
 } // Ende class
+

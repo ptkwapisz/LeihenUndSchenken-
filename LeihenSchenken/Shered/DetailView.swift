@@ -32,15 +32,15 @@ struct DeteilView: View {
             TabView(selection: $globaleVariable.navigationTabView) {
                 
                 Tab1(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Image(systemName: "doc.text.magnifyingglass")
-                    Text("Filter")
+                    Image(systemName: "tablecells.fill")
+                    Text("Liste")
                 }
                 .tag(1) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 
                 
                 Tab2(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                     Image(systemName: "tablecells.fill")
-                    Text("Liste")
+                    Text("Tab2")
                     
                 }
                 .tag(2) // Die Tags identifizieren die Tab und füren zum richtigen Titel
@@ -86,24 +86,25 @@ struct DeteilView: View {
                     } // Ende Menu
                     
                     
-                    Button("Menue 3", action: {})
+                    Button("Abfragen", action: {showMenue3 = true})
                     Divider()
-                    Button("Menue 4", action: {showMenue4.toggle()})
-                    Button("Settings Zurücksetzen", action: {showMenue5.toggle()})
+                    Button("Settings zurücksetzen", action: {showMenue4.toggle()})
+                    Button("Datenbank zurücksetzen", action: {showMenue5.toggle()})
+                    
                 }) {
                     Image(systemName: "filemenu.and.cursorarrow")
                 } // Ende Button
                 .alert("Trefen Sie eine Wahl!", isPresented: $showMenue4, actions: {
-                      Button("Ausführen") {}; Button("Abbrechen") {}
-                      }, message: { Text("Durch Menüpunkt 3 wird eine Tätigkeit ausgeführt.") } // Ende message
-                ) // Ende alert
-                .alert("Trefen Sie eine Wahl!", isPresented: $showMenue5, actions: {
                       Button("Ausführen") {deleteUserDefaults()}; Button("Abbrechen") {}
-                      }, message: { Text("Durch das Zurücksetzen der Settings werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Sprache: Deutsch, Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
+                      }, message: { Text("Durch das Zurücksetzen der Settings werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
                     ) // Ende alert
+                .alert("Trefen Sie eine Wahl!", isPresented: $showMenue5, actions: {
+                      Button("Ausführen") {datenbankReset()}; Button("Abbrechen") {}
+                      }, message: { Text("Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt.") } // Ende message
+                ) // Ende alert
                 .sheet(isPresented: $showMenue1_1, content: { ShapeViewAddUser(isPresented: $showMenue1_1, isParameterBereich: $isParameterBereich )})
                 .sheet(isPresented: $showMenue1_2, content: { ShapeViewAddGegenstand(isPresented: $showMenue1_2, isParameterBereich: $isParameterBereich) })
-                
+                .sheet(isPresented: $showMenue3, content: { ShapeViewAbfrage(isPresented: $showMenue3) })
             } // Ende ToolbarItemGroup
                         
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -158,9 +159,9 @@ func naviTitleText(tabNummer: Int) -> String {
     
     switch tabNummer {
         case 1:
-            returnWert = "Abfragenfilter"
+            returnWert = "Liste der Gegenständen"
         case 2:
-            returnWert = "Liste der Datensätze"
+            returnWert = "Tab2"
         case 3:
             returnWert = "Tab3 "
         case 4:
@@ -174,3 +175,19 @@ func naviTitleText(tabNummer: Int) -> String {
     return returnWert
     
 } // Ende func naviTitleText
+
+/*
+struct EmptyView: View {
+    
+    var body: some View {
+        
+        Text("Geben sie einen Datensatz an")
+            .scaledToFit()
+            .padding(20)
+            .frame(width: 350, height: 100)
+            .background(Color.gray.gradient)
+            .cornerRadius(25)
+        
+    } // Ende var body
+} // Ende struct
+*/

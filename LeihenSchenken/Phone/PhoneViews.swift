@@ -8,69 +8,9 @@
 import SwiftUI
 import Foundation
 
+
+
 struct IphoneTable1: View {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
-    @State var operatorZeichen: [String] = ["gleicht", "ungleicht"]
-    @State private var selectedOperatorZeichen = "gleicht"
-    
-    @State var tabellenFeld1: [String] = ["gegenstand", "vorgang","name", "vorname"]
-    @State private var selectedTabellenFeld1 = "gegenstand"
-    
-    @State var tabellenFeld2: [String] = ["Buch", "Geld","CD/DVD", "Werkzeug"]
-    @State private var selectedTabellenFeld2 = "Buch"
-    
-    var body: some View {
-        
-        VStack {
-            Text("Abfragenfilter").bold()
-            Form {
-                
-                Picker("Bedinung 1", selection: $selectedTabellenFeld1, content: {
-                                ForEach(tabellenFeld1, id: \.self, content: { index1 in
-                                    Text(index1)
-                                })
-                })
-                .frame(height: 50)
-                
-                Picker("", selection: $selectedOperatorZeichen, content: {
-                                ForEach(operatorZeichen, id: \.self, content: { index2 in
-                                    Text(index2)
-                                })
-                })
-                .pickerStyle(.wheel)
-                .frame(height: 50)
-                
-                Picker("Bedinung 2", selection: $selectedTabellenFeld2, content: {
-                                ForEach(tabellenFeld2, id: \.self, content: { index3 in
-                                    Text(index3)
-                                })
-                })
-                .frame(height: 50)
-                
-                /*
-                HStack {
-                    Text("Feld 1 ")
-                    Text("Feld 2 ")
-                } // Ende HStack
-              
-                HStack {
-                    Text("Feld 3 ")
-                    Text("Feld 4 ")
-                } // Ende HStack
-                */
-                
-            } // Ende Form
-            .background(globaleVariable.farbenEbene1)
-            .cornerRadius(10)
-            //.frame(width: 360, height: 570)
-                           
-        } // Ende VStack
-    } // Ende var body
-} // Ende struct
-
-
-struct IphoneTable2: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     let titleErsteSpalte: CGFloat = 190
@@ -81,8 +21,11 @@ struct IphoneTable2: View {
     
     var body: some View {
         
-        let gegenstaende = addDataGegenstaende()
-        let gegVorgang = distingtArray(par1: gegenstaende, par2: "Vorgang")
+        //let gegenstaende = addDataGegenstaende()
+        
+        let gegenstaende = querySQLAbfrageClass(queryTmp: "SELECT * FROM Objekte")
+        
+        let gegVorgang = distingtArray(par1: gegenstaende, par2: "Vorgang") // Leihen oder Schänken
         
         
         let anzahl: Int = gegenstaende.count

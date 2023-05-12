@@ -32,6 +32,8 @@ func ifDatabaseExist() -> Bool {
         } // Ende if/Else
 } // Return func i
 
+// Bei erstellung der Tabelle Gegenstände werden in die Tabelle Gegensände Standardwerte hinzugefügt
+// Bei der Erstellung der Tabelle Personen wird ein Musterdatensatz hinzugefügt
 func standartWerteSchreiben() {
     
     let perKeyFormatter: DateFormatter
@@ -48,27 +50,41 @@ func standartWerteSchreiben() {
         let myString = String(myInt2)
        
         let insertDataToGegenstaende = "INSERT INTO Gegenstaende(perKey, gegenstandName) VALUES('\(myString)', '\(standartWerte[n])')"
-        
+        /*
+        let insertDataToPersonen = "INSERT INTO Personen(perKey, personSpitzname, personVorname, personNachname, personSex) VALUES('\(myString)', 'Musterspitzname', 'Mustervorname', 'Mustermann', 'Mann')"
+        */
         if sqlite3_exec(db, insertDataToGegenstaende, nil, nil, nil) !=
            SQLITE_OK {
             let errmsg = String(cString: sqlite3_errmsg(db)!)
             print("error -->: \(errmsg)")
             print("Daten wurden nicht hinzugefügt")
         } // End if
-    
+        /*
+        if n == 0 {
+            if sqlite3_exec(db, insertDataToPersonen, nil, nil, nil) !=
+                SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                print("error -->: \(errmsg)")
+                print("Daten wurden nicht hinzugefügt")
+            } // End if
+        } // Ende if/else
+        */
+        
     } // Ende for n
     
 } // Ende func
 
 func erstellenDatenbankUndTabellen() -> Bool {
     
-    let createTableObjekte = "CREATE TABLE IF NOT EXISTS Objekte (perKey TEXT PRIMARY KEY, gegenstand TEXT, gegenstandText TEXT, gegenstandBild TEXT, preisWert TEXT, datum TEXT, vorgang TEXT, personSpitzname TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT, allgemeinerText TEXT)"
     
-    let createTablePersonen = "CREATE TABLE IF NOT EXISTS Personen (perKey TEXT PRIMARY KEY, personSpitzname TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT)"
+    let createTableObjekte = "CREATE TABLE IF NOT EXISTS Objekte (perKey TEXT PRIMARY KEY, gegenstand TEXT, gegenstandText TEXT, gegenstandBild TEXT, preisWert TEXT, datum TEXT, vorgang TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT, allgemeinerText TEXT)"
+    
+    let createTablePersonen = "CREATE TABLE IF NOT EXISTS Personen (perKey TEXT PRIMARY KEY, personPicker Text, personVorname TEXT, personNachname TEXT, personSex TEXT)"
     
     let createTableGegenstaende = "CREATE TABLE IF NOT EXISTS Gegenstaende (perKey TEXT PRIMARY KEY, gegenstandName TEXT)"
     
     let fileUrl = try!
+    
     FileManager.default.url(for: .documentDirectory,
                             in: .userDomainMask, appropriateFor: nil, create:
                                 false).appendingPathComponent("LeiheUndSchenkeDb.db")
@@ -115,7 +131,7 @@ func erstellenDatenbankUndTabellen() -> Bool {
     
 } // Ende func erstellenDatenbankUndTabellen
 
-func querySQLAbfrage(queryTmp: String) -> Array<String>  {
+func querySQLAbfrageArray(queryTmp: String) -> Array<String>  {
     
     var resultatArray = [String]()
     var statement: OpaquePointer?
@@ -134,7 +150,7 @@ func querySQLAbfrage(queryTmp: String) -> Array<String>  {
                resultatArray.append(name0)
             }
         } else {
-            print("Die Werte in der Tabelle Gegenstaende not found")
+            print("Die Werte in der Tabelle Gegenstaende wurden n icht gefunden")
         } // End if else
 
     } // Ende while
@@ -146,11 +162,150 @@ func querySQLAbfrage(queryTmp: String) -> Array<String>  {
 
     statement = nil
     
-    // Ende der Abfrage aus der Datenbank
-    // print("Ende der Abfrage aus der Datenbank")
+    return resultatArray
     
+} // Ende func querySQLAbfrageArray
+
+
+// Diese function liefert den ersaten element eines Strig Arrays zurück
+func extrahierenString(arrayTemp: [String]) -> String  {
+    
+    var resultat: String
+    
+    if arrayTemp.count > 0 {
+       resultat = arrayTemp[0]
+    }else{
+       resultat = ""
+        
+    } // Ende if/else
+    
+    return resultat
+    
+} // Ende func extrahiereString
+
+func anzahlDerDatensaetze(tableName: String) -> Int {
+    var resultat: Int = 0
+    //let query = "select count(*) from '\(tableName)';"
+    let temp = querySQLAbfrageArray(queryTmp: "select count(*) from '\(tableName)';")
+    resultat = Int(temp[0])!
+    
+  return resultat
+} // Ende func
+
+
+func datenbankReset(){
+    
+    print("Datenbank wird zurückgesetzt!")
+    
+    sqlite3_close(db)
+    db = nil
+    deleteFile(fileNameToDelete: "LeiheUndSchenkeDb.db")
+    var db: OpaquePointer?
+    
+    let _: Bool = erstellenDatenbankUndTabellen()
+    // Hier werden Standardwerte geschrieben
+    
+    standartWerteSchreiben()
+    // Hier werden die globale Arrays neu erstellt
+    
+    refreschParameter()
+    
+} // Ende func
+
+func deleteFile(fileNameToDelete: String) {
+    
+    // 1. Find a Documents directory on the device,
+    // 2. Check if a file at the specified path exists,
+    // 3. Delete file,
+    // 4. Catch an error if an error takes place.
+    
+    var filePath = ""
+    // Fine documents directory on device
+     let dirs : [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
+    if dirs.count > 0 {
+        let dir = dirs[0] //documents directory
+        filePath = dir.appendingFormat("/" + fileNameToDelete)
+        //print("Local path = \(filePath)")
+     
+    } else {
+        print("Could not find local directory to file")
+        return
+    }
+    do {
+         let fileManager = FileManager.default
+        
+        // Check if file exists
+        if fileManager.fileExists(atPath: filePath) {
+            // Delete file
+            try fileManager.removeItem(atPath: filePath)
+        } else {
+            print("File does not exist")
+        } // End if else
+     
+    } // End do
+    catch let error as NSError {
+        print("An error took place: \(error)")
+    } // End catch
+    
+} // End func deleteFile()
+
+// Die Arrays von Saison und MAnnschaften werden neu erstellt
+// Diese Function wird nach import oder neuerstellung des Datenbankes aufgerufen
+func refreschParameter(){
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    // Das Array mit den Standartwerten wird erstellt
+    globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
+    
+    globaleVariable.parameterPerson = personenArray()
+    
+} // Ende refreschParameter
+
+// Dierse Funktion fügt in eine Variable (Type Class) die Tabelle aus einer Datenbank
+
+func querySQLAbfrageClass(queryTmp: String) -> [GegenstaendeVariable]  {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var name: [String] = ["","","","","","","","","","",""]
+    
+    var resultatArray: [GegenstaendeVariable] = [GegenstaendeVariable(perKey: "", gegenstand: "", gegenstandTex: "", gegenstandBild: "", preisWert: "", datum: "", vorgang: "", personVorname: "", personNachname: "", personSex: "", allgemeinerText: "")]
+    
+    let queryString = queryTmp + globaleVariable.abfrageQueryString
+    
+    print(queryString)
+    
+    var statement: OpaquePointer?
+    
+    if sqlite3_prepare_v2(db, "\(queryString)", -1, &statement, nil) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error preparing query select: \(errmsg)")
+    }else{
+        resultatArray.removeAll()
+    } // End if
+
+    while sqlite3_step(statement) == SQLITE_ROW {
+
+        var n = 0
+        for n in 0...10 {
+            if let cString0 = sqlite3_column_text(statement, Int32(n)) {
+                name[n] = String(cString: cString0)
+            } else {
+                print("Werticht gefunden")
+            } // End if else
+        } // Ende for n
+        
+        
+        resultatArray.append(GegenstaendeVariable(perKey: name[0], gegenstand: name[1], gegenstandTex: name[2], gegenstandBild: name[3], preisWert: name[4], datum: name[5], vorgang: name[6], personVorname: name[7], personNachname: name[8], personSex: name[9], allgemeinerText: name[10]))
+        
+    } // Ende while
+    
+    if sqlite3_finalize(statement) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error finalizing prepared statement: \(errmsg)")
+    } // End if
+
+    statement = nil
     
     return resultatArray
     
-} // Ende querySQLAbfrage
-
+} // Ende func querySQLAbfrageArray
