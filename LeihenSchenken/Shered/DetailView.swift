@@ -10,8 +10,9 @@ import SwiftUI
 
 struct DeteilView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
     
-    @State var showInfoModalView: Bool = false
+    @State var showAbfrageModalView: Bool = false
     @State var isParameterBereich: Bool = false
     
     @State var showMenue1: Bool = false
@@ -19,6 +20,8 @@ struct DeteilView: View {
     @State var showMenue1_2: Bool = false
     @State var showMenue2: Bool = false
     @State var showMenue3: Bool = false
+    @State var showMenue3_1: Bool = false
+    @State var showMenue3_2: Bool = false
     @State var showMenue4: Bool = false
     @State var showMenue5: Bool = false
     @State var showAppInfo: Bool = false
@@ -33,50 +36,51 @@ struct DeteilView: View {
                 
                 Tab1(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                     Image(systemName: "tablecells.fill")
-                    Text("Liste")
-                }
+                    Text("Objekte")
+                } // Ende Tab
                 .tag(1) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 
                 
                 Tab2(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Image(systemName: "tablecells.fill")
-                    Text("Tab2")
+                    Image(systemName: "archivebox.fill")
+                    Text("Gegenstände")
                     
-                }
+                } // Ende Tab
                 .tag(2) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 
                 Tab3(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Image(systemName: "chart.xyaxis.line")
-                    Text("Tab3")
+                    Image(systemName: "person.2.fill")
+                    Text("Personen")
                     
-                }
+                } // Ende Tab
                 .tag(3) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 
                 Tab4(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Image(systemName: "tablecells")
-                    Text("Tab4")
+                    Image(systemName: "chart.xyaxis.line")
+                    Text("Statistik")
                     
-                }
+                } // Ende Tab
                 .tag(4) // Die Tags identifizieren die Tab und füren zum richtigen Titel
-                
-                Tab5(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Image(systemName: "tablecells.fill.badge.ellipsis")
-                    Text("Tab5")
-                } // Ende Tabelle
-                .tag(5) // Die Tags identifizieren die Tab und füren zum richtigen Titel
-                
+                if userSettingsDefaults.showHandbuch == true {
+                    Tab5(selectedTabView: $globaleVariable.navigationTabView).tabItem {
+                        Image(systemName: "h.circle.fill")
+                        Text("Handbuch")
+                    } // Ende Tab
+                    .tag(5) // Die Tags identifizieren die Tab und füren zum richtigen Titel
+                } // Ende if
             } // Ende TabView
             
             
         } // Ende VStack
         .navigationTitle(naviTitleText(tabNummer: globaleVariable.navigationTabView))
+        //.font(.system(size: 10, weight: .regular))
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarLeading) {
                 Menu(content: {
                     
-                    Menu("Hinzufügen") { // Menue 1
-                        Button("Person", action: {showMenue1_1 = true}) // Menue 1.1
-                        Button("Gegenstand", action: {showMenue1_2 = true}) // Menue 1.2
+                    Menu("Menue 1") { // Menue 1
+                        Button("Menue1_1", action: {}) // Menue 1.1
+                        Button("Menue1_2", action: {}) // Menue 1.2
                     } // Ende Menu
                     
                     
@@ -85,26 +89,30 @@ struct DeteilView: View {
                         Button("Menue 2.2", action: {})
                     } // Ende Menu
                     
+                    Menu("Eigenschaften") {
+                        Button("Bearbeiten", action: {showMenue3_1.toggle()}) // Menue3_1
+                        Button("Zurücksetzen", action: {showMenue3_2.toggle()}) // Menue3_2
+                    } // Ende Menu
                     
-                    Button("Abfragen", action: {showMenue3 = true})
+                    //Button("Abfragen", action: {showMenue3 = true})
                     Divider()
-                    Button("Settings zurücksetzen", action: {showMenue4.toggle()})
+                    //Button("Settings zurücksetzen", action: {showMenue4.toggle()})
                     Button("Datenbank zurücksetzen", action: {showMenue5.toggle()})
                     
                 }) {
                     Image(systemName: "filemenu.and.cursorarrow")
                 } // Ende Button
-                .alert("Trefen Sie eine Wahl!", isPresented: $showMenue4, actions: {
-                      Button("Ausführen") {deleteUserDefaults()}; Button("Abbrechen") {}
+                .alert("Trefen Sie eine Wahl!", isPresented: $showMenue3_2, actions: {
+                    Button("Abbrechen") {}; Button("Ausführen") {deleteUserDefaults()} 
                       }, message: { Text("Durch das Zurücksetzen der Settings werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
                     ) // Ende alert
                 .alert("Trefen Sie eine Wahl!", isPresented: $showMenue5, actions: {
-                      Button("Ausführen") {datenbankReset()}; Button("Abbrechen") {}
+                    Button("Abbrechen") {}; Button("Ausführen") {datenbankReset()}
                       }, message: { Text("Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt.") } // Ende message
                 ) // Ende alert
-                .sheet(isPresented: $showMenue1_1, content: { ShapeViewAddUser(isPresented: $showMenue1_1, isParameterBereich: $isParameterBereich )})
-                .sheet(isPresented: $showMenue1_2, content: { ShapeViewAddGegenstand(isPresented: $showMenue1_2, isParameterBereich: $isParameterBereich) })
-                .sheet(isPresented: $showMenue3, content: { ShapeViewAbfrage(isPresented: $showMenue3) })
+                //.sheet(isPresented: $showMenue1_1, content: { ShapeViewAddUser(isPresented: $showMenue1_1, isParameterBereich: $isParameterBereich )})
+                .sheet(isPresented: $showMenue3_1, content: { ShapeViewSettings(isPresented: $showMenue3_1)})
+                //.sheet(isPresented: $showMenue3, content: { ShapeViewAbfrage(isPresented: $showMenue3) })
             } // Ende ToolbarItemGroup
                         
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -123,12 +131,12 @@ struct DeteilView: View {
             
             //self.shapeSettings.showSettings = true
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: {showInfoModalView = true
+                Button(action: {showAbfrageModalView = true
                         
                 }) {
                     Image(systemName: "gear")
                 } // Ende Button
-                .sheet(isPresented: $showInfoModalView, content:  { ShapeViewSettings(isPresented: $showInfoModalView) })
+                .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
                 Spacer()
             } // Ende ToolbarItemGroup
             
@@ -159,15 +167,15 @@ func naviTitleText(tabNummer: Int) -> String {
     
     switch tabNummer {
         case 1:
-            returnWert = "Liste der Gegenständen"
+            returnWert = "Objektliste"
         case 2:
-            returnWert = "Tab2"
+            returnWert = "Gegenstandslist"
         case 3:
-            returnWert = "Tab3 "
+            returnWert = "Personenliste"
         case 4:
-            returnWert = "Tab4 "
+            returnWert = "Statistiken"
         case 5:
-            returnWert = "Tab5 "
+            returnWert = "Handbuch"
         default:
             returnWert = ""
     } // Ende switch
@@ -176,18 +184,4 @@ func naviTitleText(tabNummer: Int) -> String {
     
 } // Ende func naviTitleText
 
-/*
-struct EmptyView: View {
-    
-    var body: some View {
-        
-        Text("Geben sie einen Datensatz an")
-            .scaledToFit()
-            .padding(20)
-            .frame(width: 350, height: 100)
-            .background(Color.gray.gradient)
-            .cornerRadius(25)
-        
-    } // Ende var body
-} // Ende struct
-*/
+

@@ -1,4 +1,4 @@
-//
+
 //  GlobaleVariablen.swift
 //  LeihenSchenken
 //
@@ -49,7 +49,7 @@ class GlobaleVariable: ObservableObject {
     
     
 } // ende class
-/*
+
 class UserSettingsDefaults: ObservableObject {
     static let shared = UserSettingsDefaults()
     
@@ -59,18 +59,21 @@ class UserSettingsDefaults: ObservableObject {
         } // Ende didSet
     } // Ende @Published
     
+    @Published var showHandbuch: Bool {
+        didSet {
+            UserDefaults.standard.set(showHandbuch, forKey: "showHandbuch")
+        } // Ende didSet
+    } // Ende @Published
+    
     init() {
         
         self.selectedSprache = UserDefaults.standard.object(forKey: "selectedSprache") as? Int ?? 0
+        self.showHandbuch = UserDefaults.standard.object(forKey: "showHandbuch") as? Bool ?? true
         
     } // Ende init
 } // Ende class
-*/
- 
-// Address Book Tutorial in Swift and iOS
-// https://www.kodeco.com/1786-address-book-tutorial-in-swift-and-ios
 
-class GegenstaendeVariable: Identifiable {
+class ObjectVariable: Identifiable {
     //static let shared = UserSettingsDefaults()
     
     @Published var perKey: String
@@ -101,8 +104,23 @@ class GegenstaendeVariable: Identifiable {
         
     } // Ende init
 
+} // Ende class
+
+class GegenstandVariable: Identifiable {
+    
+      @Published var perKey: String
+      @Published var gegenstandName: String
+    
+    init(perKey: String, gegenstandName: String) {
+        
+        self.perKey = perKey
+        self.gegenstandName = gegenstandName
+        
+    } // Ende init
     
 } // Ende class
+
+
 
 class PersonVariable: Identifiable {
     
@@ -120,3 +138,22 @@ class PersonVariable: Identifiable {
     
 } // Ende class
 
+class PersonClassVariable: Identifiable {
+    
+    @Published var perKey: String
+    @Published var personPicker: String
+    @Published var personVorname: String
+    @Published var personNachname: String
+    @Published var personSex: String
+    
+    init(perKey: String, personPicker: String, personVorname: String, personNachname: String, personSex: String) {
+        
+        self.perKey = perKey
+        self.personPicker = personPicker
+        self.personVorname = personVorname
+        self.personNachname = personNachname
+        self.personSex = personSex
+        
+    } // Ende init
+    
+} // Ende class

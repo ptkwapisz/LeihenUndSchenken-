@@ -50,16 +50,16 @@ func standartWerteSchreiben() {
         let myString = String(myInt2)
        
         let insertDataToGegenstaende = "INSERT INTO Gegenstaende(perKey, gegenstandName) VALUES('\(myString)', '\(standartWerte[n])')"
-        /*
-        let insertDataToPersonen = "INSERT INTO Personen(perKey, personSpitzname, personVorname, personNachname, personSex) VALUES('\(myString)', 'Musterspitzname', 'Mustervorname', 'Mustermann', 'Mann')"
-        */
+        
+        let insertDataToPersonen = "INSERT INTO Personen(perKey, personPicker, personVorname, personNachname, personSex) VALUES('\(myString)', 'Mustername, Mustervorname', 'Mustervorname', 'Mustermname', 'Mann')"
+        
         if sqlite3_exec(db, insertDataToGegenstaende, nil, nil, nil) !=
            SQLITE_OK {
             let errmsg = String(cString: sqlite3_errmsg(db)!)
             print("error -->: \(errmsg)")
             print("Daten wurden nicht hinzugefügt")
         } // End if
-        /*
+        
         if n == 0 {
             if sqlite3_exec(db, insertDataToPersonen, nil, nil, nil) !=
                 SQLITE_OK {
@@ -68,7 +68,7 @@ func standartWerteSchreiben() {
                 print("Daten wurden nicht hinzugefügt")
             } // End if
         } // Ende if/else
-        */
+        
         
     } // Ende for n
     
@@ -150,7 +150,7 @@ func querySQLAbfrageArray(queryTmp: String) -> Array<String>  {
                resultatArray.append(name0)
             }
         } else {
-            print("Die Werte in der Tabelle Gegenstaende wurden n icht gefunden")
+            print("Die Werte in der Tabelle wurden nicht gefunden")
         } // End if else
 
     } // Ende while
@@ -167,7 +167,7 @@ func querySQLAbfrageArray(queryTmp: String) -> Array<String>  {
 } // Ende func querySQLAbfrageArray
 
 
-// Diese function liefert den ersaten element eines Strig Arrays zurück
+// Diese function liefert den ersaten element eines Strig-Arrays zurück
 func extrahierenString(arrayTemp: [String]) -> String  {
     
     var resultat: String
@@ -200,7 +200,7 @@ func datenbankReset(){
     sqlite3_close(db)
     db = nil
     deleteFile(fileNameToDelete: "LeiheUndSchenkeDb.db")
-    var db: OpaquePointer?
+    //var db: OpaquePointer?
     
     let _: Bool = erstellenDatenbankUndTabellen()
     // Hier werden Standardwerte geschrieben
@@ -249,30 +249,29 @@ func deleteFile(fileNameToDelete: String) {
     
 } // End func deleteFile()
 
-// Die Arrays von Saison und MAnnschaften werden neu erstellt
+// Die Arrays von der Eingabemaske werden neu erstellt
 // Diese Function wird nach import oder neuerstellung des Datenbankes aufgerufen
 func refreschParameter(){
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     // Das Array mit den Standartwerten wird erstellt
-    globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
+    globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
     
     globaleVariable.parameterPerson = personenArray()
     
 } // Ende refreschParameter
 
 // Dierse Funktion fügt in eine Variable (Type Class) die Tabelle aus einer Datenbank
-
-func querySQLAbfrageClass(queryTmp: String) -> [GegenstaendeVariable]  {
+func querySQLAbfrageClassObjecte(queryTmp: String) -> [ObjectVariable]  {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var name: [String] = ["","","","","","","","","","",""]
     
-    var resultatArray: [GegenstaendeVariable] = [GegenstaendeVariable(perKey: "", gegenstand: "", gegenstandTex: "", gegenstandBild: "", preisWert: "", datum: "", vorgang: "", personVorname: "", personNachname: "", personSex: "", allgemeinerText: "")]
+    var resultatClass: [ObjectVariable] = [ObjectVariable(perKey: "", gegenstand: "", gegenstandTex: "", gegenstandBild: "", preisWert: "", datum: "", vorgang: "", personVorname: "", personNachname: "", personSex: "", allgemeinerText: "")]
     
     let queryString = queryTmp + globaleVariable.abfrageQueryString
     
-    print(queryString)
+    //print(queryString)
     
     var statement: OpaquePointer?
     
@@ -280,12 +279,11 @@ func querySQLAbfrageClass(queryTmp: String) -> [GegenstaendeVariable]  {
         let errmsg = String(cString: sqlite3_errmsg(db)!)
         print("Error preparing query select: \(errmsg)")
     }else{
-        resultatArray.removeAll()
+        resultatClass.removeAll()
     } // End if
 
     while sqlite3_step(statement) == SQLITE_ROW {
 
-        var n = 0
         for n in 0...10 {
             if let cString0 = sqlite3_column_text(statement, Int32(n)) {
                 name[n] = String(cString: cString0)
@@ -295,7 +293,7 @@ func querySQLAbfrageClass(queryTmp: String) -> [GegenstaendeVariable]  {
         } // Ende for n
         
         
-        resultatArray.append(GegenstaendeVariable(perKey: name[0], gegenstand: name[1], gegenstandTex: name[2], gegenstandBild: name[3], preisWert: name[4], datum: name[5], vorgang: name[6], personVorname: name[7], personNachname: name[8], personSex: name[9], allgemeinerText: name[10]))
+        resultatClass.append(ObjectVariable(perKey: name[0], gegenstand: name[1], gegenstandTex: name[2], gegenstandBild: name[3], preisWert: name[4], datum: name[5], vorgang: name[6], personVorname: name[7], personNachname: name[8], personSex: name[9], allgemeinerText: name[10]))
         
     } // Ende while
     
@@ -306,6 +304,133 @@ func querySQLAbfrageClass(queryTmp: String) -> [GegenstaendeVariable]  {
 
     statement = nil
     
-    return resultatArray
+    return resultatClass
     
-} // Ende func querySQLAbfrageArray
+} // Ende func querySQLAbfrageClassObjekte
+
+func querySQLAbfrageClassGegenstaende(queryTmp: String) -> [GegenstandVariable]  {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var name: [String] = ["",""]
+    
+    var resultatClass: [GegenstandVariable] = [GegenstandVariable(perKey: "", gegenstandName: "")]
+    
+    let queryString = queryTmp
+    
+    //print(queryString)
+    
+    var statement: OpaquePointer?
+    
+    if sqlite3_prepare_v2(db, "\(queryString)", -1, &statement, nil) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error preparing query select: \(errmsg)")
+    }else{
+        resultatClass.removeAll()
+    } // End if
+
+    while sqlite3_step(statement) == SQLITE_ROW {
+
+        //var n: Int = 0
+        for n in 0...1 {
+            if let cString0 = sqlite3_column_text(statement, Int32(n)) {
+                name[n] = String(cString: cString0)
+            } else {
+                print("Werticht gefunden")
+            } // End if else
+        } // Ende for n
+        
+        if name[1] != "Neuer Gegenstand" {
+            resultatClass.append(GegenstandVariable(perKey: name[0], gegenstandName: name[1]))
+        }
+        
+    } // Ende while
+    
+    if sqlite3_finalize(statement) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error finalizing prepared statement: \(errmsg)")
+    } // End if
+
+    statement = nil
+    
+    resultatClass.sort{($0.gegenstandName) < ($1.gegenstandName)}
+    
+    return resultatClass
+    
+} // Ende func querySQLAbfrageClassGegenstaende
+
+
+func deleteItemsFromDatabase(tabelle: String, perKey: String) {
+
+    let deleteStatementString: String = "DELETE FROM \(tabelle) WHERE perKey = \(perKey)"
+    print(deleteStatementString)
+    
+    
+    
+    var deleteStatement: OpaquePointer?
+
+    if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
+       if sqlite3_step(deleteStatement) == SQLITE_DONE {
+          print("\nSuccessfully deleted row.")
+       } else {
+          print("\nCould not delete row.")
+       } // Ende if/else
+    } else {
+       print("\nDELETE statement could not be prepared")
+    } // Ende if/else
+  
+   sqlite3_finalize(deleteStatement)
+    
+} // Ende func
+
+
+// Dierse Funktion fügt in eine Variable (Type Class) die Tabelle aus einer Datenbank
+func querySQLAbfrageClassPerson(queryTmp: String) -> [PersonClassVariable]  {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var name: [String] = ["","","","",""]
+    
+    var resultatClass: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
+    
+    let queryString = queryTmp + globaleVariable.abfrageQueryString
+    
+    //print(queryString)
+    
+    var statement: OpaquePointer?
+    
+    if sqlite3_prepare_v2(db, "\(queryString)", -1, &statement, nil) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error preparing query select: \(errmsg)")
+    }else{
+        resultatClass.removeAll()
+    } // End if
+
+    while sqlite3_step(statement) == SQLITE_ROW {
+
+        //var n = 0
+        for n in 0...name.count - 1 {
+            if let cString0 = sqlite3_column_text(statement, Int32(n)) {
+                name[n] = String(cString: cString0)
+            } else {
+                print("Wert nicht gefunden")
+            } // End if else
+        } // Ende for n
+        
+        
+        resultatClass.append(PersonClassVariable(perKey: name[0], personPicker: name[1], personVorname: name[2], personNachname: name[3], personSex: name[4]))
+        
+    } // Ende while
+    
+    if sqlite3_finalize(statement) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error finalizing prepared statement: \(errmsg)")
+    } // End if
+
+    statement = nil
+    
+    resultatClass.sort{($0.personNachname, $0.personVorname) < ($1.personNachname, $1.personVorname)}
+    
+    return resultatClass
+    
+} // Ende func querySQLAbfrageClassObjekte
+
+

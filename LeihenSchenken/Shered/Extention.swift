@@ -4,11 +4,10 @@
 //
 //  Created by PIOTR KWAPISZ on 03.05.23.
 //
+//
 
 import SwiftUI
 import Foundation
-
-
 
 // Diese Erweiterung endcodiert Image-String in ein Image
 // Benutzung: Image(base64Str: imgString)
@@ -20,8 +19,6 @@ extension Image {
     } // Ende init
 } // Ende extension
 
-
-
 // Diese Extention entfernt in einem Array alle Duplicate
 // Benutzung: array.unique()
 extension Sequence where Iterator.Element: Hashable {
@@ -30,3 +27,10 @@ extension Sequence where Iterator.Element: Hashable {
         return filter { seen.insert($0).inserted }
     } // Ende func unique
 } // Ende extensiopn
+
+// Diese Erweiterung ermöglicht die genaue Bildschirmbreite zu ermitteln.
+extension UIScreen{
+   static let screenWidth = UIScreen.main.bounds.size.width
+   static let screenHeight = UIScreen.main.bounds.size.height
+   static let screenSize = UIScreen.main.bounds.size
+}

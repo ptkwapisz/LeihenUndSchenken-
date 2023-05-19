@@ -53,41 +53,12 @@ return result
     
 } // Ende func
 
-/*
-func addDataGegenstaende() -> [GegenstaendeVariable] {
-    
-    var resultat: [GegenstaendeVariable] = [GegenstaendeVariable(perKey: "", gegenstand: "", gegenstandTex: "", gegenstandBild: "", preisWert: "", datum: "", vorgang: "", personVorname: "", personNachname: "", personSex: "", allgemeinerText: "")]
-    
-    let anzahlDerDatenSaetze = querySQLAbfrageArray(queryTmp: "SELECT count(perKey) FROM Objekte")
-    let dbGeagenstaendePerKey = querySQLAbfrageArray(queryTmp: "SELECT perKey FROM Objekte")
-    let dbGeagenstaendeGegenstand = querySQLAbfrageArray(queryTmp: "SELECT gegenstand FROM Objekte")
-    let dbGeagenstaendeGegenstandText = querySQLAbfrageArray(queryTmp: "SELECT gegenstandText FROM Objekte")
-    let dbGeagenstaendeGegenstandBild = querySQLAbfrageArray(queryTmp: "SELECT gegenstandBild FROM Objekte")
-    let dbGeagenstaendePreisWert = querySQLAbfrageArray(queryTmp: "SELECT preisWert FROM Objekte")
-    let dbGeagenstaendeDatum = querySQLAbfrageArray(queryTmp: "SELECT datum FROM Objekte")
-    let dbGeagenstaendeVorgang = querySQLAbfrageArray(queryTmp: "SELECT vorgang FROM Objekte")
-    //let dbGeagenstaendePersonSpName = querySQLAbfrage(queryTmp: "SELECT personSpitzname FROM Objekte")
-    let dbGeagenstaendePersonVorname = querySQLAbfrageArray(queryTmp: "SELECT personVorname FROM Objekte")
-    let dbGeagenstaendePersonNachname = querySQLAbfrageArray(queryTmp: "SELECT personNachname FROM Objekte")
-    let dbGeagenstaendePersonSex = querySQLAbfrageArray(queryTmp: "SELECT personSex FROM Objekte")
-    let dbGeagenstaendeAllgemeinerText = querySQLAbfrageArray(queryTmp: "SELECT allgemeinerText FROM Objekte")
-    
-    
-    if Int(anzahlDerDatenSaetze[0])! > 0 {
-        resultat.removeAll()
-        for n in 0...Int(anzahlDerDatenSaetze[0])!-1 {
-            resultat.append(contentsOf: [GegenstaendeVariable(perKey: dbGeagenstaendePerKey[n], gegenstand: dbGeagenstaendeGegenstand[n], gegenstandTex: dbGeagenstaendeGegenstandText[n], gegenstandBild: dbGeagenstaendeGegenstandBild[n], preisWert: dbGeagenstaendePreisWert[n], datum: dbGeagenstaendeDatum[n], vorgang: dbGeagenstaendeVorgang[n], personVorname: dbGeagenstaendePersonVorname[n], personNachname: dbGeagenstaendePersonNachname[n], personSex: dbGeagenstaendePersonSex[n], allgemeinerText: dbGeagenstaendeAllgemeinerText[n])])
-            //print(n)
-        } // Ende for n
-    } // Ende if
-return resultat
-} // Ende func
-*/
+
 
 // In dieser Funktion werden verdichtete Werte aus dem Array (distinct) erstellt
 // Erster Parameter ist Array
 // Zweiter Parameter ist String für die Verdichtung
-func distingtArray(par1: [GegenstaendeVariable], par2: String) -> [String]{
+func distingtArray(par1: [ObjectVariable], par2: String) -> [String]{
     
     var resultat: [String] = [""]
     
@@ -221,3 +192,44 @@ func gegenstaendenInDatenbankSchreiben(par1: String, par2: String) {
     
     
 } // Ende func
+
+
+func dateToString(parDatum: Date) -> String {
+    
+    var result: String = ""
+    
+    let inputDateString = parDatum
+
+    let germanDateFormatter = DateFormatter()
+    germanDateFormatter.locale = .init(identifier: "de")
+    germanDateFormatter.dateFormat = "d MMM yyyy"
+    germanDateFormatter.dateStyle = .short
+    germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+    //if inputDateString != nil {
+
+        result = germanDateFormatter.string(from: inputDateString)
+
+        print(result) //16.08.19, 07:04:12
+    //}else{
+        
+      //  result = "Keine umwandlung"
+    //} // Ende if/else
+    
+    return result
+} // Ende func
+
+// Diese Funktion erstellt den Titel mit dem hinweis
+// ob der Abfragefilter ein- oder ausgeschaltet ist.
+func erstelleTitel(par: Bool) -> String {
+    var resultat: String = ""
+    
+        if par == true {
+            resultat = " gefiltert"
+        }else{
+            resultat = " ungefiltert"
+        } // Ende if/else
+    
+    return resultat
+    
+}// Ende func

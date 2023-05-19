@@ -4,21 +4,28 @@
 //
 //  Created by PIOTR KWAPISZ on 01.05.23.
 //
+//
 
 import SwiftUI
 
 struct ChartView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    @State var par1: [GegenstaendeVariable]
+    @State var par1: [ObjectVariable]
     @State var par2: Int
     
     @State var showChartHilfe: Bool = false
     
-    
     var body: some View {
         
         VStack {
+            //Text("\(par1[par2].gegenstand)")
+            Text("\(par1[par2].gegenstandText)")
+                .padding(.top, 10)
+                .padding(.leading, 6)
+                //.font(.system(size: 16, weight: .regular))
+                .foregroundColor(Color.black)
+                .opacity(0.6)
             
             Text("\(par1[par2].datum)")
             if par1[par2].gegenstandBild != "Kein Bild" {
@@ -39,7 +46,10 @@ struct ChartView: View {
             
             } // Ende if/else
             
-            Text("\(par1[par2].gegenstandText)")
+            Text("\(par1[par2].preisWert)" + "€")
+            Text("\(par1[par2].vorgang)")
+            Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
+            Text("\(par1[par2].allgemeinerText)")
             
         } // Ende Vstack
         .navigationTitle("\(par1[par2].gegenstand)")

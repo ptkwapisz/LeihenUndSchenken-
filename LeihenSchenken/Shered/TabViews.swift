@@ -47,7 +47,7 @@ struct Tab1: View {
     let heightFaktor: Double = 0.99
     //let test = addDataGegenstaende()
     
-    let test = querySQLAbfrageClass(queryTmp: "SELECT * FROM Objekte")
+    let test = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
     
 var body: some View {
     GeometryReader { geometry in
@@ -81,11 +81,17 @@ var body: some View {
     GeometryReader { geometry in
         VStack {
             
-            Text("DeteilView Tab2")
-                .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
-                .cornerRadius(10)
-            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                IphoneTable2()
+                .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+               
+            } else {
+                
+                Text("DeteilView Tab2")
+                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .background(globaleVariable.farbenEbene1)
+                    .cornerRadius(10)
+            }
         } // Ende VStack
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
         .background(globaleVariable.farbenEbene0)
@@ -105,11 +111,17 @@ var body: some View {
     GeometryReader { geometry in
         VStack {
             
-            Text("DeteilView Tab3")
-                .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
-                .cornerRadius(10)
-            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                IphoneTable3()
+                .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+               
+            } else {
+                
+                Text("DeteilView Tab3")
+                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .background(globaleVariable.farbenEbene1)
+                    .cornerRadius(10)
+            }
         } // Ende VStack
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
         .background(globaleVariable.farbenEbene0)
@@ -143,17 +155,24 @@ struct Tab5: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
+    let pdfPath = Bundle.main.url(forResource: "Handbuch", withExtension: "pdf")
     let heightFaktor: Double = 0.99
     
 var body: some View {
     GeometryReader { geometry in
         VStack {
             
-            Text("DeteilView Tab5")
-                .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
-                .cornerRadius(10)
-            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                PDFKitView(url: pdfPath!)
+                .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+               
+            } else {
+                
+                Text("DeteilView Tab5")
+                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .background(globaleVariable.farbenEbene1)
+                    .cornerRadius(10)
+            }
         } // Ende VStack
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
         .background(globaleVariable.farbenEbene0)

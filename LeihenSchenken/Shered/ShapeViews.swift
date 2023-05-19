@@ -207,8 +207,6 @@ struct ShapeViewAddUser: View {
    } // Ende var body
 } // Ende struct
 
-
-
 struct ShapeViewAddGegenstand: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @Binding var isPresented: Bool
@@ -300,7 +298,7 @@ struct ShapeViewSettings: View {
     @Binding var isPresented: Bool
     
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
     
     @State var showSettingsHilfe: Bool = false
     
@@ -314,16 +312,18 @@ struct ShapeViewSettings: View {
             
             Form {
                 
-                 Section(header: Text("Farbeinstellung")) {
+                Section(header: Text("Farbeinstellung")) {
                     ColorPicker("Farben für Ebene 0", selection:  $globaleVariable.farbenEbene0, supportsOpacity: false)
                         .onAppear ( perform: {globaleVariable.farbenEbene0 = colorData.loadColor0()})
                         .frame(width: 300, height: 40)
-                        
+                    
                     ColorPicker("Farben für Ebene 1", selection: $globaleVariable.farbenEbene1, supportsOpacity: false)
                         .onAppear ( perform: {globaleVariable.farbenEbene1 = colorData.loadColor1()})
                         .frame(width: 300, height: 40)
                     
                 }// Ende Section Farben
+                
+                Toggle("Zeige Handbuch", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
                 
             } // Ende Form
             .navigationBarItems(trailing: Button( action: {
