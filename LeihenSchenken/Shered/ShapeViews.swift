@@ -288,16 +288,11 @@ struct ShapeViewAbfrage: View {
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
     
-    @State var operatorZeichen: [String] = ["gleich", "ungleich"]
-    //@State private var selectedOperatorZeichen = "gleich"
+    @State var abfrageFeld1: [String] = ["Gegenstand", "Vorgang","Name", "Vorname"]
     
-    @State var tabellenFeld1: [String] = ["Gegenstand", "Vorgang","Name", "Vorname"]
-    //@State private var selectedTabellenFeld1 = "Gegenstand"
-    
-    //@State var tabellenFeld2: [String] = ["Buch", "Geld","CD/DVD", "Werkzeug"]
-    
-    @State var tabellenFeld2: [String] = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
-    //@State var selectedTabellenFeld2: String = extrahierenString(arrayTemp: querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand"))
+    @State var abfrageFeld2: [String] = ["gleich", "ungleich"]
+
+    @State var abfrageFeld3: [String] = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
     
     var body: some View {
         
@@ -307,7 +302,7 @@ struct ShapeViewAbfrage: View {
             Form {
                 Section(header: Text("Bedingung")) {
                     Picker("Wenn ", selection: $globaleVariable.selectedAbfrageFeld1, content: {
-                        ForEach(tabellenFeld1, id: \.self, content: { index1 in
+                        ForEach(abfrageFeld1, id: \.self, content: { index1 in
                             Text(index1)
                         })
                     })
@@ -317,20 +312,20 @@ struct ShapeViewAbfrage: View {
                         switch globaleVariable.selectedAbfrageFeld1 {
                                 
                             case "Gegenstand":
-                                tabellenFeld2 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
-                            globaleVariable.selectedAbfrageFeld3 = tabellenFeld2[0]
+                                abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
+                                globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Gegenstand")
                             case "Vorgang":
-                                tabellenFeld2 = ["Leihen", "Schenken"]
-                            globaleVariable.selectedAbfrageFeld3 = "Leihen"
+                                abfrageFeld3 = ["Leihen", "Schenken"]
+                                globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Vorgang")
                             case "Name":
-                                tabellenFeld2 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
-                            globaleVariable.selectedAbfrageFeld3 = tabellenFeld2[0]
+                                abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
+                                globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Nachname")
                             case "Vorname":
-                                tabellenFeld2 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
-                            globaleVariable.selectedAbfrageFeld3 = tabellenFeld2[0]
+                                abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
+                                globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Vorname")
                             default:
                                 print("Keine Wahl")
@@ -341,7 +336,7 @@ struct ShapeViewAbfrage: View {
                     HStack{
                         Text("ist  ")
                         Picker("", selection: $globaleVariable.selectedAbfrageFeld2, content: {
-                            ForEach(operatorZeichen, id: \.self, content: { index2 in
+                            ForEach(abfrageFeld2, id: \.self, content: { index2 in
                                 Text(index2)
                             })
                         })
@@ -351,7 +346,7 @@ struct ShapeViewAbfrage: View {
                     } // Ende HStack
                     
                     Picker("", selection: $globaleVariable.selectedAbfrageFeld3, content: {
-                        ForEach(tabellenFeld2, id: \.self, content: { index3 in
+                        ForEach(abfrageFeld3, id: \.self, content: { index3 in
                             Text(index3)
                         })
                     })
