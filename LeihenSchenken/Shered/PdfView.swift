@@ -46,7 +46,7 @@ struct PDFKitRepresentedView: UIViewRepresentable {
         pdfView.document = PDFDocument(url: self.url)
  pdfView.autoScales = true
  pdfView.displayDirection = .vertical
- pdfView.minScaleFactor = 0.65 // 0.65 für iPhon  0.70 für iPhon Max
+ pdfView.minScaleFactor = 0.5 // 0.65 für iPhon  0.70 für iPhon Max
  pdfView.maxScaleFactor = 5.0
         return pdfView
     } // Ende func

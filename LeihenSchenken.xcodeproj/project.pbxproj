@@ -8,9 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DB0160FB2A17CE15000A34CE /* PdfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0160FA2A17CE15000A34CE /* PdfView.swift */; };
-		DB0160FD2A17D379000A34CE /* Handbuch.pdf in Resources */ = {isa = PBXBuildFile; fileRef = DB0160FC2A17D379000A34CE /* Handbuch.pdf */; };
 		DB27ACE02A0B83C7009BC26B /* PadViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB27ACDF2A0B83C7009BC26B /* PadViews.swift */; };
-		DB3C9E9729E877F000C449C9 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C9E9629E877F000C449C9 /* Test.swift */; };
 		DB4329AF2A003E91006874E8 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4329AE2A003E91006874E8 /* ChartView.swift */; };
 		DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E9F32A023BB000CBC354 /* Extention.swift */; };
 		DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */; };
@@ -28,6 +26,8 @@
 		DBCEF80B29D1ED7A0017A728 /* LeihenSchenkenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF80A29D1ED7A0017A728 /* LeihenSchenkenTests.swift */; };
 		DBCEF81529D1ED7A0017A728 /* LeihenSchenkenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF81429D1ED7A0017A728 /* LeihenSchenkenUITests.swift */; };
 		DBCEF81729D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF81629D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift */; };
+		DBE5D0A72A192DEB006410AD /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE5D0A62A192DEB006410AD /* Test.swift */; };
+		DBE5D0A92A1930A9006410AD /* L&S Handbuch.pdf in Resources */ = {isa = PBXBuildFile; fileRef = DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */; };
 		DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF6A33029E6D489001A01BC /* SqlManagement.swift */; };
 /* End PBXBuildFile section */
 
@@ -50,9 +50,7 @@
 
 /* Begin PBXFileReference section */
 		DB0160FA2A17CE15000A34CE /* PdfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfView.swift; sourceTree = "<group>"; };
-		DB0160FC2A17D379000A34CE /* Handbuch.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Handbuch.pdf; path = ../../../../../../../Desktop/Handbuch.pdf; sourceTree = "<group>"; };
 		DB27ACDF2A0B83C7009BC26B /* PadViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadViews.swift; sourceTree = "<group>"; };
-		DB3C9E9629E877F000C449C9 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		DB4329AE2A003E91006874E8 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		DB51E9F32A023BB000CBC354 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneViews.swift; sourceTree = "<group>"; };
@@ -73,6 +71,8 @@
 		DBCEF81029D1ED7A0017A728 /* LeihenSchenkenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeihenSchenkenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCEF81429D1ED7A0017A728 /* LeihenSchenkenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeihenSchenkenUITests.swift; sourceTree = "<group>"; };
 		DBCEF81629D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeihenSchenkenUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DBE5D0A62A192DEB006410AD /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "L&S Handbuch.pdf"; sourceTree = "<group>"; };
 		DBF6A33029E6D489001A01BC /* SqlManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqlManagement.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,9 +114,9 @@
 				DB4329AE2A003E91006874E8 /* ChartView.swift */,
 				DBCCBB862A1826D300EDF087 /* TabViews.swift */,
 				DBCCBB882A18271600EDF087 /* DetailView.swift */,
-				DB3C9E9629E877F000C449C9 /* Test.swift */,
 				DB0160FA2A17CE15000A34CE /* PdfView.swift */,
-				DB0160FC2A17D379000A34CE /* Handbuch.pdf */,
+				DBE5D0A62A192DEB006410AD /* Test.swift */,
+				DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */,
 			);
 			path = Shered;
 			sourceTree = "<group>";
@@ -141,7 +141,6 @@
 			isa = PBXGroup;
 			children = (
 				DBCEF7F829D1ED770017A728 /* LeihenSchenken */,
-				DBCEF80929D1ED7A0017A728 /* LeihenSchenkenTests */,
 				DBCEF81329D1ED7A0017A728 /* LeihenSchenkenUITests */,
 				DBCEF7F729D1ED770017A728 /* Products */,
 			);
@@ -192,6 +191,7 @@
 			children = (
 				DBCEF81429D1ED7A0017A728 /* LeihenSchenkenUITests.swift */,
 				DBCEF81629D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift */,
+				DBCEF80929D1ED7A0017A728 /* LeihenSchenkenTests */,
 			);
 			path = LeihenSchenkenUITests;
 			sourceTree = "<group>";
@@ -301,8 +301,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBCEF80129D1ED790017A728 /* Preview Assets.xcassets in Resources */,
+				DBE5D0A92A1930A9006410AD /* L&S Handbuch.pdf in Resources */,
 				DBCEF7FE29D1ED790017A728 /* Assets.xcassets in Resources */,
-				DB0160FD2A17D379000A34CE /* Handbuch.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,11 +332,11 @@
 				DBCCBB892A18271600EDF087 /* DetailView.swift in Sources */,
 				DBCEF7FA29D1ED770017A728 /* LeihenSchenkenApp.swift in Sources */,
 				DBCCBB852A1826A200EDF087 /* ColorData.swift in Sources */,
+				DBE5D0A72A192DEB006410AD /* Test.swift in Sources */,
 				DB27ACE02A0B83C7009BC26B /* PadViews.swift in Sources */,
 				DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */,
 				DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */,
 				DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */,
-				DB3C9E9729E877F000C449C9 /* Test.swift in Sources */,
 				DBCCBB832A18266D00EDF087 /* ShapeViews.swift in Sources */,
 				DBCCBB872A1826D300EDF087 /* TabViews.swift in Sources */,
 				DBCCBB812A18263D00EDF087 /* ParameterView.swift in Sources */,

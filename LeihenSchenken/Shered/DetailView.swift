@@ -134,7 +134,7 @@ struct DeteilView: View {
                 Button(action: {showAbfrageModalView = true
                         
                 }) {
-                    Image(systemName: "gear")
+                    Image(systemName: "line.3.horizontal.decrease.circle")
                 } // Ende Button
                 .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
                 Spacer()

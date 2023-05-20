@@ -8,104 +8,14 @@
 import Foundation
 import SwiftUI
 
-/*
-struct ShapeViewAddUser: View {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @Binding var isPresented: Bool
-    
-    @State var showSettingsHilfe: Bool = false
-    
-    @State var selectedPerson_sexInt: Int = 0
-    //@State private var date = Date()
-    
-    @State var vorName: String = ""
-    @State var name: String = ""
-    @State var spitzname: String = ""
-   // @State var geburtstag: String = ""
-    
-    var body: some View {
-        
-        
-        NavigationView {
-            
-            Form {
-                Section(){
-                    TextField("Spitzname", text: $spitzname)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .disableAutocorrection(true)
-                    
-                    TextField("Vorname", text: $vorName)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .disableAutocorrection(true)
-                    
-                    TextField("Name", text: $name)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .disableAutocorrection(true)
-                    
-                    Picker("Geschlecht:", selection: $selectedPerson_sexInt, content: {
-                        ForEach(0..<$globaleVariable.parameterPersonSex.count, id: \.self) { index in
-                            Text("\(globaleVariable.parameterPersonSex[index])")//.tag(index)
-                        } // Ende ForEach
-                        
-                    })
-                    
-                } // Ende Section
-        
-                Button(action: {
-                    print("Benutzer hinzufügen!")
-                }) {
-                    HStack {
-                        Image(systemName: "square.and.arrow.down.fill")
-                            .font(.title3)
-                        Text("Benutzer hinzufügen")
-                            .fontWeight(.semibold)
-                            .font(.title3)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .foregroundColor(.white)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                }
-                
-            } // Ende Form
-            .scrollContentBackground(.hidden)
-            .navigationBarItems(trailing: Button( action: {
-                isPresented = false
-                
-            }) {Image(systemName: "x.circle.fill")
-                .imageScale(.large)
-            } )
-            .navigationBarItems(trailing: Button( action: {
-                showSettingsHilfe = true
-            }) {Image(systemName: "questionmark.circle.fill")
-                .imageScale(.large)
-            } )
-            .alert("Hilfe zu neuer Benutzer", isPresented: $showSettingsHilfe, actions: {
-                Button(" - OK - ") {}
-            }, message: { Text("Das ist die Beschreibung für den Bereich Benutzer hinzufügen.") } // Ende message
-            ) // Ende alert
-            
-            
-        } // Ende NavigationView
-    
-    } // Ende var body
-} // Ende struct ShapeViewAddUser
-*/
-
 struct ShapeViewAddUser: View {
    @ObservedObject var globaleVariable = GlobaleVariable.shared
    @Binding var isPresented: Bool
    @Binding var isParameterBereich: Bool
     
-   @State var showSettingsHilfe: Bool = false
-
+   @State var showHilfe: Bool = false
+    @State var showWarnung: Bool = false
+    
    @State var selectedPerson_sexInt: Int = 0
 
    @State var vorname: String = ""
@@ -138,9 +48,8 @@ struct ShapeViewAddUser: View {
                } // Ende Section
                
                Button(action: {
-                   if isParameterBereich {
-                       
-                       if vorname != "" && name != "" {
+                   if vorname != "" && name != "" {
+                       if isParameterBereich {
                            let tempPerson = name + ", " + vorname
                            globaleVariable.parameterPerson.append(tempPerson)
                            personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
@@ -148,22 +57,24 @@ struct ShapeViewAddUser: View {
                            isPresented = false
                        }else{
                            
-                           print("Person wurde in die Auswahl nicht hinzugefügt!")
-                       } // Ende if/else
-                   }else{
+                           if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
                        
-                       if vorname != "" && name != ""{
-                           //let tempPerson = name + ", " + vorname
-                           //globaleVariable.parameterPerson.append(tempPerson)
-                           personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                           print("Person wird in die Datenbank hinzugefügt!")
-                           isPresented = false
-                       }else{
-                           print("Person wurde in die Datenbank nicht hinzugefügt!")
-                       } // Ende if/else
+                               showWarnung = true
+                               
+                           }else{
+                               
+                               personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                               globaleVariable.parameterPerson.removeAll()
+                               globaleVariable.parameterPerson = personenArray()
+                               print("Person wurde in die Datenbank hinzugefügt!")
+                               isPresented = false
+                               
+                           } // Ende if/else
+                           
+                       }// Ende if/else
                        
                    } // Ende if/else
-                   
+               
                }) {
                    HStack {
                        Image(systemName: "square.and.arrow.down.fill")
@@ -179,6 +90,11 @@ struct ShapeViewAddUser: View {
                    .background(Color.blue)
                    .cornerRadius(10)
                } // Ende Button
+               .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
+                   Button(" - OK - ") {}
+               }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate gespeichert werden!") } // Ende message
+               ) // Ende alert
+               
                
                if isParameterBereich {
                    
@@ -196,11 +112,11 @@ struct ShapeViewAddUser: View {
            .navigationBarItems(trailing:
                                 HStack {
                
-               Button(action: {showSettingsHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
+               Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
                Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
                
            }) // Ende NavigationBarItem
-                 .alert("Hilfe zu neuer Benutzer", isPresented: $showSettingsHilfe, actions:
+                 .alert("Hilfe zu neuer Benutzer", isPresented: $showHilfe, actions:
                             { Button(" - OK - ") {}
                             }, message: { Text("Das ist die Beschreibung für den Bereich Benutzer hinzufügen.") } ) // Ende alert
        } // Ende NavigationView
@@ -212,7 +128,8 @@ struct ShapeViewAddGegenstand: View {
     @Binding var isPresented: Bool
     @Binding var isParameterBereich: Bool
     
-    @State var showSettingsHilfe: Bool = false
+    @State var showHilfe: Bool = false
+    @State var showWarnung: Bool = false
     
     @State var gegenstandNeu: String = ""
     
@@ -234,12 +151,24 @@ struct ShapeViewAddGegenstand: View {
                     if gegenstandNeu != "" {
                         if isParameterBereich {
                             globaleVariable.parameterGegenstand.append(gegenstandNeu)
-                            print("Gegenstand in die Auswahl hinzufügen!")
+                            print("Gegenstand wurde in die Auswahl hinzugefügt!")
                         }else{
-                            print("Gegenstand in die Datenbank hinzufügen!")
-                        } // Ende if/else
+                            if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
                         
-                        isPresented = false
+                                showWarnung = true
+                                
+                            }else{
+                                
+                                gegenstandInDatenbankSchreiben(par1: gegenstandNeu)
+                                globaleVariable.parameterGegenstand.removeAll()
+                                globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
+
+                                print("Gegenstand wurde in die Datenbank hinzugefügt!")
+                                
+                                isPresented = false
+                            } // Ende guard/else
+                            
+                        } // Ende if/else
                         
                     } // Ende if
                 }) {
@@ -256,6 +185,11 @@ struct ShapeViewAddGegenstand: View {
                     .background(Color.blue)
                     .cornerRadius(10)
                 } // Ende Button
+                .alert("Warnung zu neuem Gegenstand", isPresented: $showWarnung, actions: {
+                    Button(" - OK - ") {}
+                }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate gespeichert werden!") } // Ende message
+                ) // Ende alert
+                
                 
                 if isParameterBereich {
                     Text("Mit drücken von 'Gegenstand hinzufügen' wird der neue Gegenstand in die Auswahl hinzugefügt.")
@@ -277,11 +211,11 @@ struct ShapeViewAddGegenstand: View {
                 .imageScale(.large)
             } )
             .navigationBarItems(trailing: Button( action: {
-                showSettingsHilfe = true
+                showHilfe = true
             }) {Image(systemName: "questionmark.circle.fill")
                 .imageScale(.large)
             } )
-            .alert("Hilfe zu neuer Gegenstand", isPresented: $showSettingsHilfe, actions: {
+            .alert("Hilfe zu neuer Gegenstand", isPresented: $showHilfe, actions: {
                 Button(" - OK - ") {}
             }, message: { Text("Das ist die Beschreibung für den Bereich Gegenstand hinzufügen.") } // Ende message
             ) // Ende alert
@@ -291,6 +225,7 @@ struct ShapeViewAddGegenstand: View {
     
     } // Ende var body
 } // Ende struct ShapeViewAddUser
+
 
 
 struct ShapeViewSettings: View {
@@ -354,47 +289,48 @@ struct ShapeViewAbfrage: View {
     @State var showAlertSpeichernButton: Bool = false
     
     @State var operatorZeichen: [String] = ["gleich", "ungleich"]
-    @State private var selectedOperatorZeichen = "gleich"
+    //@State private var selectedOperatorZeichen = "gleich"
     
     @State var tabellenFeld1: [String] = ["Gegenstand", "Vorgang","Name", "Vorname"]
-    @State private var selectedTabellenFeld1 = "Gegenstand"
+    //@State private var selectedTabellenFeld1 = "Gegenstand"
     
     //@State var tabellenFeld2: [String] = ["Buch", "Geld","CD/DVD", "Werkzeug"]
     
-    @State var tabellenFeld2: [String] = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT gegenstand FROM Objekte ORDER BY gegenstand")
-    @State var selectedTabellenFeld2: String = extrahierenString(arrayTemp: querySQLAbfrageArray(queryTmp: "SELECT DISTINCT gegenstand FROM Objekte ORDER BY gegenstand"))
+    @State var tabellenFeld2: [String] = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
+    //@State var selectedTabellenFeld2: String = extrahierenString(arrayTemp: querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand"))
     
     var body: some View {
         
         VStack {
-            Text("Filter").bold()
+            Text("")
+            Text("Abfragefilter").bold()
             Form {
                 Section(header: Text("Bedingung")) {
-                    Picker("Wenn ", selection: $selectedTabellenFeld1, content: {
+                    Picker("Wenn ", selection: $globaleVariable.selectedAbfrageFeld1, content: {
                         ForEach(tabellenFeld1, id: \.self, content: { index1 in
                             Text(index1)
                         })
                     })
                     .frame(height: 30)
-                    .onChange(of: selectedTabellenFeld1, perform: { _ in
+                    .onChange(of: globaleVariable.selectedAbfrageFeld1, perform: { _ in
                         
-                        switch selectedTabellenFeld1 {
+                        switch globaleVariable.selectedAbfrageFeld1 {
                                 
                             case "Gegenstand":
-                                tabellenFeld2 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT gegenstand FROM Objekte ORDER BY gegenstand")
-                                selectedTabellenFeld2 = tabellenFeld2[0]
+                                tabellenFeld2 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
+                            globaleVariable.selectedAbfrageFeld3 = tabellenFeld2[0]
                                 print("Gegenstand")
                             case "Vorgang":
-                                tabellenFeld2 = ["Leihen", "Schänken"]
-                                selectedTabellenFeld2 = "Leihen"
+                                tabellenFeld2 = ["Leihen", "Schenken"]
+                            globaleVariable.selectedAbfrageFeld3 = "Leihen"
                                 print("Vorgang")
                             case "Name":
                                 tabellenFeld2 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
-                                selectedTabellenFeld2 = tabellenFeld2[0]
+                            globaleVariable.selectedAbfrageFeld3 = tabellenFeld2[0]
                                 print("Nachname")
                             case "Vorname":
                                 tabellenFeld2 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
-                                selectedTabellenFeld2 = tabellenFeld2[0]
+                            globaleVariable.selectedAbfrageFeld3 = tabellenFeld2[0]
                                 print("Vorname")
                             default:
                                 print("Keine Wahl")
@@ -404,7 +340,7 @@ struct ShapeViewAbfrage: View {
                     
                     HStack{
                         Text("ist  ")
-                        Picker("", selection: $selectedOperatorZeichen, content: {
+                        Picker("", selection: $globaleVariable.selectedAbfrageFeld2, content: {
                             ForEach(operatorZeichen, id: \.self, content: { index2 in
                                 Text(index2)
                             })
@@ -414,7 +350,7 @@ struct ShapeViewAbfrage: View {
                         
                     } // Ende HStack
                     
-                    Picker("", selection: $selectedTabellenFeld2, content: {
+                    Picker("", selection: $globaleVariable.selectedAbfrageFeld3, content: {
                         ForEach(tabellenFeld2, id: \.self, content: { index3 in
                             Text(index3)
                         })
@@ -454,17 +390,22 @@ struct ShapeViewAbfrage: View {
                                 primaryButton: .destructive(Text("Speichern")) {
                                     var tmpFeld1 = ""
                                     if globaleVariable.abfrageFilter == true {
-                                        if selectedTabellenFeld1 == "Name" {
-                                           tmpFeld1 = "personNachname"
-                                        }
-                                        if selectedTabellenFeld1 == "Vorname" {
-                                           tmpFeld1 = "personVorname"
-                                        }
-                                        if selectedTabellenFeld1 == "Gegenstand" || selectedTabellenFeld1 == "Vorgang" {
-                                           tmpFeld1 = selectedTabellenFeld1
-                                        }
                                         
-                                       let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedTabellenFeld2)" + "'"
+                                        switch globaleVariable.selectedAbfrageFeld1 {
+                                        case "Name":
+                                            tmpFeld1 = "personNachname"
+                                        case "Vorname":
+                                            tmpFeld1 = "personVorname"
+                                        case "Gegenstand":
+                                            tmpFeld1 = globaleVariable.selectedAbfrageFeld1
+                                        case "Vorgang":
+                                            tmpFeld1 = globaleVariable.selectedAbfrageFeld1
+                                        default:
+                                            tmpFeld1 = ""
+                                            
+                                        } // Ende switch
+                                        
+                                       let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(globaleVariable.selectedAbfrageFeld3)" + "'"
                                         globaleVariable.abfrageQueryString = temp
                                         
                                     }else{
@@ -481,12 +422,20 @@ struct ShapeViewAbfrage: View {
                         } // Ende alert
                     
                     } // Ende HStack
-            
+                Section {
+                    Text("Hier können Sie die Abfrage für Darstellung Ihrer Objekte in der Tabelle definieren.")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                        
+                }
             } // Ende Form
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)
             //.frame(width: 360, height: 570)
-                           
+            
+            
+            
+            
         } // Ende VStack
     } // Ende var body
 } // Ende struct

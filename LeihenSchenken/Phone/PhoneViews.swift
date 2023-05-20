@@ -235,7 +235,7 @@ struct IphoneTable3: View {
     
     var body: some View {
       
-        let person = querySQLAbfrageClassPerson(queryTmp: "Select * from Personen")
+        let person = querySQLAbfrageClassPerson(queryTmp: "Select * from Personen", isObjectTabelle: false)
         
         VStack {
             Text("")
@@ -331,88 +331,6 @@ struct IphoneTable3: View {
     }// Ende var body
     
 } // Ende struct
-
-
-
-/*
-struct IphoneTable3a: View {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @State var isParameterBereich: Bool = false
-    @State var personHinzufuegen: Bool = false
-    @State var showingErrorAlert = false
-    @State var errorMessageText = ""
-   
-    //var personen = personenArray().filter { $0 != "Neue Person" }
-    
-    @State private var selectedType: String?
-    
-    var body: some View {
-        
-        let personenTmp = globaleVariable.parameterPerson
-        let personen = personenTmp.filter { $0 != "Neue Person" }
-        
-        VStack {
-            Text("")
-            Text("Personen").bold()
-            
-            List(personen, id: \.self, selection: $selectedType) { item in
-                Text(item)
-                
-            } // Ende List
-           
-            
-            
-            HStack(alignment: .bottom) {
-                Button(" + ") {
-                    personHinzufuegen = true
-                
-                } // Ende Button
-                .font(.system(size: 20, weight: .medium))
-                .foregroundColor(Color.white)
-                
-                Text("|")
-                
-                Button(" - ") {
-                    
-                    let selectedTypeTmp = "\(selectedType ?? "N/A")"
-                    print("\(selectedType ?? "N/A")")
-                    
-                    if selectedTypeTmp == "N/A" {
-                        errorMessageText = "Bitte suchen Sie zuerst eine Person die Sie löschen möchten aus. Dann markieren sie durch das Klicken die entsprechende Zeile. Danach betätigen Sie noch mal das Minuszeichen."
-                        showingErrorAlert = true
-                    }// Ende if/else
-                    
-                } // Ende Button
-                .font(.system(size: 20, weight: .medium))
-                .foregroundColor(Color.white)
-                .alert(isPresented: $showingErrorAlert) {
-                            Alert(title: Text("Wichtige Information"), message: Text(errorMessageText), dismissButton: .default(Text("OK")))
-                } // Ende alert
-               
-                Text("|")
-            
-            } // Ende HStack
-            .frame(width: 395, height: 25, alignment: .leading)
-            .background(.gray)
-            //.cornerRadius(10)
-            .foregroundColor(Color.black)
-            .sheet(isPresented: $personHinzufuegen, content: {ShapeViewAddUser(isPresented: $personHinzufuegen, isParameterBereich: $isParameterBereich)})
-            
-        } // Ende Vstack
-        .background(globaleVariable.farbenEbene1)
-        //.cornerRadius(10)
-        .shadow(radius: 10)
-    
-    }// Ende var body
-    
-} // Ende struct
-
-*/
-
-
-
-
-
 
 func perKeyBestimmenGegenstand(par: String) -> [String] {
     var result: [String] = [""]

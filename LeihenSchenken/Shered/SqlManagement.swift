@@ -384,14 +384,22 @@ func deleteItemsFromDatabase(tabelle: String, perKey: String) {
 
 
 // Dierse Funktion fügt in eine Variable (Type Class) die Tabelle aus einer Datenbank
-func querySQLAbfrageClassPerson(queryTmp: String) -> [PersonClassVariable]  {
+// Der erste parameter ist die Query-String
+// Der zweite Parameter besagt aus welcher Struct diese Funktion aufgerufen wurde
+// Nur bei der ObjectTabelle (Tab1) soll der Zusatz 'globaleVariable.abfrageQueryString' hinzugefügt werden
+func querySQLAbfrageClassPerson(queryTmp: String, isObjectTabelle: Bool) -> [PersonClassVariable]  {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var name: [String] = ["","","","",""]
+    var queryString: String = ""
     
     var resultatClass: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
     
-    let queryString = queryTmp + globaleVariable.abfrageQueryString
+    if isObjectTabelle == true {
+        queryString = queryTmp + globaleVariable.abfrageQueryString
+    }else{
+        queryString = queryTmp
+    } // Ende if/else
     
     //print(queryString)
     
@@ -434,3 +442,68 @@ func querySQLAbfrageClassPerson(queryTmp: String) -> [PersonClassVariable]  {
 } // Ende func querySQLAbfrageClassObjekte
 
 
+// Diese Funktion wird Eingesetzt, um zu prüfen, ob es Verdopellung bei erstellen der Gegenstände
+// oder Personen gibt.
+// Der Parameter parPerson ist ein Array
+// parPerson[0] = Vorname
+// parPerson[1] = Nachname
+// parPerson[2] = Sex
+// Die Funktion liefert 'true' wenn einer von der Parameter sich in der Datenbank befindet.
+func pruefenDieElementeDerDatenbank(parPerson: [String], parGegenstand: String) -> Bool {
+    var resultat: Bool? = nil
+    let parPersonTmp1: Int = parPerson[0].count + parPerson[1].count + parPerson[2].count
+    let parGegenstandTmp: Int = parGegenstand.count
+    var parPersonTmp2: String = ""
+    
+    if parGegenstandTmp > 0 {
+        let ergebnis = querySQLAbfrageArray(queryTmp: "SELECT count() gegenstand from Gegenstaende WHERE gegenstandName = '\(parGegenstand)'")
+        if Int(ergebnis[0])! > 0 {
+            resultat = true
+        }else{
+            resultat = false
+            
+        }// Ende if/else
+        
+        print("Anzahl der Gegenstände ist " + ergebnis[0])
+        
+    } // Ende if
+    
+    if parPersonTmp1 > 0 {
+        parPersonTmp2 = parPerson[1] + ", " + parPerson[0]
+        let ergebnis = querySQLAbfrageArray(queryTmp: "SELECT count() personPicker from Personen WHERE personPicker = '\(parPersonTmp2)' AND personSex = '\(parPerson[2])'")
+        if Int(ergebnis[0])! > 0 {
+            resultat = true
+        }else{
+            resultat = false
+            
+        }// Ende if/else
+        print("Anzahl der Personen ist " + ergebnis[0])
+    } // Ende if
+    
+    return resultat!
+} // Ende func
+
+// Diese Funktion speichert ein Gegenstaend in die Datenbank in die Tabelle Gegenstaende
+func gegenstandInDatenbankSchreiben(par1: String) {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    let perKeyFormatter: DateFormatter
+    perKeyFormatter = DateFormatter()
+    perKeyFormatter.dateFormat = "y MM dd, HH:mm"
+    
+    let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
+    
+    let insertDataToDatenbank = "INSERT INTO gegenstaende(perKey, gegenstandName) VALUES('\(perKey)','\(par1)')"
+
+    if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
+       SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("error -->: \(errmsg)")
+        print("Personendaten wurden nicht hinzugefügt")
+    } // End if
+
+    
+    print("Personendaten wurden gespeichert...")
+    
+    
+} // Ende func

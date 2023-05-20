@@ -63,7 +63,7 @@ struct ParameterView: View {
         germanDateFormatter = DateFormatter()
         germanDateFormatter.locale = .init(identifier: "de")
         germanDateFormatter.dateFormat = "d MMM yyyy"
-        germanDateFormatter.dateStyle = .short
+        germanDateFormatter.dateStyle = .long
         germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         
     } // Ende init
@@ -282,6 +282,7 @@ struct ParameterView: View {
         .toolbar {ToolbarItem(placement: .navigationBarLeading) {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
+                
                 if anzahlDerDatensaetze(tableName: "Objekte") == 0 {
                     NavigationLink(destination: EmptyView()){
                         Label("", systemImage: "sidebar.left")

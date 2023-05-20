@@ -87,14 +87,14 @@ func cleanEingabeMaske () {
     globaleVariable.selectedVorgangInt = 0
     globaleVariable.selectedPersonInt = 0
     globaleVariable.textGegenstandbeschreibung = ""
-    globaleVariable.preisWert = "0.00"
+    globaleVariable.preisWert = ""
     globaleVariable.datum = Date()
     globaleVariable.textAllgemeineNotizen = ""
     globaleVariable.selectedPersonVariable.removeAll()
     globaleVariable.parameterPerson.removeAll()
     globaleVariable.parameterPerson = personenArray()
     
-    print("Gelöscht...")
+    print("Die Eingabe-Variablen wurden zurückgesetzt.")
     
 } // Ende func
 
