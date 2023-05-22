@@ -8,6 +8,18 @@ import SwiftUI
 import Foundation
 
 
+// Sachen zum abarbeite:
+
+/*
+- Abragen speichern
+OK - Sprache für den PrintController
+- Button aus dem PrintController entfernen
+OK - Sprache bei dem DatePicker (Monat erscheint auf English)
+- Centrieren der Buttons auf der Eingabemaske
+*/
+
+
+
 struct EmptyView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     var breite: CGFloat = 370
@@ -38,3 +50,35 @@ struct EmptyView: View {
         
 } // Ende struct
 
+
+// Wird aus der DetailView aufgerufen
+func printingFile() {
+    
+    let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
+    
+    if UIPrintInteractionController.canPrint(pdfPath!) {
+        
+        let printInfo = UIPrintInfo(dictionary: nil)
+        printInfo.jobName = "Drucke Handbuch!"
+        printInfo.outputType = UIPrintInfo.OutputType.general
+        printInfo.duplex = UIPrintInfo.Duplex.longEdge
+        printInfo.accessibilityViewIsModal = true
+        
+        
+        let printController = UIPrintInteractionController.shared
+        printController.printInfo = printInfo
+        printController.showsNumberOfCopies = true
+        printController.printingItem = pdfPath
+        printController.present(animated: true, completionHandler: nil)
+        
+    } // Ende if
+    
+    // https://nshipster.com/uiprintinteractioncontroller/
+    
+} // Ende func
+
+
+func abfrage(par: String){
+    
+    print(par)
+}

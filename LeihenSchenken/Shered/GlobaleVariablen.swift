@@ -15,17 +15,17 @@ class GlobaleVariable: ObservableObject {
     @Published var parameterVorgang: [String] =  ["Leihen", "Schenken"]
     @Published var parameterGegenstand: [String] = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
     
+    
     @Published var abfrageFilter: Bool = false
     @Published var abfrageQueryString: String = ""
     
-    @Published var selectedAbfrageFeld1: String = "Gegenstand"
-    @Published var selectedAbfrageFeld2: String = "gleich"
-    @Published var selectedAbfrageFeld3: String = extrahierenString(arrayTemp: querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand"))
+    @Published var selectedAbfrageFeld1: String = ""//Gegenstand"
+    @Published var selectedAbfrageFeld2: String = ""//"gleich"
+    @Published var selectedAbfrageFeld3: String = ""//extrahierenString(arrayTemp: querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand"))
         
     @Published var parameterDatum: Date = Date()
     @Published var parameterImageString: String = "Kein Bild"
     
-    //@Published var parameterPerson: [String] = ["Neue Person", "Kwapisz, Piotr","Stehle, Angelika","Stehle, Elena","Kwapisz, Zofia","Hanisch, Witold"]
     @Published var parameterPerson: [String] = personenArray()
     
     @Published var navigationTabView = 1

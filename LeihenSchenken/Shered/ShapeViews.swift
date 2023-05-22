@@ -304,15 +304,44 @@ struct ShapeViewAbfrage: View {
                     Picker("Wenn ", selection: $globaleVariable.selectedAbfrageFeld1, content: {
                         ForEach(abfrageFeld1, id: \.self, content: { index1 in
                             Text(index1)
+                    
                         })
+                        
                     })
                     .frame(height: 30)
+                    .onAppear(perform: {
+                        
+                        if globaleVariable.selectedAbfrageFeld1 != "" && globaleVariable.selectedAbfrageFeld2 != "" && globaleVariable.selectedAbfrageFeld3 != "" {
+                            switch globaleVariable.selectedAbfrageFeld1 {
+                                    
+                                case "Gegenstand":
+                                    abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
+                                    globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                    print("Gegenstand " + "\(abfrageFeld3[0])")
+                                case "Vorgang":
+                                    abfrageFeld3 = ["Leihen", "Schenken"]
+                                    globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                    print("Vorgang " + "\(abfrageFeld3[0])")
+                                case "Name":
+                                    abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
+                                    globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                    print("Nachname " + "\(abfrageFeld3[0])")
+                                case "Vorname":
+                                    abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
+                                    globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                    print("Vorname " + "\(abfrageFeld3[0])")
+                                default:
+                                    print("Keine Wahl")
+                            } // Ende switch
+                        }
+                    })
+                    
                     .onChange(of: globaleVariable.selectedAbfrageFeld1, perform: { _ in
                         
                         switch globaleVariable.selectedAbfrageFeld1 {
                                 
                             case "Gegenstand":
-                                abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
+                                 abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
                                 globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Gegenstand")
                             case "Vorgang":
@@ -332,7 +361,7 @@ struct ShapeViewAbfrage: View {
                         } // Ende switch
                         
                     }) // Ende onChange...
-                    
+                
                     HStack{
                         Text("ist  ")
                         Picker("", selection: $globaleVariable.selectedAbfrageFeld2, content: {
@@ -363,8 +392,8 @@ struct ShapeViewAbfrage: View {
                     Button(action: {showAlertAbbrechenButton = true}) { Label("Abbrechen", systemImage: "pencil.slash") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                         .alert(isPresented:$showAlertAbbrechenButton) {
                             Alert(
-                                title: Text("Möchten Sie abbrechen und die Abfrage zurücksetzen?"),
-                                message: Text("Die Abfrage und die Filteraktivierung werden zurückgesetzt"),
+                                title: Text("Möchten Sie abbrechen oder die Abfrage zurücksetzen?"),
+                                message: Text("Beim Zurücksetzen werden die Abfrage und die Filteraktivierung zurückgesetzt. Beim Abbrechen wird nichts veränder und sie verlassen die Abfragemaske."),
                                 primaryButton: .destructive(Text("Zurücksetzen")) {
                                     globaleVariable.abfrageFilter = false
                                     globaleVariable.abfrageQueryString = ""
@@ -372,6 +401,7 @@ struct ShapeViewAbfrage: View {
                                     
                                 },
                                 secondaryButton: .cancel(Text("Abbrechen")){
+                                    isPresented = false
                                     print("Abgebrochen ....")
                                 } // Ende secondary Button
                             ) // Ende Alert
@@ -427,9 +457,6 @@ struct ShapeViewAbfrage: View {
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)
             //.frame(width: 360, height: 570)
-            
-            
-            
             
         } // Ende VStack
     } // Ende var body

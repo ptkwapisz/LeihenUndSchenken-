@@ -161,6 +161,8 @@ struct ParameterView: View {
                     DatePicker("Datum: ", selection: $globaleVariable.datum, displayedComponents: [.date])
                         .accentColor(Color.black)
                         .multilineTextAlignment (.center)
+                        .environment(\.locale, Locale.init(identifier: "de"))
+
                         .id(calendarId)
                         .onChange(of: globaleVariable.datum, perform: { _ in
                           calendarId += 1

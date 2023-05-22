@@ -61,6 +61,7 @@ struct DeteilView: View {
                     
                 } // Ende Tab
                 .tag(4) // Die Tags identifizieren die Tab und füren zum richtigen Titel
+                
                 if userSettingsDefaults.showHandbuch == true {
                     Tab5(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                         Image(systemName: "h.circle.fill")
@@ -75,71 +76,90 @@ struct DeteilView: View {
         .navigationTitle(naviTitleText(tabNummer: globaleVariable.navigationTabView))
         //.font(.system(size: 10, weight: .regular))
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarLeading) {
-                Menu(content: {
-                    
-                    Menu("Menue 1") { // Menue 1
-                        Button("Menue1_1", action: {}) // Menue 1.1
-                        Button("Menue1_2", action: {}) // Menue 1.2
-                    } // Ende Menu
-                    
-                    
-                    Menu("Menue 2") {
-                        Button("Menue 2.1", action: {})
-                        Button("Menue 2.2", action: {})
-                    } // Ende Menu
-                    
-                    Menu("Eigenschaften") {
-                        Button("Bearbeiten", action: {showMenue3_1.toggle()}) // Menue3_1
-                        Button("Zurücksetzen", action: {showMenue3_2.toggle()}) // Menue3_2
-                    } // Ende Menu
-                    
-                    //Button("Abfragen", action: {showMenue3 = true})
-                    Divider()
-                    //Button("Settings zurücksetzen", action: {showMenue4.toggle()})
-                    Button("Datenbank zurücksetzen", action: {showMenue5.toggle()})
-                    
-                }) {
-                    Image(systemName: "filemenu.and.cursorarrow")
-                } // Ende Button
-                .alert("Trefen Sie eine Wahl!", isPresented: $showMenue3_2, actions: {
-                    Button("Abbrechen") {}; Button("Ausführen") {deleteUserDefaults()} 
-                      }, message: { Text("Durch das Zurücksetzen der Settings werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
-                    ) // Ende alert
-                .alert("Trefen Sie eine Wahl!", isPresented: $showMenue5, actions: {
-                    Button("Abbrechen") {}; Button("Ausführen") {datenbankReset()}
-                      }, message: { Text("Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt.") } // Ende message
-                ) // Ende alert
-                //.sheet(isPresented: $showMenue1_1, content: { ShapeViewAddUser(isPresented: $showMenue1_1, isParameterBereich: $isParameterBereich )})
-                .sheet(isPresented: $showMenue3_1, content: { ShapeViewSettings(isPresented: $showMenue3_1)})
-                //.sheet(isPresented: $showMenue3, content: { ShapeViewAbfrage(isPresented: $showMenue3) })
-            } // Ende ToolbarItemGroup
+            // Wenn das Tab Handbuch gezeigt wird
+            // andere Tabmenuepunkte ausgeblendet
+            if globaleVariable.navigationTabView < 5 {
+                ToolbarItemGroup(placement: .navigationBarLeading) {
+                    Menu(content: {
                         
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: {showAppInfo.toggle()
-                    
-                }) {
-                    Image(systemName: "house")
-                    
-                } // Ende Button
-                .alert("Allgemeine Information", isPresented: $showAppInfo, actions: {
-                      Button(" - OK - ") {}
-                      }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
+                        Menu("Menue 1") { // Menue 1
+                            Button("Menue1_1", action: {}) // Menue 1.1
+                            Button("Menue1_2", action: {}) // Menue 1.2
+                        } // Ende Menu
+                        
+                        
+                        Menu("Menue 2") {
+                            Button("Menue 2.1", action: {})
+                            Button("Menue 2.2", action: {})
+                        } // Ende Menu
+                        
+                        Menu("Eigenschaften") {
+                            Button("Bearbeiten", action: {showMenue3_1.toggle()}) // Menue3_1
+                            Button("Zurücksetzen", action: {showMenue3_2.toggle()}) // Menue3_2
+                        } // Ende Menu
+                        
+                        //Button("Abfragen", action: {showMenue3 = true})
+                        Divider()
+                        //Button("Settings zurücksetzen", action: {showMenue4.toggle()})
+                        Button("Datenbank zurücksetzen", action: {showMenue5.toggle()})
+                        
+                    }) {
+                        Image(systemName: "filemenu.and.cursorarrow")
+                    } // Ende Button
+                    .alert("Trefen Sie eine Wahl!", isPresented: $showMenue3_2, actions: {
+                        Button("Abbrechen") {}; Button("Ausführen") {deleteUserDefaults()}
+                    }, message: { Text("Durch das Zurücksetzen der Settings werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
                     ) // Ende alert
+                    .alert("Trefen Sie eine Wahl!", isPresented: $showMenue5, actions: {
+                        Button("Abbrechen") {}; Button("Ausführen") {datenbankReset()}
+                    }, message: { Text("Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt.") } // Ende message
+                    ) // Ende alert
+                    //.sheet(isPresented: $showMenue1_1, content: { ShapeViewAddUser(isPresented: $showMenue1_1, isParameterBereich: $isParameterBereich )})
+                    .sheet(isPresented: $showMenue3_1, content: { ShapeViewSettings(isPresented: $showMenue3_1)})
+                    //.sheet(isPresented: $showMenue3, content: { ShapeViewAbfrage(isPresented: $showMenue3) })
+                } // Ende ToolbarItemGroup
                 
-            } // Ende ToolbarItemGroup
-            
-            //self.shapeSettings.showSettings = true
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: {showAbfrageModalView = true
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: {showAppInfo.toggle()
                         
-                }) {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                } // Ende Button
-                .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
-                Spacer()
-            } // Ende ToolbarItemGroup
+                    }) {
+                        Image(systemName: "house")
+                        
+                    } // Ende Button
+                    .alert("Allgemeine Information", isPresented: $showAppInfo, actions: {
+                        Button(" - OK - ") {}
+                    }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
+                    ) // Ende alert
+                    
+                } // Ende ToolbarItemGroup
+                
+                //self.shapeSettings.showSettings = true
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: {showAbfrageModalView = true
+                        
+                    }) {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                    } // Ende Button
+                    .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
+                    Spacer()
+                } // Ende ToolbarItemGroup
+                
+            } // Ende if
             
+            // Wenn das Tab Handbuch gezeigt wird
+            // wird das Zeichen für Drucken gezeigt
+            if globaleVariable.navigationTabView == 5 {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action:{
+                        
+                       
+                        printingFile()
+                        
+                    }) {
+                        Image(systemName: "printer.fill") // printer.fill square.and.arrow.up
+                    } // Ende Button
+                } // Ende ToolbarItem
+            } // Ende if
             
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button(action:{showTabHilfe.toggle()

@@ -132,9 +132,12 @@ var body: some View {
         VStack {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
-                PDFKitView(url: pdfPath!)
-                .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
                
+                
+                PDFKitView(url: pdfPath!)
+                    .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+            
+                
             } else {
                 
                 Text("DeteilView Tab5")
