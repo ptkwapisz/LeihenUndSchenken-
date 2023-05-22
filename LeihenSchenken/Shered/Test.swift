@@ -55,8 +55,10 @@ struct EmptyView: View {
 func printingFile() {
     
     let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
-    
+   
     if UIPrintInteractionController.canPrint(pdfPath!) {
+        
+        //notificationCenter.addObserver(self, selector: #selector(self.downloadFile), name: UIApplication.didBecomeActiveNotification, object: nil)
         
         let printInfo = UIPrintInfo(dictionary: nil)
         printInfo.jobName = "Drucke Handbuch!"
@@ -71,6 +73,7 @@ func printingFile() {
         printController.printingItem = pdfPath
         printController.present(animated: true, completionHandler: nil)
         
+    
     } // Ende if
     
     // https://nshipster.com/uiprintinteractioncontroller/

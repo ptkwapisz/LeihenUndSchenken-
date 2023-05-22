@@ -311,59 +311,59 @@ struct ShapeViewAbfrage: View {
                     .frame(height: 30)
                     .onAppear(perform: {
                         
-                        if globaleVariable.selectedAbfrageFeld1 != "" && globaleVariable.selectedAbfrageFeld2 != "" && globaleVariable.selectedAbfrageFeld3 != "" {
                             switch globaleVariable.selectedAbfrageFeld1 {
                                     
                                 case "Gegenstand":
                                     abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
-                                    globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                    print("Gegenstand " + "\(abfrageFeld3[0])")
+                                    //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                    print("Gegenstand " + "\(globaleVariable.selectedAbfrageFeld3)")
                                 case "Vorgang":
                                     abfrageFeld3 = ["Leihen", "Schenken"]
-                                    globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                    print("Vorgang " + "\(abfrageFeld3[0])")
+                                    //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                    print("Vorgang " + "\(globaleVariable.selectedAbfrageFeld3)")
                                 case "Name":
                                     abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
-                                    globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                    print("Nachname " + "\(abfrageFeld3[0])")
+                                    //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                    print("Nachname " + "\(globaleVariable.selectedAbfrageFeld3)")
                                 case "Vorname":
                                     abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
-                                    globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                    print("Vorname " + "\(abfrageFeld3[0])")
+                                    //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                    print("Vorname " + "\(globaleVariable.selectedAbfrageFeld3)")
                                 default:
                                     print("Keine Wahl")
                             } // Ende switch
-                        }
+                     
+                        print("Feld1 onAppear")
                     })
-                    
                     .onChange(of: globaleVariable.selectedAbfrageFeld1, perform: { _ in
                         
                         switch globaleVariable.selectedAbfrageFeld1 {
                                 
                             case "Gegenstand":
                                  abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
-                                globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Gegenstand")
                             case "Vorgang":
                                 abfrageFeld3 = ["Leihen", "Schenken"]
-                                globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Vorgang")
                             case "Name":
                                 abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
-                                globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Nachname")
                             case "Vorname":
                                 abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
-                                globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
+                                //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
                                 print("Vorname")
                             default:
                                 print("Keine Wahl")
                         } // Ende switch
-                        
+                        print("Feld1 onChange")
                     }) // Ende onChange...
                 
                     HStack{
                         Text("ist  ")
+                        
                         Picker("", selection: $globaleVariable.selectedAbfrageFeld2, content: {
                             ForEach(abfrageFeld2, id: \.self, content: { index2 in
                                 Text(index2)
@@ -371,6 +371,7 @@ struct ShapeViewAbfrage: View {
                         })
                         .pickerStyle(.wheel)
                         .frame(height: 50)
+                        
                         
                     } // Ende HStack
                     
@@ -380,6 +381,12 @@ struct ShapeViewAbfrage: View {
                         })
                     })
                     .frame(height: 30)
+                    .onAppear(perform: {
+                        print("Feld3 onAppear")
+                    })
+                    .onChange(of: globaleVariable.selectedAbfrageFeld3, perform: {  _ in
+                     print("Feld3 onChange")
+                    })
                 } // Ende Section
                 
                 Section(header: Text("Abfragenparameter")) {

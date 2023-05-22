@@ -138,7 +138,7 @@ struct DeteilView: View {
                     Button(action: {showAbfrageModalView = true
                         
                     }) {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
+                        Image(systemName: "line.3.horizontal.decrease.circle") //"icons8-filter-25"  line.3.horizontal.decrease.circle
                     } // Ende Button
                     .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
                     Spacer()
@@ -156,7 +156,7 @@ struct DeteilView: View {
                         printingFile()
                         
                     }) {
-                        Image(systemName: "printer.fill") // printer.fill square.and.arrow.up
+                        Image(systemName: "printer") // printer.fill square.and.arrow.up
                     } // Ende Button
                 } // Ende ToolbarItem
             } // Ende if
