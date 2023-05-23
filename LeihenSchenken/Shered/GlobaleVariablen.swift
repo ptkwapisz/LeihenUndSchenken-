@@ -19,9 +19,9 @@ class GlobaleVariable: ObservableObject {
     @Published var abfrageFilter: Bool = false
     @Published var abfrageQueryString: String = ""
     
-    @Published var selectedAbfrageFeld1: String = "Gegenstand"
-    @Published var selectedAbfrageFeld2: String = "gleich"
-    @Published var selectedAbfrageFeld3: String = extrahierenString(arrayTemp: querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand"))
+    //@Published var selectedAbfrageFeld1: String = "Gegenstand"
+    //@Published var selectedAbfrageFeld2: String = "gleich"
+    //@Published var selectedAbfrageFeld3: String = extrahierenString(arrayTemp: querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand"))
         
     @Published var parameterDatum: Date = Date()
     @Published var parameterImageString: String = "Kein Bild"
@@ -69,10 +69,34 @@ class UserSettingsDefaults: ObservableObject {
         } // Ende didSet
     } // Ende @Published
     
+    
+    @Published var selectedFilterField1: String {
+        didSet {
+            UserDefaults.standard.set(selectedFilterField1, forKey: "selectedFilterField1")
+        } // Ende didSet
+    } // Ende @Published
+    
+    
+    @Published var selectedFilterField2: String {
+        didSet {
+            UserDefaults.standard.set(selectedFilterField2, forKey: "selectedFilterField2")
+        } // Ende didSet
+    } // Ende @Published
+    
+    @Published var selectedFilterField3: String {
+        didSet {
+            UserDefaults.standard.set(selectedFilterField3, forKey: "selectedFilterField3")
+        } // Ende didSet
+    } // Ende @Published
+    
+    
     init() {
         
         self.selectedSprache = UserDefaults.standard.object(forKey: "selectedSprache") as? Int ?? 0
         self.showHandbuch = UserDefaults.standard.object(forKey: "showHandbuch") as? Bool ?? true
+        self.selectedFilterField1 = UserDefaults.standard.object(forKey: "selectedFilterField1") as? String ?? "Gegenstand"
+        self.selectedFilterField2 = UserDefaults.standard.object(forKey: "selectedFilterField2") as? String ?? "gleich"
+        self.selectedFilterField3 = UserDefaults.standard.object(forKey: "selectedFilterField3") as? String ?? "Buch"
         
     } // Ende init
 } // Ende class

@@ -112,7 +112,7 @@ struct ShapeViewAddUser: View {
            .navigationBarItems(trailing:
                                 HStack {
                
-               Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
+               Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle").imageScale(.large)}
                Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
                
            }) // Ende NavigationBarItem
@@ -212,7 +212,7 @@ struct ShapeViewAddGegenstand: View {
             } )
             .navigationBarItems(trailing: Button( action: {
                 showHilfe = true
-            }) {Image(systemName: "questionmark.circle.fill")
+            }) {Image(systemName: "questionmark.circle")
                 .imageScale(.large)
             } )
             .alert("Hilfe zu neuer Gegenstand", isPresented: $showHilfe, actions: {
@@ -283,16 +283,19 @@ struct ShapeViewSettings: View {
 
 struct ShapeViewAbfrage: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    
     @Binding var isPresented: Bool
     
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
     
     @State var abfrageFeld1: [String] = ["Gegenstand", "Vorgang","Name", "Vorname"]
-    
+    @State var selectedAbfrageFeld1 = "Gegenstand"
     @State var abfrageFeld2: [String] = ["gleich", "ungleich"]
-
+    @State var selectedAbfrageFeld2 = "gleich"
     @State var abfrageFeld3: [String] = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
+    @State var selectedAbfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")[0]
     
     var body: some View {
         
@@ -301,90 +304,52 @@ struct ShapeViewAbfrage: View {
             Text("Abfragefilter").bold()
             Form {
                 Section(header: Text("Bedingung")) {
-                    Picker("Wenn ", selection: $globaleVariable.selectedAbfrageFeld1, content: {
+                    Picker("Wenn ", selection: $selectedAbfrageFeld1, content: {
                         ForEach(abfrageFeld1, id: \.self, content: { index1 in
                             Text(index1)
-                    
                         })
-                        
                     })
                     .frame(height: 30)
+                    
                     .onAppear(perform: {
                         
-                            switch globaleVariable.selectedAbfrageFeld1 {
-                                    
-                                case "Gegenstand":
-                                    abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
-                                    //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                    print("Gegenstand " + "\(globaleVariable.selectedAbfrageFeld3)")
-                                case "Vorgang":
-                                    abfrageFeld3 = ["Leihen", "Schenken"]
-                                    //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                    print("Vorgang " + "\(globaleVariable.selectedAbfrageFeld3)")
-                                case "Name":
-                                    abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
-                                    //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                    print("Nachname " + "\(globaleVariable.selectedAbfrageFeld3)")
-                                case "Vorname":
-                                    abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
-                                    //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                    print("Vorname " + "\(globaleVariable.selectedAbfrageFeld3)")
-                                default:
-                                    print("Keine Wahl")
-                            } // Ende switch
-                     
+                        abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
                         print("Feld1 onAppear")
                     })
-                    .onChange(of: globaleVariable.selectedAbfrageFeld1, perform: { _ in
-                        
-                        switch globaleVariable.selectedAbfrageFeld1 {
-                                
-                            case "Gegenstand":
-                                 abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
-                                //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                print("Gegenstand")
-                            case "Vorgang":
-                                abfrageFeld3 = ["Leihen", "Schenken"]
-                                //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                print("Vorgang")
-                            case "Name":
-                                abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
-                                //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                print("Nachname")
-                            case "Vorname":
-                                abfrageFeld3 = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
-                                //globaleVariable.selectedAbfrageFeld3 = abfrageFeld3[0]
-                                print("Vorname")
-                            default:
-                                print("Keine Wahl")
-                        } // Ende switch
+                     
+                    .onChange(of: selectedAbfrageFeld1, perform: { _ in
+                    
+                        abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
+                        selectedAbfrageFeld3 = abfrageFeld3[0]
                         print("Feld1 onChange")
                     }) // Ende onChange...
-                
+                    
                     HStack{
                         Text("ist  ")
                         
-                        Picker("", selection: $globaleVariable.selectedAbfrageFeld2, content: {
+                        Picker("", selection: $selectedAbfrageFeld2, content: {
                             ForEach(abfrageFeld2, id: \.self, content: { index2 in
                                 Text(index2)
                             })
                         })
-                        .pickerStyle(.wheel)
-                        .frame(height: 50)
-                        
+                        //.pickerStyle(.inline)
+                        .frame(height: 30)
                         
                     } // Ende HStack
                     
-                    Picker("", selection: $globaleVariable.selectedAbfrageFeld3, content: {
+                    Picker("", selection: $selectedAbfrageFeld3, content: {
                         ForEach(abfrageFeld3, id: \.self, content: { index3 in
                             Text(index3)
                         })
+                        
                     })
                     .frame(height: 30)
                     .onAppear(perform: {
+                        print("\(selectedAbfrageFeld3)")
                         print("Feld3 onAppear")
                     })
-                    .onChange(of: globaleVariable.selectedAbfrageFeld3, perform: {  _ in
+                    .onChange(of: selectedAbfrageFeld3, perform: {  _ in
+                     print("\(selectedAbfrageFeld3)")
                      print("Feld3 onChange")
                     })
                 } // Ende Section
@@ -400,7 +365,7 @@ struct ShapeViewAbfrage: View {
                         .alert(isPresented:$showAlertAbbrechenButton) {
                             Alert(
                                 title: Text("Möchten Sie abbrechen oder die Abfrage zurücksetzen?"),
-                                message: Text("Beim Zurücksetzen werden die Abfrage und die Filteraktivierung zurückgesetzt. Beim Abbrechen wird nichts veränder und sie verlassen die Abfragemaske."),
+                                message: Text("Beim Zurücksetzen werden: die Abfrage und die Filteraktivierung zurückgesetzt. Beim Abbrechen wird nichts verändert und sie verlassen die Abfragemaske."),
                                 primaryButton: .destructive(Text("Zurücksetzen")) {
                                     globaleVariable.abfrageFilter = false
                                     globaleVariable.abfrageQueryString = ""
@@ -420,24 +385,25 @@ struct ShapeViewAbfrage: View {
                                 title: Text("Möchten Sie diese Abfrage speichern?"),
                                 message: Text("Die Abfrage und der Zustand der Filteraktivierung werden gespeichert."),
                                 primaryButton: .destructive(Text("Speichern")) {
+                                    
                                     var tmpFeld1 = ""
                                     if globaleVariable.abfrageFilter == true {
                                         
-                                        switch globaleVariable.selectedAbfrageFeld1 {
+                                        switch userSettingsDefaults.selectedFilterField1 {
                                         case "Name":
                                             tmpFeld1 = "personNachname"
                                         case "Vorname":
                                             tmpFeld1 = "personVorname"
                                         case "Gegenstand":
-                                            tmpFeld1 = globaleVariable.selectedAbfrageFeld1
+                                            tmpFeld1 = userSettingsDefaults.selectedFilterField1
                                         case "Vorgang":
-                                            tmpFeld1 = globaleVariable.selectedAbfrageFeld1
+                                            tmpFeld1 = userSettingsDefaults.selectedFilterField1
                                         default:
                                             tmpFeld1 = ""
                                             
                                         } // Ende switch
                                         
-                                       let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(globaleVariable.selectedAbfrageFeld3)" + "'"
+                                       let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(userSettingsDefaults.selectedFilterField3)" + "'"
                                         globaleVariable.abfrageQueryString = temp
                                         
                                     }else{

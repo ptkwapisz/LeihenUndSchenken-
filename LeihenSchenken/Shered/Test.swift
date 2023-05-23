@@ -11,14 +11,13 @@ import Foundation
 // Sachen zum abarbeite:
 
 /*
-- Abragen speichern
+- Abfragen speichern
 OK - Sprache für den PrintController
 - Button aus dem PrintController entfernen
 OK - Sprache bei dem DatePicker (Monat erscheint auf English)
-- Centrieren der Buttons auf der Eingabemaske
+OK - Centrieren der Buttons auf der Eingabemaske
+- Musteruser löschen
 */
-
-
 
 struct EmptyView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -81,7 +80,27 @@ func printingFile() {
 } // Ende func
 
 
-func abfrage(par: String){
+func abfrageField3(field1: String)->[String] {
     
-    print(par)
+    var result: [String] = []
+
+    switch field1 {
+            
+        case "Gegenstand":
+            result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
+            //print("Gegenstand " + "\(selectedAbfrageFeld3)")
+        case "Vorgang":
+            result = ["Leihen", "Schenken"]
+            //print("Vorgang " + "\(selectedAbfrageFeld3)")
+        case "Name":
+            result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
+            //print("Nachname " + "\(selectedAbfrageFeld3)")
+        case "Vorname":
+            result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
+            //print("Vorname " + "\(selectedAbfrageFeld3)")
+        default:
+            print("Keine Wahl")
+    } // Ende switch
+
+    return result
 }

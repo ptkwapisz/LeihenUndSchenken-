@@ -193,8 +193,8 @@ struct ParameterView: View {
                         Text("").frame(height: 20)
                        
                         HStack {
-                                
-                            Button(action: {showAlertAbbrechenButton = true}) { Label("Abbrechen", systemImage: "pencil.slash") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                            Spacer()
+                            Button(action: {showAlertAbbrechenButton = true}) { Text("Abbrechen") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                                 .alert(isPresented:$showAlertAbbrechenButton) {
                                     Alert(
                                         title: Text("Möchten Sie alle Angaben unwiederfuflich löschen?"),
@@ -211,7 +211,7 @@ struct ParameterView: View {
                                     ) // Ende Alert
                                 } // Ende alert
                             
-                            Button(action: {showAlertSpeichernButton = true}) { Label("Speichern", systemImage: "pencil.and.outline")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
+                            Button(action: {showAlertSpeichernButton = true}) { Text("Speichern")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
                                 .alert(isPresented:$showAlertSpeichernButton) {
                                     Alert(
                                         title: Text("Möchten Sie alle Angaben speichern?"),
@@ -243,7 +243,7 @@ struct ParameterView: View {
                                         }
                                     ) // Ende Alert
                                 } // Ende alert
-                            
+                            Spacer()
                             } // Ende HStack
                     
                     } // Ende VStack
