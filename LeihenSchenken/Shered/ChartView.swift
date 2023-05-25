@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// Das ist die View für detalierte Objektangaben mit Foto
 struct ChartView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
@@ -16,42 +17,124 @@ struct ChartView: View {
     
     @State var showChartHilfe: Bool = false
     
-    var body: some View {
-        
+    let heightFaktor: Double = 0.99
+    
+var body: some View {
+    GeometryReader { geometry in
         VStack {
-            //Text("\(par1[par2].gegenstand)")
-            Text("\(par1[par2].gegenstandText)")
-                .padding(.top, 10)
-                .padding(.leading, 6)
-                //.font(.system(size: 16, weight: .regular))
-                .foregroundColor(Color.black)
-                .opacity(0.6)
-            
-            Text("\(par1[par2].datum)")
-            if par1[par2].gegenstandBild != "Kein Bild" {
-                Image(base64Str: par1[par2].gegenstandBild)!
-                .resizable()
-                .scaledToFit()
-                .cornerRadius(25)
-                .padding(20)
-                .frame(width: 350, height: 200)
-                .shadow(color: Color.black, radius: 5, x: 5, y: 5)
-            }else{
-                Text("Kein Bild")
-                    .scaledToFit()
-                    .padding(20)
-                    .frame(width: 150, height: 100)
-                    .background(Color.gray.gradient)
+            VStack {
+                HStack {
+                    if par1[par2].gegenstandBild != "Kein Bild" {
+                        Image(base64Str: par1[par2].gegenstandBild)!
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 150, height: 150)
+                            .clipped()
+                            .cornerRadius(25)
+                            .padding(5)
+                            //.border(.black)
+                            .shadow(color: Color.black, radius: 5, x: 5, y: 5)
+                    }else{
+                        Text("Kein Bild")
+                            .scaledToFit()
+                            .padding(20)
+                            .frame(width: 150, height: 150)
+                            .background(Color.gray.gradient)
+                            .cornerRadius(25)
+                            .opacity(0.9)
+                    } // Ende if/else
+                    
+                    
+                    //Section(header: Text("Objektinformationen")) {
+                        Text("\(par1[par2].gegenstandText)")
+                            //.padding(.top, 10)
+                            //.padding(.leading, 6)
+                            .frame(width: 200, height: 150)
+                            //.border(.blue)
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(Color.black)
+                            .background(Color.white)
+                            .cornerRadius(25)
+                            .opacity(0.9)
+                          
+                    //} // Ende Section
+                    
+                }// Ende HStack
+                
+                HStack {
+                    Text("Wert des Gegenstandes: ")
+                    Text("\(par1[par2].preisWert)" + "€")
+                    Spacer()
+                }
+                .frame(alignment: .leading)
+                
+                HStack {
+                    Text("\(vorgangDeklination(vorgang: par1[par2].vorgang))")
+                    Text(" am ")
+                    Text("\(par1[par2].datum)")
+                    Text(" an ")
+                    Spacer()
+                }
+                HStack {
+                    Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
+                    Spacer()
+                }
+                
+                Text("\(par1[par2].allgemeinerText)")
+                    .frame(width: 200, height: 150)
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(Color.black)
+                    .background(Color.white)
                     .cornerRadius(25)
-            
-            } // Ende if/else
-            
-            Text("\(par1[par2].preisWert)" + "€")
-            Text("\(par1[par2].vorgang)")
-            Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
-            Text("\(par1[par2].allgemeinerText)")
-            
-        } // Ende Vstack
+                    .opacity(0.9)
+                
+                
+                //Text("\(par1[par2].allgemeinerText)")
+                
+                Spacer()
+                
+                
+                HStack(alignment: .bottom) {
+                    
+                    Button {
+                        //gegenstandHinzufuegen = true
+                        
+                    } label: {
+                        Label("", systemImage: "rectangle.stack.fill")
+                        
+                    } // Ende Button
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundColor(Color.white)
+                    .offset(x: 10)
+                    
+                    Text("|")
+                        .offset(x:3, y: -3)
+                        .foregroundColor(Color.white)
+                    
+                    Button {
+                        //gegenstandHinzufuegen = true
+                        
+                    } label: {
+                        Label("", systemImage: "rectangle.stack.fill.badge.minus")
+                        
+                    } // Ende Button
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundColor(Color.white)
+                    .offset(x: 10)
+                    
+                }// Ende HStack
+                .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
+                .background(.gray)
+                .foregroundColor(Color.black)
+                
+                
+            } // Ende VStack
+            .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+            .background(globaleVariable.farbenEbene1)
+            .cornerRadius(10)
+        } // Ende VStack
+        .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+        .background(globaleVariable.farbenEbene0)
         .navigationTitle("\(par1[par2].gegenstand)")
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -66,5 +149,80 @@ struct ChartView: View {
                 ) // Ende alert
             } // Ende ToolbarItemGroup
         } // Ende toolbar
+    } // Ende GeometryReader
+} // Ende var body
+} // Ende struc Tab4
+
+
+/*
+// Das ist die View für detalierte Objektangaben mit Foto
+struct ChartViewtemp: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    @State var par1: [ObjectVariable]
+    @State var par2: Int
+    
+    @State var showChartHilfe: Bool = false
+    
+    var body: some View {
+        //Form {
+            VStack {
+                Section(header: Text("Objektinformationen")) {
+                    Text("\(par1[par2].gegenstandText)")
+                        .padding(.top, 10)
+                        .padding(.leading, 6)
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(Color.black)
+                        .opacity(0.9)
+               } // Ende Section
+                
+                
+                Text("\(par1[par2].datum)")
+                if par1[par2].gegenstandBild != "Kein Bild" {
+                    Image(base64Str: par1[par2].gegenstandBild)!
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(25)
+                        .padding(20)
+                        .frame(width: 350, height: 200)
+                        .shadow(color: Color.black, radius: 5, x: 5, y: 5)
+                }else{
+                    Text("Kein Bild")
+                        .scaledToFit()
+                        .padding(20)
+                        .frame(width: 150, height: 100)
+                        .background(Color.gray.gradient)
+                        .cornerRadius(25)
+                    
+                } // Ende if/else
+                
+                Text("\(par1[par2].preisWert)" + "€")
+                Text("\(par1[par2].vorgang)")
+                Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
+                Text("\(par1[par2].allgemeinerText)")
+                
+            } // Ende Vstack
+            .frame(width: UIScreen.screenWidth,height:UIScreen.screenHeight - 250, alignment: .leading)
+            .background(Color(UIColor.lightGray))
+            .cornerRadius(10)
+            .navigationTitle("\(par1[par2].gegenstand)")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action:{showChartHilfe.toggle()
+                        
+                    }) {
+                        Image(systemName: "questionmark.circle")
+                    } // Ende Button
+                    .alert("Hilfe für Chart", isPresented: $showChartHilfe, actions: {
+                        Button(" - OK - ") {}
+                    }, message: { Text("Das ist die Beschreibung für das Chart.") } // Ende message
+                    ) // Ende alert
+                } // Ende ToolbarItemGroup
+            } // Ende toolbar
+        //} // Ende Form
+        
     }  // Ende var body
 } // Ende struckt ChartView
+*/
+
+

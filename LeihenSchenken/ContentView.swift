@@ -36,14 +36,15 @@ struct ContentView: View {
         NavigationView {
             
             ParameterView()
-            
+               
             DeteilView()
            
         } // Ende NavigationView
         .listStyle(SidebarListStyle()).font(.title3)
         .environmentObject(globaleVariable)
         .phoneOnlyStackNavigationView()
-       
+
+        
     } // Ende var body
 } // Ende struct ContentView
 

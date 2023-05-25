@@ -210,10 +210,7 @@ struct IphoneTable2: View {
         //.cornerRadius(10)
         .shadow(radius: 10)
         
-        
     }// Ende var body
-    
-    
     
 } // Ende struct
 

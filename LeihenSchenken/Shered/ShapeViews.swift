@@ -53,6 +53,8 @@ struct ShapeViewAddUser: View {
                            let tempPerson = name + ", " + vorname
                            globaleVariable.parameterPerson.append(tempPerson)
                            personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                           // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
+                           globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
                            print("Person wird in die Auswahl hinzugefügt!")
                            isPresented = false
                        }else{
@@ -66,6 +68,7 @@ struct ShapeViewAddUser: View {
                                personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
                                globaleVariable.parameterPerson.removeAll()
                                globaleVariable.parameterPerson = personenArray()
+                               
                                print("Person wurde in die Datenbank hinzugefügt!")
                                isPresented = false
                                
@@ -151,6 +154,9 @@ struct ShapeViewAddGegenstand: View {
                     if gegenstandNeu != "" {
                         if isParameterBereich {
                             globaleVariable.parameterGegenstand.append(gegenstandNeu)
+                            // Es wird in der Eingabemaske bei Gegenstand der neue Gegenstand ausgewählt
+                            globaleVariable.selectedGegenstandInt = globaleVariable.parameterGegenstand.count-1
+                            isPresented = false
                             print("Gegenstand wurde in die Auswahl hinzugefügt!")
                         }else{
                             if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
@@ -356,6 +362,7 @@ struct ShapeViewAbfrage: View {
                 
                 Section(header: Text("Abfragenparameter")) {
                     Toggle("Filteraktivirung:", isOn: $globaleVariable.abfrageFilter ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                   
                 } // Ende Section
                 
                 
@@ -389,26 +396,30 @@ struct ShapeViewAbfrage: View {
                                     var tmpFeld1 = ""
                                     if globaleVariable.abfrageFilter == true {
                                         
-                                        switch userSettingsDefaults.selectedFilterField1 {
-                                        case "Name":
-                                            tmpFeld1 = "personNachname"
-                                        case "Vorname":
-                                            tmpFeld1 = "personVorname"
+                                        switch selectedAbfrageFeld1 {
+                                        
                                         case "Gegenstand":
-                                            tmpFeld1 = userSettingsDefaults.selectedFilterField1
+                                            tmpFeld1 = selectedAbfrageFeld1
                                         case "Vorgang":
-                                            tmpFeld1 = userSettingsDefaults.selectedFilterField1
+                                            tmpFeld1 = selectedAbfrageFeld1
+                                            case "Name":
+                                                tmpFeld1 = "personNachname"
+                                            case "Vorname":
+                                                tmpFeld1 = "personVorname"
                                         default:
                                             tmpFeld1 = ""
                                             
                                         } // Ende switch
                                         
-                                       let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(userSettingsDefaults.selectedFilterField3)" + "'"
+                                       let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
                                         globaleVariable.abfrageQueryString = temp
                                         
                                     }else{
                                         globaleVariable.abfrageQueryString = ""
                                     } // Ende if
+                                    
+                                    // Tab1 Objektliste wird gezeigt
+                                    globaleVariable.navigationTabView = 1
                                     
                                     isPresented = false
                                 },

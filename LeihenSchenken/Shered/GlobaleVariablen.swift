@@ -12,17 +12,13 @@ class GlobaleVariable: ObservableObject {
     static let shared = GlobaleVariable()
     
     @Published var parameterPersonSex: [String] =  ["Frau", "Mann", "Divers"]
-    @Published var parameterVorgang: [String] =  ["Leihen", "Schenken"]
+    @Published var parameterVorgang: [String] =  ["Verleihen", "Verschenken"]
     @Published var parameterGegenstand: [String] = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
     
     
     @Published var abfrageFilter: Bool = false
     @Published var abfrageQueryString: String = ""
     
-    //@Published var selectedAbfrageFeld1: String = "Gegenstand"
-    //@Published var selectedAbfrageFeld2: String = "gleich"
-    //@Published var selectedAbfrageFeld3: String = extrahierenString(arrayTemp: querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand"))
-        
     @Published var parameterDatum: Date = Date()
     @Published var parameterImageString: String = "Kein Bild"
     

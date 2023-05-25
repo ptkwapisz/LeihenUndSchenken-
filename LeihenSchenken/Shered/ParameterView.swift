@@ -14,6 +14,7 @@ struct ParameterView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     @State var showParameterHilfe: Bool = false
+    @State var showParameterAllgemeinesInfo: Bool = false
     @State var showAlerOKButton: Bool = false
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
@@ -27,7 +28,7 @@ struct ParameterView: View {
     
     private enum Field: Int, CaseIterable {
         case amount
-        case str1 // Für gegenstandbeschreibung
+        case str1 // Für Gegenstandbeschreibung
         case str2 // Für allgemeine Informationen
     } // Ende private enum
     
@@ -98,186 +99,195 @@ struct ParameterView: View {
         ) // Ende let
         
         GeometryReader { geometry in
-            VStack {
-                
-                Form {
-                
-                    Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
-                        ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
-                            Text("\(globaleVariable.parameterGegenstand[index])").tag(index)
-                        } // Ende ForEach
+            
+                VStack {
+                   
+                    Form {
                         
-                    }).sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich )})
-                    
-                    TextEditorWithPlaceholder(text: $globaleVariable.textGegenstandbeschreibung, platz: $platzText1)
-                        //.focused($preisWertIsFocused)
-                        .focused($focusedField, equals: .str1)
-                    
-                    HStack {
-                        Text("Gegenstandsbild:   ")
-                            .frame(height: 60)
-                        
-                        PhotosSelector()
-                        
-                        Text(" ")
-                        
-                        if globaleVariable.parameterImageString != "Kein Bild" {
-                            let imageData = Data (base64Encoded: globaleVariable.parameterImageString)!
-                            let image = UIImage (data: imageData)!
+                        Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
+                            ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
+                                Text("\(globaleVariable.parameterGegenstand[index])").tag(index)
+                            } // Ende ForEach
                             
-                            Image(uiImage: image)
-                                .resizable()
-                                .cornerRadius(50)
-                                .padding(.all, 4)
-                                .frame(width: 50, height: 50)
-                                .background(Color.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                               
-                        } // Ende if
+                        })
+                        .font(.system(size: 16, weight: .regular))
+                        .sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich )})
                         
-                    } // Ende HStack
-                    
-                    HStack {
-                        
-                        Text("Preis/Wert:  ")
-                            .frame(height: 35, alignment: .leading)  // width: 190,
-                        
-                        Text("                ")
-                        TextField("0.00 €", text: $globaleVariable.preisWert)
-                        
-                            .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 115, height: 35, alignment: .trailing)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(5)
-                            .font(.system(size: 18, weight: .regular))
-                            .keyboardType(.decimalPad)
-                            //.focused($preisWertIsFocused)
-                            .focused($focusedField, equals: .amount)
-                        
-                    } // Ende HStack
-                 
-                    DatePicker("Datum: ", selection: $globaleVariable.datum, displayedComponents: [.date])
-                        .accentColor(Color.black)
-                        .multilineTextAlignment (.center)
-                        .environment(\.locale, Locale.init(identifier: "de"))
-
-                        .id(calendarId)
-                        .onChange(of: globaleVariable.datum, perform: { _ in
-                          calendarId += 1
-                        }) // Ende onChange...
-                        .onTapGesture {
-                          calendarId += 1
-                        } // Ende onTap....
-                                        
-                    Picker("Was möchten Sie tun?", selection: $globaleVariable.selectedVorgangInt, content: {
-                        ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
-                            Text("\(globaleVariable.parameterVorgang[index])")//.tag(index)
-                        } // Ende ForEach
-                    }) // Picker
-                    
-                    Picker("Person: ", selection: tapOptionPerson, content: {
-                        ForEach(0..<$globaleVariable.parameterPerson.count, id: \.self) { index in
-                            Text("\(globaleVariable.parameterPerson[index])")//.tag(index)
-                        } // Ende ForEach
-                    }) // Picker
-                    .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
-                    
-                    
-                    TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
+                        TextEditorWithPlaceholder(text: $globaleVariable.textGegenstandbeschreibung, platz: $platzText1)
                         //.focused($preisWertIsFocused)
-                        .focused($focusedField, equals: .str2)
-                    
-                    VStack{
-                        Text("").frame(height: 20)
-                       
+                            .focused($focusedField, equals: .str1)
+                        
                         HStack {
-                            Spacer()
-                            Button(action: {showAlertAbbrechenButton = true}) { Text("Abbrechen") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
-                                .alert(isPresented:$showAlertAbbrechenButton) {
-                                    Alert(
-                                        title: Text("Möchten Sie alle Angaben unwiederfuflich löschen?"),
-                                        message: Text("Man kann den Vorgang nicht rückgängich machen!"),
-                                        primaryButton: .destructive(Text("Löschen")) {
-                                            
-                                            // Die Parameterwerte werden gelöscht.
-                                            cleanEingabeMaske()
-                                            
-                                        },
-                                        secondaryButton: .cancel(Text("Abbrechen")){
-                                            print("Abgebrochen ....")
-                                        } // Ende secondary Button
-                                    ) // Ende Alert
-                                } // Ende alert
+                            Text("Gegenstandsbild:   ")
+                                .frame(height: 50)
+                                .font(.system(size: 16, weight: .regular))
                             
-                            Button(action: {showAlertSpeichernButton = true}) { Text("Speichern")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
-                                .alert(isPresented:$showAlertSpeichernButton) {
-                                    Alert(
-                                        title: Text("Möchten Sie alle Angaben speichern?"),
-                                        message: Text("Die Daten werden in die Datenbank gespeichert und die Angabemaske wird geleert!"),
-                                        primaryButton: .destructive(Text("Speichern")) {
-                                            // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
-                                            
-                                            let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
-                                            
-                                            let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(globaleVariable.selectedPersonVariable[0].personVorname)', '\(globaleVariable.selectedPersonVariable[0].personNachname)', '\(globaleVariable.selectedPersonVariable[0].personSex)', '\(globaleVariable.textAllgemeineNotizen)')"
-                                       
-                                            if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
-                                               SQLITE_OK {
-                                                let errmsg = String(cString: sqlite3_errmsg(db)!)
-                                                print("error -->: \(errmsg)")
-                                                print("Daten wurden nicht hinzugefügt")
-                                            }else{
+                            PhotosSelector()
+                            
+                            Text(" ")
+                            
+                            if globaleVariable.parameterImageString != "Kein Bild" {
+                                let imageData = Data (base64Encoded: globaleVariable.parameterImageString)!
+                                let image = UIImage (data: imageData)!
+                                
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .cornerRadius(50)
+                                    .padding(.all, 4)
+                                    .frame(width: 50, height: 50)
+                                    .background(Color.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                                
+                            } // Ende if
+                            
+                        } // Ende HStack
+                        
+                        HStack {
+                            
+                            Text("Preis/Wert:  ")
+                                .frame(height: 35, alignment: .leading)  // width: 190,
+                                .font(.system(size: 16, weight: .regular))
+                            
+                            Text("                ")
+                            TextField("0.00 €", text: $globaleVariable.preisWert)
+                            
+                                .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
+                                .multilineTextAlignment(.trailing)
+                                .frame(width: 115, height: 35, alignment: .trailing)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(5)
+                                .font(.system(size: 16, weight: .regular))
+                                .keyboardType(.decimalPad)
+                            //.focused($preisWertIsFocused)
+                                .focused($focusedField, equals: .amount)
+                            
+                        } // Ende HStack
+                        
+                        DatePicker("Datum: ", selection: $globaleVariable.datum, displayedComponents: [.date])
+                            .accentColor(Color.black)
+                            .multilineTextAlignment (.center)
+                            .environment(\.locale, Locale.init(identifier: "de"))
+                            .font(.system(size: 16, weight: .regular))
+                            .id(calendarId)
+                            .onChange(of: globaleVariable.datum, perform: { _ in
+                                calendarId += 1
+                            }) // Ende onChange...
+                            .onTapGesture {
+                                calendarId += 1
+                            } // Ende onTap....
+                        
+                        Picker("Was möchten Sie tun?", selection: $globaleVariable.selectedVorgangInt, content: {
+                            ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
+                                Text("\(globaleVariable.parameterVorgang[index])")//.tag(index)
+                            } // Ende ForEach
+                        }) // Picker
+                        .font(.system(size: 16, weight: .regular))
+                        
+                        Picker("Person: ", selection: tapOptionPerson, content: {
+                            ForEach(0..<$globaleVariable.parameterPerson.count, id: \.self) { index in
+                                Text("\(globaleVariable.parameterPerson[index])")//.tag(index)
+                            } // Ende ForEach
+                        }) // Picker
+                        .font(.system(size: 16, weight: .regular))
+                        .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
+                        
+                        
+                        TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
+                        //.focused($preisWertIsFocused)
+                            .focused($focusedField, equals: .str2)
+                        
+                        VStack{
+                            Text("").frame(height: 20)
+                            
+                            HStack {
+                                Spacer()
+                                Button(action: {showAlertAbbrechenButton = true}) { Text("Abbrechen") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                                    .alert(isPresented:$showAlertAbbrechenButton) {
+                                        Alert(
+                                            title: Text("Möchten Sie alle Eingaben unwiederfuflich löschen?"),
+                                            message: Text("Man kann den Vorgang nicht rückgängich machen!"),
+                                            primaryButton: .destructive(Text("Löschen")) {
                                                 
                                                 // Die Parameterwerte werden gelöscht.
                                                 cleanEingabeMaske()
                                                 
-                                                print("Gespeichert...")
+                                            },
+                                            secondaryButton: .cancel(Text("Abbrechen")){
+                                                print("Abgebrochen ....")
+                                            } // Ende secondary Button
+                                        ) // Ende Alert
+                                    } // Ende alert
+                                
+                                Button(action: {showAlertSpeichernButton = true}) { Text("Speichern")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
+                                    .alert(isPresented:$showAlertSpeichernButton) {
+                                        Alert(
+                                            title: Text("Möchten Sie alle Eingaben speichern?"),
+                                            message: Text("Die Daten werden in die Datenbank gespeichert und die Eingabemaske wird geleert!"),
+                                            primaryButton: .destructive(Text("Speichern")) {
+                                                // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
                                                 
-                                            } // End if/else
-
-                                        },
-                                        secondaryButton: .cancel(Text("Abbrechen")){
-                                            print("Abgebrochen ....")
-                                        }
-                                    ) // Ende Alert
-                                } // Ende alert
-                            Spacer()
+                                                let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
+                                                
+                                                let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(globaleVariable.selectedPersonVariable[0].personVorname)', '\(globaleVariable.selectedPersonVariable[0].personNachname)', '\(globaleVariable.selectedPersonVariable[0].personSex)', '\(globaleVariable.textAllgemeineNotizen)')"
+                                                
+                                                if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
+                                                    SQLITE_OK {
+                                                    let errmsg = String(cString: sqlite3_errmsg(db)!)
+                                                    print("error -->: \(errmsg)")
+                                                    print("Daten wurden nicht hinzugefügt")
+                                                }else{
+                                                    
+                                                    // Die Parameterwerte werden gelöscht.
+                                                    cleanEingabeMaske()
+                                                    
+                                                    print("Gespeichert...")
+                                                    
+                                                } // End if/else
+                                                
+                                            },
+                                            secondaryButton: .cancel(Text("Abbrechen")){
+                                                print("Abgebrochen ....")
+                                            }
+                                        ) // Ende Alert
+                                    } // Ende alert
+                                Spacer()
                             } // Ende HStack
-                    
-                    } // Ende VStack
-                    .toolbar {ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
-                        if focusedField == .amount {
-                            Button("OK") {
-                                //preisWertIsFocused = false
-                                focusedField = nil
-                                print("OK Button wurde gedrückt!")
-                            } // Ende Button
-                        }else if focusedField == .str1 {
-                            Button("Abbrechen") {
-                                //preisWertIsFocused = false
-                                globaleVariable.textGegenstandbeschreibung = ""
-                                focusedField = nil
-                                print("Abbrechen Button Str1 wurde gedrückt!")
-                            } // Ende Button
-                        }else {
-                            Button("Abbrechen") {
-                                //preisWertIsFocused = false
-                                globaleVariable.textAllgemeineNotizen = ""
-                                focusedField = nil
-                                print("Abbrechen Button Str2 wurde gedrückt!")
-                            } // Ende Button
                             
-                        } // Ende if/else
-                        
+                        } // Ende VStack
+                        .toolbar {ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            if focusedField == .amount {
+                                Button("OK") {
+                                    //preisWertIsFocused = false
+                                    focusedField = nil
+                                    print("OK Button wurde gedrückt!")
+                                } // Ende Button
+                            }else if focusedField == .str1 {
+                                Button("Abbrechen") {
+                                    //preisWertIsFocused = false
+                                    globaleVariable.textGegenstandbeschreibung = ""
+                                    focusedField = nil
+                                    print("Abbrechen Button Str1 wurde gedrückt!")
+                                } // Ende Button
+                            }else {
+                                Button("Abbrechen") {
+                                    //preisWertIsFocused = false
+                                    globaleVariable.textAllgemeineNotizen = ""
+                                    focusedField = nil
+                                    print("Abbrechen Button Str2 wurde gedrückt!")
+                                } // Ende Button
+                                
+                            } // Ende if/else
+                            
                         } // Ende ItemGroup
-                    } // Ende toolbar
+                        } // Ende toolbar
+                        
+                   } // Ende Form
                     
-                } // Ende Form
-                
-            } // Ende VStack
+                } // Ende VStack
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .background(globaleVariable.farbenEbene0)
             
         } // Ende GeometryReader
         .navigationTitle("Eingabemaske")
@@ -306,10 +316,19 @@ struct ParameterView: View {
         .navigationBarItems(trailing: Button( action: {
             showParameterHilfe = true
         }) {Image(systemName: "questionmark.circle").imageScale(.large)} )
-        .alert("Hilfe zu Angabemaske", isPresented: $showParameterHilfe, actions: {
+        .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
               Button(" - OK - ") {}
-              }, message: { Text("Das ist die Beschreibung für den Bereich Angabemaske.") } // Ende message
+              }, message: { Text("Das ist die Beschreibung für den Bereich Eingabemaske.") } // Ende message
             ) // Ende alert
+        .navigationBarItems(trailing: Button( action: {
+            showParameterAllgemeinesInfo = true
+        }) {Image(systemName: "house").imageScale(.large)} )
+        .alert("Allgemeine Information", isPresented: $showParameterAllgemeinesInfo, actions: {
+              Button(" - OK - ") {}
+              }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
+            ) // Ende alert
+        
+        
         
     } // Ende var body
     
@@ -350,8 +369,9 @@ struct TextEditorWithPlaceholder: View {
                             .textFieldStyle(.roundedBorder)
                             .submitLabel(.done)
                             .onChange(of: text, perform: { newValue in
-                                if newValue.count <= 50 {
+                                if newValue.count <= 100 {
                                     lastText = newValue
+                                    print(lastText.count)
                                 }else{
                                     self.text = lastText
                                 } // Ende else

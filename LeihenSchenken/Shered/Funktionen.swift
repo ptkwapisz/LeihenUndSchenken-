@@ -98,6 +98,24 @@ func cleanEingabeMaske () {
     
 } // Ende func
 
+func vorgangDeklination(vorgang: String)-> String {
+    var resultat: String = ""
+    
+    switch vorgang {
+        
+    case "Verleihen":
+        resultat = "verleiht"
+    case "Verschenken":
+        resultat = "verschenkt"
+    default:
+        print(vorgang)
+        print("Keine übereinstimmung")
+        
+    }// Ende switch
+    
+    return resultat
+}// Ende func
+
 
 // Aus der Datenbanktabelle Personen werden die Personendaten geladen, die bei Angabemaske angezeigt werden.
 // Dabei wird das Format "Name, Vorname" erstellt.

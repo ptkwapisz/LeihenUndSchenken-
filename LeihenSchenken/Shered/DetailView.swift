@@ -118,7 +118,7 @@ struct DeteilView: View {
                     .sheet(isPresented: $showMenue3_1, content: { ShapeViewSettings(isPresented: $showMenue3_1)})
                     //.sheet(isPresented: $showMenue3, content: { ShapeViewAbfrage(isPresented: $showMenue3) })
                 } // Ende ToolbarItemGroup
-                
+                /*
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action: {showAppInfo.toggle()
                         
@@ -130,9 +130,9 @@ struct DeteilView: View {
                         Button(" - OK - ") {}
                     }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
                     ) // Ende alert
-                    
-                } // Ende ToolbarItemGroup
                 
+                } // Ende ToolbarItemGroup
+                */
                 //self.shapeSettings.showSettings = true
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action: {showAbfrageModalView = true

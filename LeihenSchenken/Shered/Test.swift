@@ -80,6 +80,11 @@ func printingFile() {
 } // Ende func
 
 
+
+// Diese Funktion wird in der struc ShapeViewAbfrage (ShapeView) aufgerufen, um den input field 3
+// in Abhängigkeit von der Eingabe im field 1 zu erstellen.
+// Diese funktion wird aus den Bereichen onAppear und onChange aufgerufen
+
 func abfrageField3(field1: String)->[String] {
     
     var result: [String] = []
@@ -103,4 +108,4 @@ func abfrageField3(field1: String)->[String] {
     } // Ende switch
 
     return result
-}
+} // Ende func
