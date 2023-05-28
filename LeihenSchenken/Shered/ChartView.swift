@@ -22,116 +22,135 @@ struct ChartView: View {
 var body: some View {
     GeometryReader { geometry in
         VStack {
+        
             VStack {
-                HStack {
-                    if par1[par2].gegenstandBild != "Kein Bild" {
-                        Image(base64Str: par1[par2].gegenstandBild)!
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 150, height: 150)
-                            .clipped()
-                            .cornerRadius(25)
-                            .padding(5)
-                            //.border(.black)
-                            .shadow(color: Color.black, radius: 5, x: 5, y: 5)
-                    }else{
-                        Text("Kein Bild")
-                            .scaledToFit()
-                            .padding(20)
-                            .frame(width: 150, height: 150)
-                            .background(Color.gray.gradient)
-                            .cornerRadius(25)
-                            .opacity(0.9)
-                    } // Ende if/else
+                Text("")
+                Text("Objektdeteilansicht").bold()
+                
+                List {
                     
-                    
-                    //Section(header: Text("Objektinformationen")) {
-                        Text("\(par1[par2].gegenstandText)")
+                    HStack {
+                            
+                        if par1[par2].gegenstandBild != "Kein Bild" {
+                                Image(base64Str: par1[par2].gegenstandBild)!
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 150, height: 150)
+                                    .clipped()
+                                    .cornerRadius(10)
+                                    .padding(5)
+                                
+                            }else{
+                                Text("Kein Bild")
+                                    .scaledToFit()
+                                    .padding(20)
+                                    .frame(width: 150, height: 150)
+                                    .background(Color.gray.gradient)
+                                    .cornerRadius(10)
+                                   
+                            } // Ende if/else
+                            
+                            
+                            Text("\(par1[par2].gegenstandText)")
                             //.padding(.top, 10)
                             //.padding(.leading, 6)
-                            .frame(width: 200, height: 150)
+                                .frame(width: 200, height: 150)
                             //.border(.blue)
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(Color.black)
-                            .background(Color.white)
-                            .cornerRadius(25)
-                            .opacity(0.9)
-                          
-                    //} // Ende Section
+                                .font(.system(size: 16, weight: .regular))
+                                .foregroundColor(Color.black)
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .opacity(0.9)
+                            
+                            
+                        }// Ende HStack
                     
-                }// Ende HStack
-                
-                HStack {
-                    Text("Wert des Gegenstandes: ")
-                    Text("\(par1[par2].preisWert)" + "€")
-                    Spacer()
-                }
-                .frame(alignment: .leading)
-                
-                HStack {
-                    Text("\(vorgangDeklination(vorgang: par1[par2].vorgang))")
-                    Text(" am ")
-                    Text("\(par1[par2].datum)")
-                    Text(" an ")
-                    Spacer()
-                }
-                HStack {
-                    Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
-                    Spacer()
-                }
-                
-                Text("\(par1[par2].allgemeinerText)")
-                    .frame(width: 200, height: 150)
+                    HStack() {
+                        Text("Wert des Gegenstandes: ")
+                        Text("\(par1[par2].preisWert)" + "€")
+                        Spacer()
+                    }
                     .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(Color.black)
+                    .frame(width:UIScreen.screenWidth / 1.1, alignment: .center)
                     .background(Color.white)
-                    .cornerRadius(25)
-                    .opacity(0.9)
-                
-                
-                //Text("\(par1[par2].allgemeinerText)")
-                
-                Spacer()
-                
-                
-                HStack(alignment: .bottom) {
+                    .padding(.leading, 15)
                     
-                    Button {
-                        //gegenstandHinzufuegen = true
-                        
-                    } label: {
-                        Label("", systemImage: "rectangle.stack.fill")
-                        
-                    } // Ende Button
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(Color.white)
-                    .offset(x: 10)
+                    HStack {
+                        Text("\(vorgangDeklination(vorgang: par1[par2].vorgang))")
+                        Text(" am ")
+                        Text("\(par1[par2].datum)")
+                        Text(" an ")
+                        Spacer()
+                    }
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width:UIScreen.screenWidth / 1.1, alignment: .center)
+                    .background(Color.white)
+                    .padding(.leading, 15)
                     
-                    Text("|")
-                        .offset(x:3, y: -3)
+                    HStack {
+                        Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
+                        Spacer()
+                    }
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width:UIScreen.screenWidth / 1.1, alignment: .center)
+                    .background(Color.white)
+                    .padding(.leading, 15)
+                    
+                    Text("\(par1[par2].allgemeinerText)")
+                        .frame(width: 300, height: 150)
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(Color.black)
+                        .background(Color.white)
+                        .cornerRadius(25)
+                        .opacity(0.9)
+                    
+                    
+                    
+                } // Ende List
+                .cornerRadius(10)
+                
+                    Spacer()
+                    
+                    HStack(alignment: .bottom) {
+                        
+                        Button {
+                            //gegenstandHinzufuegen = true
+                            
+                        } label: {
+                            Label("", systemImage: "doc.badge.gearshape.fill")
+                            //.font(.system(size: 25))
+                            
+                        } // Ende Button
+                        .font(.system(size: 20, weight: .medium))
                         .foregroundColor(Color.white)
-                    
-                    Button {
-                        //gegenstandHinzufuegen = true
+                        .offset(x: 10)
                         
-                    } label: {
-                        Label("", systemImage: "rectangle.stack.fill.badge.minus")
+                        Text("|")
+                            .offset(x:3, y: -3)
+                            .foregroundColor(Color.white)
                         
-                    } // Ende Button
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(Color.white)
-                    .offset(x: 10)
+                        Button {
+                            //gegenstandHinzufuegen = true
+                            
+                        } label: {
+                            Label("", systemImage: "rectangle.stack.fill.badge.minus")
+                            
+                        } // Ende Button
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(Color.white)
+                        .offset(x: 10)
+                        
+                    }// Ende HStack
+                    .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
+                    .background(.gray)
+                    .foregroundColor(Color.black)
                     
-                }// Ende HStack
-                .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
-                .background(.gray)
-                .foregroundColor(Color.black)
-                
-                
-            } // Ende VStack
-            .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-            .background(globaleVariable.farbenEbene1)
-            .cornerRadius(10)
+ 
+                } // Ende VStack
+                .frame(width: geometry.size.width ,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
+            
         } // Ende VStack
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
         .background(globaleVariable.farbenEbene0)

@@ -97,11 +97,11 @@ struct ParameterView: View {
                 } // Ende if
             } // Ende set
         ) // Ende let
-        
-        GeometryReader { geometry in
-            
+       
+            GeometryReader { geometry in
+                
                 VStack {
-                   
+                    
                     Form {
                         
                         Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
@@ -149,7 +149,7 @@ struct ParameterView: View {
                                 .frame(height: 35, alignment: .leading)  // width: 190,
                                 .font(.system(size: 16, weight: .regular))
                             
-                            Text("                ")
+                            Text("                    ")
                             TextField("0.00 €", text: $globaleVariable.preisWert)
                             
                                 .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
@@ -162,7 +162,11 @@ struct ParameterView: View {
                             //.focused($preisWertIsFocused)
                                 .focused($focusedField, equals: .amount)
                             
+                            //Text("€").font(.system(size: 16, weight: .regular))
+                               
                         } // Ende HStack
+                        //.frame(width: UIScreen.screenWidth)
+                        
                         
                         DatePicker("Datum: ", selection: $globaleVariable.datum, displayedComponents: [.date])
                             .accentColor(Color.black)
@@ -283,52 +287,52 @@ struct ParameterView: View {
                         } // Ende ItemGroup
                         } // Ende toolbar
                         
-                   } // Ende Form
+                    } // Ende Form
                     
                 } // Ende VStack
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .background(globaleVariable.farbenEbene0)
-            
-        } // Ende GeometryReader
-        .navigationTitle("Eingabemaske")
-        .toolbar {ToolbarItem(placement: .navigationBarLeading) {
-            
-            if UIDevice.current.userInterfaceIdiom == .phone {
                 
-                if anzahlDerDatensaetze(tableName: "Objekte") == 0 {
-                    NavigationLink(destination: EmptyView()){
-                        Label("", systemImage: "sidebar.left")
-                        
-                    } // Ende NavigationLink
-                }else{
-                    NavigationLink(destination: DeteilView()){
-                        Label("", systemImage: "sidebar.left")
-                        
-                    } // Ende NavigationLink
+            } // Ende GeometryReader
+            .navigationTitle("Eingabemaske")
+            .toolbar {ToolbarItem(placement: .navigationBarLeading) {
+                
+                if UIDevice.current.userInterfaceIdiom == .phone {
                     
-                } // Ende if/else
+                    if anzahlDerDatensaetze(tableName: "Objekte") == 0 {
+                        NavigationLink(destination: EmptyView()){
+                            Label("", systemImage: "sidebar.left")
+                            
+                        } // Ende NavigationLink
+                    }else{
+                        NavigationLink(destination: DeteilView()){
+                            Label("", systemImage: "sidebar.left")
+                            
+                        } // Ende NavigationLink
+                        
+                    } // Ende if/else
+                    
+                } // Ende UIDevice
                 
-           } // Ende UIDevice
+            } // Ende ToolbarItem
                 
-         } // Ende ToolbarItem
-        
-         } // Ende toolbar
-        .navigationBarItems(trailing: Button( action: {
-            showParameterHilfe = true
-        }) {Image(systemName: "questionmark.circle").imageScale(.large)} )
-        .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
-              Button(" - OK - ") {}
-              }, message: { Text("Das ist die Beschreibung für den Bereich Eingabemaske.") } // Ende message
+            } // Ende toolbar
+            .navigationBarItems(trailing: Button( action: {
+                showParameterHilfe = true
+            }) {Image(systemName: "questionmark.circle").imageScale(.large)} )
+            .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
+                Button(" - OK - ") {}
+            }, message: { Text("Das ist die Beschreibung für den Bereich Eingabemaske.") } // Ende message
             ) // Ende alert
-        .navigationBarItems(trailing: Button( action: {
-            showParameterAllgemeinesInfo = true
-        }) {Image(systemName: "house").imageScale(.large)} )
-        .alert("Allgemeine Information", isPresented: $showParameterAllgemeinesInfo, actions: {
-              Button(" - OK - ") {}
-              }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
+            .navigationBarItems(trailing: Button( action: {
+                showParameterAllgemeinesInfo = true
+            }) {Image(systemName: "house").imageScale(.large)} )
+            .alert("Allgemeine Information", isPresented: $showParameterAllgemeinesInfo, actions: {
+                Button(" - OK - ") {}
+            }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
             ) // Ende alert
-        
-        
+            
+            
         
     } // Ende var body
     

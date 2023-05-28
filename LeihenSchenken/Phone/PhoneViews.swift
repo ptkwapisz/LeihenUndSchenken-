@@ -21,13 +21,11 @@ struct IphoneTable1: View {
         
         let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen oder Schänken
         
-        //var tempErgaenzung = ""
-        
         let anzahl: Int = objekte.count
       
             VStack {
                 Text("")
-                Text("Alle Vorgänge" + "\(tempErgaenzung)").bold()
+                Text("Alle Objekte" + "\(tempErgaenzung)").bold()
                     .frame(maxWidth: .infinity, alignment: .center)
                 
                     List {
@@ -132,7 +130,8 @@ struct IphoneTable2: View {
                 Text(index.gegenstandName)
                 
             } // Ende List
-           
+            .cornerRadius(10)
+            
             HStack(alignment: .bottom) {
                 
                 Button {
@@ -243,6 +242,8 @@ struct IphoneTable3: View {
                 Text(index.personPicker)
                 
             } // Ende List
+            .cornerRadius(10)
+            
             
             HStack(alignment: .bottom) {
                 Button {
@@ -315,7 +316,7 @@ struct IphoneTable3: View {
             } // Ende HStack
             .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
             .background(.gray)
-            //.cornerRadius(10)
+            .cornerRadius(10)
             .foregroundColor(Color.black)
             .sheet(isPresented: $personHinzufuegen, content: {ShapeViewAddUser(isPresented: $personHinzufuegen, isParameterBereich: $isParameterBereich)})
             
