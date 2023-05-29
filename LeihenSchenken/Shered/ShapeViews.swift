@@ -40,6 +40,7 @@ struct ShapeViewAddUser: View {
                        .disableAutocorrection(true)
                    
                    Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
+                       
                        ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
                            Text("\(globaleVariable.parameterPersonSex[index])")
                            
@@ -50,11 +51,12 @@ struct ShapeViewAddUser: View {
                Button(action: {
                    if vorname != "" && name != "" {
                        if isParameterBereich {
-                           let tempPerson = name + ", " + vorname
-                           globaleVariable.parameterPerson.append(tempPerson)
+                           //let tempPerson = name + ", " + vorname
+                           //globaleVariable.parameterPerson.append(tempPerson)
                            personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
                            // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
-                           globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
+                           //globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
+                           globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
                            print("Person wird in die Auswahl hinzugefügt!")
                            isPresented = false
                        }else{
@@ -66,8 +68,11 @@ struct ShapeViewAddUser: View {
                            }else{
                                
                                personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                               globaleVariable.parameterPerson.removeAll()
-                               globaleVariable.parameterPerson = personenArray()
+                               //globaleVariable.parameterPerson.removeAll()
+                               //globaleVariable.parameterPerson = personenArray()
+                               globaleVariable.personenParameter.removeAll()
+                               globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                               
                                
                                print("Person wurde in die Datenbank hinzugefügt!")
                                isPresented = false

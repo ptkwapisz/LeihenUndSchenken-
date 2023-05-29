@@ -22,7 +22,12 @@ class GlobaleVariable: ObservableObject {
     @Published var parameterDatum: Date = Date()
     @Published var parameterImageString: String = "Kein Bild"
     
-    @Published var parameterPerson: [String] = personenArray()
+    //@Published var parameterPerson: [String] = personenArray()
+    //@Published var selectedPersonVariable: [PersonVariable] = [PersonVariable(personVorname: "", personNachname: "", personSex: "")]
+    
+    @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+    
+    
     
     @Published var navigationTabView = 1
     @Published var farbenEbene0: Color = loadColor0A()
@@ -40,8 +45,6 @@ class GlobaleVariable: ObservableObject {
     @Published var textGegenstandbeschreibung: String = ""
     @Published var selectedVorgangInt: Int = 0
     @Published var selectedPersonInt: Int = 0
-    @Published var selectedPersonVariable: [PersonVariable] = [PersonVariable(personVorname: "", personNachname: "", personSex: "")]
-    
     
     @Published var preisWert: String = ""
     @Published var textAllgemeineNotizen: String = ""
@@ -130,6 +133,7 @@ class ObjectVariable: Identifiable {
 
 } // Ende class
 
+
 class GegenstandVariable: Identifiable {
     
       @Published var perKey: String
@@ -143,8 +147,6 @@ class GegenstandVariable: Identifiable {
     } // Ende init
     
 } // Ende class
-
-
 
 class PersonVariable: Identifiable {
     
@@ -161,6 +163,7 @@ class PersonVariable: Identifiable {
     } // Ende init
     
 } // Ende class
+
 
 class PersonClassVariable: Identifiable {
     
@@ -181,3 +184,4 @@ class PersonClassVariable: Identifiable {
     } // Ende init
     
 } // Ende class
+

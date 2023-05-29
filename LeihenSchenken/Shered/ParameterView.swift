@@ -45,9 +45,8 @@ struct ParameterView: View {
     @State private var platz: String = ""
     
     @State var imageData = UIImage()
-    
-    //@State var preisWert: String = ""
-    
+     
+    //@State private var personPickerEingabemaske: [PersonClassVariable] = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false)
     
     private let numberFormatter: NumberFormatter
     private let perKeyFormatter: DateFormatter
@@ -85,6 +84,23 @@ struct ParameterView: View {
             } // Ende set
         ) // Ende let
         
+        
+        
+        let tapOptionPerson = Binding<Int>(
+            get: { globaleVariable.selectedPersonInt }, set: { globaleVariable.selectedPersonInt = $0
+                
+                //Add the onTapGesture contents here
+                if globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personPicker == "Neue Person" {
+                   showSheetPerson = true
+                   selectedPerson = "Neue Person"
+                }else{
+                    selectedPerson = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personPicker
+                } // Ende if
+            } // Ende set
+        ) // Ende let
+        
+        
+        /*
         let tapOptionPerson = Binding<Int>(
             get: { globaleVariable.selectedPersonInt }, set: { globaleVariable.selectedPersonInt = $0
                 
@@ -97,12 +113,17 @@ struct ParameterView: View {
                 } // Ende if
             } // Ende set
         ) // Ende let
-       
+        */
+        
+        
+        
             GeometryReader { geometry in
                 
                 VStack {
                     
                     Form {
+                        
+                        
                         
                         Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
                             ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
@@ -149,7 +170,7 @@ struct ParameterView: View {
                                 .frame(height: 35, alignment: .leading)  // width: 190,
                                 .font(.system(size: 16, weight: .regular))
                             
-                            Text("                    ")
+                            Text(String(repeating: " ", count: 28))
                             TextField("0.00 €", text: $globaleVariable.preisWert)
                             
                                 .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
@@ -188,14 +209,26 @@ struct ParameterView: View {
                         }) // Picker
                         .font(.system(size: 16, weight: .regular))
                         
+                        
+                        
                         Picker("Person: ", selection: tapOptionPerson, content: {
-                            ForEach(0..<$globaleVariable.parameterPerson.count, id: \.self) { index in
-                                Text("\(globaleVariable.parameterPerson[index])")//.tag(index)
+                            ForEach(0..<$globaleVariable.personenParameter.count, id: \.self) { index in
+                                Text("\(globaleVariable.personenParameter[index].personPicker)")//.tag(index)
                             } // Ende ForEach
                         }) // Picker
                         .font(.system(size: 16, weight: .regular))
                         .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
                         
+                        
+                        /*
+                        Picker("Person: ", selection: tapOptionPerson, content: {
+                            ForEach(0..<$personenParameter.count, id: \.self) { index in
+                                Text("\(personenParameter[index].personPicker)")//.tag(index)
+                            } // Ende ForEach
+                        }) // Picker
+                        .font(.system(size: 16, weight: .regular))
+                        .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
+*/
                         
                         TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
                         //.focused($preisWertIsFocused)
@@ -218,6 +251,7 @@ struct ParameterView: View {
                                                 
                                             },
                                             secondaryButton: .cancel(Text("Abbrechen")){
+                                                //print("\(globaleVariable.parameterPerson[globaleVariable.selectedPersonInt])")
                                                 print("Abgebrochen ....")
                                             } // Ende secondary Button
                                         ) // Ende Alert
@@ -229,11 +263,16 @@ struct ParameterView: View {
                                             title: Text("Möchten Sie alle Eingaben speichern?"),
                                             message: Text("Die Daten werden in die Datenbank gespeichert und die Eingabemaske wird geleert!"),
                                             primaryButton: .destructive(Text("Speichern")) {
-                                                // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
                                                 
+                                                // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
                                                 let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
                                                 
-                                                let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(globaleVariable.selectedPersonVariable[0].personVorname)', '\(globaleVariable.selectedPersonVariable[0].personNachname)', '\(globaleVariable.selectedPersonVariable[0].personSex)', '\(globaleVariable.textAllgemeineNotizen)')"
+                                                let personIntTmp = globaleVariable.selectedPersonInt
+                                                let personVornameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personVorname
+                                                let personNachnameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personNachname
+                                                let persoSexTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personSex
+                                                
+                                                let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(personVornameTmp)', '\(personNachnameTmp)', '\(persoSexTmp)', '\(globaleVariable.textAllgemeineNotizen)')"
                                                 
                                                 if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
                                                     SQLITE_OK {
@@ -242,10 +281,10 @@ struct ParameterView: View {
                                                     print("Daten wurden nicht hinzugefügt")
                                                 }else{
                                                     
-                                                    // Die Parameterwerte werden gelöscht.
-                                                    cleanEingabeMaske()
+                                                    // Die Parameterwerte wurden in die Tabelle geschrieben.
                                                     
-                                                    print("Gespeichert...")
+                                                    cleanEingabeMaske()
+                                                    print("In der Tabelle Gespeichert...")
                                                     
                                                 } // End if/else
                                                 
@@ -375,7 +414,7 @@ struct TextEditorWithPlaceholder: View {
                             .onChange(of: text, perform: { newValue in
                                 if newValue.count <= 100 {
                                     lastText = newValue
-                                    print(lastText.count)
+                                    //print(lastText.count)
                                 }else{
                                     self.text = lastText
                                 } // Ende else

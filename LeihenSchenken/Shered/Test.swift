@@ -109,3 +109,6 @@ func abfrageField3(field1: String)->[String] {
 
     return result
 } // Ende func
+
+
+

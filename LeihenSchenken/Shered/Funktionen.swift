@@ -90,9 +90,12 @@ func cleanEingabeMaske () {
     globaleVariable.preisWert = ""
     globaleVariable.datum = Date()
     globaleVariable.textAllgemeineNotizen = ""
-    globaleVariable.selectedPersonVariable.removeAll()
-    globaleVariable.parameterPerson.removeAll()
-    globaleVariable.parameterPerson = personenArray()
+    //globaleVariable.selectedPersonVariable.removeAll()
+    //globaleVariable.parameterPerson.removeAll()
+    //globaleVariable.parameterPerson = personenArray()
+    globaleVariable.personenParameter.removeAll()
+    globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+    
     
     print("Die Eingabe-Variablen wurden zurückgesetzt.")
     
@@ -116,8 +119,8 @@ func vorgangDeklination(vorgang: String)-> String {
     return resultat
 }// Ende func
 
-
-// Aus der Datenbanktabelle Personen werden die Personendaten geladen, die bei Angabemaske angezeigt werden.
+/*
+// Aus der Datenbanktabelle Personen werden die Personendaten geladen, die bei Eingabemaske angezeigt werden.
 // Dabei wird das Format "Name, Vorname" erstellt.
 func personenArray() -> [String] {
     var resultat: [String] = [""]
@@ -141,6 +144,8 @@ func personenArray() -> [String] {
     
     return resultat.unique()
 } // Ende func
+
+*/
 
 
 // Diese Funktion speichert die Personendaten in die Datenbank in die Tabelle Personen
@@ -166,8 +171,11 @@ func personenDatenInDatenbankSchreiben(par1: String, par2: String, par3: String)
         print("Personendaten wurden nicht hinzugefügt")
     } // End if
 
-    globaleVariable.parameterPerson.removeAll()
-    globaleVariable.parameterPerson = personenArray()
+    // globaleVariable.parameterPerson.removeAll()
+    // globaleVariable.parameterPerson = personenArray()
+    globaleVariable.personenParameter.removeAll()
+    globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+    
     print("Personendaten wurden in die Tabelle gespeichert...")
     
 } // Ende func
@@ -178,15 +186,21 @@ func personenDatenInDatenbankSchreiben(par1: String, par2: String, par3: String)
 // par3 = Geschlecht
 func personenDatenInVariableSchreiben(par1: String, par2: String, par3: String){
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    /*
     globaleVariable.selectedPersonVariable.removeAll()
     globaleVariable.selectedPersonVariable.append(contentsOf: [PersonVariable(personVorname: "\(par1)", personNachname: "\(par2)", personSex: "\(par3)")])
+    */
+    var pickerTemp: String = par2 + ", " + par1
+    globaleVariable.personenParameter.removeAll()
+    
+    globaleVariable.personenParameter.append(contentsOf: [PersonClassVariable(perKey: "0000000000000", personPicker: "Neue Person", personVorname: "Neue Person", personNachname: "Neue Person", personSex: "Mann")])
+    globaleVariable.personenParameter.append(contentsOf: [PersonClassVariable(perKey: "0000000000001", personPicker: pickerTemp, personVorname: par1, personNachname: par2, personSex: par3)])
     
     print("Personendaten wurden in die Variable gespeichert...")
     
 } // Ende func
 
-// Diese Funktion speichert die gegenstaende in die Datenbank in die Tabelle Gegenstaende
+// Diese Funktion speichert die Gegenstaende in die Datenbank in die Tabelle Gegenstaende
 func gegenstaendenInDatenbankSchreiben(par1: String, par2: String) {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
@@ -205,9 +219,7 @@ func gegenstaendenInDatenbankSchreiben(par1: String, par2: String) {
         print("Personendaten wurden nicht hinzugefügt")
     } // End if
 
-    
     print("Personendaten wurden gespeichert...")
-    
     
 } // Ende func
 

@@ -11,11 +11,16 @@ import SwiftUI
 // Das ist die View für detalierte Objektangaben mit Foto
 struct ChartView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State var par1: [ObjectVariable]
     @State var par2: Int
     
     @State var showChartHilfe: Bool = false
+    
+    @State var errorMessageText = ""
+    @State private var showAlert = false
+    @State private var activeAlert: ActiveAlert = .error
     
     let heightFaktor: Double = 0.99
     
@@ -54,7 +59,7 @@ var body: some View {
                             Text("\(par1[par2].gegenstandText)")
                             //.padding(.top, 10)
                             //.padding(.leading, 6)
-                                .frame(width: 200, height: 150)
+                            .frame(width: 200, height: 150, alignment: .topLeading)
                             //.border(.blue)
                                 .font(.system(size: 16, weight: .regular))
                                 .foregroundColor(Color.black)
@@ -97,7 +102,7 @@ var body: some View {
                     .padding(.leading, 15)
                     
                     Text("\(par1[par2].allgemeinerText)")
-                        .frame(width: 300, height: 150)
+                        .frame(width: 300, height: 150, alignment: .topLeading)
                         .font(.system(size: 16, weight: .regular))
                         .foregroundColor(Color.black)
                         .background(Color.white)
@@ -130,7 +135,8 @@ var body: some View {
                             .foregroundColor(Color.white)
                         
                         Button {
-                            //gegenstandHinzufuegen = true
+                            showAlert = true
+                            //activeAlert = .delete
                             
                         } label: {
                             Label("", systemImage: "rectangle.stack.fill.badge.minus")
@@ -139,7 +145,32 @@ var body: some View {
                         .font(.system(size: 20, weight: .medium))
                         .foregroundColor(Color.white)
                         .offset(x: 10)
-                        
+                        .alert(isPresented: $showAlert) {
+                           Alert( title: Text("Wichtige Information!"),
+                                        message: Text("Das Objekt: \(par1[par2].gegenstand) wird unwiederfuflich gelöscht! Man kann diesen Vorgang nicht rückgängich machen!"),
+                                            primaryButton: .destructive(Text("Löschen")) {
+                                            
+                                            let perKeyTmp = par1[par2].perKey
+                                            deleteItemsFromDatabase(tabelle: "Objekte", perKey: perKeyTmp)
+                                            print("\(par1[par2].gegenstand)" + " wurde gelöscht")
+                                            print(perKeyTmp)
+                                            globaleVariable.navigationTabView = 1
+                                            refreshAllViews()
+                                            showAlert = false
+                                            // Diese Zeile bewirkt, dass die View geschlossen wird
+                                            self.presentationMode.wrappedValue.dismiss()
+                                        },
+                                        secondaryButton: .cancel(Text("Abbrechen")){
+                                            print("\(par1[par2].gegenstand)" + " wurde nicht gelöscht")
+                                            print("Abgebrochen ....")
+                                            refreshAllViews()
+                                            showAlert = false
+                                        } // Ende secondary Button
+                                        
+                                    ) // Ende Alert
+                            //} // Ende switch
+                        } // Ende alert
+                    
                     }// Ende HStack
                     .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
                     .background(.gray)
@@ -162,9 +193,9 @@ var body: some View {
                 }) {
                     Image(systemName: "questionmark.circle")
                 } // Ende Button
-                .alert("Hilfe für Chart", isPresented: $showChartHilfe, actions: {
+                .alert("Hilfe für die Objektdeteilansicht", isPresented: $showChartHilfe, actions: {
                     Button(" - OK - ") {}
-                }, message: { Text("Das ist die Beschreibung für das Chart.") } // Ende message
+                }, message: { Text("Das ist die Beschreibung.") } // Ende message
                 ) // Ende alert
             } // Ende ToolbarItemGroup
         } // Ende toolbar
