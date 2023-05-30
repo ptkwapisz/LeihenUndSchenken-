@@ -71,7 +71,6 @@ struct IphoneTable1: View {
                                                             Label{} icon: { Image(systemName: "photo.fill.on.rectangle.fill") .font(.system(size: 16, weight: .medium))
                                                             } // Ende Label
                                                             .frame(width:35, height: 25, alignment: .center)
-                                                            //.background(.gray)
                                                             .cornerRadius(10)
                                                             .foregroundColor(.white)
                                                             // Diese Zeile bewirkt, dass Label rechtsbündig kurz vor dem > erscheint
@@ -95,12 +94,11 @@ struct IphoneTable1: View {
                         
                     } // Ende List
                     .cornerRadius(10)
-                   
+                    Spacer()
             } // Ende VStack
-            //.frame(width: 360, height: 570)
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)
-            .shadow(radius: 10)
+            
        
     } // Ende var body
     
@@ -206,8 +204,8 @@ struct IphoneTable2: View {
         
         } // Ende Vstack
         .background(globaleVariable.farbenEbene1)
-        //.cornerRadius(10)
-        .shadow(radius: 10)
+        .cornerRadius(10)
+        //.shadow(radius: 10)
         
     }// Ende var body
     
@@ -316,19 +314,61 @@ struct IphoneTable3: View {
             } // Ende HStack
             .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
             .background(.gray)
-            .cornerRadius(10)
             .foregroundColor(Color.black)
             .sheet(isPresented: $personHinzufuegen, content: {ShapeViewAddUser(isPresented: $personHinzufuegen, isParameterBereich: $isParameterBereich)})
             
             
         } // Ende Vstack
         .background(globaleVariable.farbenEbene1)
-        //.cornerRadius(10)
-        .shadow(radius: 10)
+        .cornerRadius(10)
+        
     
     }// Ende var body
     
 } // Ende struct
+
+struct IphoneTable4: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+
+    var body: some View {
+        
+        let statistikenVariable: [Statistiken] = ladeStatistiken()
+        
+        VStack{
+            Text("")
+            Text("Statistiken").bold()
+            
+            List {
+                ForEach(0..<statistikenVariable.count, id: \.self) { item in
+                    HStack {
+                        
+                        Text("\(statistikenVariable[item].stText)")
+                        Spacer()
+                        Text("\(statistikenVariable[item].stWert)")
+                            
+                        
+                        
+                    } // Ende HStack
+                    //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                    .frame(height: 10)
+                    .font(.system(size: 16, weight: .medium)).bold()
+                    
+                    
+                }// Ende ForEach
+                
+            } // Ende List
+            .cornerRadius(10)
+             Spacer()
+
+        } // Ende Vstack
+        .background(globaleVariable.farbenEbene1)
+        .cornerRadius(10)
+       
+    } // Ende var body
+        
+} // Ende struct
+
+
 
 func perKeyBestimmenGegenstand(par: String) -> [String] {
     var result: [String] = [""]

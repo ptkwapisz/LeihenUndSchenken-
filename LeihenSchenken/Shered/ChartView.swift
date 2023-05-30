@@ -106,7 +106,7 @@ var body: some View {
                         .font(.system(size: 16, weight: .regular))
                         .foregroundColor(Color.black)
                         .background(Color.white)
-                        .cornerRadius(25)
+                        .cornerRadius(10)
                         .opacity(0.9)
                     
                     

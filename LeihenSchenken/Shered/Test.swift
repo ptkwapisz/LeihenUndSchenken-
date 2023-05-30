@@ -110,5 +110,23 @@ func abfrageField3(field1: String)->[String] {
     return result
 } // Ende func
 
+func ladeStatistiken() -> [Statistiken] {
+    var resultat: [Statistiken] = [Statistiken(stText: "", stWert: "")]
+    resultat.removeAll()
+    
+    let z1s1: String = "Alle Objekte:"
+    let z1S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte")
+    
+    let z2s1: String = "Verschenkte Objekte:"
+    let z2S2: [String]  = querySQLAbfrageArray(queryTmp: "select count() From Objekte Where vorgang = 'Verschenken'")
 
+    let z3s1: String = "Verliehene Objekte:"
+    let z3S2: [String]  = querySQLAbfrageArray(queryTmp: "select count() From Objekte Where vorgang = 'Verleihen'")
+    
+    resultat.append(Statistiken(stText: z1s1, stWert: z1S2[0]))
+    resultat.append(Statistiken(stText: z2s1, stWert: z2S2[0]))
+    resultat.append(Statistiken(stText: z3s1, stWert: z3S2[0]))
+    
+    return resultat
+} // Ende func
 

@@ -33,4 +33,14 @@ extension UIScreen{
    static let screenWidth = UIScreen.main.bounds.size.width
    static let screenHeight = UIScreen.main.bounds.size.height
    static let screenSize = UIScreen.main.bounds.size
-}
+} // Ende Extension
+
+extension View {
+    @ViewBuilder func phoneOnlyStackNavigationView() -> some View {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            self.navigationViewStyle(.stack)
+        } else {
+            self
+        } // Ende else
+    } // Ende some View
+} // Ende extension

@@ -26,7 +26,7 @@ class GlobaleVariable: ObservableObject {
     //@Published var selectedPersonVariable: [PersonVariable] = [PersonVariable(personVorname: "", personNachname: "", personSex: "")]
     
     @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
-    
+    //@Published var statistikenClasse: [Statistiken] = ladeStatistiken()
     
     
     @Published var navigationTabView = 1
@@ -148,17 +148,16 @@ class GegenstandVariable: Identifiable {
     
 } // Ende class
 
-class PersonVariable: Identifiable {
+
+class Statistiken: Identifiable {
     
-    @Published var personVorname: String
-    @Published var personNachname: String
-    @Published var personSex: String
-    
-    init(personVorname: String, personNachname: String, personSex: String) {
+    @Published var stText: String
+    @Published var stWert: String
+   
+    init(stText: String, stWert: String) {
         
-        self.personVorname = personVorname
-        self.personNachname = personNachname
-        self.personSex = personSex
+        self.stText = stText
+        self.stWert = stWert
         
     } // Ende init
     

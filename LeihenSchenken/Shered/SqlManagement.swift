@@ -257,6 +257,8 @@ func refreschParameter(){
     // Das Array mit den Standartwerten wird erstellt
     globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
     
+    globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+    
     //globaleVariable.parameterPerson = personenArray()
     
 } // Ende refreschParameter

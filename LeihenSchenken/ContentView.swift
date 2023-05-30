@@ -55,12 +55,3 @@ struct ContentView_Previews: PreviewProvider {
 } // Ende struct
 
 
-extension View {
-    @ViewBuilder func phoneOnlyStackNavigationView() -> some View {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            self.navigationViewStyle(.stack)
-        } else {
-            self
-        } // Ende else
-    } // Ende some View
-} // Ende extension
