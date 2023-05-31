@@ -101,7 +101,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DBBC7B9F2A0017CE00177A52 /* Shered */ = {
+		DBBC7B9F2A0017CE00177A52 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
 				DBCCBB7C2A1825D200EDF087 /* GlobaleVariablen.swift */,
@@ -118,7 +118,7 @@
 				DBE5D0A62A192DEB006410AD /* Test.swift */,
 				DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */,
 			);
-			path = Shered;
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		DBBC7BA02A0017F200177A52 /* Phone */ = {
@@ -161,7 +161,7 @@
 			children = (
 				DBCEF7F929D1ED770017A728 /* LeihenSchenkenApp.swift */,
 				DBCEF7FB29D1ED770017A728 /* ContentView.swift */,
-				DBBC7B9F2A0017CE00177A52 /* Shered */,
+				DBBC7B9F2A0017CE00177A52 /* Shared */,
 				DBBC7BA02A0017F200177A52 /* Phone */,
 				DBBC7BA12A00181E00177A52 /* Pad */,
 				DBCEF7FD29D1ED790017A728 /* Assets.xcassets */,

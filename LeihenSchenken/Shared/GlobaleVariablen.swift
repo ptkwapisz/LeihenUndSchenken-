@@ -114,7 +114,7 @@ class ObjectVariable: Identifiable {
     @Published var personNachname: String
     @Published var personSex: String
     @Published var allgemeinerText: String
-
+    
     init(perKey: String, gegenstand: String, gegenstandTex: String, gegenstandBild: String, preisWert: String, datum: String, vorgang: String, personVorname: String, personNachname: String, personSex: String, allgemeinerText: String) {
         
         self.perKey = perKey
@@ -130,14 +130,14 @@ class ObjectVariable: Identifiable {
         self.allgemeinerText = allgemeinerText
         
     } // Ende init
-
+    
 } // Ende class
 
 
 class GegenstandVariable: Identifiable {
     
-      @Published var perKey: String
-      @Published var gegenstandName: String
+    @Published var perKey: String
+    @Published var gegenstandName: String
     
     init(perKey: String, gegenstandName: String) {
         
@@ -151,12 +151,15 @@ class GegenstandVariable: Identifiable {
 
 class Statistiken: Identifiable {
     
-    @Published var stText: String
+    @Published var stGruppe: String
+    @Published var stName: String
     @Published var stWert: String
-   
-    init(stText: String, stWert: String) {
+    
+    
+    init(stGruppe: String, stName: String, stWert: String) {
         
-        self.stText = stText
+        self.stGruppe = stGruppe
+        self.stName = stName
         self.stWert = stWert
         
     } // Ende init

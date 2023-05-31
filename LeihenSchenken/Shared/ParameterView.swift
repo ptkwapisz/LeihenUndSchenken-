@@ -99,31 +99,11 @@ struct ParameterView: View {
             } // Ende set
         ) // Ende let
         
-        
-        /*
-        let tapOptionPerson = Binding<Int>(
-            get: { globaleVariable.selectedPersonInt }, set: { globaleVariable.selectedPersonInt = $0
-                
-                //Add the onTapGesture contents here
-                if globaleVariable.parameterPerson[globaleVariable.selectedPersonInt] == "Neue Person" {
-                   showSheetPerson = true
-                   selectedPerson = "Neue Person"
-                }else{
-                    selectedPerson = globaleVariable.parameterPerson[globaleVariable.selectedPersonInt]
-                } // Ende if
-            } // Ende set
-        ) // Ende let
-        */
-        
-        
-        
             GeometryReader { geometry in
                 
                 VStack {
                     
                     Form {
-                        
-                        
                         
                         Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
                             ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
@@ -267,7 +247,7 @@ struct ParameterView: View {
                                                 // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
                                                 let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
                                                 
-                                                let personIntTmp = globaleVariable.selectedPersonInt
+                                                //let personIntTmp = globaleVariable.selectedPersonInt
                                                 let personVornameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personVorname
                                                 let personNachnameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personNachname
                                                 let persoSexTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personSex
@@ -439,14 +419,16 @@ struct PhotosSelector: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @State private var selectedItem: PhotosPickerItem?
     @State private var selectedPhotoData: Data?
-    let filter: PHPickerFilter = .not(.all(of: [
+    let filter: PHPickerFilter = .not(.any( of: [
         .videos,
         .slomoVideos,
         .bursts,
         .livePhotos,
         .screenRecordings,
         .cinematicVideos,
-        .timelapseVideos
+        .timelapseVideos,
+        .screenshots,
+        .depthEffectPhotos
     ]))
     
     var body: some View {

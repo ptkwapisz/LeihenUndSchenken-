@@ -71,10 +71,9 @@ struct DeteilView: View {
                 } // Ende if
             } // Ende TabView
             
-            
         } // Ende VStack
         .navigationTitle(naviTitleText(tabNummer: globaleVariable.navigationTabView))
-        //.font(.system(size: 10, weight: .regular))
+
         .toolbar {
             // Wenn das Tab Handbuch gezeigt wird
             // andere Tabmenuepunkte ausgeblendet
@@ -187,9 +186,9 @@ func naviTitleText(tabNummer: Int) -> String {
     
     switch tabNummer {
         case 1:
-            returnWert = "Objektliste"
+            returnWert = "Objektenliste"
         case 2:
-            returnWert = "Gegenstandslist"
+            returnWert = "Gegenständeliste"
         case 3:
             returnWert = "Personenliste"
         case 4:

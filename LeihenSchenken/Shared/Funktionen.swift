@@ -78,6 +78,26 @@ func distingtArray(par1: [ObjectVariable], par2: String) -> [String]{
     return resultat
 } // Ende func
 
+func distingtArrayStatistiken(par1: [Statistiken], par2: String) -> [String]{
+    
+    var resultat: [String] = [""]
+    
+    switch par2 {
+        
+    case "stGruppe" :
+        resultat = Array(Set(par1.compactMap { $0.stGruppe }))
+        
+    default:
+        print("Default")
+    } // Ende Switch
+    
+    return resultat
+} // Ende func
+
+
+
+
+
 // Das ist die funktion zum Bereinigen der Eingabemaske
 func cleanEingabeMaske () {
     @ObservedObject var globaleVariable = GlobaleVariable.shared

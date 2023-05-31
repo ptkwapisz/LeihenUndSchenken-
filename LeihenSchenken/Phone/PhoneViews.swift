@@ -195,7 +195,7 @@ struct IphoneTable2: View {
                 Text("|")
                     .offset(x:3, y: -3)
                     .foregroundColor(Color.white)
-            }
+            } // Ende HStack
             .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
             .background(.gray)
             .foregroundColor(Color.black)
@@ -329,46 +329,54 @@ struct IphoneTable3: View {
 
 struct IphoneTable4: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-
+    
     var body: some View {
         
         let statistikenVariable: [Statistiken] = ladeStatistiken()
+        let stSection = distingtArrayStatistiken(par1: statistikenVariable, par2: "stGruppe")
         
         VStack{
             Text("")
             Text("Statistiken").bold()
             
             List {
-                ForEach(0..<statistikenVariable.count, id: \.self) { item in
-                    HStack {
-                        
-                        Text("\(statistikenVariable[item].stText)")
-                        Spacer()
-                        Text("\(statistikenVariable[item].stWert)")
-                            
-                        
-                        
-                    } // Ende HStack
-                    //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                    .frame(height: 10)
-                    .font(.system(size: 16, weight: .medium)).bold()
-                    
-                    
-                }// Ende ForEach
                 
+                ForEach(stSection.indices, id: \.self) { idx in
+                    Section(header: Text("\(stSection[idx])")
+                        .font(.system(size: 15, weight: .medium)).bold()) {
+                            
+                            ForEach(0..<statistikenVariable.count, id: \.self) { item in
+                                
+                                if stSection[idx] == statistikenVariable[item].stGruppe {
+                                    
+                                    HStack {
+                                        
+                                        Text("\(statistikenVariable[item].stName)")
+                                        Spacer()
+                                        Text("\(statistikenVariable[item].stWert)")
+                                        
+                                        
+                                    } // Ende HStack
+                                    //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                    .frame(height: 10)
+                                    .font(.system(size: 16, weight: .medium)).bold()
+                                    
+                                } // Ende if
+                            }// Ende ForEach
+                            
+                        } // Ende Section
+                }
             } // Ende List
             .cornerRadius(10)
-             Spacer()
-
+            Spacer()
+            
         } // Ende Vstack
         .background(globaleVariable.farbenEbene1)
         .cornerRadius(10)
-       
-    } // Ende var body
         
+    } // Ende var body
+    
 } // Ende struct
-
-
 
 func perKeyBestimmenGegenstand(par: String) -> [String] {
     var result: [String] = [""]
@@ -382,8 +390,6 @@ func perKeyBestimmenGegenstand(par: String) -> [String] {
     return result
 } // Ende func
 
-
-
 func perKeyBestimmenPerson(par: String) -> [String] {
     var result: [String] = [""]
     
@@ -395,7 +401,6 @@ func perKeyBestimmenPerson(par: String) -> [String] {
 
     return result
 } // Ende func
-
 
 // Diese enum wird für Alertmeldung benutzt
 enum ActiveAlert {

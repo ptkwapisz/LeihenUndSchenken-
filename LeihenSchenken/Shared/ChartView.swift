@@ -18,9 +18,11 @@ struct ChartView: View {
     
     @State var showChartHilfe: Bool = false
     
-    @State var errorMessageText = ""
-    @State private var showAlert = false
+    @State var errorMessageText: String = ""
+    @State private var showAlert: Bool = false
     @State private var activeAlert: ActiveAlert = .error
+    
+    @State var objektEditieren: Bool = false
     
     let heightFaktor: Double = 0.99
     
@@ -70,6 +72,7 @@ var body: some View {
                             
                         }// Ende HStack
                     
+                    
                     HStack() {
                         Text("Wert des Gegenstandes: ")
                         Text("\(par1[par2].preisWert)" + "€")
@@ -101,6 +104,7 @@ var body: some View {
                     .background(Color.white)
                     .padding(.leading, 15)
                     
+                    
                     Text("\(par1[par2].allgemeinerText)")
                         .frame(width: 300, height: 150, alignment: .topLeading)
                         .font(.system(size: 16, weight: .regular))
@@ -119,7 +123,7 @@ var body: some View {
                     HStack(alignment: .bottom) {
                         
                         Button {
-                            //gegenstandHinzufuegen = true
+                            objektEditieren = true
                             
                         } label: {
                             Label("", systemImage: "doc.badge.gearshape.fill")
@@ -170,17 +174,19 @@ var body: some View {
                                     ) // Ende Alert
                             //} // Ende switch
                         } // Ende alert
-                    
-                    }// Ende HStack
+                        
+                    } // Ende HStack
                     .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
                     .background(.gray)
                     .foregroundColor(Color.black)
+                    .sheet(isPresented: $objektEditieren, content: { ChartViewEdit(isPresentedChartViewEdit: $objektEditieren, par1: par1, par2: par2)})
                     
  
                 } // Ende VStack
                 .frame(width: geometry.size.width ,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                 .background(globaleVariable.farbenEbene1)
                 .cornerRadius(10)
+                
             
         } // Ende VStack
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
@@ -201,78 +207,104 @@ var body: some View {
         } // Ende toolbar
     } // Ende GeometryReader
 } // Ende var body
-} // Ende struc Tab4
+} // Ende struc ChartView
 
 
-/*
-// Das ist die View für detalierte Objektangaben mit Foto
-struct ChartViewtemp: View {
+
+// Das ist die View für detalierte Objektbearbeitung mit Foto
+struct ChartViewEdit: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    @Binding var isPresentedChartViewEdit: Bool
     @State var par1: [ObjectVariable]
     @State var par2: Int
     
     @State var showChartHilfe: Bool = false
     
     var body: some View {
-        //Form {
-            VStack {
-                Section(header: Text("Objektinformationen")) {
-                    Text("\(par1[par2].gegenstandText)")
-                        .padding(.top, 10)
-                        .padding(.leading, 6)
-                        .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(Color.black)
-                        .opacity(0.9)
-               } // Ende Section
-                
-                
-                Text("\(par1[par2].datum)")
-                if par1[par2].gegenstandBild != "Kein Bild" {
-                    Image(base64Str: par1[par2].gegenstandBild)!
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(25)
-                        .padding(20)
-                        .frame(width: 350, height: 200)
-                        .shadow(color: Color.black, radius: 5, x: 5, y: 5)
-                }else{
-                    Text("Kein Bild")
-                        .scaledToFit()
-                        .padding(20)
-                        .frame(width: 150, height: 100)
-                        .background(Color.gray.gradient)
-                        .cornerRadius(25)
+        //GeometryReader { geometry in
+            NavigationView {
+                Form {
+                    Section(header: Text("Objektinformationen")) {
+                        Text("\(par1[par2].gegenstandText)")
+                            .padding(.top, 10)
+                            .padding(.leading, 6)
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(Color.black)
+                            .opacity(0.9)
+                    } // Ende Section
                     
-                } // Ende if/else
-                
-                Text("\(par1[par2].preisWert)" + "€")
-                Text("\(par1[par2].vorgang)")
-                Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
-                Text("\(par1[par2].allgemeinerText)")
+                    
+                    Text("\(par1[par2].datum)")
+                    if par1[par2].gegenstandBild != "Kein Bild" {
+                        Image(base64Str: par1[par2].gegenstandBild)!
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(25)
+                            .padding(20)
+                            .frame(width: 350, height: 200)
+                            .shadow(color: Color.black, radius: 5, x: 5, y: 5)
+                    }else{
+                        Text("Kein Bild")
+                            .scaledToFit()
+                            .padding(20)
+                            .frame(width: 150, height: 100)
+                            .background(Color.gray.gradient)
+                            .cornerRadius(25)
+                        
+                    } // Ende if/else
+                    
+                    
+                    Text("\(par1[par2].preisWert)" + "€")
+                    Text("\(par1[par2].vorgang)")
+                    Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
+                    Text("\(par1[par2].allgemeinerText)")
+                    
+                    Section {
+                        Button(action: {
+                           
+                            isPresentedChartViewEdit = false
+                            
+                        }) {
+                            HStack {
+                                Image(systemName: "square.and.arrow.down.fill")
+                                    .font(.title3)
+                                Text("Änderungen speichern")
+                                    .fontWeight(.semibold)
+                                    .font(.title3)
+                            } // Ende HStack
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .foregroundColor(.white)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                        } // Ende Button
+                        
+                        
+                    } // Ende Section
+                    
+                } // Ende VStack
+                .scrollContentBackground(.hidden)
+                .navigationBarItems(trailing: Button( action: {
+                    isPresentedChartViewEdit = false
+                    
+                }) {Image(systemName: "figure.walk.circle")
+                    .imageScale(.large)
+                } )
+                .navigationBarItems(trailing: Button( action: {
+                    showChartHilfe = true
+                }) {Image(systemName: "questionmark.circle")
+                    .imageScale(.large)
+                } )
+                .alert("Hilfe zu Objekt Editieren", isPresented: $showChartHilfe, actions: {
+                    Button(" - OK - ") {}
+                }, message: { Text("Das ist die Beschreibung für den Bereich Objekt Editieren.") } // Ende message
+                ) // Ende alert
                 
             } // Ende Vstack
-            .frame(width: UIScreen.screenWidth,height:UIScreen.screenHeight - 250, alignment: .leading)
-            .background(Color(UIColor.lightGray))
-            .cornerRadius(10)
-            .navigationTitle("\(par1[par2].gegenstand)")
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action:{showChartHilfe.toggle()
-                        
-                    }) {
-                        Image(systemName: "questionmark.circle")
-                    } // Ende Button
-                    .alert("Hilfe für Chart", isPresented: $showChartHilfe, actions: {
-                        Button(" - OK - ") {}
-                    }, message: { Text("Das ist die Beschreibung für das Chart.") } // Ende message
-                    ) // Ende alert
-                } // Ende ToolbarItemGroup
-            } // Ende toolbar
-        //} // Ende Form
-        
+            
+        //} // Ende GeometryReader
     }  // Ende var body
 } // Ende struckt ChartView
-*/
+
 
 

@@ -7,46 +7,34 @@
 import SwiftUI
 import Foundation
 
-
-// Sachen zum abarbeite:
-
-/*
-- Abfragen speichern
-OK - Sprache für den PrintController
-- Button aus dem PrintController entfernen
-OK - Sprache bei dem DatePicker (Monat erscheint auf English)
-OK - Centrieren der Buttons auf der Eingabemaske
-- Musteruser löschen
-*/
-
 struct EmptyView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     var breite: CGFloat = 370
     var hoehe: CGFloat = 320
-
+    
     var body: some View {
         ZStack{
-        VStack{
-            Text("Info zu Tabellen").bold()
-                .font(.title2)
-                .frame(alignment: .center)
-
-            Divider().background(Color.black)
-            Text("")
-            Text("Die Tabellen können nur dann angezeigt werden, wenn mindestens ein Gegenstand gespeichert wurde. Gehen Sie bitte zu Eingabemaske zurück und geben sie den ersten Gegenstand ein. Bitte vergessen Sie nicht dann Ihre Eingaben zu speichern. Danach können Sie die Tabellen sehen.")
-                .font(.system(size: 18))
-             Spacer()
-
-        } // Ende Vstack
-        //.frame(width: breite, height: hoehe, alignment: .leading)
-        .padding(EdgeInsets(top: 40, leading: 20, bottom: 30, trailing: 20))
-        .frame(width: breite, height: hoehe, alignment: .leading)
-        .background(Color.gray.gradient)
-        .cornerRadius(10.0)
-        .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 15.0)
-        }
+            VStack{
+                Text("Info zu Tabellen").bold()
+                    .font(.title2)
+                    .frame(alignment: .center)
+                
+                Divider().background(Color.black)
+                Text("")
+                Text("Die Tabellen können nur dann angezeigt werden, wenn mindestens ein Gegenstand gespeichert wurde. Gehen Sie bitte zu Eingabemaske zurück und geben sie den ersten Gegenstand ein. Bitte vergessen Sie nicht dann Ihre Eingaben zu speichern. Danach können Sie die Tabellen sehen.")
+                    .font(.system(size: 18))
+                Spacer()
+                
+            } // Ende Vstack
+            //.frame(width: breite, height: hoehe, alignment: .leading)
+            .padding(EdgeInsets(top: 40, leading: 20, bottom: 30, trailing: 20))
+            .frame(width: breite, height: hoehe, alignment: .leading)
+            .background(Color.gray.gradient)
+            .cornerRadius(10.0)
+            .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 15.0)
+        } // Ende ZStack
     } // Ende var body
-        
+    
 } // Ende struct
 
 
@@ -54,7 +42,7 @@ struct EmptyView: View {
 func printingFile() {
     
     let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
-   
+    
     if UIPrintInteractionController.canPrint(pdfPath!) {
         
         //notificationCenter.addObserver(self, selector: #selector(self.downloadFile), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -72,7 +60,7 @@ func printingFile() {
         printController.printingItem = pdfPath
         printController.present(animated: true, completionHandler: nil)
         
-    
+        
     } // Ende if
     
     // https://nshipster.com/uiprintinteractioncontroller/
@@ -111,21 +99,38 @@ func abfrageField3(field1: String)->[String] {
 } // Ende func
 
 func ladeStatistiken() -> [Statistiken] {
-    var resultat: [Statistiken] = [Statistiken(stText: "", stWert: "")]
+    var resultat: [Statistiken] = [Statistiken(stGruppe: "", stName: "", stWert: "")]
     resultat.removeAll()
     
+    let z1s0: String = "Objekte"
     let z1s1: String = "Alle Objekte:"
     let z1S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte")
     
+    let z2s0: String = "Objekte"
     let z2s1: String = "Verschenkte Objekte:"
-    let z2S2: [String]  = querySQLAbfrageArray(queryTmp: "select count() From Objekte Where vorgang = 'Verschenken'")
-
-    let z3s1: String = "Verliehene Objekte:"
-    let z3S2: [String]  = querySQLAbfrageArray(queryTmp: "select count() From Objekte Where vorgang = 'Verleihen'")
+    let z2S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Verschenken'")
     
-    resultat.append(Statistiken(stText: z1s1, stWert: z1S2[0]))
-    resultat.append(Statistiken(stText: z2s1, stWert: z2S2[0]))
-    resultat.append(Statistiken(stText: z3s1, stWert: z3S2[0]))
+    let z3s0: String = "Objekte"
+    let z3s1: String = "Verliehene Objekte:"
+    let z3S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Verleihen'")
+    
+    resultat.append(Statistiken(stGruppe: z1s0, stName: z1s1, stWert: z1S2[0]))
+    resultat.append(Statistiken(stGruppe: z2s0, stName: z2s1, stWert: z2S2[0]))
+    resultat.append(Statistiken(stGruppe: z3s0, stName: z3s1, stWert: z3S2[0]))
+    
+    let tmp0 = querySQLAbfrageArray(queryTmp: "Select distinct(gegenstand) From Objekte")
+    
+    for n in 0...tmp0.count - 1 {
+        
+        let tmp1 = querySQLAbfrageArray(queryTmp: "Select count() gegenstand From Objekte Where gegenstand = '\(tmp0[n])'")
+        
+        if Int("\(tmp1[0])") != 0 {
+            
+            resultat.append(Statistiken(stGruppe: "Gegenstände", stName: "\(tmp0[n])", stWert: tmp1[0]))
+            
+        } // Ende if
+        
+    }// Ende for
     
     return resultat
 } // Ende func

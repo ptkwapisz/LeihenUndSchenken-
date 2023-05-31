@@ -283,14 +283,15 @@ struct ShapeViewSettings: View {
                 showSettingsHilfe = true
             }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
             .alert("Hilfe zu Settings", isPresented: $showSettingsHilfe, actions: {
-                  Button(" - OK - ") {}
-                  }, message: { Text("Das ist die Beschreibung für den Bereich Settings.") } // Ende message
-                ) // Ende alert
+                Button(" - OK - ") {}
+            }, message: { Text("Das ist die Beschreibung für den Bereich Settings.") } // Ende message
+            ) // Ende alert
             
             
         } // Ende NavigationView
     } // Ende var body
 } // Ende struct ShapeViewSettings
+
 
 struct ShapeViewAbfrage: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -321,15 +322,13 @@ struct ShapeViewAbfrage: View {
                         })
                     })
                     .frame(height: 30)
-                    
                     .onAppear(perform: {
                         
                         abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
                         print("Feld1 onAppear")
                     })
-                     
                     .onChange(of: selectedAbfrageFeld1, perform: { _ in
-                    
+                        
                         abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
                         selectedAbfrageFeld3 = abfrageFeld3[0]
                         print("Feld1 onChange")
@@ -360,63 +359,46 @@ struct ShapeViewAbfrage: View {
                         print("Feld3 onAppear")
                     })
                     .onChange(of: selectedAbfrageFeld3, perform: {  _ in
-                     print("\(selectedAbfrageFeld3)")
-                     print("Feld3 onChange")
+                        print("\(selectedAbfrageFeld3)")
+                        print("Feld3 onChange")
                     })
                 } // Ende Section
                 
-                Section(header: Text("Abfragenparameter")) {
-                    Toggle("Filteraktivirung:", isOn: $globaleVariable.abfrageFilter ).toggleStyle(SwitchToggleStyle(tint: .blue))
-                   
+                Section(header: Text("Filteraktivierung")) {
+                    Toggle("Filterschalter:", isOn: $globaleVariable.abfrageFilter ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                    
                 } // Ende Section
                 
                 
                 HStack {
-                        
-                    Button(action: {showAlertAbbrechenButton = true}) { Label("Abbrechen", systemImage: "pencil.slash") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
-                        .alert(isPresented:$showAlertAbbrechenButton) {
-                            Alert(
-                                title: Text("Möchten Sie abbrechen oder die Abfrage zurücksetzen?"),
-                                message: Text("Beim Zurücksetzen werden: die Abfrage und die Filteraktivierung zurückgesetzt. Beim Abbrechen wird nichts verändert und sie verlassen die Abfragemaske."),
-                                primaryButton: .destructive(Text("Zurücksetzen")) {
-                                    globaleVariable.abfrageFilter = false
-                                    globaleVariable.abfrageQueryString = ""
-                                    isPresented = false
-                                    
-                                },
-                                secondaryButton: .cancel(Text("Abbrechen")){
-                                    isPresented = false
-                                    print("Abgebrochen ....")
-                                } // Ende secondary Button
-                            ) // Ende Alert
-                        } // Ende alert
+                    Spacer()
                     
-                    Button(action: {showAlertSpeichernButton = true}) { Label("Speichern", systemImage: "pencil.and.outline")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
+                    Button(action: {showAlertSpeichernButton = true}) { Label("Abfrage verlassen.", systemImage: "pencil.and.outline")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
                         .alert(isPresented:$showAlertSpeichernButton) {
                             Alert(
                                 title: Text("Möchten Sie diese Abfrage speichern?"),
-                                message: Text("Die Abfrage und der Zustand der Filteraktivierung werden gespeichert."),
+                                message: Text("Die Abfrage und der Zustand der Filteraktivierung werden bis zum nächsten Aufruf dieser Seite gespeichert."),
                                 primaryButton: .destructive(Text("Speichern")) {
                                     
                                     var tmpFeld1 = ""
                                     if globaleVariable.abfrageFilter == true {
                                         
                                         switch selectedAbfrageFeld1 {
-                                        
-                                        case "Gegenstand":
-                                            tmpFeld1 = selectedAbfrageFeld1
-                                        case "Vorgang":
-                                            tmpFeld1 = selectedAbfrageFeld1
+                                                
+                                            case "Gegenstand":
+                                                tmpFeld1 = selectedAbfrageFeld1
+                                            case "Vorgang":
+                                                tmpFeld1 = selectedAbfrageFeld1
                                             case "Name":
                                                 tmpFeld1 = "personNachname"
                                             case "Vorname":
                                                 tmpFeld1 = "personVorname"
-                                        default:
-                                            tmpFeld1 = ""
-                                            
+                                            default:
+                                                tmpFeld1 = ""
+                                                
                                         } // Ende switch
                                         
-                                       let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
+                                        let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
                                         globaleVariable.abfrageQueryString = temp
                                         
                                     }else{
@@ -430,22 +412,22 @@ struct ShapeViewAbfrage: View {
                                 },
                                 secondaryButton: .cancel(Text("Abbrechen")){
                                     print("Abgebrochen ....")
-                                    //isPresented = false
+                                    isPresented = false
                                 }
                             ) // Ende Alert
                         } // Ende alert
-                    
-                    } // Ende HStack
+                    Spacer()
+                } // Ende HStack
+                
                 Section {
-                    Text("Hier können Sie die Abfrage für Darstellung Ihrer Objekte in der Tabelle definieren.")
+                    Text("Hier können Sie die Abfrage für Darstellung Ihrer Objektenabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
-                        
-                }
+                    
+                } // Ende Section
             } // Ende Form
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)
-            //.frame(width: 360, height: 570)
             
         } // Ende VStack
     } // Ende var body
