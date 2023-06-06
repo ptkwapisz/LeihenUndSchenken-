@@ -5,6 +5,7 @@
 //  Created by PIOTR KWAPISZ on 01.05.23.
 //
 //
+//
 
 import SwiftUI
 
@@ -179,7 +180,7 @@ var body: some View {
                     .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
                     .background(.gray)
                     .foregroundColor(Color.black)
-                    .sheet(isPresented: $objektEditieren, content: { ChartViewEdit(isPresentedChartViewEdit: $objektEditieren, par1: par1, par2: par2)})
+                    .sheet(isPresented: $objektEditieren, content: { ChartViewEdit(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)})
                     
  
                 } // Ende VStack
@@ -215,53 +216,126 @@ var body: some View {
 struct ChartViewEdit: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @Binding var isPresentedChartViewEdit: Bool
-    @State var par1: [ObjectVariable]
-    @State var par2: Int
+    @Binding var par1: [ObjectVariable]
+    @Binding var par2: Int
     
+    @State var isPositionenEdit: Bool = false
     @State var showChartHilfe: Bool = false
+    @State var lastText: String = ""
+    
+    @State private var calendarId: Int = 0
+    @State var datumTmp: Date = Date()
+    
+    @FocusState private var focusedField: Field?
+    private enum Field: Int, CaseIterable {
+        case amount
+        case str1 // Für Gegenstandbeschreibung
+        case str2 // Für allgemeine Informationen
+    } // Ende private enum
     
     var body: some View {
-        //GeometryReader { geometry in
+        
             NavigationView {
                 Form {
-                    Section(header: Text("Objektinformationen")) {
-                        Text("\(par1[par2].gegenstandText)")
-                            .padding(.top, 10)
-                            .padding(.leading, 6)
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(Color.black)
-                            .opacity(0.9)
-                    } // Ende Section
-                    
-                    
-                    Text("\(par1[par2].datum)")
-                    if par1[par2].gegenstandBild != "Kein Bild" {
-                        Image(base64Str: par1[par2].gegenstandBild)!
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(25)
-                            .padding(20)
-                            .frame(width: 350, height: 200)
-                            .shadow(color: Color.black, radius: 5, x: 5, y: 5)
-                    }else{
-                        Text("Kein Bild")
-                            .scaledToFit()
-                            .padding(20)
-                            .frame(width: 150, height: 100)
-                            .background(Color.gray.gradient)
-                            .cornerRadius(25)
+                    Section(header: Text("Objekt bearbeiten:" ).font(.system(size: 16, weight: .regular))) {
+                        HStack(alignment: .center) {
+                            Text("Gegenstand:")
+                                .font(.callout)
+                                .bold()
+                            
+                            Spacer()
+                            
+                            TextField(" ", text: $par1[par2].gegenstand)
+                                .modifierEditFields()
+                            
+                        } // Ende HStack
                         
-                    } // Ende if/else
-                    
-                    
-                    Text("\(par1[par2].preisWert)" + "€")
-                    Text("\(par1[par2].vorgang)")
-                    Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
-                    Text("\(par1[par2].allgemeinerText)")
+                        TextEditorWithPlaceholder(text: $par1[par2].gegenstandText, platz: $par1[par2].gegenstandText)
+                            .focused($focusedField, equals: .str1)
+                            .background(Color.blue)
+                            .cornerRadius(5)
+                            .opacity(0.6)
+                        
+                        
+                        if par1[par2].gegenstandBild != "Kein Bild" {
+                            Image(base64Str: par1[par2].gegenstandBild)!
+                                .resizable()
+                                .cornerRadius(10)
+                                .padding(20)
+                                .frame(width: 100, height: 100)
+                        }else{
+                            Text("Kein Bild")
+                                .scaledToFit()
+                                .padding(20)
+                                .frame(width: 100, height: 100)
+                                .background(Color.gray.gradient)
+                                .cornerRadius(10)
+                                .font(.system(size: 12, weight: .regular))
+                        } // Ende if/else
+                        
+                        HStack {
+                            Text("Neuer Wert: ")
+                                .font(.callout)
+                                .bold()
+                            Spacer()
+                            
+                            TextField(" ", text: $par1[par2].preisWert)
+                                .modifierEditFields()
+                            /*
+                            Text("\(par1[par2].preisWert)" + "€")
+                                .font(.system(size: 16, weight: .regular))
+                                .offset(x: 5)
+                            */
+                        } // Ende HStack
+                        
+                        HStack {
+                            
+                            Text("Neues Datum: ")
+                                .background(Color.white)
+                                .font(.callout)
+                                .bold()
+                            Spacer()
+                            DatePicker("", selection: $datumTmp, displayedComponents: [.date])
+                            .labelsHidden()
+                            .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 5))
+                            .accentColor(Color.black)
+                            .multilineTextAlignment (.center)
+                            .environment(\.locale, Locale.init(identifier: "de"))
+                            .font(.system(size: 16, weight: .regular))
+                            .id(calendarId)
+                            .onChange(of: datumTmp, perform: { _ in
+                                calendarId += 1
+                            }) // Ende onChange...
+                            /*
+                            .onTapGesture {
+                                calendarId += 1
+                            } // Ende onTap....
+                            */
+                        } // Ende HStack
+                        
+                        
+                        
+                        
+                        Text("\(par1[par2].vorgang)")
+                            .font(.system(size: 16, weight: .regular))
+                            .offset(x: 5)
+                        Text("\(par1[par2].personVorname)" + " " + "\(par1[par2].personNachname)")
+                            .font(.system(size: 16, weight: .regular))
+                            .offset(x: 5)
+                        
+                        TextEditorWithPlaceholder(text: $par1[par2].allgemeinerText, platz: $par1[par2].allgemeinerText)
+                            .focused($focusedField, equals: .str2)
+                            .background(Color.blue)
+                            .cornerRadius(5)
+                            .opacity(0.6)
+                        
+                    } // Ende Section
                     
                     Section {
                         Button(action: {
                            
+                            print(datumTmp)
+                            par1[par2].datum = dateToString(parDatum: datumTmp)
                             isPresentedChartViewEdit = false
                             
                         }) {
@@ -300,11 +374,10 @@ struct ChartViewEdit: View {
                 }, message: { Text("Das ist die Beschreibung für den Bereich Objekt Editieren.") } // Ende message
                 ) // Ende alert
                 
-            } // Ende Vstack
+            } // Ende NavigationView
             
-        //} // Ende GeometryReader
     }  // Ende var body
-} // Ende struckt ChartView
+} // Ende struckt ChartViewEdit
 
 
 

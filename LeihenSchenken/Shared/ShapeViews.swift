@@ -9,126 +9,126 @@ import Foundation
 import SwiftUI
 
 struct ShapeViewAddUser: View {
-   @ObservedObject var globaleVariable = GlobaleVariable.shared
-   @Binding var isPresented: Bool
-   @Binding var isParameterBereich: Bool
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @Binding var isPresented: Bool
+    @Binding var isParameterBereich: Bool
     
-   @State var showHilfe: Bool = false
+    @State var showHilfe: Bool = false
     @State var showWarnung: Bool = false
     
-   @State var selectedPerson_sexInt: Int = 0
-
-   @State var vorname: String = ""
-   @State var name: String = ""
-   @State var spitzname: String = ""
-
-   var body: some View {
-       NavigationView {
-           Form {
-               Section() {
-                   
-                   TextField("Vorname", text: $vorname)
-                       .padding(5)
-                       .background(Color(.systemGray6))
-                       .cornerRadius(5)
-                       .disableAutocorrection(true)
-                   
-                   TextField("Name", text: $name)
-                       .padding(5)
-                       .background(Color(.systemGray6))
-                       .cornerRadius(5)
-                       .disableAutocorrection(true)
-                   
-                   Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
-                       
-                       ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
-                           Text("\(globaleVariable.parameterPersonSex[index])")
-                           
-                       } // Ende ForEach
-                   } // Ende Picker
-               } // Ende Section
-               
-               Button(action: {
-                   if vorname != "" && name != "" {
-                       if isParameterBereich {
-                           //let tempPerson = name + ", " + vorname
-                           //globaleVariable.parameterPerson.append(tempPerson)
-                           personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                           // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
-                           //globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
-                           globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
-                           print("Person wird in die Auswahl hinzugefügt!")
-                           isPresented = false
-                       }else{
-                           
-                           if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
-                       
-                               showWarnung = true
-                               
-                           }else{
-                               
-                               personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                               //globaleVariable.parameterPerson.removeAll()
-                               //globaleVariable.parameterPerson = personenArray()
-                               globaleVariable.personenParameter.removeAll()
-                               globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
-                               
-                               
-                               print("Person wurde in die Datenbank hinzugefügt!")
-                               isPresented = false
-                               
-                           } // Ende if/else
-                           
-                       }// Ende if/else
-                       
-                   } // Ende if/else
-               
-               }) {
-                   HStack {
-                       Image(systemName: "square.and.arrow.down.fill")
-                           .font(.title3)
-                       Text("Person hinzufügen")
-                           .fontWeight(.semibold)
-                           .font(.title3)
-                       
-                   } // Ende HStack
-                   .padding()
-                   .frame(maxWidth: .infinity, alignment: .center)
-                   .foregroundColor(.white)
-                   .background(Color.blue)
-                   .cornerRadius(10)
-               } // Ende Button
-               .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
-                   Button(" - OK - ") {}
-               }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate gespeichert werden!") } // Ende message
-               ) // Ende alert
-               
-               
-               if isParameterBereich {
-                   
-                   Text("Mit drücken von 'Person hinzufügen' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden des Programms gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske haben, gehen Sie bitte zum Menue-Punkt 'Hinzufügen/Person' und geben Sie dort die Persondaten ein.")
-                       .font(.system(size: 14, weight: .regular))
-                       .foregroundColor(.gray)
-               }else{
-                   Text("Mit drücken von 'Person hinzufügen' werden die Daten in die Datenbank hinzugefügt.")
-                       .font(.system(size: 14, weight: .regular))
-                       .foregroundColor(.gray)
-                   
-               } // Ende if/else
-               
-           } // Ende Form
-           .navigationBarItems(trailing:
-                                HStack {
-               
-               Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle").imageScale(.large)}
-               Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
-               
-           }) // Ende NavigationBarItem
-                 .alert("Hilfe zu neuer Benutzer", isPresented: $showHilfe, actions:
-                            { Button(" - OK - ") {}
-                            }, message: { Text("Das ist die Beschreibung für den Bereich Benutzer hinzufügen.") } ) // Ende alert
-       } // Ende NavigationView
-   } // Ende var body
+    @State var selectedPerson_sexInt: Int = 0
+    
+    @State var vorname: String = ""
+    @State var name: String = ""
+    @State var spitzname: String = ""
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                Section() {
+                    
+                    TextField("Vorname", text: $vorname)
+                        .padding(5)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(5)
+                        .disableAutocorrection(true)
+                    
+                    TextField("Name", text: $name)
+                        .padding(5)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(5)
+                        .disableAutocorrection(true)
+                    
+                    Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
+                        
+                        ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
+                            Text("\(globaleVariable.parameterPersonSex[index])")
+                            
+                        } // Ende ForEach
+                    } // Ende Picker
+                } // Ende Section
+                
+                Button(action: {
+                    if vorname != "" && name != "" {
+                        if isParameterBereich {
+                            //let tempPerson = name + ", " + vorname
+                            //globaleVariable.parameterPerson.append(tempPerson)
+                            personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                            // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
+                            //globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
+                            globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
+                            print("Person wird in die Auswahl hinzugefügt!")
+                            isPresented = false
+                        }else{
+                            
+                            if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
+                                
+                                showWarnung = true
+                                
+                            }else{
+                                
+                                personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                //globaleVariable.parameterPerson.removeAll()
+                                //globaleVariable.parameterPerson = personenArray()
+                                globaleVariable.personenParameter.removeAll()
+                                globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                                
+                                
+                                print("Person wurde in die Datenbank hinzugefügt!")
+                                isPresented = false
+                                
+                            } // Ende if/else
+                            
+                        }// Ende if/else
+                        
+                    } // Ende if/else
+                    
+                }) {
+                    HStack {
+                        Image(systemName: "square.and.arrow.down.fill")
+                            .font(.title3)
+                        Text("Person hinzufügen")
+                            .fontWeight(.semibold)
+                            .font(.title3)
+                        
+                    } // Ende HStack
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+                } // Ende Button
+                .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
+                    Button(" - OK - ") {}
+                }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate gespeichert werden!") } // Ende message
+                ) // Ende alert
+                
+                
+                if isParameterBereich {
+                    
+                    Text("Mit drücken von 'Person hinzufügen' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden des Programms gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske haben, gehen Sie bitte zum Menue-Punkt 'Hinzufügen/Person' und geben Sie dort die Persondaten ein.")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                }else{
+                    Text("Mit drücken von 'Person hinzufügen' werden die Daten in die Datenbank hinzugefügt.")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                    
+                } // Ende if/else
+                
+            } // Ende Form
+            .navigationBarItems(trailing:
+                                    HStack {
+                
+                Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle").imageScale(.large)}
+                Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
+                
+            }) // Ende NavigationBarItem
+            .alert("Hilfe zu neuer Benutzer", isPresented: $showHilfe, actions:
+                    { Button(" - OK - ") {}
+            }, message: { Text("Das ist die Beschreibung für den Bereich Benutzer hinzufügen.") } ) // Ende alert
+        } // Ende NavigationView
+    } // Ende var body
 } // Ende struct
 
 struct ShapeViewAddGegenstand: View {
@@ -236,7 +236,6 @@ struct ShapeViewAddGegenstand: View {
     
     } // Ende var body
 } // Ende struct ShapeViewAddUser
-
 
 
 struct ShapeViewSettings: View {

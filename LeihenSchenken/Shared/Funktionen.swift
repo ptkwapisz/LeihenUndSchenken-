@@ -269,6 +269,53 @@ func dateToString(parDatum: Date) -> String {
     return result
 } // Ende func
 
+func stringToDate(parDatum: String) -> Date {
+    
+    var result: Date
+    
+    let inputDateString = parDatum
+    
+    let germanDateFormatter = DateFormatter()
+    germanDateFormatter.locale = .init(identifier: "de")
+    germanDateFormatter.dateFormat = "d MMM yyyy"
+    germanDateFormatter.dateStyle = .short
+    germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+    
+    result = germanDateFormatter.date(from: inputDateString)!
+    
+    print(result) //16.08.19, 07:04:12
+    
+    return result
+} // Ende func
+
+
+func stringToDate2(parameter1: [ObjectVariable] , parameter2: Int) -> Date {
+    
+    
+    var result: Date
+    
+    let inputDateString = parameter1[parameter2].datum
+    
+    let germanDateFormatter = DateFormatter()
+    germanDateFormatter.locale = .init(identifier: "de")
+    germanDateFormatter.dateFormat = "d MMM yyyy"
+    germanDateFormatter.dateStyle = .short
+    germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+    
+    result = germanDateFormatter.date(from: inputDateString)!
+    
+    print(result) //16.08.19, 07:04:12
+    
+    return result
+} // Ende func
+
+
+
+
+
+
+
+
 // Diese Funktion erstellt den Titel mit dem hinweis
 // ob der Abfragefilter ein- oder ausgeschaltet ist.
 func erstelleTitel(par: Bool) -> String {
