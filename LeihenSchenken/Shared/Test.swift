@@ -74,6 +74,7 @@ func printingFile() {
 // Diese funktion wird aus den Bereichen onAppear und onChange aufgerufen
 
 func abfrageField3(field1: String)->[String] {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var result: [String] = []
 
@@ -83,7 +84,7 @@ func abfrageField3(field1: String)->[String] {
             result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
             //print("Gegenstand " + "\(selectedAbfrageFeld3)")
         case "Vorgang":
-            result = ["Leihen", "Schenken"]
+            result = globaleVariable.parameterVorgang
             //print("Vorgang " + "\(selectedAbfrageFeld3)")
         case "Name":
             result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
@@ -114,9 +115,14 @@ func ladeStatistiken() -> [Statistiken] {
     let z3s1: String = "Verliehene Objekte:"
     let z3S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Verleihen'")
     
+    let z4s0: String = "Objekte"
+    let z4s1: String = "Erhaltene Objekte:"
+    let z4S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Bekommen'")
+    
     resultat.append(Statistiken(stGruppe: z1s0, stName: z1s1, stWert: z1S2[0]))
     resultat.append(Statistiken(stGruppe: z2s0, stName: z2s1, stWert: z2S2[0]))
     resultat.append(Statistiken(stGruppe: z3s0, stName: z3s1, stWert: z3S2[0]))
+    resultat.append(Statistiken(stGruppe: z4s0, stName: z4s1, stWert: z4S2[0]))
     
     let tmp0 = querySQLAbfrageArray(queryTmp: "Select distinct(gegenstand) From Objekte")
     

@@ -22,84 +22,83 @@ struct IphoneTable1: View {
         let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen oder Schänken
         
         let anzahl: Int = objekte.count
-      
-            VStack {
-                Text("")
-                Text("Alle Objekte" + "\(tempErgaenzung)").bold()
-                    .frame(maxWidth: .infinity, alignment: .center)
-                
-                    List {
-                        
-                            ForEach(gegVorgang.indices, id: \.self) { idx in
-                            
-                                Section(header: Text("Vorgang: " + "\(gegVorgang[idx])")
-                                    .font(.system(size: 15, weight: .medium)).bold()) {
-                          
-                                        ForEach(0..<anzahl, id: \.self) { item in
-                                            
-                                            if gegVorgang[idx] == objekte[item].vorgang {
-                                                
-                                                VStack() {
-                                        
-                                                    
-                                                    HStack {
-                                                        
-                                                        Text("\(objekte[item].gegenstand)")
-                                                        Text(" am ")
-                                                        Text("\(objekte[item].datum)")
-                                                        
-                                                        Spacer()
-                                                        
-                                                    } // Ende HStack
-                                                    .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                    .font(.system(size: 18, weight: .medium)).bold()
-                                                    
-                                                    HStack {
-                                                        NavigationLink(destination: ChartView(par1: objekte, par2: item)) {
-                                                            
-                                                            
-                                                            Text(String(objekte[item].personVorname))
-                                                                .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                                .font(.system(size: 15, weight: .medium)).bold()
-                                                            
-                                                            Text(String(objekte[item].personNachname))
-                                                                .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                                .font(.system(size: 15, weight: .medium)).bold()
-                                                            
-                                                            Spacer()
-                                                            
-                                                            Label{} icon: { Image(systemName: "photo.fill.on.rectangle.fill") .font(.system(size: 16, weight: .medium))
-                                                            } // Ende Label
-                                                            .frame(width:35, height: 25, alignment: .center)
-                                                            .cornerRadius(10)
-                                                            .foregroundColor(.white)
-                                                            // Diese Zeile bewirkt, dass Label rechtsbündig kurz vor dem > erscheint
-                                                            .frame(maxWidth: .infinity, alignment: .trailing)
-                                                            
-                                                            
-                                                        } // Ende NavigationLink
-                                                    
-                                                    } // Ende HStack
-                                                    
-                                                } // Ende VStack
-                                                
-                                            } // Ende if blutKat1
-                                        } // Ende ForEach
-                                        .listRowBackground(globaleVariable.farbenEbene0)
-                                        .listRowSeparatorTint(.white)
-                                        
-                                   } // Ende Section
-                                
-                            } // Ende ForEach
-                        
-                    } // Ende List
-                    .cornerRadius(10)
-                    Spacer()
-            } // Ende VStack
-            .background(globaleVariable.farbenEbene1)
-            .cornerRadius(10)
+        
+        VStack {
+            Text("")
+            Text("Alle Objekte" + "\(tempErgaenzung)").bold()
+                .frame(maxWidth: .infinity, alignment: .center)
             
-       
+            List {
+                
+                ForEach(gegVorgang.indices, id: \.self) { idx in
+                    
+                    Section(header: Text("Vorgang: " + "\(gegVorgang[idx])")
+                        .font(.system(size: 15, weight: .medium)).bold()) {
+                            
+                            ForEach(0..<anzahl, id: \.self) { item in
+                                
+                                if gegVorgang[idx] == objekte[item].vorgang {
+                                    
+                                    VStack() {
+                                        
+                                        HStack {
+                                            
+                                            Text("\(objekte[item].gegenstand)")
+                                            Text(" am ")
+                                            Text("\(objekte[item].datum)")
+                                            
+                                            Spacer()
+                                            
+                                        } // Ende HStack
+                                        .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                        .font(.system(size: 18, weight: .medium)).bold()
+                                        
+                                        HStack {
+                                            NavigationLink(destination: ChartView(par1: objekte, par2: item)) {
+                                                
+                                                
+                                                Text(String(objekte[item].personVorname))
+                                                    .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                                    .font(.system(size: 15, weight: .medium)).bold()
+                                                
+                                                Text(String(objekte[item].personNachname))
+                                                    .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                                    .font(.system(size: 15, weight: .medium)).bold()
+                                                
+                                                Spacer()
+                                                
+                                                Label{} icon: { Image(systemName: "photo.fill.on.rectangle.fill") .font(.system(size: 16, weight: .medium))
+                                                } // Ende Label
+                                                .frame(width:35, height: 25, alignment: .center)
+                                                .cornerRadius(10)
+                                                .foregroundColor(.white)
+                                                // Diese Zeile bewirkt, dass Label rechtsbündig kurz vor dem > erscheint
+                                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                                
+                                                
+                                            } // Ende NavigationLink
+                                            
+                                        } // Ende HStack
+                                        
+                                    } // Ende VStack
+                                    
+                                } // Ende if blutKat1
+                            } // Ende ForEach
+                            .listRowBackground(globaleVariable.farbenEbene0)
+                            .listRowSeparatorTint(.white)
+                            
+                        } // Ende Section
+                    
+                } // Ende ForEach
+                
+            } // Ende List
+            .cornerRadius(10)
+            Spacer()
+        } // Ende VStack
+        .background(globaleVariable.farbenEbene1)
+        .cornerRadius(10)
+        
+        
     } // Ende var body
     
 } // Ende struct

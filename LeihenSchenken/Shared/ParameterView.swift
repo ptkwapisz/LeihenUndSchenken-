@@ -182,7 +182,7 @@ struct ParameterView: View {
                                 calendarId += 1
                             } // Ende onTap....
                         
-                        Picker("Was möchten Sie tun?", selection: $globaleVariable.selectedVorgangInt, content: {
+                        Picker("Vorgang: ", selection: $globaleVariable.selectedVorgangInt, content: {
                             ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
                                 Text("\(globaleVariable.parameterVorgang[index])")//.tag(index)
                             } // Ende ForEach
@@ -271,7 +271,7 @@ struct ParameterView: View {
                                             },
                                             secondaryButton: .cancel(Text("Abbrechen")){
                                                 print("Abgebrochen ....")
-                                            }
+                                            } // Ende secondaryButton
                                         ) // Ende Alert
                                     } // Ende alert
                                 Spacer()
@@ -303,7 +303,7 @@ struct ParameterView: View {
                                 
                             } // Ende if/else
                             
-                        } // Ende ItemGroup
+                        } // Ende ToolbarItemGroup
                         } // Ende toolbar
                         
                     } // Ende Form
@@ -351,8 +351,6 @@ struct ParameterView: View {
             }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
             ) // Ende alert
             
-            
-        
     } // Ende var body
     
 } // Ende struct

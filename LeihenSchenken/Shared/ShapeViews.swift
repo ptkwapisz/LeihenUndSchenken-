@@ -48,69 +48,70 @@ struct ShapeViewAddUser: View {
                     } // Ende Picker
                 } // Ende Section
                 
-                Button(action: {
-                    if vorname != "" && name != "" {
-                        if isParameterBereich {
-                            //let tempPerson = name + ", " + vorname
-                            //globaleVariable.parameterPerson.append(tempPerson)
-                            personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                            // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
-                            //globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
-                            globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
-                            print("Person wird in die Auswahl hinzugefügt!")
-                            isPresented = false
-                        }else{
-                            
-                            if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
-                                
-                                showWarnung = true
-                                
+                HStack {
+                    Spacer()
+                    Button(action: { isPresented = false }) {Text("Abbrechen")}
+                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                    
+                    Button(action: {
+                        if vorname != "" && name != "" {
+                            if isParameterBereich {
+                                //let tempPerson = name + ", " + vorname
+                                //globaleVariable.parameterPerson.append(tempPerson)
+                                personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
+                                //globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
+                                globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
+                                print("Person wird in die Auswahl hinzugefügt!")
+                                isPresented = false
                             }else{
                                 
-                                personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                                //globaleVariable.parameterPerson.removeAll()
-                                //globaleVariable.parameterPerson = personenArray()
-                                globaleVariable.personenParameter.removeAll()
-                                globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                                if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
+                                    
+                                    showWarnung = true
+                                    
+                                }else{
+                                    
+                                    personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                    //globaleVariable.parameterPerson.removeAll()
+                                    //globaleVariable.parameterPerson = personenArray()
+                                    globaleVariable.personenParameter.removeAll()
+                                    globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                                    
+                                    
+                                    print("Person wurde in die Datenbank hinzugefügt!")
+                                    isPresented = false
+                                    
+                                } // Ende if/else
                                 
-                                
-                                print("Person wurde in die Datenbank hinzugefügt!")
-                                isPresented = false
-                                
-                            } // Ende if/else
+                            }// Ende if/else
                             
-                        }// Ende if/else
+                        } // Ende if/else
                         
-                    } // Ende if/else
-                    
-                }) {
-                    HStack {
-                        Image(systemName: "square.and.arrow.down.fill")
-                            .font(.title3)
-                        Text("Person hinzufügen")
-                            .fontWeight(.semibold)
-                            .font(.title3)
+                    }) {
                         
-                    } // Ende HStack
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .center)
+                        Text("Speichern")
+                        
+                    } // Ende Button
+                    .buttonStyle(.borderedProminent)
                     .foregroundColor(.white)
-                    .background(Color.blue)
+                    .font(.system(size: 16, weight: .regular))
                     .cornerRadius(10)
-                } // Ende Button
+                    Spacer()
+                } // Ende HStack
+                
                 .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
                     Button(" - OK - ") {}
                 }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate gespeichert werden!") } // Ende message
                 ) // Ende alert
                 
-                
                 if isParameterBereich {
                     
-                    Text("Mit drücken von 'Person hinzufügen' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden des Programms gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske haben, gehen Sie bitte zum Menue-Punkt 'Hinzufügen/Person' und geben Sie dort die Persondaten ein.")
+                    Text("Mit drücken von 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden des Programms gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Personen', dort auf '+' drücken und geben Sie dort die Persondaten ein.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                 }else{
-                    Text("Mit drücken von 'Person hinzufügen' werden die Daten in die Datenbank hinzugefügt.")
+                    Text("Mit drücken von 'Speichern' werden die Daten in die Datenbank hinzugefügt.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                     
@@ -121,7 +122,7 @@ struct ShapeViewAddUser: View {
                                     HStack {
                 
                 Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle").imageScale(.large)}
-                Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
+                //Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
                 
             }) // Ende NavigationBarItem
             .alert("Hilfe zu neuer Benutzer", isPresented: $showHilfe, actions:
@@ -154,53 +155,56 @@ struct ShapeViewAddGegenstand: View {
                         .disableAutocorrection(true)
                     
                 } // Ende Section
-        
-                Button(action: {
-                    if gegenstandNeu != "" {
-                        if isParameterBereich {
-                            globaleVariable.parameterGegenstand.append(gegenstandNeu)
-                            // Es wird in der Eingabemaske bei Gegenstand der neue Gegenstand ausgewählt
-                            globaleVariable.selectedGegenstandInt = globaleVariable.parameterGegenstand.count-1
-                            isPresented = false
-                            print("Gegenstand wurde in die Auswahl hinzugefügt!")
-                        }else{
-                            if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
-                        
-                                showWarnung = true
-                                
-                            }else{
-                                
-                                gegenstandInDatenbankSchreiben(par1: gegenstandNeu)
-                                globaleVariable.parameterGegenstand.removeAll()
-                                globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
-
-                                print("Gegenstand wurde in die Datenbank hinzugefügt!")
-                                
+                
+                HStack {
+                    Spacer()
+                    Button(action: { isPresented = false }) {Text("Abbrechen")}
+                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                    
+                    Button(action: {
+                        if gegenstandNeu != "" {
+                            if isParameterBereich {
+                                globaleVariable.parameterGegenstand.append(gegenstandNeu)
+                                // Es wird in der Eingabemaske bei Gegenstand der neue Gegenstand ausgewählt
+                                globaleVariable.selectedGegenstandInt = globaleVariable.parameterGegenstand.count-1
                                 isPresented = false
-                            } // Ende guard/else
+                                print("Gegenstand wurde in die Auswahl hinzugefügt!")
+                            }else{
+                                if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
+                                    
+                                    showWarnung = true
+                                    
+                                }else{
+                                    
+                                    gegenstandInDatenbankSchreiben(par1: gegenstandNeu)
+                                    globaleVariable.parameterGegenstand.removeAll()
+                                    globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
+                                    
+                                    print("Gegenstand wurde in die Datenbank hinzugefügt!")
+                                    
+                                    isPresented = false
+                                } // Ende guard/else
+                                
+                            } // Ende if/else
                             
-                        } // Ende if/else
+                        } // Ende if
+                    }) {
                         
-                    } // Ende if
-                }) {
-                    HStack {
-                        Image(systemName: "square.and.arrow.down.fill")
-                            .font(.title3)
-                        Text("Gegenstand hinzufügen")
-                            .fontWeight(.semibold)
-                            .font(.title3)
-                    } // Ende HStack
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .center)
+                        Text("Speichern")
+                        
+                    }// Ende Button
+                    .buttonStyle(.borderedProminent)
                     .foregroundColor(.white)
-                    .background(Color.blue)
+                    .font(.system(size: 16, weight: .regular))
                     .cornerRadius(10)
-                } // Ende Button
+                    
+                    Spacer()
+                    
+                } // Ende Hstack
                 .alert("Warnung zu neuem Gegenstand", isPresented: $showWarnung, actions: {
                     Button(" - OK - ") {}
                 }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate gespeichert werden!") } // Ende message
                 ) // Ende alert
-                
                 
                 if isParameterBereich {
                     Text("Mit drücken von 'Gegenstand hinzufügen' wird der neue Gegenstand in die Auswahl hinzugefügt.")
@@ -215,16 +219,18 @@ struct ShapeViewAddGegenstand: View {
                 
             } // Ende Form
             .scrollContentBackground(.hidden)
-            .navigationBarItems(trailing: Button( action: {
-                isPresented = false
-                
-            }) {Image(systemName: "figure.walk.circle")
-                .imageScale(.large)
-            } )
+            /*
+             .navigationBarItems(trailing: Button( action: {
+             isPresented = false
+             
+             }) {Image(systemName: "figure.walk.circle")
+             .imageScale(.large)
+             } )
+             */
             .navigationBarItems(trailing: Button( action: {
                 showHilfe = true
             }) {Image(systemName: "questionmark.circle")
-                .imageScale(.large)
+                    .imageScale(.large)
             } )
             .alert("Hilfe zu neuer Gegenstand", isPresented: $showHilfe, actions: {
                 Button(" - OK - ") {}
@@ -233,7 +239,7 @@ struct ShapeViewAddGegenstand: View {
             
             
         } // Ende NavigationView
-    
+        
     } // Ende var body
 } // Ende struct ShapeViewAddUser
 
@@ -272,7 +278,7 @@ struct ShapeViewSettings: View {
                 
             } // Ende Form
             .navigationBarItems(trailing: Button( action: {
-            
+                
                 colorData.saveColor(color0: globaleVariable.farbenEbene0, color1: globaleVariable.farbenEbene1)
                 //presentationMode.wrappedValue.dismiss()
                 isPresented = false
@@ -314,12 +320,13 @@ struct ShapeViewAbfrage: View {
             Text("")
             Text("Abfragefilter").bold()
             Form {
-                Section(header: Text("Bedingung")) {
+                Section(header: Text("Bedingung").font(.system(size: 16, weight: .regular))) {
                     Picker("Wenn ", selection: $selectedAbfrageFeld1, content: {
                         ForEach(abfrageFeld1, id: \.self, content: { index1 in
                             Text(index1)
                         })
                     })
+                    .font(.system(size: 16, weight: .regular))
                     .frame(height: 30)
                     .onAppear(perform: {
                         
@@ -335,6 +342,7 @@ struct ShapeViewAbfrage: View {
                     
                     HStack{
                         Text("ist  ")
+                            .font(.system(size: 16, weight: .regular))
                         
                         Picker("", selection: $selectedAbfrageFeld2, content: {
                             ForEach(abfrageFeld2, id: \.self, content: { index2 in
@@ -343,14 +351,14 @@ struct ShapeViewAbfrage: View {
                         })
                         //.pickerStyle(.inline)
                         .frame(height: 30)
-                        
+                        .font(.system(size: 16, weight: .regular))
                     } // Ende HStack
                     
                     Picker("", selection: $selectedAbfrageFeld3, content: {
                         ForEach(abfrageFeld3, id: \.self, content: { index3 in
                             Text(index3)
                         })
-                        
+                        .font(.system(size: 16, weight: .regular))
                     })
                     .frame(height: 30)
                     .onAppear(perform: {
@@ -363,16 +371,17 @@ struct ShapeViewAbfrage: View {
                     })
                 } // Ende Section
                 
-                Section(header: Text("Filteraktivierung")) {
+                Section(header: Text("Filteraktivierung").font(.system(size: 16, weight: .regular))) {
                     Toggle("Filterschalter:", isOn: $globaleVariable.abfrageFilter ).toggleStyle(SwitchToggleStyle(tint: .blue))
-                    
+                        .font(.system(size: 16, weight: .regular))
                 } // Ende Section
                 
                 
                 HStack {
                     Spacer()
                     
-                    Button(action: {showAlertSpeichernButton = true}) { Label("Abfrage verlassen.", systemImage: "pencil.and.outline")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
+                    Button(action: {showAlertSpeichernButton = true})
+                    { Text("Abfrage verlassen.")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
                         .alert(isPresented:$showAlertSpeichernButton) {
                             Alert(
                                 title: Text("Möchten Sie diese Abfrage speichern?"),
@@ -418,12 +427,12 @@ struct ShapeViewAbfrage: View {
                     Spacer()
                 } // Ende HStack
                 
-                Section {
+                //Section {
                     Text("Hier können Sie die Abfrage für Darstellung Ihrer Objektenabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                     
-                } // Ende Section
+                //} // Ende Section
             } // Ende Form
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)

@@ -343,7 +343,7 @@ func querySQLAbfrageClassGegenstaende(queryTmp: String) -> [GegenstandVariable] 
         
         if name[1] != "Neuer Gegenstand" {
             resultatClass.append(GegenstandVariable(perKey: name[0], gegenstandName: name[1]))
-        }
+        } // Ende if
         
     } // Ende while
     
@@ -426,9 +426,9 @@ func querySQLAbfrageClassPerson(queryTmp: String, isObjectTabelle: Bool) -> [Per
             } // End if else
         } // Ende for n
         
-        
-        resultatClass.append(PersonClassVariable(perKey: name[0], personPicker: name[1], personVorname: name[2], personNachname: name[3], personSex: name[4]))
-        
+        if name[1] != "Neue Person" {
+            resultatClass.append(PersonClassVariable(perKey: name[0], personPicker: name[1], personVorname: name[2], personNachname: name[3], personSex: name[4]))
+        }
     } // Ende while
     
     if sqlite3_finalize(statement) != SQLITE_OK {

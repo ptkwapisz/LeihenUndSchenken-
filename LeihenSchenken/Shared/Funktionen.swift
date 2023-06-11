@@ -95,9 +95,6 @@ func distingtArrayStatistiken(par1: [Statistiken], par2: String) -> [String]{
 } // Ende func
 
 
-
-
-
 // Das ist die funktion zum Bereinigen der Eingabemaske
 func cleanEingabeMaske () {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -125,15 +122,17 @@ func vorgangDeklination(vorgang: String)-> String {
     var resultat: String = ""
     
     switch vorgang {
-        
-    case "Verleihen":
-        resultat = "verleiht"
-    case "Verschenken":
-        resultat = "verschenkt"
-    default:
-        print(vorgang)
-        print("Keine übereinstimmung")
-        
+            
+        case "Verleihen":
+            resultat = "verleiht"
+        case "Verschenken":
+            resultat = "verschenkt"
+        case "Bekommen":
+            resultat = "bekommen"
+        default:
+            print(vorgang)
+            print("Keine übereinstimmung")
+            
     }// Ende switch
     
     return resultat
@@ -308,12 +307,6 @@ func stringToDate2(parameter1: [ObjectVariable] , parameter2: Int) -> Date {
     
     return result
 } // Ende func
-
-
-
-
-
-
 
 
 // Diese Funktion erstellt den Titel mit dem hinweis
