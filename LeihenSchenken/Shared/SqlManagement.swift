@@ -366,8 +366,6 @@ func deleteItemsFromDatabase(tabelle: String, perKey: String) {
     let deleteStatementString: String = "DELETE FROM \(tabelle) WHERE perKey = \(perKey)"
     print(deleteStatementString)
     
-    
-    
     var deleteStatement: OpaquePointer?
 
     if sqlite3_prepare_v2(db, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
@@ -384,6 +382,43 @@ func deleteItemsFromDatabase(tabelle: String, perKey: String) {
     
 } // Ende func
 
+
+
+// Diese Funktion ersetzt ein Tabellenfeld durch ein neues in der Datenbanktabelle Objekte
+// Vorher geschieht die Prüfung, ob die Felder sich unterscheiden
+func updateSqliteTabellenField(sqliteFeld: String, neueInhalt: String, perKey: String) {
+
+let alterWertQuery = "SELECT \(sqliteFeld) FROM Objekte WHERE perKey = \(perKey)"
+
+let alterWert = querySQLAbfrageArray(queryTmp: alterWertQuery)
+    
+if alterWert[0] == neueInhalt {
+    print("\(alterWert[0])" + " = " + "\(neueInhalt)")
+    print("Gleich")
+}else{
+    let updateStatementString = "UPDATE Objekte SET \(sqliteFeld) = '\(neueInhalt)' WHERE perKey = \(perKey)"
+    
+    var updateStatement: OpaquePointer?
+    
+    if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) ==
+        SQLITE_OK {
+        if sqlite3_step(updateStatement) == SQLITE_DONE {
+            print("\nSuccessfully updated row.")
+        } else {
+            print("\nCould not update row.")
+        } // Ende if/else
+    } else {
+        print("\nUPDATE statement is not prepared")
+    } // Ende if/else
+    
+    sqlite3_finalize(updateStatement)
+    
+    print("\(alterWert[0])" + " != " + "\(neueInhalt)")
+    print("Ungleich")
+    
+} // Ende if/else
+    
+} // Ende func
 
 // Dierse Funktion fügt in eine Variable (Type Class) die Personentabelle aus der Datenbank
 // Der erste parameter ist die Query-String
@@ -513,9 +548,6 @@ func gegenstandInDatenbankSchreiben(par1: String) {
 
 // Dierse Funktion fügt in eine Variable (Type Class) die Personentabelle aus der Datenbank
 // Der erste parameter ist die Query-String
-// Der zweite Parameter besagt aus welcher Struct diese Funktion aufgerufen wurde
-// Nur bei der ObjectTabelle (Tab1) soll der Zusatz 'globaleVariable.abfrageQueryString' hinzugefügt werden
-// damit die Abfrage und Filter funktionieren.
 func querySQLAbfrageClassPersonen(queryTmp: String) -> [PersonClassVariable]  {
     //@ObservedObject var globaleVariable = GlobaleVariable.shared
     
@@ -524,16 +556,6 @@ func querySQLAbfrageClassPersonen(queryTmp: String) -> [PersonClassVariable]  {
     
     var resultatClass: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
    
-    /*
-    if isObjectTabelle == true {
-        queryString = queryTmp + globaleVariable.abfrageQueryString
-    }else{
-        queryString = queryTmp
-    } // Ende if/else
-    */
-    
-    //print(queryString)
-    
     var statement: OpaquePointer?
     
     if sqlite3_prepare_v2(db, "\(queryString)", -1, &statement, nil) != SQLITE_OK {

@@ -164,7 +164,7 @@ struct DeteilView: View {
                 Button(action:{showTabHilfe.toggle()
                         
                 }) {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "questionmark.circle.fill")
                 } // Ende Button
                 .alert("Hilfe für \(naviTitleText(tabNummer: globaleVariable.navigationTabView))", isPresented: $showTabHilfe, actions: {
                       Button(" - OK - ") {}

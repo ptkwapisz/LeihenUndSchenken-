@@ -204,7 +204,7 @@ struct ChartView: View {
                     Button(action:{showChartHilfe.toggle()
                         
                     }) {
-                        Image(systemName: "questionmark.circle")
+                        Image(systemName: "questionmark.circle.fill")
                     } // Ende Button
                     .alert("Hilfe für die Objektdeteilansicht", isPresented: $showChartHilfe, actions: {
                         Button(" - OK - ") {}
@@ -225,12 +225,23 @@ struct ChartViewEdit: View {
     @Binding var par1: [ObjectVariable]
     @Binding var par2: Int
     
+    /*
+    init(par1: Binding<[ObjectVariable]>, par2: Binding<Int>) {
+        self._par1 = par1
+        self._par2 = par2
+
+    } // Ende init
+    */
+    
     @State var isPositionenEdit: Bool = false
     @State var showChartHilfe: Bool = false
     @State var lastText: String = ""
     
     @State private var calendarId: Int = 0
+    
     @State var datumTmp: Date = Date()
+    
+    //@State var datumTmp2: Date = stringToDate(parDatum: "12.04.1957")
     
     @FocusState private var focusedField: Field?
     private enum Field: Int, CaseIterable {
@@ -241,9 +252,13 @@ struct ChartViewEdit: View {
     
     var body: some View {
         
+        let datumTmpArray = querySQLAbfrageArray(queryTmp: "Select datum From Objekte Where perKey = '\(par1[par2].perKey)'")
+        let datumTmpString = datumTmpArray[0]
+        
+    
         NavigationView {
             Form {
-                Section(header: Text("Objekt bearbeiten:" ).font(.system(size: 16, weight: .regular))) {
+                Section(header: Text("Objekt bearbeiten:" ).font(.system(size: 16, weight: .regular)).bold()) {
                     HStack(alignment: .center) {
                         Text("Gegenstand:")
                             .font(.callout)
@@ -266,9 +281,12 @@ struct ChartViewEdit: View {
                     if par1[par2].gegenstandBild != "Kein Bild" {
                         Image(base64Str: par1[par2].gegenstandBild)!
                             .resizable()
-                            .cornerRadius(10)
-                            .padding(20)
+                            .scaledToFill()
                             .frame(width: 100, height: 100)
+                            .clipped()
+                            .cornerRadius(10)
+                            .padding(5)
+                        
                     }else{
                         Text("Kein Bild")
                             .scaledToFit()
@@ -276,7 +294,7 @@ struct ChartViewEdit: View {
                             .frame(width: 100, height: 100)
                             .background(Color.gray.gradient)
                             .cornerRadius(10)
-                            .font(.system(size: 12, weight: .regular))
+                        
                     } // Ende if/else
                     
                     HStack {
@@ -312,11 +330,10 @@ struct ChartViewEdit: View {
                             .onChange(of: datumTmp, perform: { _ in
                                 calendarId += 1
                             }) // Ende onChange...
-                        /*
-                         .onTapGesture {
-                         calendarId += 1
-                         } // Ende onTap....
-                         */
+                            .onAppear{
+                                datumTmp = stringToDate(parDatum: "\(datumTmpString)")
+                            } // Ende onAppear
+                        
                     } // Ende HStack
                     
                     
@@ -344,8 +361,8 @@ struct ChartViewEdit: View {
                             
                         }) {
                             HStack {
-                                Image(systemName: "x.square.fill")
-                                    .font(.system(size: 16, weight: .regular))
+                                //Image(systemName: "x.square.fill")
+                                  //  .font(.system(size: 16, weight: .regular))
                                 Text("Abbrechen")
                                 
                             } // Ende HStack
@@ -359,13 +376,23 @@ struct ChartViewEdit: View {
                         Button(action: {
                             
                             print(datumTmp)
+                           
+                            updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: par1[par2].gegenstand, perKey: par1[par2].perKey)
+                            
                             par1[par2].datum = dateToString(parDatum: datumTmp)
+                            updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey)
+                            
+                            updateSqliteTabellenField(sqliteFeld: "gegenstandText", neueInhalt: par1[par2].gegenstandText, perKey: par1[par2].perKey)
+                            
+                            updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: par1[par2].allgemeinerText, perKey: par1[par2].perKey)
+                            
+                            refreshAllViews()
                             isPresentedChartViewEdit = false
                             
                         }) {
                             HStack {
-                                Image(systemName: "square.and.arrow.down.fill")
-                                    .font(.system(size: 16, weight: .regular))
+                                //Image(systemName: "square.and.arrow.down.fill")
+                                  //  .font(.system(size: 16, weight: .regular))
                                 Text("Speichern")
                                 
                             } // Ende HStack
@@ -381,17 +408,10 @@ struct ChartViewEdit: View {
                 
             } // Ende VStack
             .scrollContentBackground(.hidden)
-            /*
-             .navigationBarItems(trailing: Button( action: {
-             isPresentedChartViewEdit = false
-             
-             }) {Image(systemName: "figure.walk.circle")
-             .imageScale(.large)
-             } )
-             */
+            
             .navigationBarItems(trailing: Button( action: {
                 showChartHilfe = true
-            }) {Image(systemName: "questionmark.circle")
+            }) {Image(systemName: "questionmark.circle.fill")
                     .imageScale(.large)
             } )
             .alert("Hilfe zu Objekt Editieren", isPresented: $showChartHilfe, actions: {

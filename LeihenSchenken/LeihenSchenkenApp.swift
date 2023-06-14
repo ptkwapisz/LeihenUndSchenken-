@@ -12,14 +12,18 @@ var db: OpaquePointer?
 
 @main
 
+
 struct LeihenSchenkenApp: App {
+
+    
+
     var body: some Scene {
         
         let _: Bool = ifDatabaseExist()
         
         WindowGroup {
             GeometryReader { geometry in
-            
+               
                ContentView()
                     // Diese Zeilen unterdrücken den Constrain Feheler
                     .onAppear {

@@ -55,7 +55,15 @@ struct IphoneTable1: View {
                                         
                                         HStack {
                                             NavigationLink(destination: ChartView(par1: objekte, par2: item)) {
-                                                
+                                                if gegVorgang[idx] == "Bekommen" {
+                                                   Text("von")
+                                                        .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                                        .font(.system(size: 15, weight: .medium)).bold()
+                                                } else {
+                                                    Text("an")
+                                                        .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                                        .font(.system(size: 15, weight: .medium)).bold()
+                                                } // Ende if/else
                                                 
                                                 Text(String(objekte[item].personVorname))
                                                     .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)

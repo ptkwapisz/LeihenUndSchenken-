@@ -107,7 +107,7 @@ struct ParameterView: View {
                         
                         Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
                             ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
-                                Text("\(globaleVariable.parameterGegenstand[index])").tag(index)
+                                Text("\(globaleVariable.parameterGegenstand[index])")//.tag(index)
                             } // Ende ForEach
                             
                         })
@@ -252,7 +252,7 @@ struct ParameterView: View {
                                                 let personNachnameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personNachname
                                                 let persoSexTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personSex
                                                 
-                                                let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(selectedGegenstand)', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(personVornameTmp)', '\(personNachnameTmp)', '\(persoSexTmp)', '\(globaleVariable.textAllgemeineNotizen)')"
+                                                let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt])', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(personVornameTmp)', '\(personNachnameTmp)', '\(persoSexTmp)', '\(globaleVariable.textAllgemeineNotizen)')"
                                                 
                                                 if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
                                                     SQLITE_OK {
@@ -338,7 +338,7 @@ struct ParameterView: View {
             } // Ende toolbar
             .navigationBarItems(trailing: Button( action: {
                 showParameterHilfe = true
-            }) {Image(systemName: "questionmark.circle").imageScale(.large)} )
+            }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
             .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
                 Button(" - OK - ") {}
             }, message: { Text("Das ist die Beschreibung für den Bereich Eingabemaske.") } // Ende message

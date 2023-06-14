@@ -121,7 +121,7 @@ struct ShapeViewAddUser: View {
             .navigationBarItems(trailing:
                                     HStack {
                 
-                Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle").imageScale(.large)}
+                Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
                 //Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
                 
             }) // Ende NavigationBarItem
@@ -229,7 +229,7 @@ struct ShapeViewAddGegenstand: View {
              */
             .navigationBarItems(trailing: Button( action: {
                 showHilfe = true
-            }) {Image(systemName: "questionmark.circle")
+            }) {Image(systemName: "questionmark.circle.fill")
                     .imageScale(.large)
             } )
             .alert("Hilfe zu neuer Gegenstand", isPresented: $showHilfe, actions: {
@@ -273,17 +273,34 @@ struct ShapeViewSettings: View {
                         .frame(width: 300, height: 40)
                     
                 }// Ende Section Farben
+                Section {
+                    Toggle("Zeige Handbuch", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                }
+            
+                HStack {
+                    Spacer()
+                    
+                    Button(action: {
+                        
+                        colorData.saveColor(color0: globaleVariable.farbenEbene0, color1: globaleVariable.farbenEbene1)
+                        //presentationMode.wrappedValue.dismiss()
+                        isPresented = false
+                    })
+                    { Text("Eigenschaften verlassen.")
+                        
+                    } // Ende Button Text
+                    .buttonStyle(.borderedProminent)
+                    .foregroundColor(.white)
+                    .font(.system(size: 16, weight: .regular))
+                        
+                    Spacer()
+                } // Ende HStack
                 
-                Toggle("Zeige Handbuch", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                Text("Das Eigenschaftsfenster wird geschloßen und die einzehlen Eigenschaften werden gespeichert.")
+                    .font(.system(size: 14, weight: .regular))
+                    .foregroundColor(.gray)
                 
             } // Ende Form
-            .navigationBarItems(trailing: Button( action: {
-                
-                colorData.saveColor(color0: globaleVariable.farbenEbene0, color1: globaleVariable.farbenEbene1)
-                //presentationMode.wrappedValue.dismiss()
-                isPresented = false
-                
-            }) {Image(systemName: "figure.walk.circle").imageScale(.large)} )
             .navigationBarItems(trailing: Button( action: {
                 showSettingsHilfe = true
             }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )

@@ -10,16 +10,18 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
+
     //@State private var columnVisibility = NavigationSplitViewVisibility.all
     
     init() {
+      
       let coloredAppearance = UINavigationBarAppearance()
       coloredAppearance.configureWithOpaqueBackground()
       // Color für die TitleBar
       coloredAppearance.backgroundColor = .lightGray
       coloredAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
       coloredAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-      
+
       UINavigationBar.appearance().standardAppearance = coloredAppearance
       UINavigationBar.appearance().compactAppearance = coloredAppearance
       UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
@@ -28,11 +30,11 @@ struct ContentView: View {
       UINavigationBar.appearance().tintColor = .blue
     
       UITableViewCell.appearance().backgroundColor = .clear
-        
+       
     } // Ende init
     
-    
     var body: some View {
+        
         NavigationView {
             
             ParameterView()
@@ -43,6 +45,8 @@ struct ContentView: View {
         .listStyle(SidebarListStyle()).font(.title3)
         .environmentObject(globaleVariable)
         .phoneOnlyStackNavigationView()
+        // Disable dark mode in iOS
+        .preferredColorScheme(.light)
 
         
     } // Ende var body
@@ -53,5 +57,6 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     } // Ende static var
 } // Ende struct
+
 
 

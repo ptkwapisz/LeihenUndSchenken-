@@ -16,7 +16,7 @@ struct Tab1: View {
     let heightFaktor: Double = 0.99
     //let test = addDataGegenstaende()
     
-    let test = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
+    //let test = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
     
 var body: some View {
     GeometryReader { geometry in
