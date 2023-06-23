@@ -11,6 +11,8 @@
 		DB27ACE02A0B83C7009BC26B /* PadViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB27ACDF2A0B83C7009BC26B /* PadViews.swift */; };
 		DB4329AF2A003E91006874E8 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4329AE2A003E91006874E8 /* ChartView.swift */; };
 		DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E9F32A023BB000CBC354 /* Extention.swift */; };
+		DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A992A437D09001B2781 /* EditFields.swift */; };
+		DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A9B2A438393001B2781 /* ViewModifier.swift */; };
 		DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */; };
 		DBCCBB7D2A1825D200EDF087 /* GlobaleVariablen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCBB7C2A1825D200EDF087 /* GlobaleVariablen.swift */; };
 		DBCCBB7F2A18260B00EDF087 /* Funktionen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCBB7E2A18260B00EDF087 /* Funktionen.swift */; };
@@ -53,6 +55,8 @@
 		DB27ACDF2A0B83C7009BC26B /* PadViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadViews.swift; sourceTree = "<group>"; };
 		DB4329AE2A003E91006874E8 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		DB51E9F32A023BB000CBC354 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
+		DB538A992A437D09001B2781 /* EditFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFields.swift; sourceTree = "<group>"; };
+		DB538A9B2A438393001B2781 /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneViews.swift; sourceTree = "<group>"; };
 		DBCCBB7C2A1825D200EDF087 /* GlobaleVariablen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobaleVariablen.swift; sourceTree = "<group>"; };
 		DBCCBB7E2A18260B00EDF087 /* Funktionen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Funktionen.swift; sourceTree = "<group>"; };
@@ -110,11 +114,13 @@
 				DBF6A33029E6D489001A01BC /* SqlManagement.swift */,
 				DBCCBB822A18266D00EDF087 /* ShapeViews.swift */,
 				DB51E9F32A023BB000CBC354 /* Extention.swift */,
+				DB538A992A437D09001B2781 /* EditFields.swift */,
 				DBCCBB842A1826A200EDF087 /* ColorData.swift */,
 				DB4329AE2A003E91006874E8 /* ChartView.swift */,
 				DBCCBB862A1826D300EDF087 /* TabViews.swift */,
 				DBCCBB882A18271600EDF087 /* DetailView.swift */,
 				DB0160FA2A17CE15000A34CE /* PdfView.swift */,
+				DB538A9B2A438393001B2781 /* ViewModifier.swift */,
 				DBE5D0A62A192DEB006410AD /* Test.swift */,
 				DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */,
 			);
@@ -329,11 +335,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBCEF7FC29D1ED770017A728 /* ContentView.swift in Sources */,
+				DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */,
 				DB4329AF2A003E91006874E8 /* ChartView.swift in Sources */,
 				DBCCBB892A18271600EDF087 /* DetailView.swift in Sources */,
 				DBCEF7FA29D1ED770017A728 /* LeihenSchenkenApp.swift in Sources */,
 				DBCCBB852A1826A200EDF087 /* ColorData.swift in Sources */,
 				DBE5D0A72A192DEB006410AD /* Test.swift in Sources */,
+				DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */,
 				DB27ACE02A0B83C7009BC26B /* PadViews.swift in Sources */,
 				DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */,
 				DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */,

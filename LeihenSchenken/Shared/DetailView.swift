@@ -117,22 +117,7 @@ struct DeteilView: View {
                     .sheet(isPresented: $showMenue3_1, content: { ShapeViewSettings(isPresented: $showMenue3_1)})
                     //.sheet(isPresented: $showMenue3, content: { ShapeViewAbfrage(isPresented: $showMenue3) })
                 } // Ende ToolbarItemGroup
-                /*
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: {showAppInfo.toggle()
-                        
-                    }) {
-                        Image(systemName: "house")
-                        
-                    } // Ende Button
-                    .alert("Allgemeine Information", isPresented: $showAppInfo, actions: {
-                        Button(" - OK - ") {}
-                    }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
-                    ) // Ende alert
                 
-                } // Ende ToolbarItemGroup
-                */
-                //self.shapeSettings.showSettings = true
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action: {showAbfrageModalView = true
                         
@@ -151,7 +136,6 @@ struct DeteilView: View {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action:{
                         
-                       
                         printingFile()
                         
                     }) {
@@ -174,8 +158,6 @@ struct DeteilView: View {
                 
         } // Ende toolbar
         //.toolbarRole(.editor) // Bei dieser Rolle ist der back Button < ohne Text
-        
-        
         
     } // var body
 } // Ende struct

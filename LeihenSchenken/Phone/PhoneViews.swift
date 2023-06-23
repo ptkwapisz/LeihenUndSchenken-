@@ -16,12 +16,10 @@ struct IphoneTable1: View {
     var body: some View {
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
-        
         let objekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
-        
         let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen oder Schänken
-        
         let anzahl: Int = objekte.count
+        
         
         VStack {
             Text("")
@@ -54,9 +52,11 @@ struct IphoneTable1: View {
                                         .font(.system(size: 18, weight: .medium)).bold()
                                         
                                         HStack {
+                                            
                                             NavigationLink(destination: ChartView(par1: objekte, par2: item)) {
+                                                
                                                 if gegVorgang[idx] == "Bekommen" {
-                                                   Text("von")
+                                                    Text("von")
                                                         .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
                                                         .font(.system(size: 15, weight: .medium)).bold()
                                                 } else {
@@ -102,6 +102,7 @@ struct IphoneTable1: View {
             } // Ende List
             .cornerRadius(10)
             Spacer()
+            
         } // Ende VStack
         .background(globaleVariable.farbenEbene1)
         .cornerRadius(10)
@@ -208,7 +209,6 @@ struct IphoneTable2: View {
             .foregroundColor(Color.black)
             .sheet(isPresented: $gegenstandHinzufuegen, content: { ShapeViewAddGegenstand(isPresented: $gegenstandHinzufuegen, isParameterBereich: $isParameterBereich) })
             
-        
         } // Ende Vstack
         .background(globaleVariable.farbenEbene1)
         .cornerRadius(10)

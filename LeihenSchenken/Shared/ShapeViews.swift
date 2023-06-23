@@ -118,6 +118,7 @@ struct ShapeViewAddUser: View {
                 } // Ende if/else
                 
             } // Ende Form
+            .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing:
                                     HStack {
                 
@@ -142,19 +143,39 @@ struct ShapeViewAddGegenstand: View {
     
     @State var gegenstandNeu: String = ""
     
+    @FocusState var isInputActive: Bool
+    
     var body: some View {
         
         NavigationView {
             
             Form {
                 Section(){
-                    TextField("Gegenstand", text: $gegenstandNeu)
+                    TextField("Gegenstand", text: $gegenstandNeu.max(20))
+                        .focused($isInputActive)
                         .padding(5)
                         .background(Color(.systemGray6))
+                        .submitLabel(.done)
                         .cornerRadius(5)
                         .disableAutocorrection(true)
                     
                 } // Ende Section
+                .toolbar {ToolbarItemGroup(placement: .keyboard) {
+                    HStack {
+                        Text("\(gegenstandNeu.count)/20")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.gray)
+                            .padding()
+                        Spacer()
+                        
+                        Button("Abbrechen") {
+                            isInputActive = false
+                            gegenstandNeu = ""
+                        } // Ende Button
+                    } // Ende HStack
+                    
+                }// Ende ToolbarItemGroup
+                } // Ende Toolbar
                 
                 HStack {
                     Spacer()
@@ -218,15 +239,8 @@ struct ShapeViewAddGegenstand: View {
                 } // Ende if/else
                 
             } // Ende Form
+            .navigationTitle("Neuer Gegenstand").navigationBarTitleDisplayMode(.inline)
             .scrollContentBackground(.hidden)
-            /*
-             .navigationBarItems(trailing: Button( action: {
-             isPresented = false
-             
-             }) {Image(systemName: "figure.walk.circle")
-             .imageScale(.large)
-             } )
-             */
             .navigationBarItems(trailing: Button( action: {
                 showHilfe = true
             }) {Image(systemName: "questionmark.circle.fill")
@@ -236,7 +250,6 @@ struct ShapeViewAddGegenstand: View {
                 Button(" - OK - ") {}
             }, message: { Text("Das ist die Beschreibung für den Bereich Gegenstand hinzufügen.") } // Ende message
             ) // Ende alert
-            
             
         } // Ende NavigationView
         
@@ -301,6 +314,7 @@ struct ShapeViewSettings: View {
                     .foregroundColor(.gray)
                 
             } // Ende Form
+            .navigationTitle("Setings").navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button( action: {
                 showSettingsHilfe = true
             }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
@@ -321,6 +335,7 @@ struct ShapeViewAbfrage: View {
     
     @Binding var isPresented: Bool
     
+    @State var showAbfrageHilfe: Bool = false
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
     
@@ -334,126 +349,138 @@ struct ShapeViewAbfrage: View {
     var body: some View {
         
         VStack {
-            Text("")
-            Text("Abfragefilter").bold()
-            Form {
-                Section(header: Text("Bedingung").font(.system(size: 16, weight: .regular))) {
-                    Picker("Wenn ", selection: $selectedAbfrageFeld1, content: {
-                        ForEach(abfrageFeld1, id: \.self, content: { index1 in
-                            Text(index1)
-                        })
-                    })
-                    .font(.system(size: 16, weight: .regular))
-                    .frame(height: 30)
-                    .onAppear(perform: {
-                        
-                        abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
-                        print("Feld1 onAppear")
-                    })
-                    .onChange(of: selectedAbfrageFeld1, perform: { _ in
-                        
-                        abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
-                        selectedAbfrageFeld3 = abfrageFeld3[0]
-                        print("Feld1 onChange")
-                    }) // Ende onChange...
-                    
-                    HStack{
-                        Text("ist  ")
-                            .font(.system(size: 16, weight: .regular))
-                        
-                        Picker("", selection: $selectedAbfrageFeld2, content: {
-                            ForEach(abfrageFeld2, id: \.self, content: { index2 in
-                                Text(index2)
+            //Text("")
+            //Text("Abfragefilter").bold()
+            NavigationView {
+                Form {
+                    Section(header: Text("Bedingung").font(.system(size: 16, weight: .regular))) {
+                        Picker("Wenn ", selection: $selectedAbfrageFeld1, content: {
+                            ForEach(abfrageFeld1, id: \.self, content: { index1 in
+                                Text(index1)
                             })
                         })
-                        //.pickerStyle(.inline)
-                        .frame(height: 30)
                         .font(.system(size: 16, weight: .regular))
+                        .frame(height: 30)
+                        .onAppear(perform: {
+                            
+                            abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
+                            print("Feld1 onAppear")
+                        })
+                        .onChange(of: selectedAbfrageFeld1, perform: { _ in
+                            
+                            abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
+                            selectedAbfrageFeld3 = abfrageFeld3[0]
+                            print("Feld1 onChange")
+                        }) // Ende onChange...
+                        
+                        HStack{
+                            Text("ist  ")
+                                .font(.system(size: 16, weight: .regular))
+                            
+                            Picker("", selection: $selectedAbfrageFeld2, content: {
+                                ForEach(abfrageFeld2, id: \.self, content: { index2 in
+                                    Text(index2)
+                                })
+                            })
+                            //.pickerStyle(.inline)
+                            .frame(height: 30)
+                            .font(.system(size: 16, weight: .regular))
+                        } // Ende HStack
+                        
+                        Picker("", selection: $selectedAbfrageFeld3, content: {
+                            ForEach(abfrageFeld3, id: \.self, content: { index3 in
+                                Text(index3)
+                            })
+                            .font(.system(size: 16, weight: .regular))
+                        })
+                        .frame(height: 30)
+                        .onAppear(perform: {
+                            print("\(selectedAbfrageFeld3)")
+                            print("Feld3 onAppear")
+                        })
+                        .onChange(of: selectedAbfrageFeld3, perform: {  _ in
+                            print("\(selectedAbfrageFeld3)")
+                            print("Feld3 onChange")
+                        })
+                    } // Ende Section
+                    
+                    Section(header: Text("Filteraktivierung").font(.system(size: 16, weight: .regular))) {
+                        Toggle("Filterschalter:", isOn: $globaleVariable.abfrageFilter ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                            .font(.system(size: 16, weight: .regular))
+                    } // Ende Section
+                    
+                    
+                    HStack {
+                        Spacer()
+                        
+                        Button(action: {showAlertSpeichernButton = true})
+                        { Text("Abfrage verlassen.")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
+                            .alert(isPresented:$showAlertSpeichernButton) {
+                                Alert(
+                                    title: Text("Möchten Sie diese Abfrage speichern?"),
+                                    message: Text("Die Abfrage und der Zustand der Filteraktivierung werden bis zum nächsten Aufruf dieser Seite gespeichert."),
+                                    primaryButton: .destructive(Text("Speichern")) {
+                                        
+                                        var tmpFeld1 = ""
+                                        if globaleVariable.abfrageFilter == true {
+                                            
+                                            switch selectedAbfrageFeld1 {
+                                                    
+                                                case "Gegenstand":
+                                                    tmpFeld1 = selectedAbfrageFeld1
+                                                case "Vorgang":
+                                                    tmpFeld1 = selectedAbfrageFeld1
+                                                case "Name":
+                                                    tmpFeld1 = "personNachname"
+                                                case "Vorname":
+                                                    tmpFeld1 = "personVorname"
+                                                default:
+                                                    tmpFeld1 = ""
+                                                    
+                                            } // Ende switch
+                                            
+                                            let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
+                                            globaleVariable.abfrageQueryString = temp
+                                            
+                                        }else{
+                                            globaleVariable.abfrageQueryString = ""
+                                        } // Ende if
+                                        
+                                        // Tab1 Objektliste wird gezeigt
+                                        globaleVariable.navigationTabView = 1
+                                        
+                                        isPresented = false
+                                    },
+                                    secondaryButton: .cancel(Text("Abbrechen")){
+                                        print("Abgebrochen ....")
+                                        isPresented = false
+                                    }
+                                ) // Ende Alert
+                            } // Ende alert
+                        Spacer()
                     } // Ende HStack
                     
-                    Picker("", selection: $selectedAbfrageFeld3, content: {
-                        ForEach(abfrageFeld3, id: \.self, content: { index3 in
-                            Text(index3)
-                        })
-                        .font(.system(size: 16, weight: .regular))
-                    })
-                    .frame(height: 30)
-                    .onAppear(perform: {
-                        print("\(selectedAbfrageFeld3)")
-                        print("Feld3 onAppear")
-                    })
-                    .onChange(of: selectedAbfrageFeld3, perform: {  _ in
-                        print("\(selectedAbfrageFeld3)")
-                        print("Feld3 onChange")
-                    })
-                } // Ende Section
-                
-                Section(header: Text("Filteraktivierung").font(.system(size: 16, weight: .regular))) {
-                    Toggle("Filterschalter:", isOn: $globaleVariable.abfrageFilter ).toggleStyle(SwitchToggleStyle(tint: .blue))
-                        .font(.system(size: 16, weight: .regular))
-                } // Ende Section
-                
-                
-                HStack {
-                    Spacer()
-                    
-                    Button(action: {showAlertSpeichernButton = true})
-                    { Text("Abfrage verlassen.")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
-                        .alert(isPresented:$showAlertSpeichernButton) {
-                            Alert(
-                                title: Text("Möchten Sie diese Abfrage speichern?"),
-                                message: Text("Die Abfrage und der Zustand der Filteraktivierung werden bis zum nächsten Aufruf dieser Seite gespeichert."),
-                                primaryButton: .destructive(Text("Speichern")) {
-                                    
-                                    var tmpFeld1 = ""
-                                    if globaleVariable.abfrageFilter == true {
-                                        
-                                        switch selectedAbfrageFeld1 {
-                                                
-                                            case "Gegenstand":
-                                                tmpFeld1 = selectedAbfrageFeld1
-                                            case "Vorgang":
-                                                tmpFeld1 = selectedAbfrageFeld1
-                                            case "Name":
-                                                tmpFeld1 = "personNachname"
-                                            case "Vorname":
-                                                tmpFeld1 = "personVorname"
-                                            default:
-                                                tmpFeld1 = ""
-                                                
-                                        } // Ende switch
-                                        
-                                        let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
-                                        globaleVariable.abfrageQueryString = temp
-                                        
-                                    }else{
-                                        globaleVariable.abfrageQueryString = ""
-                                    } // Ende if
-                                    
-                                    // Tab1 Objektliste wird gezeigt
-                                    globaleVariable.navigationTabView = 1
-                                    
-                                    isPresented = false
-                                },
-                                secondaryButton: .cancel(Text("Abbrechen")){
-                                    print("Abgebrochen ....")
-                                    isPresented = false
-                                }
-                            ) // Ende Alert
-                        } // Ende alert
-                    Spacer()
-                } // Ende HStack
-                
-                //Section {
+                    //Section {
                     Text("Hier können Sie die Abfrage für Darstellung Ihrer Objektenabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                     
-                //} // Ende Section
-            } // Ende Form
-            .background(globaleVariable.farbenEbene1)
-            .cornerRadius(10)
-            
+                    //} // Ende Section
+                } // Ende Form
+                .navigationTitle("Abfrage").navigationBarTitleDisplayMode(.inline)
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
+                .navigationBarItems(trailing:
+                                        HStack {
+                    
+                    Button(action: {showAbfrageHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
+                    //Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
+                    
+                }) // Ende NavigationBarItem
+                .alert("Hilfe zu Abfrage", isPresented: $showAbfrageHilfe, actions:
+                        { Button(" - OK - ") {}
+                }, message: { Text("Das ist die Beschreibung für den Bereich Abfrage.") } ) // Ende alert
+            }
         } // Ende VStack
     } // Ende var body
 } // Ende struct

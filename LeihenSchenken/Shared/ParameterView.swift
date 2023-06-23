@@ -23,17 +23,14 @@ struct ParameterView: View {
     @State var showSheetGegenstand: Bool = false
     @State var isParameterBereich: Bool = true
     
-    
     @FocusState private var focusedField: Field?
     
     private enum Field: Int, CaseIterable {
-        case amount
+        case amount // Für Preis/Wert
         case str1 // Für Gegenstandbeschreibung
         case str2 // Für allgemeine Informationen
     } // Ende private enum
     
-    
- 
     @State private var calendarId: Int = 0
     
     @State var platzText1: String = "Gegenstandbeschreibung"
@@ -46,8 +43,6 @@ struct ParameterView: View {
     
     @State var imageData = UIImage()
      
-    //@State private var personPickerEingabemaske: [PersonClassVariable] = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false)
-    
     private let numberFormatter: NumberFormatter
     private let perKeyFormatter: DateFormatter
     private let germanDateFormatter: DateFormatter
@@ -68,7 +63,6 @@ struct ParameterView: View {
         
     } // Ende init
     
-    
     var body: some View {
         
         let tapOptionGegenstand = Binding<Int>(
@@ -83,8 +77,6 @@ struct ParameterView: View {
                 } // Ende if
             } // Ende set
         ) // Ende let
-        
-        
         
         let tapOptionPerson = Binding<Int>(
             get: { globaleVariable.selectedPersonInt }, set: { globaleVariable.selectedPersonInt = $0
@@ -115,8 +107,7 @@ struct ParameterView: View {
                         .sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich )})
                         
                         TextEditorWithPlaceholder(text: $globaleVariable.textGegenstandbeschreibung, platz: $platzText1)
-                        //.focused($preisWertIsFocused)
-                            .focused($focusedField, equals: .str1)
+                           .focused($focusedField, equals: .str1)
                         
                         HStack {
                             Text("Gegenstandsbild:   ")
@@ -149,8 +140,8 @@ struct ParameterView: View {
                             Text("Preis/Wert:  ")
                                 .frame(height: 35, alignment: .leading)  // width: 190,
                                 .font(.system(size: 16, weight: .regular))
-                            
-                            Text(String(repeating: " ", count: 28))
+                            Spacer()
+                            //Text(String(repeating: " ", count: 28))
                             TextField("0.00 €", text: $globaleVariable.preisWert)
                             
                                 .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
@@ -160,7 +151,6 @@ struct ParameterView: View {
                                 .cornerRadius(5)
                                 .font(.system(size: 16, weight: .regular))
                                 .keyboardType(.decimalPad)
-                            //.focused($preisWertIsFocused)
                                 .focused($focusedField, equals: .amount)
                             
                             //Text("€").font(.system(size: 16, weight: .regular))
@@ -168,19 +158,24 @@ struct ParameterView: View {
                         } // Ende HStack
                         //.frame(width: UIScreen.screenWidth)
                         
-                        
-                        DatePicker("Datum: ", selection: $globaleVariable.datum, displayedComponents: [.date])
-                            .accentColor(Color.black)
-                            .multilineTextAlignment (.center)
-                            .environment(\.locale, Locale.init(identifier: "de"))
-                            .font(.system(size: 16, weight: .regular))
-                            .id(calendarId)
-                            .onChange(of: globaleVariable.datum, perform: { _ in
-                                calendarId += 1
-                            }) // Ende onChange...
-                            .onTapGesture {
-                                calendarId += 1
-                            } // Ende onTap....
+                        HStack{
+                            Text("Datum: ")
+                                //.font(.system(size: 16, weight: .regular))
+                            DatePicker("", selection: $globaleVariable.datum, displayedComponents: [.date])
+                                .colorInvert()
+                                .colorMultiply(Color.gray)
+                                .multilineTextAlignment (.center)
+                                .environment(\.locale, Locale.init(identifier: "de"))
+                                .font(.system(size: 16, weight: .regular))
+                                .id(calendarId)
+                                .onChange(of: globaleVariable.datum, perform: { _ in
+                                    calendarId += 1
+                                }) // Ende onChange...
+                                .onTapGesture {
+                                    calendarId += 1
+                                } // Ende onTap....
+                        } //Ende HStack
+                        .font(.system(size: 16, weight: .regular))
                         
                         Picker("Vorgang: ", selection: $globaleVariable.selectedVorgangInt, content: {
                             ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
@@ -189,8 +184,6 @@ struct ParameterView: View {
                         }) // Picker
                         .font(.system(size: 16, weight: .regular))
                         
-                        
-                        
                         Picker("Person: ", selection: tapOptionPerson, content: {
                             ForEach(0..<$globaleVariable.personenParameter.count, id: \.self) { index in
                                 Text("\(globaleVariable.personenParameter[index].personPicker)")//.tag(index)
@@ -198,17 +191,6 @@ struct ParameterView: View {
                         }) // Picker
                         .font(.system(size: 16, weight: .regular))
                         .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
-                        
-                        
-                        /*
-                        Picker("Person: ", selection: tapOptionPerson, content: {
-                            ForEach(0..<$personenParameter.count, id: \.self) { index in
-                                Text("\(personenParameter[index].personPicker)")//.tag(index)
-                            } // Ende ForEach
-                        }) // Picker
-                        .font(.system(size: 16, weight: .regular))
-                        .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
-*/
                         
                         TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
                         //.focused($preisWertIsFocused)
@@ -278,29 +260,44 @@ struct ParameterView: View {
                             } // Ende HStack
                             
                         } // Ende VStack
+                        
                         .toolbar {ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
+                            
                             if focusedField == .amount {
-                                Button("OK") {
+                                Spacer()
+                                Button("Fertig") {
                                     //preisWertIsFocused = false
                                     focusedField = nil
                                     print("OK Button wurde gedrückt!")
                                 } // Ende Button
                             }else if focusedField == .str1 {
-                                Button("Abbrechen") {
-                                    //preisWertIsFocused = false
-                                    globaleVariable.textGegenstandbeschreibung = ""
-                                    focusedField = nil
-                                    print("Abbrechen Button Str1 wurde gedrückt!")
-                                } // Ende Button
-                            }else {
-                                Button("Abbrechen") {
-                                    //preisWertIsFocused = false
-                                    globaleVariable.textAllgemeineNotizen = ""
-                                    focusedField = nil
-                                    print("Abbrechen Button Str2 wurde gedrückt!")
-                                } // Ende Button
-                                
+                                HStack {
+                                    Text("\(globaleVariable.textGegenstandbeschreibung.count)/100")
+                                        .font(.system(size: 16, weight: .regular))
+                                        .foregroundColor(.gray)
+                                        .padding()
+                                    Spacer()
+                                    Button("Abbrechen") {
+                                        //preisWertIsFocused = false
+                                        globaleVariable.textGegenstandbeschreibung = ""
+                                        focusedField = nil
+                                        print("Abbrechen Button Str1 wurde gedrückt!")
+                                    } // Ende Button
+                                    .font(.system(size: 16, weight: .regular))
+                                } // Ende HStack
+                            }else if focusedField == .str2  {
+                                HStack{
+                                    Text("\(globaleVariable.textAllgemeineNotizen.count)/100")
+                                        .font(.system(size: 16, weight: .regular))
+                                        .foregroundColor(.gray)
+                                    Spacer()
+                                    Button("Abbrechen") {
+                                        //preisWertIsFocused = false
+                                        globaleVariable.textAllgemeineNotizen = ""
+                                        focusedField = nil
+                                        print("Abbrechen Button Str2 wurde gedrückt!")
+                                    } // Ende Button
+                                } // Ende HStack
                             } // Ende if/else
                             
                         } // Ende ToolbarItemGroup
@@ -366,7 +363,7 @@ struct TextEditorWithPlaceholder: View {
         @FocusState private var textIsFocussed: Bool
     
         var body: some View {
-            
+           
                 ZStack(alignment: .leading) {
                     if text.isEmpty {
                         VStack {
@@ -396,19 +393,20 @@ struct TextEditorWithPlaceholder: View {
                                 }else{
                                     self.text = lastText
                                 } // Ende else
-    
+                                
                                 guard let newValueLastChar = newValue.last else { return }
-                                        
+                                
                                 if newValueLastChar == "\n" {
                                     text.removeLast()
                                     textIsFocussed = false
                                 } // Ende if
-                                        
+                                
                             }) // Ende onChange
-                                    
+                        
                     } // Ende VStack
+                    
                 } // Ende ZStack
-            
+    
         }// Ende var body
     }// Ende struckt
 
@@ -461,20 +459,7 @@ struct PhotosSelector: View {
 } //Ende struckt PhotoSelector
 
 
-struct TextFieldEuro: ViewModifier {
-    @Binding var textParameter: String
-   
-    func body(content: Content) -> some View {
-        HStack {
-            content
-            if !textParameter.isEmpty {
-                Text("€")
-                    .foregroundColor(Color(UIColor.opaqueSeparator))
-                    
-            } //Ende if !text
-        } // Ende HStack
-    } // Ende func body
-} // Ende struc
+
 
 
 

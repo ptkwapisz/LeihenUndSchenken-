@@ -552,7 +552,7 @@ func querySQLAbfrageClassPersonen(queryTmp: String) -> [PersonClassVariable]  {
     //@ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var name: [String] = ["","","","",""]
-    var queryString: String = queryTmp
+    let queryString: String = queryTmp
     
     var resultatClass: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
    
