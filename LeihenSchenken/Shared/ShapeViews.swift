@@ -20,7 +20,7 @@ struct ShapeViewAddUser: View {
     
     @State var vorname: String = ""
     @State var name: String = ""
-    @State var spitzname: String = ""
+    //@State var spitzname: String = ""
     
     var body: some View {
         NavigationView {
@@ -254,7 +254,7 @@ struct ShapeViewAddGegenstand: View {
         } // Ende NavigationView
         
     } // Ende var body
-} // Ende struct ShapeViewAddUser
+} // Ende struct
 
 
 struct ShapeViewSettings: View {
@@ -484,3 +484,122 @@ struct ShapeViewAbfrage: View {
         } // Ende VStack
     } // Ende var body
 } // Ende struct
+
+
+struct ShapeViewEditUser: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @Binding var isPresentedShapeViewEditUser: Bool
+    //@Binding var neuePersonTmp: [String]
+    @Binding var personPickerTmp: String
+    @Binding var neuePersonTmp: [PersonClassVariable]
+    
+    @State var showHilfe: Bool = false
+    
+    @State var selectedPerson_sexInt: Int = 0
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                Section() {
+                    
+                    TextField("Vorname", text: $neuePersonTmp[0].personVorname)
+                        .padding(5)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(5)
+                        .disableAutocorrection(true)
+                    
+                    TextField("Name", text: $neuePersonTmp[0].personNachname)
+                        .padding(5)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(5)
+                        .disableAutocorrection(true)
+                    
+                    Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
+                        
+                        ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
+                            Text("\(globaleVariable.parameterPersonSex[index])")
+                            
+                            
+                        } // Ende ForEach
+                    } // Ende Picker
+                    /*
+                    .onChange(of: selectedPerson_sexInt, perform: { _ in
+                        neuePersonTmp[0].personSex = globaleVariable.parameterPersonSex[selectedPerson_sexInt]
+                    }) // Ende onChange
+                    */
+                } // Ende Section
+                
+                HStack {
+                    Spacer()
+                    Button(action: { isPresentedShapeViewEditUser = false }) {Text("Abbrechen")}
+                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                    
+                    Button(action: {
+                        // Hier aktion für speichern
+                        
+                        if neuePersonTmp[0].personVorname != "" && neuePersonTmp[0].personNachname != "" {
+                            personPickerTmp = " " + neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
+                            isPresentedShapeViewEditUser = false
+                            
+                        } else {
+                            
+                            print("Die Felder sind leer")
+                        } // Ende if/else
+                        
+                    }) {
+                        
+                        Text("Speichern")
+                        
+                    } // Ende Button
+                    .buttonStyle(.borderedProminent)
+                    .foregroundColor(.white)
+                    .font(.system(size: 16, weight: .regular))
+                    .cornerRadius(10)
+                    Spacer()
+                } // Ende HStack
+                
+                
+            } // Ende Form
+            .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing:
+                                    HStack {
+                
+                Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
+                
+                
+            }) // Ende NavigationBarItem
+            .alert("Hilfe zu neuer Benutzer", isPresented: $showHilfe, actions:
+                    { Button(" - OK - ") {}
+            }, message: { Text("Das ist die Beschreibung für den Bereich Benutzer ändern.") } ) // Ende alert
+        } // Ende NavigationView
+    } // Ende var body
+} // Ende struct
+
+
+struct ShapeShowDetailPhoto: View {
+    @Binding var isPresentedShowDetailPhoto: Bool
+    @Binding var par1: [ObjectVariable]
+    @Binding var par2: Int
+    
+    var body: some View {
+        NavigationView {
+            GeometryReader { geometry in
+                Form {
+                    VStack{
+                        Image(base64Str: par1[par2].gegenstandBild)!
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                            .cornerRadius(10)
+                            .padding(5)
+                        Button(action: { isPresentedShowDetailPhoto = false }) {Text("Abbrechen")}
+                            .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                    } // Ende Vstak
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.9)
+                } // Ende Form
+                .navigationTitle("Detailsicht Photo").navigationBarTitleDisplayMode(.inline)
+            } // Ende GeometryReader
+        }
+    } // Ende var body
+    
+} // Ende ShapeshowDetailPhoto

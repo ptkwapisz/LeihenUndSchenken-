@@ -45,7 +45,8 @@ extension View {
     } // Ende some View
 } // Ende extension
 
-// Diese Extension wird für Längeneinschränkung benutzt
+// Diese Extension wird für Längeneinschränkung beim TextField benutzt
+// In der View ShapeViewAddGegenstand
 extension Binding where Value == String {
     func max(_ limit: Int) -> Self {
         if self.wrappedValue.count > limit {

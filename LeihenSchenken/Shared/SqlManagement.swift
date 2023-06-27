@@ -387,36 +387,45 @@ func deleteItemsFromDatabase(tabelle: String, perKey: String) {
 // Diese Funktion ersetzt ein Tabellenfeld durch ein neues in der Datenbanktabelle Objekte
 // Vorher geschieht die Prüfung, ob die Felder sich unterscheiden
 func updateSqliteTabellenField(sqliteFeld: String, neueInhalt: String, perKey: String) {
-
-let alterWertQuery = "SELECT \(sqliteFeld) FROM Objekte WHERE perKey = \(perKey)"
-
-let alterWert = querySQLAbfrageArray(queryTmp: alterWertQuery)
     
-if alterWert[0] == neueInhalt {
-    print("\(alterWert[0])" + " = " + "\(neueInhalt)")
-    print("Gleich")
-}else{
-    let updateStatementString = "UPDATE Objekte SET \(sqliteFeld) = '\(neueInhalt)' WHERE perKey = \(perKey)"
+    let alterWertQuery = "SELECT \(sqliteFeld) FROM Objekte WHERE perKey = \(perKey)"
     
-    var updateStatement: OpaquePointer?
-    
-    if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) ==
-        SQLITE_OK {
-        if sqlite3_step(updateStatement) == SQLITE_DONE {
-            print("\nSuccessfully updated row.")
+    let alterWert = querySQLAbfrageArray(queryTmp: alterWertQuery)
+    // Kann später gelöscht werden
+    if alterWert[0] == neueInhalt {
+        if neueInhalt.count < 50 {
+            print("\(alterWert[0])" + " = " + "\(neueInhalt)")
+            print("Gleich")
+        }else{
+            print("Bilder sind gleich")
+        } // Ende if
+    }else{
+        let updateStatementString = "UPDATE Objekte SET \(sqliteFeld) = '\(neueInhalt)' WHERE perKey = \(perKey)"
+        
+        var updateStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, updateStatementString, -1, &updateStatement, nil) ==
+            SQLITE_OK {
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("\nSuccessfully updated row.")
+            } else {
+                print("\nCould not update row.")
+            } // Ende if/else
         } else {
-            print("\nCould not update row.")
+            print("\nUPDATE statement is not prepared")
         } // Ende if/else
-    } else {
-        print("\nUPDATE statement is not prepared")
+        
+        sqlite3_finalize(updateStatement)
+        
+        // Kann später gelöscht werden
+        if neueInhalt.count < 50 {
+            print("\(alterWert[0])" + " != " + "\(neueInhalt)")
+            print("Ungleich")
+        }else{
+            print("Bilder sind ungleich")
+        } // Ende if
+        
     } // Ende if/else
-    
-    sqlite3_finalize(updateStatement)
-    
-    print("\(alterWert[0])" + " != " + "\(neueInhalt)")
-    print("Ungleich")
-    
-} // Ende if/else
     
 } // Ende func
 

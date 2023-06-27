@@ -206,10 +206,10 @@ func personenDatenInDatenbankSchreiben(par1: String, par2: String, par3: String)
 func personenDatenInVariableSchreiben(par1: String, par2: String, par3: String){
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    let pickerTemp: String = par2 + ", " + par1
     globaleVariable.personenParameter.removeAll()
     
     globaleVariable.personenParameter.append(contentsOf: [PersonClassVariable(perKey: "0000000000000", personPicker: "Neue Person", personVorname: "Neue Person", personNachname: "Neue Person", personSex: "Mann")])
+    let pickerTemp: String = par2 + ", " + par1
     globaleVariable.personenParameter.append(contentsOf: [PersonClassVariable(perKey: "0000000000001", personPicker: pickerTemp, personVorname: par1, personNachname: par2, personSex: par3)])
     
     print("Personendaten wurden in die Variable gespeichert...")

@@ -159,14 +159,16 @@ struct ParameterView: View {
                         //.frame(width: UIScreen.screenWidth)
                         
                         HStack{
-                            Text("Datum: ")
-                                //.font(.system(size: 16, weight: .regular))
+                            Text("Datum:")
+                                .font(.system(size: 16, weight: .regular))
+                            Spacer()
                             DatePicker("", selection: $globaleVariable.datum, displayedComponents: [.date])
+                                .labelsHidden()
                                 .colorInvert()
                                 .colorMultiply(Color.gray)
                                 .multilineTextAlignment (.center)
                                 .environment(\.locale, Locale.init(identifier: "de"))
-                                .font(.system(size: 16, weight: .regular))
+                                .transformEffect(.init(scaleX: 0.9, y: 0.9))
                                 .id(calendarId)
                                 .onChange(of: globaleVariable.datum, perform: { _ in
                                     calendarId += 1
@@ -175,7 +177,6 @@ struct ParameterView: View {
                                     calendarId += 1
                                 } // Ende onTap....
                         } //Ende HStack
-                        .font(.system(size: 16, weight: .regular))
                         
                         Picker("Vorgang: ", selection: $globaleVariable.selectedVorgangInt, content: {
                             ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
@@ -357,7 +358,7 @@ struct TextEditorWithPlaceholder: View {
         @Binding var text: String
         @Binding var platz: String
     
-        @State var totalCHarsText: Int = 100
+    @State var totalCHarsText: Int = 100
         @State var lastText: String = ""
        
         @FocusState private var textIsFocussed: Bool
@@ -402,6 +403,7 @@ struct TextEditorWithPlaceholder: View {
                                 } // Ende if
                                 
                             }) // Ende onChange
+                            
                         
                     } // Ende VStack
                     

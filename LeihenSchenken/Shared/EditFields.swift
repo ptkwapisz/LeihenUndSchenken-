@@ -23,7 +23,8 @@ struct EditSheetView: View {
     @State var preisWertTmp: String = ""
     @State var gegenstandBildTmp: String = ""
     @State var vorgangTmp: String = ""
-    @State var personTmp: [String] = []
+    @State var personPickerTmp: String = ""
+    @State var neuePersonTmp: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
     
     @FocusState var isInputActive: Bool
     
@@ -31,66 +32,83 @@ struct EditSheetView: View {
         
         NavigationStack {
             GeometryReader { geometry in
-                Form {
-                    Section{
-                        
-                        EditGegenstand(par1: $par1, par2: $par2, gegenstandTmp: $gegenstandTmp)
-                        EditGegenstandText(par1: $par1, par2: $par2, gegenstandTextTmp: $gegenstandTextTmp)
-                        EditGegenstandBild(par1: $par1, par2: $par2, gegenstandBildTmp: $gegenstandBildTmp)
-                        EditPreisWert(par1: $par1, par2: $par2, preisWertTmp: $preisWertTmp)
-                        EditVorgang(par1: $par1, par2: $par2, vorgangTmp: $vorgangTmp)
-                        EditDatum(par1: $par1, par2: $par2, datumTmp: $datumTmp)
-                        EditAllgemeinerText(par1: $par1, par2: $par2, allgemeinerTextTmp: $allgemeinerTextTmp)
-                        
-                    } // Ende Section Gegenstand
-                    
-                    Section{
-                        HStack {
-                            Spacer()
-                            Button("Abbrechen"){
-                                isPresentedChartViewEdit = false
-                                globaleVariable.parameterImageString = "Kein Bild"
-                            } // Ende Button
-                            .buttonStyle(.bordered)
-                            .foregroundColor(.blue)
-                            .fontWeight(.semibold)
-                            .font(.system(size: 16, weight: .regular))
-                            
-                            Button("Speichern"){
-                            
-                                updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: gegenstandTmp, perKey: par1[par2].perKey)
-                                par1[par2].gegenstand = gegenstandTmp
-                                
-                                updateSqliteTabellenField(sqliteFeld: "gegenstandText", neueInhalt: gegenstandTextTmp, perKey: par1[par2].perKey)
-                                par1[par2].gegenstandText = gegenstandTextTmp
-                                
-                                par1[par2].datum = dateToString(parDatum: datumTmp)
-                                updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey)
-                                
-                                updateSqliteTabellenField(sqliteFeld: "vorgang", neueInhalt: vorgangTmp, perKey: par1[par2].perKey)
-                                par1[par2].vorgang = vorgangTmp
-                               
-                                updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey)
-                                par1[par2].gegenstandBild = gegenstandBildTmp
-                                
-                                updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: allgemeinerTextTmp, perKey: par1[par2].perKey)
-                                par1[par2].gegenstandText = allgemeinerTextTmp
-                                
-                                globaleVariable.parameterImageString = "Kein Bild"
-                                refreshAllViews()
-                                isPresentedChartViewEdit = false
-                                
-                            } // Ende Button
-                            .buttonStyle(.borderedProminent)
-                            .foregroundColor(.white)
-                            .fontWeight(.semibold)
-                            .font(.system(size: 16, weight: .regular))
-                            Spacer()
-                        }
-                    } // Ende Section
-                } // Ende Form
                 
+                    Form {
+                        Section{
+                            
+                            EditGegenstand(par1: $par1, par2: $par2, gegenstandTmp: $gegenstandTmp)
+                            EditGegenstandText(par1: $par1, par2: $par2, gegenstandTextTmp: $gegenstandTextTmp)
+                            EditGegenstandBild(par1: $par1, par2: $par2, gegenstandBildTmp: $gegenstandBildTmp)
+                            EditPreisWert(par1: $par1, par2: $par2, preisWertTmp: $preisWertTmp)
+                            EditDatum(par1: $par1, par2: $par2, datumTmp: $datumTmp)
+                            EditVorgang(par1: $par1, par2: $par2, vorgangTmp: $vorgangTmp)
+                            EditPerson(par1: $par1, par2: $par2, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
+                            EditAllgemeinerText(par1: $par1, par2: $par2, allgemeinerTextTmp: $allgemeinerTextTmp)
+                            
+                        } // Ende Section Gegenstand
+                        
+                        Section{
+                            HStack {
+                                Spacer()
+                                Button("Abbrechen"){
+                                    isPresentedChartViewEdit = false
+                                    globaleVariable.parameterImageString = "Kein Bild"
+                                } // Ende Button
+                                .buttonStyle(.bordered)
+                                .foregroundColor(.blue)
+                                .fontWeight(.semibold)
+                                .font(.system(size: 16, weight: .regular))
+                                
+                                Button("Speichern"){
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: gegenstandTmp, perKey: par1[par2].perKey)
+                                    par1[par2].gegenstand = gegenstandTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstandText", neueInhalt: gegenstandTextTmp, perKey: par1[par2].perKey)
+                                    par1[par2].gegenstandText = gegenstandTextTmp
+                                    
+                                    par1[par2].datum = dateToString(parDatum: datumTmp)
+                                    updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey)
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "vorgang", neueInhalt: vorgangTmp, perKey: par1[par2].perKey)
+                                    par1[par2].vorgang = vorgangTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey)
+                                    par1[par2].gegenstandBild = gegenstandBildTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: allgemeinerTextTmp, perKey: par1[par2].perKey)
+                                    par1[par2].allgemeinerText = allgemeinerTextTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "personVorname", neueInhalt: neuePersonTmp[0].personVorname, perKey: par1[par2].perKey)
+                                    par1[par2].personVorname = neuePersonTmp[0].personVorname
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "personNachname", neueInhalt: neuePersonTmp[0].personNachname, perKey: par1[par2].perKey)
+                                    par1[par2].personNachname = neuePersonTmp[0].personNachname
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "personSex", neueInhalt: neuePersonTmp[0].personSex, perKey: par1[par2].perKey)
+                                    par1[par2].personSex = neuePersonTmp[0].personSex
+                                    
+                                    globaleVariable.parameterImageString = "Kein Bild"
+                                    refreshAllViews()
+                                    isPresentedChartViewEdit = false
+                                    
+                                } // Ende Button
+                                .buttonStyle(.borderedProminent)
+                                .foregroundColor(.white)
+                                .fontWeight(.semibold)
+                                .font(.system(size: 16, weight: .regular))
+                                Spacer()
+                            } // Ende HStack
+                        } // Ende Section
+                    } // Ende Form
+                    .onAppear(){
+                        neuePersonTmp[0].personPicker = " " + par1[par2].personNachname + ", " + par1[par2].personVorname
+                        neuePersonTmp[0].personVorname = par1[par2].personVorname
+                        neuePersonTmp[0].personNachname  = par1[par2].personNachname
+                        neuePersonTmp[0].personSex = par1[par2].personSex
+                    }// Ende onApear
             } // Ende GeometryReader
+            
             .navigationTitle("Daten bearbeiten").navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -107,6 +125,7 @@ struct EditSheetView: View {
             } // Ende toolbar
             
         } // Ende NavigationView
+        
         .alert("Hilfe zu Objekt Editieren", isPresented: $showChartHilfe, actions: {
             Button(" - OK - ") {
                 
@@ -441,6 +460,7 @@ struct EditGegenstandBild: View {
                         .frame(width: 30, height: 30, alignment: .center)
                         .background(Color.gray.gradient)
                         .cornerRadius(5)
+                    PhotosSelector()
                 }else{
                     Image(base64Str: gegenstandBildTmp)?
                         .resizable()
@@ -448,11 +468,18 @@ struct EditGegenstandBild: View {
                         .frame(width: 30, height: 30)
                         .clipped()
                         .cornerRadius(5)
-                
+                    Text(" ")
+                    Button(action: {
+                        gegenstandBildTmp = "Kein Bild"
+                    }, label: {
+                        Image(systemName: "trash.square")
+                            //.symbolRenderingMode(.multicolor)
+                            .font(.system(size: 30))
+                            .foregroundColor(.accentColor)
+                    })
                 } // Ende if/else
                 
-                PhotosSelector()
-                    
+                
             }// Ende HStack
             .onAppear(){
                print("onAppear")
@@ -510,6 +537,47 @@ struct EditVorgang: View {
                 .onChange(of: indexInt, perform: { _ in
                     vorgangTmp = vorgangArrayTmp[indexInt]
                 }) // Ende onChange
+            
+            }// Ende HStack
+        } // Ende NavigationStack
+    } // Ende var body
+} // Ende struct EditVorgang
+
+struct EditPerson: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @Binding var par1: [ObjectVariable]
+    @Binding var par2: Int
+    @Binding var personPickerTmp: String
+    @Binding var neuePersonTmp: [PersonClassVariable]
+    
+    @State var personEditieren: Bool = false
+    
+    var body: some View {
+        
+        NavigationStack {
+            HStack{
+                Text("Neue Person: ")
+                    .font(.system(size: 16, weight: .regular))
+                Spacer()
+                
+                Button(action:{
+                    personEditieren = true
+                
+                   print("Button Person ......")
+                }) {
+                    Text("\(personPickerTmp)")
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(height: 30)
+                        .background(Color.blue)
+                        .opacity(0.4)
+                        .cornerRadius(5)
+                    
+                } // Ende Button
+                .onAppear(){
+                    personPickerTmp = " " + par1[par2].personNachname + ", " + par1[par2].personVorname + " "
+                } // Ende onAppear
+                .sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})
+                
             
             }// Ende HStack
         } // Ende NavigationStack
