@@ -187,3 +187,17 @@ class PersonClassVariable: Identifiable {
     
 } // Ende class
 
+class HilfeTexte: ObservableObject  {
+    static let shared = HilfeTexte()
+    
+    // Aus dem Parameterbereich
+    @Published var allgemeineAppInfo: String = "Das ‚Schenk und Leih‘ App (eigentlich ‚Verschenk und Verleih‘ App) ist für die einfache Verwaltung von verliehenen, verschenkten oder auch erhaltenen Gegenstände konzipiert. Sie soll dabei helfen, mit Hilfe der Zuordnung zu festgelegten Personen, den Überblick über diese Gegenstände zu behalten. Informationen, wie: Gegenstandsbeschreibung, Gegenstandsbild, den Preis, das Datum können eingegeben und verwaltet werden. So hat man immer einen Überblick über alles, was man verliehen, verschenkt oder bekommen hat."
+    @Published var eingabeMaske: String = "Die App beginnt mit der Eingabemaske, wo Sie verschenkte, verliehene oder erhaltene Gegenstände, wie Bücher, CDs, Werkzeuge oder Geld, erfassen können. Vier Standardgegenstände sind voreingestellt, aber Sie können auch eigene hinzufügen. Für zusätzliche Informationen nutzen Sie das Feld 'Gegenstandsbeschreibung', z.B. ISBN oder Genre bei Büchern. Fotos von Gegenständen lassen sich aus Ihrer iPhone-Mediathek ins Feld 'Gegenstandsbild' importieren. Geben Sie den ausgegebenen Betrag oder den verliehenen Geldbetrag im Feld 'Preis/Wert' ein. Im Feld 'Datum' vermerken Sie, wann Sie den Gegenstand verschenkt oder verliehen haben. Wählen Sie im Feld 'Was möchten Sie tun?' zwischen 'verschenken', 'verleihen' oder 'bekommen'. Geben Sie im Feld 'Person' ein, wer den Gegenstand erhalten hat. Im Feld 'Allgemeine Notizen' können Sie den Anlass oder die Situation beschreiben. Durch Abbrechen können Sie die Eingabemaske leeren und neu beginnen."
+    @Published var tabObjektenListe: String = "In diesem Fenster sehen sie alle Ihre erfasten Objekte gruppiert nach den Vorgängen, wie 'verlien', 'verschenkt' oder 'bekommen'. Sie können jede Zeile anklicken, um in die Deteilsicht des Objektes zu gelangen. "
+    
+    @Published var tabGegenstandListe: String = "Hilfe für Gegenstandliste"
+    @Published var tabPersonenListe: String = "Hilfe für Personenliste"
+    @Published var tabStatistiken: String = "Hilfe für Statistiken"
+    @Published var tabHandbuch: String = "Hilfe für das Handbuch"
+    
+} // Ende class

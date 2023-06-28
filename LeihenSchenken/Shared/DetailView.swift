@@ -72,7 +72,7 @@ struct DeteilView: View {
             } // Ende TabView
             
         } // Ende VStack
-        .navigationTitle(naviTitleText(tabNummer: globaleVariable.navigationTabView))
+        .navigationTitle(naviTitleText(tabNummer: globaleVariable.navigationTabView).tabName)
 
         .toolbar {
             // Wenn das Tab Handbuch gezeigt wird
@@ -145,14 +145,16 @@ struct DeteilView: View {
             } // Ende if
             
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action:{showTabHilfe.toggle()
-                        
+                Button(action:{
+                    showTabHilfe.toggle()
+                    
                 }) {
                     Image(systemName: "questionmark.circle.fill")
                 } // Ende Button
-                .alert("Hilfe für \(naviTitleText(tabNummer: globaleVariable.navigationTabView))", isPresented: $showTabHilfe, actions: {
+                //.alert("Hilfe für \(naviTitleText(tabNummer: globaleVariable.navigationTabView))", isPresented:
+                .alert("Hilfe für \(naviTitleText(tabNummer: globaleVariable.navigationTabView).tabName)", isPresented: $showTabHilfe, actions: {
                       Button(" - OK - ") {}
-                      }, message: { Text("Das ist die Beschreibung für die augewählte Tab.") } // Ende message
+                }, message: { Text("\(naviTitleText(tabNummer: globaleVariable.navigationTabView).tabHilfe)") } // Ende message
                     ) // Ende alert
                 } // Ende ToolbarItemGroup
                 
@@ -161,8 +163,8 @@ struct DeteilView: View {
         
     } // var body
 } // Ende struct
-
-func naviTitleText(tabNummer: Int) -> String {
+/*
+func naviTitleText3(tabNummer: Int) -> String {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     let returnWert:  String
     
@@ -185,4 +187,28 @@ func naviTitleText(tabNummer: Int) -> String {
     
 } // Ende func naviTitleText
 
-
+*/
+func naviTitleText(tabNummer: Int) -> (tabName: String, tabHilfe: String) {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @ObservedObject var hilfeTexte = HilfeTexte.shared
+    
+    let returnWert:  (tabName: String, tabHilfe: String)
+    
+    switch tabNummer {
+        case 1:
+            returnWert = (tabName: "Objektenliste", tabHilfe: "\(hilfeTexte.tabObjektenListe)")
+        case 2:
+            returnWert = (tabName: "Gegenständeliste", tabHilfe: "\(hilfeTexte.tabGegenstandListe)")
+        case 3:
+            returnWert = (tabName: "Personenliste", tabHilfe: "\(hilfeTexte.tabPersonenListe)")
+        case 4:
+            returnWert = (tabName: "Statistiken", tabHilfe: "\(hilfeTexte.tabStatistiken)")
+        case 5:
+            returnWert = (tabName: "Handbuch", tabHilfe: "\(hilfeTexte.tabHandbuch)")
+        default:
+            returnWert = (tabName: "", tabHilfe: "")
+    } // Ende switch
+    
+    return returnWert
+    
+} // Ende func naviTitleText

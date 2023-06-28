@@ -576,6 +576,7 @@ struct ShapeViewEditUser: View {
 } // Ende struct
 
 
+
 struct ShapeShowDetailPhoto: View {
     @Binding var isPresentedShowDetailPhoto: Bool
     @Binding var par1: [ObjectVariable]
@@ -592,14 +593,14 @@ struct ShapeShowDetailPhoto: View {
                             .clipped()
                             .cornerRadius(10)
                             .padding(5)
-                        Button(action: { isPresentedShowDetailPhoto = false }) {Text("Abbrechen")}
+                        Button(action: { isPresentedShowDetailPhoto = false }) {Text("Zurück")}
                             .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                     } // Ende Vstak
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.9)
                 } // Ende Form
                 .navigationTitle("Detailsicht Photo").navigationBarTitleDisplayMode(.inline)
             } // Ende GeometryReader
-        }
+        } // NavigationView
     } // Ende var body
     
 } // Ende ShapeshowDetailPhoto

@@ -75,6 +75,7 @@
 		DBCEF81029D1ED7A0017A728 /* LeihenSchenkenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeihenSchenkenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCEF81429D1ED7A0017A728 /* LeihenSchenkenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeihenSchenkenUITests.swift; sourceTree = "<group>"; };
 		DBCEF81629D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeihenSchenkenUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DBE3A8E42A4C8BCA000DB9ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DBE5D0A62A192DEB006410AD /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "L&S Handbuch.pdf"; sourceTree = "<group>"; };
 		DBF6A33029E6D489001A01BC /* SqlManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqlManagement.swift; sourceTree = "<group>"; };
@@ -165,6 +166,7 @@
 		DBCEF7F829D1ED770017A728 /* LeihenSchenken */ = {
 			isa = PBXGroup;
 			children = (
+				DBE3A8E42A4C8BCA000DB9ED /* Info.plist */,
 				DBCEF7F929D1ED770017A728 /* LeihenSchenkenApp.swift */,
 				DBCEF7FB29D1ED770017A728 /* ContentView.swift */,
 				DBBC7B9F2A0017CE00177A52 /* Shared */,
@@ -438,6 +440,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -492,6 +495,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -513,6 +517,9 @@
 				DEVELOPMENT_TEAM = K42L6ZYYGZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LeihenSchenken/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -542,6 +549,9 @@
 				DEVELOPMENT_TEAM = K42L6ZYYGZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LeihenSchenken/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

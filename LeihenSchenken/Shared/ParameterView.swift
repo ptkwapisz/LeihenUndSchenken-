@@ -12,6 +12,7 @@ import SQLite3
 
 struct ParameterView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @ObservedObject var hilfeTexte = HilfeTexte.shared
     
     @State var showParameterHilfe: Bool = false
     @State var showParameterAllgemeinesInfo: Bool = false
@@ -339,14 +340,14 @@ struct ParameterView: View {
             }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
             .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
                 Button(" - OK - ") {}
-            }, message: { Text("Das ist die Beschreibung für den Bereich Eingabemaske.") } // Ende message
+            }, message: { Text("\(hilfeTexte.eingabeMaske)") } // Ende message
             ) // Ende alert
             .navigationBarItems(trailing: Button( action: {
                 showParameterAllgemeinesInfo = true
             }) {Image(systemName: "house").imageScale(.large)} )
             .alert("Allgemeine Information", isPresented: $showParameterAllgemeinesInfo, actions: {
                 Button(" - OK - ") {}
-            }, message: { Text("Das ist die allgemeine Information über diese Applikation.") } // Ende message
+            }, message: { Text("\(hilfeTexte.allgemeineAppInfo)") } // Ende message
             ) // Ende alert
             
     } // Ende var body
