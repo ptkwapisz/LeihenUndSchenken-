@@ -110,6 +110,7 @@ struct EditSheetView: View {
             } // Ende GeometryReader
             
             .navigationTitle("Daten bearbeiten").navigationBarTitleDisplayMode(.inline)
+            /*
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action:{
@@ -123,15 +124,16 @@ struct EditSheetView: View {
                     
                 } // Ende ToolbarItemGroup
             } // Ende toolbar
-            
+            */
         } // Ende NavigationView
-        
+       /*
         .alert("Hilfe zu Objekt Editieren", isPresented: $showChartHilfe, actions: {
             Button(" - OK - ") {
                 
             } // Ende Button
         }, message: { Text("Das ist die Beschreibung für den Bereich Objekt Editieren.") } // Ende message
         ) // Ende alert
+        */
     } // Ende var body
 } // Ende struc TestView
 

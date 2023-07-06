@@ -119,6 +119,7 @@ struct ShapeViewAddUser: View {
                 
             } // Ende Form
             .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
+            /*
             .navigationBarItems(trailing:
                                     HStack {
                 
@@ -126,9 +127,11 @@ struct ShapeViewAddUser: View {
                 //Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
                 
             }) // Ende NavigationBarItem
+            
             .alert("Hilfe zu neuer Benutzer", isPresented: $showHilfe, actions:
                     { Button(" - OK - ") {}
             }, message: { Text("Das ist die Beschreibung für den Bereich Benutzer hinzufügen.") } ) // Ende alert
+             */
         } // Ende NavigationView
     } // Ende var body
 } // Ende struct
@@ -241,6 +244,7 @@ struct ShapeViewAddGegenstand: View {
             } // Ende Form
             .navigationTitle("Neuer Gegenstand").navigationBarTitleDisplayMode(.inline)
             .scrollContentBackground(.hidden)
+            /*
             .navigationBarItems(trailing: Button( action: {
                 showHilfe = true
             }) {Image(systemName: "questionmark.circle.fill")
@@ -250,7 +254,7 @@ struct ShapeViewAddGegenstand: View {
                 Button(" - OK - ") {}
             }, message: { Text("Das ist die Beschreibung für den Bereich Gegenstand hinzufügen.") } // Ende message
             ) // Ende alert
-            
+            */
         } // Ende NavigationView
         
     } // Ende var body
@@ -287,7 +291,7 @@ struct ShapeViewSettings: View {
                     
                 }// Ende Section Farben
                 Section {
-                    Toggle("Zeige Handbuch", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                    Toggle("Tab Handbuch anzeigen", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
                 }
             
                 HStack {
@@ -309,12 +313,13 @@ struct ShapeViewSettings: View {
                     Spacer()
                 } // Ende HStack
                 
-                Text("Das Eigenschaftsfenster wird geschloßen und die einzehlen Eigenschaften werden gespeichert.")
+                Text("Das Parameterfenster wird geschloßen und die einzehlen Parameter werden gespeichert.")
                     .font(.system(size: 14, weight: .regular))
                     .foregroundColor(.gray)
                 
             } // Ende Form
-            .navigationTitle("Setings").navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Applikations-Parameter").navigationBarTitleDisplayMode(.inline)
+            /*
             .navigationBarItems(trailing: Button( action: {
                 showSettingsHilfe = true
             }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
@@ -322,7 +327,7 @@ struct ShapeViewSettings: View {
                 Button(" - OK - ") {}
             }, message: { Text("Das ist die Beschreibung für den Bereich Settings.") } // Ende message
             ) // Ende alert
-            
+            */
             
         } // Ende NavigationView
     } // Ende var body
@@ -409,12 +414,49 @@ struct ShapeViewAbfrage: View {
                             .font(.system(size: 16, weight: .regular))
                     } // Ende Section
                     
-                    
                     HStack {
                         Spacer()
                         
+                        Button {
+                            var tmpFeld1 = ""
+                            if globaleVariable.abfrageFilter == true {
+                                
+                                switch selectedAbfrageFeld1 {
+                                        
+                                    case "Gegenstand":
+                                        tmpFeld1 = selectedAbfrageFeld1
+                                    case "Vorgang":
+                                        tmpFeld1 = selectedAbfrageFeld1
+                                    case "Name":
+                                        tmpFeld1 = "personNachname"
+                                    case "Vorname":
+                                        tmpFeld1 = "personVorname"
+                                    default:
+                                        tmpFeld1 = ""
+                                        
+                                } // Ende switch
+                                
+                                let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
+                                globaleVariable.abfrageQueryString = temp
+                                
+                            }else{
+                                globaleVariable.abfrageQueryString = ""
+                            } // Ende if
+                            globaleVariable.navigationTabView = 1
+                            
+                            isPresented = false
+                            
+                        } label: {
+                            Text("Abfrage verlassen")
+                        } // Ende Button/label
+                        .buttonStyle(.borderedProminent)
+                        .foregroundColor(.white)
+                        .font(.system(size: 16, weight: .regular))
+                        
+                        /*
                         Button(action: {showAlertSpeichernButton = true})
                         { Text("Abfrage verlassen.")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
+                        
                             .alert(isPresented:$showAlertSpeichernButton) {
                                 Alert(
                                     title: Text("Möchten Sie diese Abfrage speichern?"),
@@ -454,9 +496,12 @@ struct ShapeViewAbfrage: View {
                                     secondaryButton: .cancel(Text("Abbrechen")){
                                         print("Abgebrochen ....")
                                         isPresented = false
+                                        globaleVariable.abfrageQueryString = ""
+                                        globaleVariable.abfrageFilter = false
                                     }
                                 ) // Ende Alert
                             } // Ende alert
+                         */
                         Spacer()
                     } // Ende HStack
                     
@@ -470,6 +515,7 @@ struct ShapeViewAbfrage: View {
                 .navigationTitle("Abfrage").navigationBarTitleDisplayMode(.inline)
                 .background(globaleVariable.farbenEbene1)
                 .cornerRadius(10)
+                /*
                 .navigationBarItems(trailing:
                                         HStack {
                     
@@ -480,8 +526,11 @@ struct ShapeViewAbfrage: View {
                 .alert("Hilfe zu Abfrage", isPresented: $showAbfrageHilfe, actions:
                         { Button(" - OK - ") {}
                 }, message: { Text("Das ist die Beschreibung für den Bereich Abfrage.") } ) // Ende alert
+                */
             }
         } // Ende VStack
+        
+        
     } // Ende var body
 } // Ende struct
 

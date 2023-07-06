@@ -23,7 +23,7 @@ struct IphoneTable1: View {
         
         VStack {
             Text("")
-            Text("Alle Objekte" + "\(tempErgaenzung)").bold()
+            Text("\(tempErgaenzung)").bold()
                 .frame(maxWidth: .infinity, alignment: .center)
             
             List {
@@ -42,14 +42,26 @@ struct IphoneTable1: View {
                                         HStack {
                                             
                                             Text("\(objekte[item].gegenstand)")
-                                            Text(" am ")
+                                            Text("am")
                                             Text("\(objekte[item].datum)")
+                                            
+                                            
                                             
                                             Spacer()
                                             
                                         } // Ende HStack
                                         .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                        .font(.system(size: 18, weight: .medium)).bold()
+                                        .font(.system(size: 16, weight: .medium)).bold()
+                                        
+                                        /*
+                                        HStack {
+                                            Text("\(objekte[item].gegenstandText)")
+                                                .lineLimit(2)
+                                        Spacer()
+                                        }// Ende HStack
+                                        .font(.system(size: 15, weight: .medium)).bold()
+                                        .foregroundColor(.white)
+                                        */
                                         
                                         HStack {
                                             

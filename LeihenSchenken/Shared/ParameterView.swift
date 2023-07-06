@@ -30,6 +30,7 @@ struct ParameterView: View {
         case amount // Für Preis/Wert
         case str1 // Für Gegenstandbeschreibung
         case str2 // Für allgemeine Informationen
+        
     } // Ende private enum
     
     @State private var calendarId: Int = 0
@@ -174,9 +175,11 @@ struct ParameterView: View {
                                 .onChange(of: globaleVariable.datum, perform: { _ in
                                     calendarId += 1
                                 }) // Ende onChange...
+                                /*
                                 .onTapGesture {
                                     calendarId += 1
                                 } // Ende onTap....
+                                 */
                         } //Ende HStack
                         
                         Picker("Vorgang: ", selection: $globaleVariable.selectedVorgangInt, content: {
@@ -310,6 +313,7 @@ struct ParameterView: View {
                 } // Ende VStack
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .background(globaleVariable.farbenEbene0)
+                
                 
             } // Ende GeometryReader
             .navigationTitle("Eingabemaske")
@@ -460,10 +464,6 @@ struct PhotosSelector: View {
                 } // Ende onChange
     } // Ende var body
 } //Ende struckt PhotoSelector
-
-
-
-
 
 
 

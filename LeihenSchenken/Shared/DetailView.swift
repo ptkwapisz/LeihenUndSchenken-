@@ -72,7 +72,7 @@ struct DeteilView: View {
             } // Ende TabView
             
         } // Ende VStack
-        .navigationTitle(naviTitleText(tabNummer: globaleVariable.navigationTabView).tabName)
+        .navigationTitle(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabName)
 
         .toolbar {
             // Wenn das Tab Handbuch gezeigt wird
@@ -92,14 +92,12 @@ struct DeteilView: View {
                             Button("Menue 2.2", action: {})
                         } // Ende Menu
                         
-                        Menu("Eigenschaften") {
-                            Button("Bearbeiten", action: {showMenue3_1.toggle()}) // Menue3_1
-                            Button("Zurücksetzen", action: {showMenue3_2.toggle()}) // Menue3_2
+                        Menu("App Parameter") {
+                            Button("Parameter bearbeiten", action: {showMenue3_1.toggle()}) // Menue3_1
+                            Button("Parameter zurücksetzen", action: {showMenue3_2.toggle()}) // Menue3_2
                         } // Ende Menu
                         
-                        //Button("Abfragen", action: {showMenue3 = true})
                         Divider()
-                        //Button("Settings zurücksetzen", action: {showMenue4.toggle()})
                         Button("Datenbank zurücksetzen", action: {showMenue5.toggle()})
                         
                     }) {
@@ -107,7 +105,7 @@ struct DeteilView: View {
                     } // Ende Button
                     .alert("Trefen Sie eine Wahl!", isPresented: $showMenue3_2, actions: {
                         Button("Abbrechen") {}; Button("Ausführen") {deleteUserDefaults()}
-                    }, message: { Text("Durch das Zurücksetzen der Settings werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
+                    }, message: { Text("Durch das Zurücksetzen der Parameter werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
                     ) // Ende alert
                     .alert("Trefen Sie eine Wahl!", isPresented: $showMenue5, actions: {
                         Button("Abbrechen") {}; Button("Ausführen") {datenbankReset()}
@@ -151,13 +149,17 @@ struct DeteilView: View {
                 }) {
                     Image(systemName: "questionmark.circle.fill")
                 } // Ende Button
-                //.alert("Hilfe für \(naviTitleText(tabNummer: globaleVariable.navigationTabView))", isPresented:
-                .alert("Hilfe für \(naviTitleText(tabNummer: globaleVariable.navigationTabView).tabName)", isPresented: $showTabHilfe, actions: {
-                      Button(" - OK - ") {}
-                }, message: { Text("\(naviTitleText(tabNummer: globaleVariable.navigationTabView).tabHilfe)") } // Ende message
-                    ) // Ende alert
-                } // Ende ToolbarItemGroup
                 
+                .alert("Hilfe für \(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabName)", isPresented: $showTabHilfe, actions: {
+                    Button(" - OK - ") {}
+                }, message: { Text("\(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabHilfe)")
+                    
+                } // Ende message
+                    
+                ) // Ende .alert
+                
+            } // Ende ToolbarItemGroup
+            
         } // Ende toolbar
         //.toolbarRole(.editor) // Bei dieser Rolle ist der back Button < ohne Text
         
@@ -188,7 +190,7 @@ func naviTitleText3(tabNummer: Int) -> String {
 } // Ende func naviTitleText
 
 */
-func naviTitleText(tabNummer: Int) -> (tabName: String, tabHilfe: String) {
+func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String) {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var hilfeTexte = HilfeTexte.shared
     

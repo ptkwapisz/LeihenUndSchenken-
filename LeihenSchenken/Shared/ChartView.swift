@@ -249,7 +249,8 @@ struct ChartView: View {
                  */
                
             } // Ende GeometryReader
-            .sheet(isPresented: $objektEditieren, content: { EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)})
+            .sheet(isPresented: $objektEditieren, content: {EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)})
+        
             .sheet(isPresented: $showDetailPhoto, content: { ShapeShowDetailPhoto(isPresentedShowDetailPhoto: $showDetailPhoto, par1: $par1, par2: $par2)})
     } // Ende var body
 } // Ende struc ChartView

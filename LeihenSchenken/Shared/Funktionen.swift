@@ -312,9 +312,9 @@ func erstelleTitel(par: Bool) -> String {
     var resultat: String = ""
     
         if par == true {
-            resultat = " gefiltert"
+            resultat = "Die Objekte sind gefiltert"
         }else{
-            resultat = " ungefiltert"
+            resultat = "Alle Objekte ungefiltert"
         } // Ende if/else
     
     return resultat
