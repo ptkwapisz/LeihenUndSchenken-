@@ -102,16 +102,16 @@ struct ShapeViewAddUser: View {
                 
                 .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
                     Button(" - OK - ") {}
-                }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate gespeichert werden!") } // Ende message
+                }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
                 ) // Ende alert
                 
                 if isParameterBereich {
                     
-                    Text("Mit drücken von 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden des Programms gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Personen', dort auf '+' drücken und geben Sie dort die Persondaten ein.")
+                    Text("Mit drücken von 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden des Programms gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Personen', dort auf '+' drücken und geben Sie auf der entsprechenden Persondaten ein.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                 }else{
-                    Text("Mit drücken von 'Speichern' werden die Daten in die Datenbank hinzugefügt.")
+                    Text("Bei drücken auf 'Speichern' werden alle Daten in die Datenbank dauerhaft hinzugefügt.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                     
@@ -119,19 +119,7 @@ struct ShapeViewAddUser: View {
                 
             } // Ende Form
             .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
-            /*
-            .navigationBarItems(trailing:
-                                    HStack {
-                
-                Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
-                //Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
-                
-            }) // Ende NavigationBarItem
             
-            .alert("Hilfe zu neuer Benutzer", isPresented: $showHilfe, actions:
-                    { Button(" - OK - ") {}
-            }, message: { Text("Das ist die Beschreibung für den Bereich Benutzer hinzufügen.") } ) // Ende alert
-             */
         } // Ende NavigationView
     } // Ende var body
 } // Ende struct
@@ -227,15 +215,15 @@ struct ShapeViewAddGegenstand: View {
                 } // Ende Hstack
                 .alert("Warnung zu neuem Gegenstand", isPresented: $showWarnung, actions: {
                     Button(" - OK - ") {}
-                }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate gespeichert werden!") } // Ende message
+                }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Gegenständen gespeichert werden!") } // Ende message
                 ) // Ende alert
                 
                 if isParameterBereich {
-                    Text("Mit drücken von 'Gegenstand hinzufügen' wird der neue Gegenstand in die Auswahl hinzugefügt.")
+                    Text("Beim Drücken auf 'Speichern' wird der neue Gegenstand nur in die Auswahl hinzugefügt.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                 }else{
-                    Text("Mit drücken von 'Gegenstand hinzufügen' wird der neue Gegenstand in die Datenbank hinzugefügt.")
+                    Text("Beim Drücken auf 'Speichern' wird der neue Gegenstand dauerhaft in die Datenbank hinzugefügt.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                     
@@ -244,17 +232,7 @@ struct ShapeViewAddGegenstand: View {
             } // Ende Form
             .navigationTitle("Neuer Gegenstand").navigationBarTitleDisplayMode(.inline)
             .scrollContentBackground(.hidden)
-            /*
-            .navigationBarItems(trailing: Button( action: {
-                showHilfe = true
-            }) {Image(systemName: "questionmark.circle.fill")
-                    .imageScale(.large)
-            } )
-            .alert("Hilfe zu neuer Gegenstand", isPresented: $showHilfe, actions: {
-                Button(" - OK - ") {}
-            }, message: { Text("Das ist die Beschreibung für den Bereich Gegenstand hinzufügen.") } // Ende message
-            ) // Ende alert
-            */
+            
         } // Ende NavigationView
         
     } // Ende var body
@@ -303,7 +281,7 @@ struct ShapeViewSettings: View {
                         //presentationMode.wrappedValue.dismiss()
                         isPresented = false
                     })
-                    { Text("Eigenschaften verlassen.")
+                    { Text("Parameterfenster verlassen.")
                         
                     } // Ende Button Text
                     .buttonStyle(.borderedProminent)
@@ -313,7 +291,7 @@ struct ShapeViewSettings: View {
                     Spacer()
                 } // Ende HStack
                 
-                Text("Das Parameterfenster wird geschloßen und die einzehlen Parameter werden gespeichert.")
+                Text("Beim Drücken auf 'Parameterfenster verlassen' wird das Parameterfenster geschloßen und die einzehlen Parameter werden gespeichert.")
                     .font(.system(size: 14, weight: .regular))
                     .foregroundColor(.gray)
                 
@@ -453,60 +431,11 @@ struct ShapeViewAbfrage: View {
                         .foregroundColor(.white)
                         .font(.system(size: 16, weight: .regular))
                         
-                        /*
-                        Button(action: {showAlertSpeichernButton = true})
-                        { Text("Abfrage verlassen.")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
-                        
-                            .alert(isPresented:$showAlertSpeichernButton) {
-                                Alert(
-                                    title: Text("Möchten Sie diese Abfrage speichern?"),
-                                    message: Text("Die Abfrage und der Zustand der Filteraktivierung werden bis zum nächsten Aufruf dieser Seite gespeichert."),
-                                    primaryButton: .destructive(Text("Speichern")) {
-                                        
-                                        var tmpFeld1 = ""
-                                        if globaleVariable.abfrageFilter == true {
-                                            
-                                            switch selectedAbfrageFeld1 {
-                                                    
-                                                case "Gegenstand":
-                                                    tmpFeld1 = selectedAbfrageFeld1
-                                                case "Vorgang":
-                                                    tmpFeld1 = selectedAbfrageFeld1
-                                                case "Name":
-                                                    tmpFeld1 = "personNachname"
-                                                case "Vorname":
-                                                    tmpFeld1 = "personVorname"
-                                                default:
-                                                    tmpFeld1 = ""
-                                                    
-                                            } // Ende switch
-                                            
-                                            let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
-                                            globaleVariable.abfrageQueryString = temp
-                                            
-                                        }else{
-                                            globaleVariable.abfrageQueryString = ""
-                                        } // Ende if
-                                        
-                                        // Tab1 Objektliste wird gezeigt
-                                        globaleVariable.navigationTabView = 1
-                                        
-                                        isPresented = false
-                                    },
-                                    secondaryButton: .cancel(Text("Abbrechen")){
-                                        print("Abgebrochen ....")
-                                        isPresented = false
-                                        globaleVariable.abfrageQueryString = ""
-                                        globaleVariable.abfrageFilter = false
-                                    }
-                                ) // Ende Alert
-                            } // Ende alert
-                         */
                         Spacer()
                     } // Ende HStack
                     
                     //Section {
-                    Text("Hier können Sie die Abfrage für Darstellung Ihrer Objektenabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
+                    Text("Hier können Sie eine Abfrage für Darstellung der Objektenabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                     
@@ -515,18 +444,7 @@ struct ShapeViewAbfrage: View {
                 .navigationTitle("Abfrage").navigationBarTitleDisplayMode(.inline)
                 .background(globaleVariable.farbenEbene1)
                 .cornerRadius(10)
-                /*
-                .navigationBarItems(trailing:
-                                        HStack {
-                    
-                    Button(action: {showAbfrageHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
-                    //Button(action: {isPresented = false}) { Image(systemName: "figure.walk.circle").imageScale(.large)}
-                    
-                }) // Ende NavigationBarItem
-                .alert("Hilfe zu Abfrage", isPresented: $showAbfrageHilfe, actions:
-                        { Button(" - OK - ") {}
-                }, message: { Text("Das ist die Beschreibung für den Bereich Abfrage.") } ) // Ende alert
-                */
+                
             }
         } // Ende VStack
         
@@ -568,14 +486,9 @@ struct ShapeViewEditUser: View {
                         ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
                             Text("\(globaleVariable.parameterPersonSex[index])")
                             
-                            
                         } // Ende ForEach
                     } // Ende Picker
-                    /*
-                    .onChange(of: selectedPerson_sexInt, perform: { _ in
-                        neuePersonTmp[0].personSex = globaleVariable.parameterPersonSex[selectedPerson_sexInt]
-                    }) // Ende onChange
-                    */
+                   
                 } // Ende Section
                 
                 HStack {
@@ -586,7 +499,7 @@ struct ShapeViewEditUser: View {
                     Button(action: {
                         // Hier aktion für speichern
                         
-                        if neuePersonTmp[0].personVorname != "" && neuePersonTmp[0].personNachname != "" {
+                        if neuePersonTmp[0].personVorname != "" || neuePersonTmp[0].personNachname != "" {
                             personPickerTmp = " " + neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
                             isPresentedShapeViewEditUser = false
                             
@@ -610,21 +523,10 @@ struct ShapeViewEditUser: View {
                 
             } // Ende Form
             .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing:
-                                    HStack {
-                
-                Button(action: {showHilfe = true}) {Image(systemName: "questionmark.circle.fill").imageScale(.large)}
-                
-                
-            }) // Ende NavigationBarItem
-            .alert("Hilfe zu neuer Benutzer", isPresented: $showHilfe, actions:
-                    { Button(" - OK - ") {}
-            }, message: { Text("Das ist die Beschreibung für den Bereich Benutzer ändern.") } ) // Ende alert
+            
         } // Ende NavigationView
     } // Ende var body
 } // Ende struct
-
-
 
 struct ShapeShowDetailPhoto: View {
     @Binding var isPresentedShowDetailPhoto: Bool
@@ -653,3 +555,6 @@ struct ShapeShowDetailPhoto: View {
     } // Ende var body
     
 } // Ende ShapeshowDetailPhoto
+
+
+

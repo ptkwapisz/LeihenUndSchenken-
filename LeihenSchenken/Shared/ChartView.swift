@@ -193,7 +193,7 @@ struct ChartView: View {
                                     // Diese Zeile bewirkt, dass die View geschlossen wird
                                     self.presentationMode.wrappedValue.dismiss()
                                 },
-                                       secondaryButton: .cancel(Text("Abbrechen")){
+                                    secondaryButton: .cancel(Text("Abbrechen")){
                                     print("\(par1[par2].gegenstand)" + " wurde nicht gelöscht")
                                     print("Abgebrochen ....")
                                     refreshAllViews()
@@ -220,8 +220,6 @@ struct ChartView: View {
                 .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
                 .background(globaleVariable.farbenEbene0)
                 .navigationTitle("\(par1[par2].gegenstand)")
-                
-                //.scrollContentBackground(.hidden)
                 .navigationBarItems(trailing: Button( action: {
                     showChartHilfe = true
                 }) {Image(systemName: "questionmark.circle.fill")
@@ -232,21 +230,6 @@ struct ChartView: View {
                 }, message: { Text("Das ist die Beschreibung für den Bereich Objektdeteilansicht.") } // Ende message
                 ) // Ende alert
                 
-                /*
-                 .toolbar {
-                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                 Button(action:{showChartHilfe.toggle()
-                 
-                 }) {
-                 Image(systemName: "questionmark.circle.fill")
-                 } // Ende Button
-                 .alert("Hilfe für die Objektdeteilansicht", isPresented: $showChartHilfe, actions: {
-                 Button(" - OK - ") {}
-                 }, message: { Text("Das ist die Beschreibung.") } // Ende message
-                 ) // Ende alert
-                 } // Ende ToolbarItemGroup
-                 } // Ende toolbar
-                 */
                
             } // Ende GeometryReader
             .sheet(isPresented: $objektEditieren, content: {EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)})

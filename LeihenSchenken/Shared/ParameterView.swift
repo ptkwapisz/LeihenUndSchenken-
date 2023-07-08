@@ -175,11 +175,7 @@ struct ParameterView: View {
                                 .onChange(of: globaleVariable.datum, perform: { _ in
                                     calendarId += 1
                                 }) // Ende onChange...
-                                /*
-                                .onTapGesture {
-                                    calendarId += 1
-                                } // Ende onTap....
-                                 */
+                                
                         } //Ende HStack
                         
                         Picker("Vorgang: ", selection: $globaleVariable.selectedVorgangInt, content: {

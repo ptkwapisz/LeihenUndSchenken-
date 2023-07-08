@@ -197,8 +197,8 @@ class HilfeTexte: ObservableObject  {
     
     @Published var tabPersonenListe: String = "In diesem Fenster können Sie die Personen verwalten, die Sie beschänken, an die Sie Sachen verleihen und von denen Sie Geschänke erhalten. Sie können die Personen löschen (das Icon mit dem Minuszeichen oder neue Personen eingeben (das Icon mit dem Pluszeichen). Diese Personenliste erscheint dann auch in der Eingabemaske, wenn Sie eine Person eingeben möchten."
     
-    @Published var tabStatistiken: String = "In diesem Fenster werden die Anzahl alle Gegenstände und die Anzahl der Vorgänge angezeigt. Die zahlen sind ungefiltert, das heißt das sie den gesamten Bestand des Datenbankes zeigen."
+    @Published var tabStatistiken: String = "In diesem Fenster werden die Anzahl alle Gegenstände und die Anzahl der Vorgänge angezeigt. Die zahlen sind ungefiltert, das heißt, dass sie den gesamten Bestand also alle Objekte, die in dem Datenbank gespeichert sind, zeigen."
     
-    @Published var tabHandbuch: String = "Hilfe für das Handbuch"
+    @Published var tabHandbuch: String = "Das Handbuch beinhaltet alle Hilfetexte von dieser App und zusätzliche Informationen. Mann kann es auf dem Device lesen oder auch ausdrucken."
     
 } // Ende class
