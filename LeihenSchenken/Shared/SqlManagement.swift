@@ -203,11 +203,11 @@ func datenbankReset(){
     //var db: OpaquePointer?
     
     let _: Bool = erstellenDatenbankUndTabellen()
+    
     // Hier werden Standardwerte geschrieben
-    
     standartWerteSchreiben()
-    // Hier werden die globale Arrays neu erstellt
     
+    // Hier werden die globale Arrays neu erstellt
     refreschParameter()
     
 } // Ende func

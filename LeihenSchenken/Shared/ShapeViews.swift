@@ -126,6 +126,7 @@ struct ShapeViewAddUser: View {
 
 struct ShapeViewAddGegenstand: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
     @Binding var isPresented: Bool
     @Binding var isParameterBereich: Bool
     

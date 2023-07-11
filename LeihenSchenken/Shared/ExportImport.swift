@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import SQLite3
 
 /*
  func exportToCSV() {
@@ -121,28 +122,89 @@ struct ExportCSVProgressView: View {
     }// Ende var body
 } // Ende struct
 
-// Noch nicht fertig
+// Copy database file from to documents folder
 func backupDatabase() {
-    // Move database file from bundle to documents folder
-    
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
     let fileManager = FileManager.default
     
     guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
     
-    let finalDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
+    let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
     let userDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDb.db")
     
     do {
-        if !fileManager.fileExists(atPath: finalDatabaseURL.path) {
+        if !fileManager.fileExists(atPath: backupDatabaseURL.path) {
             print("DB does not exist in documents folder")
-            try fileManager.copyItem(atPath: userDatabaseURL.path, toPath: finalDatabaseURL.path)
+            try fileManager.copyItem(atPath: userDatabaseURL.path, toPath: backupDatabaseURL.path)
             
         } else {
-            print("Database file found at path: \(finalDatabaseURL.path)")
-            try fileManager.removeItem(atPath: finalDatabaseURL.path)
-            try fileManager.copyItem(atPath: userDatabaseURL.path, toPath: finalDatabaseURL.path)
+            print("Database file found at path: \(backupDatabaseURL.path)")
+            try fileManager.removeItem(atPath: backupDatabaseURL.path)
+            try fileManager.copyItem(atPath: userDatabaseURL.path, toPath: backupDatabaseURL.path)
+        } // Ende if/else
+    } catch {
+        print("Unable to copy LeiheUndSchenkeDb.db: \(error)")
+    } // Ende do/catch
+    globaleVariable.showDBLadenMenueItem = false
+} // Ende func
+
+
+func loadDatabase() {
+    //var showAlert: Bool = false
+    let fileManager = FileManager.default
+    
+    guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+    
+    let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
+    let userDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDb.db")
+    
+    do {
+        if !fileManager.fileExists(atPath: backupDatabaseURL.path) {
+            print("DB does not exist in documents folder")
+            //showAlert = true
+            
+        } else {
+            print("Database file found at path: \(backupDatabaseURL.path)")
+            
+            sqlite3_close(db)
+            db = nil
+            
+            try fileManager.removeItem(atPath: userDatabaseURL.path)
+            try fileManager.copyItem(atPath: backupDatabaseURL.path, toPath: userDatabaseURL.path)
+            
+            guard sqlite3_open_v2(userDatabaseURL.path, &db, SQLITE_OPEN_READWRITE, nil) == SQLITE_OK else {
+                print("Error opening database")
+                sqlite3_close(db)
+                db = nil
+                return
+            } // Ende guard
+            
+            refreschParameter()
+            
         } // Ende if/else
     } catch {
         print("Unable to copy LeiheUndSchenkeDb.db: \(error)")
     } // Ende do/catch
 } // Ende func
+
+
+// Diese Funktion wird benutzt um die egsistenz der Datenbank Copy Datei zu prüfen
+// Wenn diese Copy nicht existiert wird das Menue Button 'DB Laden' ausgegraut
+
+func ifExistLeiheUndSchenkeDbCopy() -> Bool {
+    var parameter: Bool = false
+    let fileManager = FileManager.default
+    guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return parameter}
+    
+    let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
+    
+    if !fileManager.fileExists(atPath: backupDatabaseURL.path) {
+        print("Database Copy file does not exist in documents folder")
+        parameter = true
+        
+    } else {
+        print("Database Copy file found at path: \(backupDatabaseURL.path)")
+        parameter = false
+    } // Ende if/else
+    return parameter
+}

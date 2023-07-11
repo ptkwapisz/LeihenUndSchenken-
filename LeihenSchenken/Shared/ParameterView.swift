@@ -339,14 +339,14 @@ struct ParameterView: View {
                 showParameterHilfe = true
             }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
             .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
-                Button(" - OK - ") {}
+               // Button(" - OK - ") {}
             }, message: { Text("\(hilfeTexte.eingabeMaske)") } // Ende message
             ) // Ende alert
             .navigationBarItems(trailing: Button( action: {
                 showParameterAllgemeinesInfo = true
             }) {Image(systemName: "house").imageScale(.large)} )
             .alert("Allgemeine Information", isPresented: $showParameterAllgemeinesInfo, actions: {
-                Button(" - OK - ") {}
+                //Button(" - OK - ") {}
             }, message: { Text("\(hilfeTexte.allgemeineAppInfo)") } // Ende message
             ) // Ende alert
             

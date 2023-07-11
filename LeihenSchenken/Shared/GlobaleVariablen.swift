@@ -24,6 +24,7 @@ class GlobaleVariable: ObservableObject {
     
     @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
    
+    @Published var showDBLadenMenueItem: Bool = ifExistLeiheUndSchenkeDbCopy()
     
     @Published var navigationTabView = 1
     @Published var farbenEbene0: Color = loadColor0A()
@@ -187,7 +188,7 @@ class HilfeTexte: ObservableObject  {
     static let shared = HilfeTexte()
     
     // Aus dem Parameterbereich
-    @Published var allgemeineAppInfo: String = "Das ‚Schenk und Leih‘ App (eigentlich ‚Verschenk und Verleih‘ App) ist für die einfache Verwaltung von verliehenen, verschenkten oder auch erhaltenen Gegenstände konzipiert. Sie soll dabei helfen, mit Hilfe der Zuordnung zu festgelegten Personen, den Überblick über diese Gegenstände zu behalten. Informationen, wie: Gegenstandsbeschreibung, Gegenstandsbild, den Preis, das Datum können eingegeben und verwaltet werden. So hat man immer einen Überblick über alles, was man verliehen, verschenkt oder bekommen hat."
+    @Published var allgemeineAppInfo: String = "Das ‚Schenk und Leih‘ App (eigentlich ‚Verschenk und Verleih‘ App) ist für die einfache Verwaltung von verliehenen, verschenkten oder auch erhaltenen Gegenständen konzipiert. Sie soll dabei helfen, mit Hilfe der Zuordnung zu festgelegten Personen, den Überblick über diese Gegenstände zu behalten. Informationen, wie: Gegenstandsbeschreibung, Gegenstandsbild, den Preis, das Datum können eingegeben und verwaltet werden. So hat man immer einen Überblick über alles, was man verliehen, verschenkt oder bekommen hat."
     
     @Published var eingabeMaske: String = "Die App beginnt mit der Eingabemaske, wo Sie verschenkte, verliehene oder erhaltene Gegenstände, wie Bücher, CDs, Werkzeuge oder Geld, erfassen können. Vier Standardgegenstände sind voreingestellt, aber Sie können auch eigene hinzufügen. Für zusätzliche Informationen nutzen Sie das Feld 'Gegenstandsbeschreibung', z.B. ISBN oder Genre bei Büchern. Fotos von Gegenständen lassen sich aus Ihrer iPhone-Mediathek ins Feld 'Gegenstandsbild' importieren. Geben Sie den ausgegebenen Betrag oder den verliehenen Geldbetrag im Feld 'Preis/Wert' ein. Im Feld 'Datum' vermerken Sie, wann Sie den Gegenstand verschenkt oder verliehen haben. Wählen Sie im Feld 'Was möchten Sie tun?' zwischen 'verschenken', 'verleihen' oder 'bekommen'. Geben Sie im Feld 'Person' ein, wer den Gegenstand erhalten hat. Im Feld 'Allgemeine Notizen' können Sie den Anlass oder die Situation beschreiben. Durch Abbrechen können Sie die Eingabemaske leeren und neu beginnen."
     
@@ -200,5 +201,22 @@ class HilfeTexte: ObservableObject  {
     @Published var tabStatistiken: String = "In diesem Fenster werden die Anzahl alle Gegenstände und die Anzahl der Vorgänge angezeigt. Die zahlen sind ungefiltert, das heißt, dass sie den gesamten Bestand also alle Objekte, die in dem Datenbank gespeichert sind, zeigen."
     
     @Published var tabHandbuch: String = "Das Handbuch beinhaltet alle Hilfetexte von dieser App und zusätzliche Informationen. Mann kann es auf dem Device lesen oder auch ausdrucken."
+    
+} // Ende class
+
+class AlertMessageTexte: ObservableObject  {
+    static let shared = AlertMessageTexte()
+    
+    // Menuepunkt: "Parameter zurücksetzen" in DeteilView
+    @Published var showSetupResetMessageText: String = "Durch das Zurücksetzen der Parameter werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün"
+    
+    @Published var showDBResetMessageText: String = "Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt."
+    
+    @Published var showExportToCSVMessageText: String = "Alle Objekte aus der Datenbank werden in dem Format SCV in die Datei 'LeiheUndSchenkeDB.CSV' exportiert. Diese Datei überschreibt die letzte Exportversion falls vorhanden!"
+    
+    @Published var showDBSichernMessageText: String = "Die Datenbank inclusiwe aller Tabellen wird gesichert. Diese Sicherung überschreibt die letzte Sicherungsversion falls vorhanden!"
+    
+    @Published var showDBLadenMessageText: String = "Die Datenbank inclusiwe aller Tabellen wird zurückgeladen. Diese Rücksicherung überschreibt unwiederuflich die jetzige Datenbank und ihre alle Tabellen, wie Objekte, Personen und Gegenstände. Dieser Vorgang kann nicht rückgängig gemacht Werden."
+    
     
 } // Ende class

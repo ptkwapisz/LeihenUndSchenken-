@@ -11,21 +11,19 @@ import SwiftUI
 struct DeteilView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     
     @State var showAbfrageModalView: Bool = false
     @State var isParameterBereich: Bool = false
     
-    //@State var showMenue1: Bool = false
-    @State var showMenue1_1: Bool = false
-    @State var showMenue1_2: Bool = false
-    //@State var showMenue2: Bool = false
-    @State var showMenue2_1: Bool = false
-    @State var showMenue2_2: Bool = false
-    @State var showMenue3: Bool = false
-    @State var showMenue3_1: Bool = false
-    @State var showMenue3_2: Bool = false
-    @State var showMenue4: Bool = false
-    @State var showMenue5: Bool = false
+    @State var showDBSichern: Bool = false
+    @State var showDBLaden: Bool = false
+    //@State var showDBLadenMenueItem: Bool = false
+    @State var showExportToCSV: Bool = false
+    @State var showSetupEdit: Bool = false
+    @State var showSetupReset: Bool = false
+    @State var showDBReset: Bool = false
+    
     @State var showAppInfo: Bool = false
     @State var showTabHilfe: Bool = false
     @State var showExport: Bool = false
@@ -78,46 +76,50 @@ struct DeteilView: View {
         
         .toolbar {
             // Wenn das Tab Handbuch gezeigt wird
-            // andere Tabmenuepunkte ausgeblendet
+            // werden andere Tabmenuepunkte ausgeblendet
             if globaleVariable.navigationTabView < 5 {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Menu(content: {
                         
                         Menu("Datensicherung") { // Menue 1
-                            Button("DB sichern", action: {showMenue1_1.toggle()}) // Menue 1.1
-                            Button("DB zurückspielen", action: {showMenue1_2.toggle()}) // Menue 1.2
+                            Button("DB sichern", action: {showDBSichern.toggle()})
+                            Button("DB zurückspielen", action: {showDBLaden.toggle()}).disabled(globaleVariable.showDBLadenMenueItem)
                         } // Ende Menu
                     
                         Menu("App Parameter") {
-                            Button("Parameter bearbeiten", action: {showMenue3_1.toggle()}) // Menue3_1
-                            Button("Parameter zurücksetzen", action: {showMenue3_2.toggle()}) // Menue3_2
+                            Button("Parameter bearbeiten", action: {showSetupEdit.toggle()})
+                            Button("Parameter zurücksetzen", action: {showSetupReset.toggle()})
                         } // Ende Menu
                         
                         Divider()
                         
-                        Button("Export to CSV", action: {showMenue2_1.toggle()}) // Menue2_1
-                        Button("Datenbank zurücksetzen", action: {showMenue5.toggle()})
+                        Button("Export to CSV", action: {showExportToCSV.toggle()})
+                        Button("Datenbank zurücksetzen", action: {showDBReset.toggle()})
                         
                     }) {
                         Image(systemName: "filemenu.and.cursorarrow")
                     } // Ende Menue Image
-                    .alert("Trefen Sie eine Wahl!", isPresented: $showMenue3_2, actions: {
+                    .alert("Trefen Sie eine Wahl!", isPresented: $showSetupReset, actions: {
                         Button("Abbrechen") {}; Button("Ausführen") {deleteUserDefaults()}
-                    }, message: { Text("Durch das Zurücksetzen der Parameter werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün") } // Ende message
+                    }, message: { Text("\(alertMessageTexte.showSetupResetMessageText)") } // Ende message
                     ) // Ende alert
-                    .alert("Trefen Sie eine Wahl!", isPresented: $showMenue5, actions: {
+                    .alert("Trefen Sie eine Wahl!", isPresented: $showDBReset, actions: {
                         Button("Abbrechen") {}; Button("Ausführen") {datenbankReset()}
-                    }, message: { Text("Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt.") } // Ende message
+                    }, message: { Text("\(alertMessageTexte.showDBResetMessageText)") } // Ende message
                     ) // Ende alert
-                    .alert("Trefen Sie eine Wahl!", isPresented: $showMenue2_1, actions: {
+                    .alert("Trefen Sie eine Wahl!", isPresented: $showExportToCSV, actions: {
                         Button("Abbrechen") {}; Button("Ausführen") {showExport = true}
-                    }, message: { Text("Alle Objekte aus der Datenbank werden in dem Format SCV in die Datei 'LeihUndSchenkeDB.CSV' exportiert. Diese Datei überschreibt die letzte Exportversion falls vorhanden!") } // Ende message
+                    }, message: { Text("\(alertMessageTexte.showExportToCSVMessageText)") } // Ende message
                     ) // Ende alert
-                    .alert("Trefen Sie eine Wahl!", isPresented: $showMenue1_1, actions: {
+                    .alert("Trefen Sie eine Wahl!", isPresented: $showDBSichern, actions: {
                         Button("Abbrechen") {}; Button("DB Sichern") {backupDatabase()}
-                    }, message: { Text("Die Datenbank wird inclusiwe aller Tabellen gesichert. Diese Sicherung überschreibt die letzte Sicherungsversion falls vorhanden!") } // Ende message
+                    }, message: { Text("\(alertMessageTexte.showDBSichernMessageText)") } // Ende message
                     ) // Ende alert
-                    .sheet(isPresented: $showMenue3_1, content: { ShapeViewSettings(isPresented: $showMenue3_1)})
+                    .alert("Trefen Sie eine Wahl!", isPresented: $showDBLaden, actions: {
+                        Button("Abbrechen") {}; Button("DB Laden") {loadDatabase()}
+                    }, message: { Text("\(alertMessageTexte.showDBLadenMessageText)") } // Ende message
+                    ) // Ende alert
+                    .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
                     .sheet(isPresented: $showExport, content: { ExportCSVProgressView(isPresented: $showExport).presentationBackground(.clear)})
                    
                 } // Ende ToolbarItemGroup
