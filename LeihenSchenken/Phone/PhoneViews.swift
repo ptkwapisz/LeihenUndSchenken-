@@ -13,11 +13,15 @@ import Foundation
 struct IphoneTable1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
+    @State var zeile: Int = 0
+    
     var body: some View {
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
-        let objekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
-        let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen oder Schänken
+        let objekteTmp = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
+        let objekte = objekteTmp.sorted {($0.vorgang, $0.personNachname, $0.personVorname) < ($1.vorgang, $1.personNachname, $1.personVorname)}
+        let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen, Schänken oder bekommen
+        //let gegVorgang = gegVorgang0.sorted()
         let anzahl: Int = objekte.count
         
         
@@ -46,22 +50,13 @@ struct IphoneTable1: View {
                                             Text("\(objekte[item].datum)")
                                             
                                             
-                                            
                                             Spacer()
                                             
                                         } // Ende HStack
-                                        .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                        //.background(item % 2 = 1 ? globaleVariable.farbenEbene0 : globaleVariable.farbenEbene1)
+                                        //.foregroundColor(Color.white)
                                         .font(.system(size: 16, weight: .medium)).bold()
                                         
-                                        /*
-                                        HStack {
-                                            Text("\(objekte[item].gegenstandText)")
-                                                .lineLimit(2)
-                                        Spacer()
-                                        }// Ende HStack
-                                        .font(.system(size: 15, weight: .medium)).bold()
-                                        .foregroundColor(.white)
-                                        */
                                         
                                         HStack {
                                             
@@ -69,21 +64,21 @@ struct IphoneTable1: View {
                                                 
                                                 if gegVorgang[idx] == "Bekommen" {
                                                     Text("von")
-                                                        .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                        .font(.system(size: 15, weight: .medium)).bold()
+                                                        //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                                        //.font(.system(size: 15, weight: .medium)).bold()
                                                 } else {
                                                     Text("an")
-                                                        .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                        .font(.system(size: 15, weight: .medium)).bold()
+                                                        //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                                        //.font(.system(size: 15, weight: .medium)).bold()
                                                 } // Ende if/else
                                                 
                                                 Text(String(objekte[item].personVorname))
-                                                    .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                    .font(.system(size: 15, weight: .medium)).bold()
+                                                    //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                                    //.font(.system(size: 15, weight: .medium)).bold()
                                                 
                                                 Text(String(objekte[item].personNachname))
-                                                    .background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                    .font(.system(size: 15, weight: .medium)).bold()
+                                                    //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
+                                                    //.font(.system(size: 15, weight: .medium)).bold()
                                                 
                                                 Spacer()
                                                 
@@ -91,7 +86,7 @@ struct IphoneTable1: View {
                                                 } // Ende Label
                                                 .frame(width:35, height: 25, alignment: .center)
                                                 .cornerRadius(10)
-                                                .foregroundColor(.white)
+                                                //.foregroundColor(.white)
                                                 // Diese Zeile bewirkt, dass Label rechtsbündig kurz vor dem > erscheint
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                                 
@@ -99,12 +94,16 @@ struct IphoneTable1: View {
                                             } // Ende NavigationLink
                                             
                                         } // Ende HStack
+                                        //.background(zeilenFarbe(par: item)).foregroundColor(Color.white)
+                                        .font(.system(size: 15, weight: .medium)).bold()
                                         
                                     } // Ende VStack
-                                    
-                                } // Ende if blutKat1
+                                    .foregroundColor(Color.white)
+                                    .listRowBackground(zeilenFarbe(par: item))
+                                } // Ende if gegVorgang
+                                  
                             } // Ende ForEach
-                            .listRowBackground(globaleVariable.farbenEbene0)
+                            //.listRowBackground(globaleVariable.farbenEbene0)
                             .listRowSeparatorTint(.white)
                             
                         } // Ende Section

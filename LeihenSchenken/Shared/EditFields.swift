@@ -15,6 +15,7 @@ struct EditSheetView: View {
     @Binding var par1: [ObjectVariable]
     @Binding var par2: Int
    
+    @State var disableSpeichern: Bool = false
     @State var showChartHilfe: Bool = false
     @State var gegenstandTmp: String = ""
     @State var gegenstandTextTmp: String = ""
@@ -59,7 +60,7 @@ struct EditSheetView: View {
                                 .fontWeight(.semibold)
                                 .font(.system(size: 16, weight: .regular))
                                 
-                                Button("Speichern"){
+                                Button("Speichern") {
                                     
                                     updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: gegenstandTmp, perKey: par1[par2].perKey)
                                     par1[par2].gegenstand = gegenstandTmp
@@ -97,6 +98,7 @@ struct EditSheetView: View {
                                 .foregroundColor(.white)
                                 .fontWeight(.semibold)
                                 .font(.system(size: 16, weight: .regular))
+                                .disabled(disableSpeichern)
                                 Spacer()
                             } // Ende HStack
                         } // Ende Section
@@ -462,7 +464,10 @@ struct EditGegenstandBild: View {
                         .frame(width: 30, height: 30, alignment: .center)
                         .background(Color.gray.gradient)
                         .cornerRadius(5)
-                    PhotosSelector()
+                    Text(" ")
+                    ImageSelector()
+                    Text(" ")
+                    PhotoSelector()
                 }else{
                     Image(base64Str: gegenstandBildTmp)?
                         .resizable()

@@ -239,7 +239,6 @@ func gegenstaendenInDatenbankSchreiben(par1: String, par2: String) {
     
 } // Ende func
 
-
 func dateToString(parDatum: Date) -> String {
     
     var result: String = ""
@@ -286,7 +285,6 @@ func stringToDate(parDatum: String) -> Date {
 
 
 func stringToDate2(parameter1: [ObjectVariable] , parameter2: Int) -> Date {
-    
     
     var result: Date
     

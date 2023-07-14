@@ -141,3 +141,19 @@ func ladeStatistiken() -> [Statistiken] {
     return resultat
 } // Ende func
 
+func zeilenFarbe(par: Int) -> Color {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var zeilenFarbe: Color
+    if par % 2 == 0 {
+        zeilenFarbe = globaleVariable.farbenEbene0
+        
+    }else{
+        zeilenFarbe = globaleVariable.farbenEbene0.opacity(0.5)
+        
+    }
+   
+    
+    return zeilenFarbe
+    
+}

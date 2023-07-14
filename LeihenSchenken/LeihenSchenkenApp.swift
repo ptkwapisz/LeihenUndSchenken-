@@ -12,10 +12,7 @@ var db: OpaquePointer?
 
 @main
 
-
 struct LeihenSchenkenApp: App {
-
-    
 
     var body: some Scene {
         

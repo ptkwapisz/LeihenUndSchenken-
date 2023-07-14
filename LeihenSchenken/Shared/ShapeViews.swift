@@ -107,7 +107,7 @@ struct ShapeViewAddUser: View {
                 
                 if isParameterBereich {
                     
-                    Text("Mit drücken von 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden des Programms gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Personen', dort auf '+' drücken und geben Sie auf der entsprechenden Persondaten ein.")
+                    Text("Mit drücken von 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden der App gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Personen', dort auf '+' drücken und geben Sie auf der entsprechenden Persondaten ein.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                 }else{
@@ -220,7 +220,7 @@ struct ShapeViewAddGegenstand: View {
                 ) // Ende alert
                 
                 if isParameterBereich {
-                    Text("Beim Drücken auf 'Speichern' wird der neue Gegenstand nur in die Auswahl hinzugefügt.")
+                    Text("Mit drücken von 'Speichern' wird der Gegenstand nur zur Auswahl in die Eingabemaske hinzugefügt. Er wird nach beenden der App gelöscht. Möchten Sie ein Gegenstand dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Gegenstände' und dort unten links auf '+' Zeichen. Auf der entsprechender Maske geben Sie den Gegenstand ein und speichen ihn.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                 }else{

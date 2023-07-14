@@ -48,6 +48,7 @@ class GlobaleVariable: ObservableObject {
     @Published var datum: Date = Date()
     
     
+    
 } // ende class
 
 class UserSettingsDefaults: ObservableObject {
@@ -194,7 +195,7 @@ class HilfeTexte: ObservableObject  {
     
     @Published var tabObjektenListe: String = "In diesem Fenster sehen sie alle Ihre erfasten Objekte gruppiert nach den Vorgängen, wie 'verlien', 'verschenkt' oder 'bekommen'. Sie können jede Zeile anklicken, um in die Deteilsicht des Objektes zu gelangen. "
     
-    @Published var tabGegenstandListe: String = "In diesem Fenster können Sie Ihre Gegenstande verwalten. Hier können Sie die Gegenstände löschen (das Icon mit dem Minuszeichen) oder neue Gegenstände eingeben (das Icon mit dem Pluszeichen. Diese Liste erscheint dann auch in der Eingabemaske, wenn Sie ein Gegenstand eingeben möchten. Die vier Standardgegenstände, wie Buch, Werkzeug, Geld ... können nicht gelöscht werden."
+    @Published var tabGegenstandListe: String = "In diesem Fenster können Sie Ihre Gegenstände verwalten. Hier können Sie die Gegenstände löschen (das Icon mit dem Minuszeichen) oder neue Gegenstände eingeben (das Icon mit dem Pluszeichen. Diese Liste der Gegenstände erscheint dann in der Eingabemaske. Die vier Standardgegenstände, wie Buch, Werkzeug, Geld ... können nicht gelöscht werden."
     
     @Published var tabPersonenListe: String = "In diesem Fenster können Sie die Personen verwalten, die Sie beschänken, an die Sie Sachen verleihen und von denen Sie Geschänke erhalten. Sie können die Personen löschen (das Icon mit dem Minuszeichen oder neue Personen eingeben (das Icon mit dem Pluszeichen). Diese Personenliste erscheint dann auch in der Eingabemaske, wenn Sie eine Person eingeben möchten."
     

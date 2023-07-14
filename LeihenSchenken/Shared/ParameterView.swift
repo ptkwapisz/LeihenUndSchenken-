@@ -10,15 +10,20 @@ import PhotosUI
 import UIKit
 import SQLite3
 
+
+
 struct ParameterView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var hilfeTexte = HilfeTexte.shared
+    @StateObject var cameraManager = CameraManager()
     
     @State var showParameterHilfe: Bool = false
     @State var showParameterAllgemeinesInfo: Bool = false
     @State var showAlerOKButton: Bool = false
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
+    
+    //@State var showCameraButton: Bool = false
     
     @State var showSheetPerson: Bool = false
     @State var showSheetGegenstand: Bool = false
@@ -116,9 +121,12 @@ struct ParameterView: View {
                                 .frame(height: 50)
                                 .font(.system(size: 16, weight: .regular))
                             
-                            PhotosSelector()
-                            
+                            ImageSelector()
                             Text(" ")
+                            if cameraManager.permissionGranted {
+                               PhotoSelector()
+                            }
+                            //Text(" ")
                             
                             if globaleVariable.parameterImageString != "Kein Bild" {
                                 let imageData = Data (base64Encoded: globaleVariable.parameterImageString)!
@@ -136,6 +144,9 @@ struct ParameterView: View {
                             } // Ende if
                             
                         } // Ende HStack
+                        .onAppear {
+                            cameraManager.requestPermission()
+                        } // Ende onAppear
                         
                         HStack {
                             
@@ -414,7 +425,7 @@ struct TextEditorWithPlaceholder: View {
     }// Ende struckt
 
 
-struct PhotosSelector: View {
+struct ImageSelector: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @State private var selectedItem: PhotosPickerItem?
     @State private var selectedPhotoData: Data?
@@ -460,6 +471,9 @@ struct PhotosSelector: View {
                 } // Ende onChange
     } // Ende var body
 } //Ende struckt PhotoSelector
+
+
+
 
 
 
