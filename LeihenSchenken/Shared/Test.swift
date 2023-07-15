@@ -7,6 +7,7 @@
 import SwiftUI
 import Foundation
 
+
 struct EmptyView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     var breite: CGFloat = 370
@@ -141,6 +142,8 @@ func ladeStatistiken() -> [Statistiken] {
     return resultat
 } // Ende func
 
+
+// Zeilenfarbe der Objektliste im ersten Tab
 func zeilenFarbe(par: Int) -> Color {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
@@ -151,9 +154,56 @@ func zeilenFarbe(par: Int) -> Color {
     }else{
         zeilenFarbe = globaleVariable.farbenEbene0.opacity(0.5)
         
-    }
+    } // Ende if/else
    
-    
     return zeilenFarbe
     
+} // Ende func
+
+
+func parameterCheck(parGegenstand: String, parPerson: String) -> Bool {
+    var resultat: Bool = true
+    if parGegenstand == "Neuer Gegenstand" || parPerson == "Neue Person" {
+        resultat = true
+        
+    }else{
+        resultat = false
+        
+    }// Ende if/else
+
+    return resultat
+} // Ende func
+
+
+
+
+/*
+
+import Contacts
+oder
+import AddressBook
+ 
+Button("+ Add to Contacts") {
+    // Create a mutable object to add to the contact.
+    // Mutable object means an object state that can be modified after created.
+    let contact = CNMutableContact()
+    // Name
+    contact.givenName = "Ming"
+    // Phone No.
+    contact.phoneNumbers = [CNLabeledValue(label: CNLabelPhoneNumberiPhone, value: CNPhoneNumber(stringValue: "12345678"))]
+    // Save the created contact.
+    let store = CNContactStore()
+    let saveRequest = CNSaveRequest()
+    saveRequest.add(contact, toContainerWithIdentifier: nil)
+    do {
+        try store.execute(saveRequest)
+    } catch {
+        print("Error occur: \(error)")
+        // Handle error
+        // may add a alert...
+    }
 }
+.buttonStyle(.borderedProminent)
+.tint(.black)
+
+*/

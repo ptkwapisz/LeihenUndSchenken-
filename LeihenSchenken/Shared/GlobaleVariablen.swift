@@ -47,8 +47,6 @@ class GlobaleVariable: ObservableObject {
     @Published var textAllgemeineNotizen: String = ""
     @Published var datum: Date = Date()
     
-    
-    
 } // ende class
 
 class UserSettingsDefaults: ObservableObject {

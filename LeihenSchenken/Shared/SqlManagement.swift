@@ -131,6 +131,7 @@ func erstellenDatenbankUndTabellen() -> Bool {
     
 } // Ende func erstellenDatenbankUndTabellen
 
+
 func querySQLAbfrageArray(queryTmp: String) -> Array<String>  {
     
     var resultatArray = [String]()
@@ -146,9 +147,9 @@ func querySQLAbfrageArray(queryTmp: String) -> Array<String>  {
         if let cString0 = sqlite3_column_text(statement, 0) {
             let name0 = String(cString: cString0)
             // print("Das erste Feld die Summe = \(name0) ", terminator: "")
-            if name0 != "" {
-               resultatArray.append(name0)
-            }
+            //if name0 != "" {
+            resultatArray.append(name0)
+            //}
         } else {
             print("Die Werte in der Tabelle wurden nicht gefunden")
         } // End if else
@@ -165,6 +166,7 @@ func querySQLAbfrageArray(queryTmp: String) -> Array<String>  {
     return resultatArray
     
 } // Ende func querySQLAbfrageArray
+
 
 
 // Diese function liefert den ersaten element eines Strig-Arrays zurück
@@ -391,11 +393,12 @@ func updateSqliteTabellenField(sqliteFeld: String, neueInhalt: String, perKey: S
     let alterWertQuery = "SELECT \(sqliteFeld) FROM Objekte WHERE perKey = \(perKey)"
     
     let alterWert = querySQLAbfrageArray(queryTmp: alterWertQuery)
+    
     // Kann später gelöscht werden
     if alterWert[0] == neueInhalt {
         if neueInhalt.count < 50 {
             print("\(alterWert[0])" + " = " + "\(neueInhalt)")
-            print("Gleich")
+            print("Gleich \(alterWert[0])")
         }else{
             print("Bilder sind gleich")
         } // Ende if

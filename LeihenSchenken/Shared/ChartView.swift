@@ -155,7 +155,7 @@ struct ChartView: View {
                                 objektEditieren = true
                                 
                             } label: {
-                                Label("", systemImage: "doc.badge.gearshape.fill")
+                                Label("", systemImage: "pencil.and.outline") //doc.badge.gearshape.fill
                                 //.font(.system(size: 25))
                                 
                             } // Ende Button

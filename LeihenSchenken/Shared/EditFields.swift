@@ -68,17 +68,14 @@ struct EditSheetView: View {
                                     updateSqliteTabellenField(sqliteFeld: "gegenstandText", neueInhalt: gegenstandTextTmp, perKey: par1[par2].perKey)
                                     par1[par2].gegenstandText = gegenstandTextTmp
                                     
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey)
+                                    par1[par2].gegenstandBild = gegenstandBildTmp
+                                    
                                     par1[par2].datum = dateToString(parDatum: datumTmp)
                                     updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey)
                                     
                                     updateSqliteTabellenField(sqliteFeld: "vorgang", neueInhalt: vorgangTmp, perKey: par1[par2].perKey)
                                     par1[par2].vorgang = vorgangTmp
-                                    
-                                    updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey)
-                                    par1[par2].gegenstandBild = gegenstandBildTmp
-                                    
-                                    updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: allgemeinerTextTmp, perKey: par1[par2].perKey)
-                                    par1[par2].allgemeinerText = allgemeinerTextTmp
                                     
                                     updateSqliteTabellenField(sqliteFeld: "personVorname", neueInhalt: neuePersonTmp[0].personVorname, perKey: par1[par2].perKey)
                                     par1[par2].personVorname = neuePersonTmp[0].personVorname
@@ -88,6 +85,9 @@ struct EditSheetView: View {
                                     
                                     updateSqliteTabellenField(sqliteFeld: "personSex", neueInhalt: neuePersonTmp[0].personSex, perKey: par1[par2].perKey)
                                     par1[par2].personSex = neuePersonTmp[0].personSex
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: allgemeinerTextTmp, perKey: par1[par2].perKey)
+                                    par1[par2].allgemeinerText = allgemeinerTextTmp
                                     
                                     globaleVariable.parameterImageString = "Kein Bild"
                                     refreshAllViews()

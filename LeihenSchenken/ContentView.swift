@@ -45,9 +45,10 @@ struct ContentView: View {
         .listStyle(SidebarListStyle()).font(.title3)
         .environmentObject(globaleVariable)
         .phoneOnlyStackNavigationView()
-        // Disable dark mode in iOS
+        // Ausschalten des Dark-Modus für die App
         .preferredColorScheme(.light)
-
+        // Das setzt die dynamische Taxtgrösse auf .large.
+        .dynamicTypeSize(.large)
         
     } // Ende var body
 } // Ende struct ContentView

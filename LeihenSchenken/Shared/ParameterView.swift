@@ -179,6 +179,7 @@ struct ParameterView: View {
                                 .labelsHidden()
                                 .colorInvert()
                                 .colorMultiply(Color.gray)
+                                //.font(.system(size: 16, weight: .regular))
                                 .multilineTextAlignment (.center)
                                 .environment(\.locale, Locale.init(identifier: "de"))
                                 .transformEffect(.init(scaleX: 0.9, y: 0.9))
@@ -188,6 +189,7 @@ struct ParameterView: View {
                                 }) // Ende onChange...
                                 
                         } //Ende HStack
+                     
                         
                         Picker("Vorgang: ", selection: $globaleVariable.selectedVorgangInt, content: {
                             ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
@@ -231,7 +233,10 @@ struct ParameterView: View {
                                         ) // Ende Alert
                                     } // Ende alert
                                 
-                                Button(action: {showAlertSpeichernButton = true}) { Text("Speichern")}.buttonStyle(.borderedProminent).foregroundColor(.white).font(.system(size: 16, weight: .regular))
+                                Button(action: {showAlertSpeichernButton = true}) { Text("Speichern")}
+                                    .disabled(parameterCheck(parGegenstand: "\(globaleVariable.parameterGegenstand)", parPerson: "\(globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personVorname)"))
+                                    .buttonStyle(.borderedProminent)
+                                    .foregroundColor(.white).font(.system(size: 16, weight: .regular))
                                     .alert(isPresented:$showAlertSpeichernButton) {
                                         Alert(
                                             title: Text("Möchten Sie alle Eingaben speichern?"),
