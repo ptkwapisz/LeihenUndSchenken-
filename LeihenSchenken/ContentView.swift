@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
-
-    //@State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
+    //@State private var preferredColumn = NavigationSplitViewColumn.detail
+    @State private var emptyDatabase:Bool = false
     
     init() {
       
@@ -35,20 +35,22 @@ struct ContentView: View {
     
     var body: some View {
         
-        NavigationView {
-            
+        //NavigationSplitView(preferredCompactColumn: $preferredColumn) {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
+          
             ParameterView()
-               
+        }detail: {
             DeteilView()
-           
+            
         } // Ende NavigationView
-        .listStyle(SidebarListStyle()).font(.title3)
+        //.listStyle(SidebarListStyle()).font(.title3) // Veraltet mit Navigationview
         .environmentObject(globaleVariable)
         .phoneOnlyStackNavigationView()
         // Ausschalten des Dark-Modus für die App
         .preferredColorScheme(.light)
         // Das setzt die dynamische Taxtgrösse auf .large.
         .dynamicTypeSize(.large)
+        .navigationSplitViewStyle(.balanced)
         
     } // Ende var body
 } // Ende struct ContentView

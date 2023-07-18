@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Contacts
 
 struct ShapeViewAddUser: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -17,10 +18,13 @@ struct ShapeViewAddUser: View {
     @State var showWarnung: Bool = false
     
     @State var selectedPerson_sexInt: Int = 0
+    @State var isPresentedShapeAccessContacts: Bool = false
     
     @State var vorname: String = ""
     @State var name: String = ""
-    //@State var spitzname: String = ""
+    
+    @State var myContacts: [Contact] = fetchAllContacts()
+    
     
     var body: some View {
         NavigationView {
@@ -47,6 +51,39 @@ struct ShapeViewAddUser: View {
                         } // Ende ForEach
                     } // Ende Picker
                 } // Ende Section
+                .font(.system(size: 16, weight: .regular))
+                
+                Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
+                    
+                    ScrollView {
+                        LazyVStack {
+                            ForEach(myContacts.indices, id: \.self) { idx in
+                                HStack{
+                                    
+                                    if myContacts[idx].lastName != "" && myContacts[idx].firstName != "" {
+                                        Text(myContacts[idx].lastName + ", ")
+                                        Text(myContacts[idx].firstName)
+                                        Spacer()
+                                        
+                                    } // Ende if
+                                    
+                                } // Ende HStack
+                                .font(.system(size: 20, weight: .regular))
+                                .onTapGesture {
+                                    name = myContacts[idx].lastName
+                                    vorname = myContacts[idx].firstName
+                                } // Ende onTapGesture
+                                
+                            } // Ende ForEach
+                           
+                        }
+                        .padding(5)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(10)
+                        
+                    } // Ende Scrollview
+                    .frame(height: 200, alignment: .leading)
+                }// Ende Section
                 
                 HStack {
                     Spacer()
@@ -99,7 +136,6 @@ struct ShapeViewAddUser: View {
                     .cornerRadius(10)
                     Spacer()
                 } // Ende HStack
-                
                 .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
                     Button(" - OK - ") {}
                 }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
@@ -119,9 +155,13 @@ struct ShapeViewAddUser: View {
                 
             } // Ende Form
             .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
+            //.scrollDisabled(true)
             
         } // Ende NavigationView
+        
+        
     } // Ende var body
+    
 } // Ende struct
 
 struct ShapeViewAddGegenstand: View {
@@ -476,7 +516,7 @@ struct ShapeViewEditUser: View {
                         .cornerRadius(5)
                         .disableAutocorrection(true)
                     
-                    TextField("Name", text: $neuePersonTmp[0].personNachname)
+                    TextField("Namen", text: $neuePersonTmp[0].personNachname)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
@@ -523,7 +563,7 @@ struct ShapeViewEditUser: View {
                 
                 
             } // Ende Form
-            .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Benutzer bearbeiten").navigationBarTitleDisplayMode(.inline)
             
         } // Ende NavigationView
     } // Ende var body
@@ -556,6 +596,4 @@ struct ShapeShowDetailPhoto: View {
     } // Ende var body
     
 } // Ende ShapeshowDetailPhoto
-
-
 

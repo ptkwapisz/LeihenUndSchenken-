@@ -14,7 +14,8 @@ struct IphoneTable1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     @State var zeile: Int = 0
-    
+    @State var showEingabeMaske: Bool = false
+
     var body: some View {
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
@@ -113,6 +114,29 @@ struct IphoneTable1: View {
             } // Ende List
             .cornerRadius(10)
             Spacer()
+            HStack(alignment: .bottom) {
+                
+                Button {
+                    showEingabeMaske = true
+                    
+                } label: {
+                    Label("", systemImage: "rectangle.stack.fill.badge.plus")
+                    
+                } // Ende Button
+                .font(.system(size: 30, weight: .medium))
+                .foregroundColor(Color.white)
+                .offset(x: 10)
+                
+                Text("|")
+                    .offset(x:3, y: -7)
+                    .foregroundColor(Color.white)
+                
+            } // Ende HStack
+            .frame(width: UIScreen.screenWidth, height: 34, alignment: .leading)
+            .background(.gray)
+            .foregroundColor(Color.black)
+            .sheet(isPresented: $showEingabeMaske, content: { EingabeMaskeView() })
+            
             
         } // Ende VStack
         .background(globaleVariable.farbenEbene1)
@@ -158,12 +182,12 @@ struct IphoneTable2: View {
                     Label("", systemImage: "rectangle.stack.fill.badge.plus")
                     
                 } // Ende Button
-                .font(.system(size: 20, weight: .medium))
+                .font(.system(size: 30, weight: .medium))
                 .foregroundColor(Color.white)
                 .offset(x: 10)
                 
                 Text("|")
-                    .offset(x:3, y: -3)
+                    .offset(x:3, y: -7)
                     .foregroundColor(Color.white)
                 
                 Button() {
@@ -185,7 +209,7 @@ struct IphoneTable2: View {
                 } label: {
                     Label("", systemImage: "rectangle.stack.fill.badge.minus")
                 } // Ende Button
-                .font(.system(size: 20, weight: .medium))
+                .font(.system(size: 30, weight: .medium))
                 .foregroundColor(Color.white)
                 .offset(x: 10)
                 .alert(isPresented: $showAlert) {
@@ -207,15 +231,17 @@ struct IphoneTable2: View {
                                 secondaryButton: .cancel(Text("Abbrechen")){
                                     print("Abgebrochen ....")
                                 } // Ende secondary Button
-                            ) // Ende Aler
+                            ) // Ende Alert
+                    case .information:
+                        return Alert(title: Text("Wichtige Information"), message: Text(errorMessageText), dismissButton: .default(Text("OK")))
                     } // Ende switch
                 } // Ende alert
                 
                 Text("|")
-                    .offset(x:3, y: -3)
+                    .offset(x:3, y: -7)
                     .foregroundColor(Color.white)
             } // Ende HStack
-            .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
+            .frame(width: UIScreen.screenWidth, height: 34, alignment: .leading)
             .background(.gray)
             .foregroundColor(Color.black)
             .sheet(isPresented: $gegenstandHinzufuegen, content: { ShapeViewAddGegenstand(isPresented: $gegenstandHinzufuegen, isParameterBereich: $isParameterBereich) })
@@ -234,16 +260,15 @@ struct IphoneTable3: View {
     
     @State var isParameterBereich: Bool = false
     @State var personHinzufuegen: Bool = false
-    //@State var showAlert = false
     @State var errorMessageText = ""
     
     @State var selectedPickerTmp: String = ""
     
-    //@State var person = querySQLAbfrageClassPerson(queryTmp: "Select * from Personen")
     @State var selectedPicker: String?
     
     @State private var showAlert = false
     @State private var activeAlert: ActiveAlert = .error
+    @State var showInfoText: Bool = false
     
     var body: some View {
       
@@ -260,19 +285,18 @@ struct IphoneTable3: View {
             } // Ende List
             .cornerRadius(10)
             
-            
             HStack(alignment: .bottom) {
                 Button {
                     personHinzufuegen = true
                 } label: {
                     Label("",systemImage: "person.fill.badge.plus")
                 } // Ende Button/label
-                .font(.system(size: 20, weight: .medium))
+                .font(.system(size: 30, weight: .medium))
                 .foregroundColor(Color.white)
                 .offset(x: 10)
                 
                 Text("|")
-                    .offset(x:3, y: -3)
+                    .offset(x:3, y: -7)
                     .foregroundColor(Color.white)
                 Button {
                     
@@ -281,7 +305,7 @@ struct IphoneTable3: View {
                     //print("\(selectedPickerTmp ?? "N/A")")
                     
                     if selectedPickerTmp == "N/A" {
-                        errorMessageText = "Bitte suchen Sie zuerst eine Person die Sie löschen möchten aus. Dann markieren sie durch das Klicken die entsprechende Zeile. Danach betätigen Sie noch mal das Minuszeichen."
+                        errorMessageText = "Bitte markieren Sie zuerst eine Person, die Sie löschen möchten. Das tun sie durch das Klicken auf die entsprechende Zeile. Danach betätigen Sie noch mal das Minuszeichen, um die markierte Person zu löschen ."
                         
                         showAlert = true
                         activeAlert = .error
@@ -297,40 +321,46 @@ struct IphoneTable3: View {
                     Label("",systemImage: "person.fill.badge.minus")
                     
                 } // Ende Button/label
-                .font(.system(size: 20, weight: .medium))
+                .font(.system(size: 30, weight: .medium))
                 .foregroundColor(Color.white)
                 .offset(x: 10)
                 .alert(isPresented: $showAlert) {
                     switch activeAlert {
-                        case .error:
-                            return Alert(title: Text("Wichtige Information"), message: Text(errorMessageText), dismissButton: .default(Text("OK")))
-                        case .delete:
-                            return Alert(
-                                title: Text("Wichtige Information!"),
-                                message: Text("Die Person: \(selectedPickerTmp) wird unwiederfuflich gelöscht! Man kann diesen Vorgang nicht rückgängich machen!"),
-                                primaryButton: .destructive(Text("Löschen")) {
-                                    
-                                    let perKeyTmp = perKeyBestimmenPerson(par: selectedPickerTmp)
-                                    deleteItemsFromDatabase(tabelle: "Personen", perKey: perKeyTmp[0])
-                                    print("\(selectedPickerTmp)" + " wurde gelöscht")
-                                    print(perKeyTmp)
-                                    
-                                    refreshAllViews()
-                                },
-                                secondaryButton: .cancel(Text("Abbrechen")){
-                                    print("\(selectedPickerTmp)" + " wurde nicht gelöscht")
-                                    print("Abgebrochen ....")
-                                } // Ende secondary Button
-                            ) // Ende Aler
+                    case .error:
+                        return Alert(title: Text("Wichtige Information"), message: Text(errorMessageText), dismissButton: .default(Text("OK")))
+                    case .delete:
+                        return Alert(
+                            title: Text("Wichtige Information!"),
+                            message: Text("Die Person: \(selectedPickerTmp) wird unwiederfuflich gelöscht! Man kann diesen Vorgang nicht rückgängich machen!"),
+                            primaryButton: .destructive(Text("Löschen")) {
+                                
+                                let perKeyTmp = perKeyBestimmenPerson(par: selectedPickerTmp)
+                                deleteItemsFromDatabase(tabelle: "Personen", perKey: perKeyTmp[0])
+                                print("\(selectedPickerTmp)" + " wurde gelöscht")
+                                print(perKeyTmp)
+                                
+                                refreshAllViews()
+                                
+                            },
+                            secondaryButton: .cancel(Text("Abbrechen")){
+                                print("\(selectedPickerTmp)" + " wurde nicht gelöscht")
+                                print("Abgebrochen ....")
+                            } // Ende secondary Button
+                        ) // Ende Alert
+                    case .information:
+                        return Alert(
+                            title: Text("Wichtige Information!"),
+                            message: Text("Es befinden sich keine Personen in der Datenbank. Drücken Sie unten links auf das + Zeichen, um eine neue Person in diese Liste hinzufügen."), dismissButton: .default(Text("OK")))
+                        
                     } // Ende switch
                 } // Ende alert
-               
+                
                 Text("|")
-                .offset(x:3, y: -3)
-                .foregroundColor(Color.white)
+                    .offset(x:3, y: -7)
+                    .foregroundColor(Color.white)
                 
             } // Ende HStack
-            .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
+            .frame(width: UIScreen.screenWidth, height: 34, alignment: .leading)
             .background(.gray)
             .foregroundColor(Color.black)
             .sheet(isPresented: $personHinzufuegen, content: {ShapeViewAddUser(isPresented: $personHinzufuegen, isParameterBereich: $isParameterBereich)})
@@ -339,7 +369,16 @@ struct IphoneTable3: View {
         } // Ende Vstack
         .background(globaleVariable.farbenEbene1)
         .cornerRadius(10)
-        
+        .onAppear() {
+            if person.count == 0 {
+                // Wenn sich keine Personen in der Datenbanktabelle befinden
+                // wird eine Information gezeigt.
+                showAlert = true
+                activeAlert = .information
+                
+            } // Ende if
+            
+        } // Ende onAppear
     
     }// Ende var body
     
@@ -420,7 +459,7 @@ func perKeyBestimmenPerson(par: String) -> [String] {
     return result
 } // Ende func
 
-// Diese enum wird für Alertmeldung benutzt
+// Diese enum wird für Alertmeldung bei der Tab Benuzuer aufgerufen
 enum ActiveAlert {
-    case error, delete
+    case error, delete, information
 } // Ende enum

@@ -605,3 +605,34 @@ func querySQLAbfrageClassPersonen(queryTmp: String) -> [PersonClassVariable]  {
     return resultatClass
     
 } // Ende func querySQLAbfrageClassObjekte
+
+
+// Diese Funktion wird in der struc ShapeViewAbfrage (ShapeView) aufgerufen, um den input field 3
+// in Abhängigkeit von der Eingabe im field 1 zu erstellen.
+// Diese funktion wird aus den Bereichen onAppear und onChange aufgerufen
+
+func abfrageField3(field1: String)->[String] {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var result: [String] = []
+
+    switch field1 {
+            
+        case "Gegenstand":
+            result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
+            //print("Gegenstand " + "\(selectedAbfrageFeld3)")
+        case "Vorgang":
+            result = globaleVariable.parameterVorgang
+            //print("Vorgang " + "\(selectedAbfrageFeld3)")
+        case "Name":
+            result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")
+            //print("Nachname " + "\(selectedAbfrageFeld3)")
+        case "Vorname":
+            result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
+            //print("Vorname " + "\(selectedAbfrageFeld3)")
+        default:
+            print("Keine Wahl")
+    } // Ende switch
+
+    return result
+} // Ende func

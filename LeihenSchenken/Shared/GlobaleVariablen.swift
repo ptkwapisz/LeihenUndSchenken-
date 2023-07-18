@@ -47,6 +47,8 @@ class GlobaleVariable: ObservableObject {
     @Published var textAllgemeineNotizen: String = ""
     @Published var datum: Date = Date()
     
+    
+    
 } // ende class
 
 class UserSettingsDefaults: ObservableObject {
@@ -217,5 +219,18 @@ class AlertMessageTexte: ObservableObject  {
     
     @Published var showDBLadenMessageText: String = "Die Datenbank inclusiwe aller Tabellen wird zurückgeladen. Diese Rücksicherung überschreibt unwiederuflich die jetzige Datenbank und ihre alle Tabellen, wie Objekte, Personen und Gegenstände. Dieser Vorgang kann nicht rückgängig gemacht Werden."
     
+    
+} // Ende class
+
+class Contact: Identifiable {
+    var id = UUID()
+    var firstName: String //= "No firstName"
+    var lastName: String //= "No lastName"
+    
+    init(id: UUID = UUID(), firstName: String, lastName: String) {
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+    }
     
 } // Ende class

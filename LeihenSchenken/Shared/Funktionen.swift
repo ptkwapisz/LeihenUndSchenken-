@@ -318,3 +318,108 @@ func erstelleTitel(par: Bool) -> String {
     return resultat
     
 }// Ende func
+
+
+// Wird aus der DetailView aufgerufen
+func printingFile() {
+    
+    let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
+    
+    if UIPrintInteractionController.canPrint(pdfPath!) {
+        
+        //notificationCenter.addObserver(self, selector: #selector(self.downloadFile), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
+        let printInfo = UIPrintInfo(dictionary: nil)
+        printInfo.jobName = "Drucke Handbuch!"
+        printInfo.outputType = UIPrintInfo.OutputType.general
+        printInfo.duplex = UIPrintInfo.Duplex.longEdge
+        printInfo.accessibilityViewIsModal = true
+        
+        
+        let printController = UIPrintInteractionController.shared
+        printController.printInfo = printInfo
+        printController.showsNumberOfCopies = true
+        printController.printingItem = pdfPath
+        printController.present(animated: true, completionHandler: nil)
+        
+        
+    } // Ende if
+    
+    // https://nshipster.com/uiprintinteractioncontroller/
+    
+} // Ende func
+
+
+func ladeStatistiken() -> [Statistiken] {
+    var resultat: [Statistiken] = [Statistiken(stGruppe: "", stName: "", stWert: "")]
+    resultat.removeAll()
+    
+    let z1s0: String = "Objekte"
+    let z1s1: String = "Alle Objekte:"
+    let z1S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte")
+    
+    let z2s0: String = "Objekte"
+    let z2s1: String = "Verschenkte Objekte:"
+    let z2S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Verschenken'")
+    
+    let z3s0: String = "Objekte"
+    let z3s1: String = "Verliehene Objekte:"
+    let z3S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Verleihen'")
+    
+    let z4s0: String = "Objekte"
+    let z4s1: String = "Erhaltene Objekte:"
+    let z4S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Bekommen'")
+    
+    resultat.append(Statistiken(stGruppe: z1s0, stName: z1s1, stWert: z1S2[0]))
+    resultat.append(Statistiken(stGruppe: z2s0, stName: z2s1, stWert: z2S2[0]))
+    resultat.append(Statistiken(stGruppe: z3s0, stName: z3s1, stWert: z3S2[0]))
+    resultat.append(Statistiken(stGruppe: z4s0, stName: z4s1, stWert: z4S2[0]))
+    
+    let tmp0 = querySQLAbfrageArray(queryTmp: "Select distinct(gegenstand) From Objekte")
+    
+    for n in 0...tmp0.count - 1 {
+        
+        let tmp1 = querySQLAbfrageArray(queryTmp: "Select count() gegenstand From Objekte Where gegenstand = '\(tmp0[n])'")
+        
+        if Int("\(tmp1[0])") != 0 {
+            
+            resultat.append(Statistiken(stGruppe: "Gegenstände", stName: "\(tmp0[n])", stWert: tmp1[0]))
+            
+        } // Ende if
+        
+    }// Ende for
+    
+    return resultat
+} // Ende func
+
+
+// Zeilenfarbe der Objektliste im ersten Tab
+func zeilenFarbe(par: Int) -> Color {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var zeilenFarbe: Color
+    if par % 2 == 0 {
+        zeilenFarbe = globaleVariable.farbenEbene0
+        
+    }else{
+        zeilenFarbe = globaleVariable.farbenEbene0.opacity(0.5)
+        
+    } // Ende if/else
+   
+    return zeilenFarbe
+    
+} // Ende func
+
+
+func parameterCheck(parGegenstand: String, parPerson: String) -> Bool {
+    var resultat: Bool = true
+    if parGegenstand == "Neuer Gegenstand" || parPerson == "Neue Person" {
+        resultat = true
+        
+    }else{
+        resultat = false
+        
+    }// Ende if/else
+
+    return resultat
+} // Ende func
