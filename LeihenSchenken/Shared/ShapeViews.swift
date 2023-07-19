@@ -56,33 +56,44 @@ struct ShapeViewAddUser: View {
                 Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
                     
                     ScrollView {
-                        LazyVStack {
-                            ForEach(myContacts.indices, id: \.self) { idx in
-                                HStack{
-                                    
-                                    if myContacts[idx].lastName != "" && myContacts[idx].firstName != "" {
-                                        Text(myContacts[idx].lastName + ", ")
-                                        Text(myContacts[idx].firstName)
-                                        Spacer()
-                                        
-                                    } // Ende if
-                                    
-                                } // Ende HStack
-                                .font(.system(size: 20, weight: .regular))
-                                .onTapGesture {
-                                    name = myContacts[idx].lastName
-                                    vorname = myContacts[idx].firstName
-                                } // Ende onTapGesture
+                        
+                            LazyVStack {
                                 
-                            } // Ende ForEach
-                           
-                        }
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
+                                ForEach(myContacts.indices, id: \.self) { idx in
+                                   // GeometryReader { gemotry in
+                                        HStack{
+                                            
+                                            if myContacts[idx].lastName != "" && myContacts[idx].firstName != "" {
+                                                Text(myContacts[idx].lastName + ", " + myContacts[idx].firstName)
+                                                    .font(.system(size: 20, weight: .regular))
+                                                    
+                                                
+                                                Spacer()
+                                                
+                                            } // Ende if
+                                            
+                                        } // Ende HStack
+                                        .background(idx % 2 == 0
+                                                    ? Color(.systemGray).opacity(0.2)
+                                                    : Color(.white).opacity(0.2)
+                                        )
+                                        .onTapGesture {
+                                            name = myContacts[idx].lastName
+                                            vorname = myContacts[idx].firstName
+                                        } // Ende onTapGesture
+                                    //}// Ende GeometryReader
+                                } // Ende ForEach
+                                
+                            }// Ende LazyVStack
+                            .padding(5)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(10)
                         
                     } // Ende Scrollview
                     .frame(height: 200, alignment: .leading)
+                    
+                    
+                    
                 }// Ende Section
                 
                 HStack {

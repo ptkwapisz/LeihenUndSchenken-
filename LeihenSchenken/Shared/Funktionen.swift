@@ -358,6 +358,8 @@ func ladeStatistiken() -> [Statistiken] {
     let z1s1: String = "Alle Objekte:"
     let z1S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte")
     
+    
+    
     let z2s0: String = "Objekte"
     let z2s1: String = "Verschenkte Objekte:"
     let z2S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Verschenken'")
@@ -370,24 +372,35 @@ func ladeStatistiken() -> [Statistiken] {
     let z4s1: String = "Erhaltene Objekte:"
     let z4S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Bekommen'")
     
-    resultat.append(Statistiken(stGruppe: z1s0, stName: z1s1, stWert: z1S2[0]))
-    resultat.append(Statistiken(stGruppe: z2s0, stName: z2s1, stWert: z2S2[0]))
-    resultat.append(Statistiken(stGruppe: z3s0, stName: z3s1, stWert: z3S2[0]))
-    resultat.append(Statistiken(stGruppe: z4s0, stName: z4s1, stWert: z4S2[0]))
+    
+    resultat.append(Statistiken(stGruppe: z1s0, stName: z1s1, stWert: z1S2.count == 0 ? "0" : z1S2[0]))
+    resultat.append(Statistiken(stGruppe: z2s0, stName: z2s1, stWert: z2S2.count == 0 ? "0" : z2S2[0]))
+    resultat.append(Statistiken(stGruppe: z3s0, stName: z3s1, stWert: z3S2.count == 0 ? "0" : z3S2[0]))
+    resultat.append(Statistiken(stGruppe: z4s0, stName: z4s1, stWert: z4S2.count == 0 ? "0" : z4S2[0]))
+    
     
     let tmp0 = querySQLAbfrageArray(queryTmp: "Select distinct(gegenstand) From Objekte")
     
-    for n in 0...tmp0.count - 1 {
+    if tmp0.count != 0 {
         
-        let tmp1 = querySQLAbfrageArray(queryTmp: "Select count() gegenstand From Objekte Where gegenstand = '\(tmp0[n])'")
-        
-        if Int("\(tmp1[0])") != 0 {
+        for n in 0...tmp0.count - 1 {
             
-            resultat.append(Statistiken(stGruppe: "Gegenstände", stName: "\(tmp0[n])", stWert: tmp1[0]))
+            let tmp1 = querySQLAbfrageArray(queryTmp: "Select count() gegenstand From Objekte Where gegenstand = '\(tmp0[n])'")
             
-        } // Ende if
+            if Int("\(tmp1[0])") != 0 {
+                
+                resultat.append(Statistiken(stGruppe: "Gegenstände", stName: "\(tmp0[n])", stWert: tmp1[0]))
+                
+            } // Ende if
+            
+        }// Ende for
         
-    }// Ende for
+    }else{
+        
+        // Wenn Tabelle Objekte leer ist:
+        resultat.append(Statistiken(stGruppe: "Gegenstände", stName: "Anzahl der Gegenstände", stWert: "0"))
+        
+    } // Ende if/else
     
     return resultat
 } // Ende func

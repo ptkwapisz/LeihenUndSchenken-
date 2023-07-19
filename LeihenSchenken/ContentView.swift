@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @State private var columnVisibility = NavigationSplitViewVisibility.all
+    //@State private var columnVisibility = NavigationSplitViewVisibility.all
     //@State private var preferredColumn = NavigationSplitViewColumn.detail
     @State private var emptyDatabase:Bool = false
     
@@ -36,14 +36,21 @@ struct ContentView: View {
     var body: some View {
         
         //NavigationSplitView(preferredCompactColumn: $preferredColumn) {
-        NavigationSplitView(columnVisibility: $columnVisibility) {
+        NavigationView() {
           
-            ParameterView()
-        }detail: {
-            DeteilView()
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                
+                DeteilView()
+            }else{
+                
+                EingabeMaskePadView()
+            
+                DeteilView()
+                
+            } // Ende if/else
             
         } // Ende NavigationView
-        //.listStyle(SidebarListStyle()).font(.title3) // Veraltet mit Navigationview
+        .listStyle(SidebarListStyle()).font(.title3) // Veraltet mit Navigationview
         .environmentObject(globaleVariable)
         .phoneOnlyStackNavigationView()
         // Ausschalten des Dark-Modus für die App

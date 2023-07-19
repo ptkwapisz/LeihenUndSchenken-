@@ -30,6 +30,9 @@ struct DeteilView: View {
     
     var body: some View {
     
+        // Prüfen, ob sich Objekte in der Datenbank befinden
+        let anzahlDerObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
+        
         VStack(spacing: 10) {
             
             TabView(selection: $globaleVariable.navigationTabView) {
@@ -124,15 +127,22 @@ struct DeteilView: View {
                    
                 } // Ende ToolbarItemGroup
                 
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: {showAbfrageModalView = true
+                
+                // Wen sich keine Objekte in der Datenbank befinden
+                // dann wird die Abfrage deaktiviert.
+                
+                if anzahlDerObjekte.count != 0 {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
                         
-                    }) {
-                        Image(systemName: "line.3.horizontal.decrease.circle") //"icons8-filter-25"  line.3.horizontal.decrease.circle
-                    } // Ende Button
-                    .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
-                    Spacer()
-                } // Ende ToolbarItemGroup
+                        Button(action: {showAbfrageModalView = true
+                            
+                        }) {
+                            Image(systemName: "line.3.horizontal.decrease.circle") //"icons8-filter-25"  line.3.horizontal.decrease.circle
+                        } // Ende Button
+                        .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
+                        Spacer()
+                    } // Ende ToolbarItemGroup
+                }
                 
             } // Ende if
             
@@ -186,9 +196,9 @@ func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String
         case 1:
             returnWert = (tabName: "Objektenliste", tabHilfe: "\(hilfeTexte.tabObjektenListe)")
         case 2:
-            returnWert = (tabName: "Gegenständeliste", tabHilfe: "\(hilfeTexte.tabGegenstandListe)")
+            returnWert = (tabName: "Gegenstände", tabHilfe: "\(hilfeTexte.tabGegenstandListe)")
         case 3:
-            returnWert = (tabName: "Personenliste", tabHilfe: "\(hilfeTexte.tabPersonenListe)")
+            returnWert = (tabName: "Personen", tabHilfe: "\(hilfeTexte.tabPersonenListe)")
         case 4:
             returnWert = (tabName: "Statistiken", tabHilfe: "\(hilfeTexte.tabStatistiken)")
         case 5:

@@ -13,6 +13,8 @@
 		DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E9F32A023BB000CBC354 /* Extention.swift */; };
 		DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A992A437D09001B2781 /* EditFields.swift */; };
 		DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A9B2A438393001B2781 /* ViewModifier.swift */; };
+		DBB7E9A02A6805D9007CD383 /* EingabeMaske.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB7E99F2A6805D9007CD383 /* EingabeMaske.swift */; };
+		DBB7E9A22A68069F007CD383 /* EingabeMaskePad.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB7E9A12A68069F007CD383 /* EingabeMaskePad.swift */; };
 		DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */; };
 		DBC5413A2A58B2EB00A8F01B /* ExportImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC541392A58B2EB00A8F01B /* ExportImport.swift */; };
 		DBCCA1132A60AD4200146426 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCA1122A60AD4200146426 /* CameraView.swift */; };
@@ -60,6 +62,8 @@
 		DB51E9F32A023BB000CBC354 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		DB538A992A437D09001B2781 /* EditFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFields.swift; sourceTree = "<group>"; };
 		DB538A9B2A438393001B2781 /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
+		DBB7E99F2A6805D9007CD383 /* EingabeMaske.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaske.swift; sourceTree = "<group>"; };
+		DBB7E9A12A68069F007CD383 /* EingabeMaskePad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaskePad.swift; sourceTree = "<group>"; };
 		DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneViews.swift; sourceTree = "<group>"; };
 		DBC541392A58B2EB00A8F01B /* ExportImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImport.swift; sourceTree = "<group>"; };
 		DBCCA1122A60AD4200146426 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
@@ -141,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */,
+				DBB7E99F2A6805D9007CD383 /* EingabeMaske.swift */,
 			);
 			path = Phone;
 			sourceTree = "<group>";
@@ -149,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				DB27ACDF2A0B83C7009BC26B /* PadViews.swift */,
+				DBB7E9A12A68069F007CD383 /* EingabeMaskePad.swift */,
 			);
 			path = Pad;
 			sourceTree = "<group>";
@@ -365,7 +371,9 @@
 				DBCCBB812A18263D00EDF087 /* ParameterView.swift in Sources */,
 				DBCCBB7D2A1825D200EDF087 /* GlobaleVariablen.swift in Sources */,
 				DBCCBB7F2A18260B00EDF087 /* Funktionen.swift in Sources */,
+				DBB7E9A22A68069F007CD383 /* EingabeMaskePad.swift in Sources */,
 				DB0160FB2A17CE15000A34CE /* PdfView.swift in Sources */,
+				DBB7E9A02A6805D9007CD383 /* EingabeMaske.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

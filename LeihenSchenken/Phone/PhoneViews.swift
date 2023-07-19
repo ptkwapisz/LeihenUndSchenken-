@@ -15,8 +15,10 @@ struct IphoneTable1: View {
     
     @State var zeile: Int = 0
     @State var showEingabeMaske: Bool = false
-
+    @State private var showAlert = false
+    @State private var activeAlert: ActiveAlert = .error
     var body: some View {
+        
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
         let objekteTmp = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
@@ -126,6 +128,23 @@ struct IphoneTable1: View {
                 .font(.system(size: 30, weight: .medium))
                 .foregroundColor(Color.white)
                 .offset(x: 10)
+                .alert(isPresented: $showAlert) {
+                    switch activeAlert {
+                    
+                    case .error:
+                        // Dummy Alert
+                        return Alert(title: Text(""), message: Text(""), dismissButton: .default(Text("OK")))
+                    case .delete:
+                        // Dummy Alert
+                        return Alert(title: Text(""), message: Text(""), dismissButton: .default(Text("OK")))
+                    
+                    case .information:
+                        return Alert(
+                            title: Text("Wichtige Information!"),
+                            message: Text("Es befinden sich keine Objekte in der Datenbank. Drücken Sie unten links auf den Stappel mit + Zeichen, um ein neues Objekt zu erfassen und in die Datenbank zu speichern."), dismissButton: .default(Text("OK")))
+                        
+                    } // Ende switch
+                } // Ende alert
                 
                 Text("|")
                     .offset(x:3, y: -7)
@@ -141,7 +160,16 @@ struct IphoneTable1: View {
         } // Ende VStack
         .background(globaleVariable.farbenEbene1)
         .cornerRadius(10)
-        
+        .onAppear() {
+            if objekteTmp.count == 0 {
+                // Wenn sich keine Objekte in der Datenbanktabelle befinden
+                // wird eine Information gezeigt.
+                showAlert = true
+                activeAlert = .information
+                
+            } // Ende if
+            
+        } // Ende onAppear
         
     } // Ende var body
     
@@ -165,7 +193,7 @@ struct IphoneTable2: View {
         
         VStack {
             Text("")
-            Text("Gegenstände").bold()
+            Text("Favoritenliste").bold()
             
             List(gegenstaende, id: \.gegenstandName, selection: $selectedType) { index in
                 Text(index.gegenstandName)
@@ -270,15 +298,18 @@ struct IphoneTable3: View {
     @State private var activeAlert: ActiveAlert = .error
     @State var showInfoText: Bool = false
     
+    @State var selectedType: String? = ""
+    
     var body: some View {
       
         let person = querySQLAbfrageClassPerson(queryTmp: "Select * from Personen", isObjectTabelle: false)
         
+        
         VStack {
             Text("")
-            Text("Personen").bold()
+            Text("Favoritenliste").bold()
             
-            List(person, id: \.personPicker, selection: $selectedPicker) { index in
+            List(person, id: \.personPicker, selection: $selectedType) { index in
                 
                 Text(index.personPicker)
                 
@@ -350,7 +381,7 @@ struct IphoneTable3: View {
                     case .information:
                         return Alert(
                             title: Text("Wichtige Information!"),
-                            message: Text("Es befinden sich keine Personen in der Datenbank. Drücken Sie unten links auf das + Zeichen, um eine neue Person in diese Liste hinzufügen."), dismissButton: .default(Text("OK")))
+                            message: Text("Es befinden sich keine Personen in der Datenbank. Drücken Sie unten links auf das Männchen mit + Zeichen, um eine neue Person in diese Liste hinzufügen."), dismissButton: .default(Text("OK")))
                         
                     } // Ende switch
                 } // Ende alert
@@ -377,7 +408,11 @@ struct IphoneTable3: View {
                 activeAlert = .information
                 
             } // Ende if
-            
+            // Wenn die Datenbank nicht leer ist:
+            // wird der Wert zugewiesen damit in der Liste die erste Zeile markiert wird
+            if person.count != 0 {
+                selectedType = person[0].personPicker
+            } // Ende if
         } // Ende onAppear
     
     }// Ende var body

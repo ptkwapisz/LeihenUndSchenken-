@@ -111,7 +111,7 @@ struct EditSheetView: View {
                     }// Ende onApear
             } // Ende GeometryReader
             
-            .navigationTitle("Daten bearbeiten").navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Objekt bearbeiten").navigationBarTitleDisplayMode(.inline)
             /*
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

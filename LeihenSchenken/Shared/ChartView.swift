@@ -159,12 +159,12 @@ struct ChartView: View {
                                 //.font(.system(size: 25))
                                 
                             } // Ende Button
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 30, weight: .medium))
                             .foregroundColor(Color.white)
                             .offset(x: 10)
                             
                             Text("|")
-                                .offset(x:3, y: -3)
+                                .offset(x:3, y: -7)
                                 .foregroundColor(Color.white)
                             
                             Button {
@@ -175,7 +175,7 @@ struct ChartView: View {
                                 Label("", systemImage: "rectangle.stack.fill.badge.minus")
                                 
                             } // Ende Button
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 30, weight: .medium))
                             .foregroundColor(Color.white)
                             .offset(x: 10)
                             .alert(isPresented: $showAlert) {
@@ -205,7 +205,7 @@ struct ChartView: View {
                             } // Ende alert
                             
                         } // Ende HStack
-                        .frame(width: UIScreen.screenWidth, height: 25, alignment: .leading)
+                        .frame(width: UIScreen.screenWidth, height: 34, alignment: .leading)
                         .background(.gray)
                         .foregroundColor(Color.black)
                         
