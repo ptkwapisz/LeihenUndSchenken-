@@ -32,6 +32,7 @@
 		DBCEF80B29D1ED7A0017A728 /* LeihenSchenkenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF80A29D1ED7A0017A728 /* LeihenSchenkenTests.swift */; };
 		DBCEF81529D1ED7A0017A728 /* LeihenSchenkenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF81429D1ED7A0017A728 /* LeihenSchenkenUITests.swift */; };
 		DBCEF81729D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCEF81629D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift */; };
+		DBD0BAB12A69D04C006CB53A /* TabViewsDeteil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD0BAB02A69D04C006CB53A /* TabViewsDeteil.swift */; };
 		DBE5D0A72A192DEB006410AD /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE5D0A62A192DEB006410AD /* Test.swift */; };
 		DBE5D0A92A1930A9006410AD /* L&S Handbuch.pdf in Resources */ = {isa = PBXBuildFile; fileRef = DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */; };
 		DBE8F90A2A63F92B0027E311 /* ContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE8F9092A63F92B0027E311 /* ContactsView.swift */; };
@@ -84,6 +85,7 @@
 		DBCEF81029D1ED7A0017A728 /* LeihenSchenkenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeihenSchenkenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCEF81429D1ED7A0017A728 /* LeihenSchenkenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeihenSchenkenUITests.swift; sourceTree = "<group>"; };
 		DBCEF81629D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeihenSchenkenUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DBD0BAB02A69D04C006CB53A /* TabViewsDeteil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewsDeteil.swift; sourceTree = "<group>"; };
 		DBE3A8E42A4C8BCA000DB9ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DBE5D0A62A192DEB006410AD /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "L&S Handbuch.pdf"; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				DBCCBB842A1826A200EDF087 /* ColorData.swift */,
 				DB4329AE2A003E91006874E8 /* ChartView.swift */,
 				DBCCBB862A1826D300EDF087 /* TabViews.swift */,
+				DBD0BAB02A69D04C006CB53A /* TabViewsDeteil.swift */,
 				DBCCBB882A18271600EDF087 /* DetailView.swift */,
 				DB0160FA2A17CE15000A34CE /* PdfView.swift */,
 				DB538A9B2A438393001B2781 /* ViewModifier.swift */,
@@ -362,6 +365,7 @@
 				DBE5D0A72A192DEB006410AD /* Test.swift in Sources */,
 				DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */,
 				DBC5413A2A58B2EB00A8F01B /* ExportImport.swift in Sources */,
+				DBD0BAB12A69D04C006CB53A /* TabViewsDeteil.swift in Sources */,
 				DB27ACE02A0B83C7009BC26B /* PadViews.swift in Sources */,
 				DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */,
 				DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */,
@@ -532,7 +536,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"LeihenSchenken/Preview Content\"";
 				DEVELOPMENT_TEAM = K42L6ZYYGZ;
 				ENABLE_PREVIEWS = YES;
@@ -559,7 +563,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -569,7 +573,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"LeihenSchenken/Preview Content\"";
 				DEVELOPMENT_TEAM = K42L6ZYYGZ;
 				ENABLE_PREVIEWS = YES;
@@ -596,7 +600,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

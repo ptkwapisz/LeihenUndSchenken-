@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     //@State private var preferredColumn = NavigationSplitViewColumn.detail
     @State private var emptyDatabase:Bool = false
     
@@ -35,30 +35,40 @@ struct ContentView: View {
     
     var body: some View {
         
-        //NavigationSplitView(preferredCompactColumn: $preferredColumn) {
-        NavigationView() {
-          
-            if UIDevice.current.userInterfaceIdiom == .phone {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            NavigationStack{
                 
                 DeteilView()
-            }else{
+                
+            } // Ende NavigationStack
+            .listStyle(SidebarListStyle()).font(.title3) // Veraltet mit Navigationview
+            .environmentObject(globaleVariable)
+            .phoneOnlyStackNavigationView()
+            // Ausschalten des Dark-Modus für die App
+            .preferredColorScheme(.light)
+            // Das setzt die dynamische Taxtgrösse auf .large.
+            .dynamicTypeSize(.large)
+            
+        }else{
+            
+            NavigationSplitView(columnVisibility: $columnVisibility) {
                 
                 EingabeMaskePadView()
-            
+            } detail: {
                 DeteilView()
                 
-            } // Ende if/else
+            } // Ende NavigationSplitView
+            .environmentObject(globaleVariable)
+            .phoneOnlyStackNavigationView()
+            // Ausschalten des Dark-Modus für die App
+            .preferredColorScheme(.light)
+            // Das setzt die dynamische Taxtgrösse auf .large.
+            .dynamicTypeSize(.large)
+            .navigationSplitViewStyle(.balanced)
             
-        } // Ende NavigationView
-        .listStyle(SidebarListStyle()).font(.title3) // Veraltet mit Navigationview
-        .environmentObject(globaleVariable)
-        .phoneOnlyStackNavigationView()
-        // Ausschalten des Dark-Modus für die App
-        .preferredColorScheme(.light)
-        // Das setzt die dynamische Taxtgrösse auf .large.
-        .dynamicTypeSize(.large)
-        .navigationSplitViewStyle(.balanced)
+        } // Ende if/else
         
+   
     } // Ende var body
 } // Ende struct ContentView
 

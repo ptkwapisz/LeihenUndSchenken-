@@ -5,8 +5,8 @@
 //  Created by PIOTR KWAPISZ on 20.05.23.
 //
 import SwiftUI
-import Foundation
-import Contacts
+//import Foundation
+//import Contacts
 
 struct EmptyView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared

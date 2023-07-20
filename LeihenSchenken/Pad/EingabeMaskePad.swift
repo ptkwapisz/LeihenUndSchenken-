@@ -100,8 +100,9 @@ struct EingabeMaskePadView: View {
             GeometryReader { geometry in
                 
                 VStack {
-                    
+                    Text("")
                     Form {
+                        
                         
                         Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
                             ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in

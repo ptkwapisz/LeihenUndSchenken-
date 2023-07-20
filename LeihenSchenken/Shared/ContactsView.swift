@@ -34,6 +34,9 @@ func fetchAllContacts() -> [Contact] {
             
         })
         
+        // Löschen leerer Element
+        resultat = resultat.filter({ !$0.firstName.isEmpty && !$0.lastName.isEmpty})
+        // Sortieren nach Nachname
         resultat = resultat.sorted { $0.lastName < $1.lastName }
         
     } // Ende do

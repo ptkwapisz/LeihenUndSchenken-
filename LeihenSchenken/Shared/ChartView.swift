@@ -190,6 +190,7 @@ struct ChartView: View {
                                     globaleVariable.navigationTabView = 1
                                     refreshAllViews()
                                     showAlert = false
+                                    
                                     // Diese Zeile bewirkt, dass die View geschlossen wird
                                     self.presentationMode.wrappedValue.dismiss()
                                 },
@@ -213,8 +214,6 @@ struct ChartView: View {
                     .frame(width: geometry.size.width ,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     .background(globaleVariable.farbenEbene1)
                     .cornerRadius(10)
-                    
-                   
                     
                 } // Ende VStack
                 .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
