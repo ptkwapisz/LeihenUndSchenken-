@@ -25,25 +25,18 @@ var body: some View {
         VStack {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
-                deteilTab1(sideBarWidth: $tmp)
+                deteilTab1()
                 .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
                
             } else {
                 
-                deteilTab1(sideBarWidth: $tmp)
+                deteilTab1()
                     .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     .background(globaleVariable.farbenEbene1)
                     .cornerRadius(10)
             } // Ende if/else
         } // Ende VStack
-        .onAppear(){
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                tmp = 0.0
-            }else{
-                tmp = 380.0
-            }
-            
-        }
+ 
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
         .background(globaleVariable.farbenEbene0)
     } // Ende GeometryReader
@@ -65,11 +58,11 @@ var body: some View {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
                
-                deteilTab2(sideBarWidth: $tmp)
+                deteilTab2()
                     .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
                 
             } else {
-                deteilTab2(sideBarWidth: $tmp)
+                deteilTab2()
                     .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     .background(globaleVariable.farbenEbene1)
                     .cornerRadius(10)
@@ -78,14 +71,7 @@ var body: some View {
         } // Ende VStack
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
         .background(globaleVariable.farbenEbene0)
-        .onAppear(){
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                tmp = 0.0
-            }else{
-                tmp = 380.0
-            }
-            
-        }
+        
     } // Ende GeometryReader
 } // Ende var body
 } // Ende struc Tab3
@@ -104,25 +90,18 @@ var body: some View {
         VStack {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
-                deteilTab3(sideBarWidth: $tmp)
+                deteilTab3()
                 .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
                
             } else {
                 
-                deteilTab3(sideBarWidth: $tmp)
+                deteilTab3()
                     .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     .background(globaleVariable.farbenEbene1)
                     .cornerRadius(10)
             } // Ende if/else
         } // Ende VStack
-        .onAppear(){
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                tmp = 0.0
-            }else{
-                tmp = 380.0
-            }
-            
-        }
+    
         .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
         .background(globaleVariable.farbenEbene0)
     } // Ende GeometryReader
@@ -170,7 +149,6 @@ var body: some View {
         VStack {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
-               
                 
                 PDFKitView(url: pdfPath!)
                     .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)

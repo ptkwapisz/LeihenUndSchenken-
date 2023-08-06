@@ -92,77 +92,76 @@ struct ShapeViewAddUser: View {
                     } // Ende Scrollview
                     .frame(height: 200, alignment: .leading)
                     
-                    
-                    
                 }// Ende Section
-                
-                HStack {
-                    Spacer()
-                    Button(action: { isPresented = false }) {Text("Abbrechen")}
-                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
-                    
-                    Button(action: {
-                        if vorname != "" && name != "" {
-                            if isParameterBereich {
-                                //let tempPerson = name + ", " + vorname
-                                //globaleVariable.parameterPerson.append(tempPerson)
-                                personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                                // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
-                                //globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
-                                globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
-                                print("Person wird in die Auswahl hinzugefügt!")
-                                isPresented = false
-                            }else{
-                                
-                                if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
-                                    
-                                    showWarnung = true
-                                    
+               
+                    HStack {
+                        Spacer()
+                        Button(action: { isPresented = false }) {Text("Abbrechen")}
+                            .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                        
+                        Button(action: {
+                            if vorname != "" && name != "" {
+                                if isParameterBereich {
+                                    //let tempPerson = name + ", " + vorname
+                                    //globaleVariable.parameterPerson.append(tempPerson)
+                                    personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                    // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
+                                    //globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
+                                    globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
+                                    print("Person wird in die Auswahl hinzugefügt!")
+                                    isPresented = false
                                 }else{
                                     
-                                    personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                                    //globaleVariable.parameterPerson.removeAll()
-                                    //globaleVariable.parameterPerson = personenArray()
-                                    globaleVariable.personenParameter.removeAll()
-                                    globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                                    if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
+                                        
+                                        showWarnung = true
+                                        
+                                    }else{
+                                        
+                                        personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                        //globaleVariable.parameterPerson.removeAll()
+                                        //globaleVariable.parameterPerson = personenArray()
+                                        globaleVariable.personenParameter.removeAll()
+                                        globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                                        
+                                        
+                                        print("Person wurde in die Datenbank hinzugefügt!")
+                                        isPresented = false
+                                        
+                                    } // Ende if/else
                                     
-                                    
-                                    print("Person wurde in die Datenbank hinzugefügt!")
-                                    isPresented = false
-                                    
-                                } // Ende if/else
+                                }// Ende if/else
                                 
-                            }// Ende if/else
+                            } // Ende if/else
                             
-                        } // Ende if/else
-                        
-                    }) {
-                        
-                        Text("Speichern")
-                        
-                    } // Ende Button
-                    .buttonStyle(.borderedProminent)
-                    .foregroundColor(.white)
-                    .font(.system(size: 16, weight: .regular))
-                    .cornerRadius(10)
-                    Spacer()
-                } // Ende HStack
-                .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
-                    Button(" - OK - ") {}
-                }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
-                ) // Ende alert
-                
-                if isParameterBereich {
+                        }) {
+                            
+                            Text("Speichern")
+                            
+                        } // Ende Button
+                        .disabled(vorname != "" && name != "" ? false : true)
+                        .buttonStyle(.borderedProminent)
+                        .foregroundColor(.white)
+                        .font(.system(size: 16, weight: .regular))
+                        .cornerRadius(10)
+                        Spacer()
+                    } // Ende HStack
+                    .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
+                        Button(" - OK - ") {}
+                    }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
+                    ) // Ende alert
                     
-                    Text("Mit drücken von 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden der App gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Personen', dort auf '+' drücken und geben Sie auf der entsprechenden Persondaten ein.")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                }else{
-                    Text("Bei drücken auf 'Speichern' werden alle Daten in die Datenbank dauerhaft hinzugefügt.")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                    
-                } // Ende if/else
+                    if isParameterBereich {
+                        
+                        Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Dann mit drücken auf 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden der App gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Personen', dort auf '+' drücken und geben Sie auf der entsprechenden Persondaten ein.")
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundColor(.gray)
+                    }else{
+                        Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Dann beim drücken auf 'Speichern' werden alle Daten in die Datenbank dauerhaft hinzugefügt.")
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundColor(.gray)
+                        
+                    } // Ende if/else
                 
             } // Ende Form
             .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
@@ -257,6 +256,7 @@ struct ShapeViewAddGegenstand: View {
                         Text("Speichern")
                         
                     }// Ende Button
+                    .disabled(gegenstandNeu != "" ? false : true)
                     .buttonStyle(.borderedProminent)
                     .foregroundColor(.white)
                     .font(.system(size: 16, weight: .regular))
@@ -271,12 +271,12 @@ struct ShapeViewAddGegenstand: View {
                 ) // Ende alert
                 
                 if isParameterBereich {
-                    Text("Mit drücken von 'Speichern' wird der Gegenstand nur zur Auswahl in die Eingabemaske hinzugefügt. Er wird nach beenden der App gelöscht. Möchten Sie ein Gegenstand dauerhaft zur Auswahl in der Eingabemaske speichern, gehen Sie bitte zum Tab 'Gegenstände' und dort unten links auf '+' Zeichen. Auf der entsprechender Maske geben Sie den Gegenstand ein und speichen ihn.")
+                    Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann mit drücken auf 'Speichern' wird der Gegenstand nur zur Auswahl in die Eingabemaske hinzugefügt. Er wird nach beenden der App entfernt. Möchten Sie ein Gegenstand dauerhaft zur Auswahl in der Eingabemaske hinzufügen, gehen Sie bitte zum Tab 'Gegenstände' und dort unten links auf das '+' Symbol. Auf der entsprechender Maske geben Sie den Gegenstand ein und speichen ihn.")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
                 }else{
-                    Text("Beim Drücken auf 'Speichern' wird der neue Gegenstand dauerhaft in die Datenbank hinzugefügt.")
-                        .font(.system(size: 14, weight: .regular))
+                    Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann beim drücken auf 'Speichern' wird der neue Gegenstand dauerhaft in die Datenbank hinzugefügt.")
+                        .font(.system(size: 12, weight: .regular))
                         .foregroundColor(.gray)
                     
                 } // Ende if/else
@@ -302,9 +302,8 @@ struct ShapeViewSettings: View {
     
     @State var colorData = ColorData()
     
-    
     var body: some View {
-        
+       
         
         NavigationView {
             
@@ -322,18 +321,37 @@ struct ShapeViewSettings: View {
                 }// Ende Section Farben
                 Section {
                     Toggle("Tab Handbuch anzeigen", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
-                }
-            
+                } // Ende Section
+                
+                // Prüfen, ob iClaud verfügbar ist
+                if isICloudContainerAvailable() {
+                    Section {
+                        Toggle("iCloud Sicherung", isOn: $userSettingsDefaults.iCloudSwitch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                        /*
+                            .onChange(of: userSettingsDefaults.iCloudSwitch, perform: { _ in
+                                // Hier wird die Datensicherung kopiert von iCloud to lokal oder umgekehrt
+                                // Noch nicht fertig.
+                                //moveDbBackup()
+                            }) // Ende onChange...
+                        */
+                    } footer: {
+                        
+                        Text("Beim einschalten der iCloud Sicherung, wird die Datensicherung in der iCloud gespeichert. Dadurch wird es Möglich sein, diese Datensicherung auf einem anderen Gerät (iPhone oder iPad) einzuspielen.")
+                        
+                    } // Ende Section
+                
+                } // Ende if
                 HStack {
                     Spacer()
                     
-                    Button(action: {
+                    Button() {
                         
                         colorData.saveColor(color0: globaleVariable.farbenEbene0, color1: globaleVariable.farbenEbene1)
                         //presentationMode.wrappedValue.dismiss()
                         isPresented = false
-                    })
-                    { Text("Parameterfenster verlassen.")
+                    }label: {
+                     //Text("Parameterfenster verlassen.")
+                        Label("Parameterfenster verlassen", systemImage: "arrowshape.turn.up.backward.circle")
                         
                     } // Ende Button Text
                     .buttonStyle(.borderedProminent)
@@ -344,22 +362,15 @@ struct ShapeViewSettings: View {
                 } // Ende HStack
                 
                 Text("Beim Drücken auf 'Parameterfenster verlassen' wird das Parameterfenster geschloßen und die einzehlen Parameter werden gespeichert.")
-                    .font(.system(size: 14, weight: .regular))
+                    .font(.system(size: 12, weight: .regular))
                     .foregroundColor(.gray)
                 
             } // Ende Form
+            .font(.system(size: 14, weight: .regular))
             .navigationTitle("Applikations-Parameter").navigationBarTitleDisplayMode(.inline)
-            /*
-            .navigationBarItems(trailing: Button( action: {
-                showSettingsHilfe = true
-            }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
-            .alert("Hilfe zu Settings", isPresented: $showSettingsHilfe, actions: {
-                Button(" - OK - ") {}
-            }, message: { Text("Das ist die Beschreibung für den Bereich Settings.") } // Ende message
-            ) // Ende alert
-            */
             
         } // Ende NavigationView
+        
     } // Ende var body
 } // Ende struct ShapeViewSettings
 
@@ -477,7 +488,10 @@ struct ShapeViewAbfrage: View {
                             isPresented = false
                             
                         } label: {
-                            Text("Abfrage verlassen")
+                            //Text("Abfrage verlassen")
+                            Label("Abfrage verlassen", systemImage: "arrowshape.turn.up.backward.circle")
+                            
+                            
                         } // Ende Button/label
                         .buttonStyle(.borderedProminent)
                         .foregroundColor(.white)
@@ -488,7 +502,7 @@ struct ShapeViewAbfrage: View {
                     
                     //Section {
                     Text("Hier können Sie eine Abfrage für Darstellung der Objektenabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
-                        .font(.system(size: 14, weight: .regular))
+                        .font(.system(size: 12, weight: .regular))
                         .foregroundColor(.gray)
                     
                     //} // Ende Section
@@ -593,11 +607,30 @@ struct ShapeShowDetailPhoto: View {
                         Image(base64Str: par1[par2].gegenstandBild)!
                             .resizable()
                             .scaledToFill()
+                            .scaledToFit()
                             .clipped()
                             .cornerRadius(10)
                             .padding(5)
-                        Button(action: { isPresentedShowDetailPhoto = false }) {Text("Zurück")}
-                            .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                        
+                        Button {
+                            isPresentedShowDetailPhoto = false
+                            
+                        } label: {
+                            Label("Bildansicht verlassen", systemImage: "arrowshape.turn.up.backward.circle")
+                            
+                        } // Ende Button
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(Color.white)
+                        //.buttonStyle(.bordered)
+                        .buttonStyle(.borderedProminent)
+                        
+                        /*
+                        Button(action: { isPresentedShowDetailPhoto = false })
+                        {Text("Zurück")}
+                            .buttonStyle(.bordered)
+                            .foregroundColor(.blue)
+                            .font(.system(size: 16, weight: .regular))
+                         */
                     } // Ende Vstak
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.9)
                 } // Ende Form

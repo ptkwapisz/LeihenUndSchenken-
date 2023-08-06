@@ -13,6 +13,7 @@
 		DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E9F32A023BB000CBC354 /* Extention.swift */; };
 		DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A992A437D09001B2781 /* EditFields.swift */; };
 		DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A9B2A438393001B2781 /* ViewModifier.swift */; };
+		DBAD5E012A7707F1009AAF62 /* iCloudAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */; };
 		DBB7E9A02A6805D9007CD383 /* EingabeMaske.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB7E99F2A6805D9007CD383 /* EingabeMaske.swift */; };
 		DBB7E9A22A68069F007CD383 /* EingabeMaskePad.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB7E9A12A68069F007CD383 /* EingabeMaskePad.swift */; };
 		DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */; };
@@ -63,6 +64,8 @@
 		DB51E9F32A023BB000CBC354 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		DB538A992A437D09001B2781 /* EditFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFields.swift; sourceTree = "<group>"; };
 		DB538A9B2A438393001B2781 /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
+		DB9160B62A79427E00E11ACC /* LeihenSchenken.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LeihenSchenken.entitlements; sourceTree = "<group>"; };
+		DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudAccess.swift; sourceTree = "<group>"; };
 		DBB7E99F2A6805D9007CD383 /* EingabeMaske.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaske.swift; sourceTree = "<group>"; };
 		DBB7E9A12A68069F007CD383 /* EingabeMaskePad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaskePad.swift; sourceTree = "<group>"; };
 		DBBC7BA22A001A1C00177A52 /* PhoneViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneViews.swift; sourceTree = "<group>"; };
@@ -130,12 +133,13 @@
 				DB538A992A437D09001B2781 /* EditFields.swift */,
 				DBCCBB842A1826A200EDF087 /* ColorData.swift */,
 				DB4329AE2A003E91006874E8 /* ChartView.swift */,
+				DBCCBB882A18271600EDF087 /* DetailView.swift */,
 				DBCCBB862A1826D300EDF087 /* TabViews.swift */,
 				DBD0BAB02A69D04C006CB53A /* TabViewsDeteil.swift */,
-				DBCCBB882A18271600EDF087 /* DetailView.swift */,
 				DB0160FA2A17CE15000A34CE /* PdfView.swift */,
 				DB538A9B2A438393001B2781 /* ViewModifier.swift */,
 				DBC541392A58B2EB00A8F01B /* ExportImport.swift */,
+				DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */,
 				DBE5D0A62A192DEB006410AD /* Test.swift */,
 				DBE8F9092A63F92B0027E311 /* ContactsView.swift */,
 				DBCCA1122A60AD4200146426 /* CameraView.swift */,
@@ -184,6 +188,7 @@
 		DBCEF7F829D1ED770017A728 /* LeihenSchenken */ = {
 			isa = PBXGroup;
 			children = (
+				DB9160B62A79427E00E11ACC /* LeihenSchenken.entitlements */,
 				DBE3A8E42A4C8BCA000DB9ED /* Info.plist */,
 				DBCEF7F929D1ED770017A728 /* LeihenSchenkenApp.swift */,
 				DBCEF7FB29D1ED770017A728 /* ContentView.swift */,
@@ -371,6 +376,7 @@
 				DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */,
 				DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */,
 				DBCCBB832A18266D00EDF087 /* ShapeViews.swift in Sources */,
+				DBAD5E012A7707F1009AAF62 /* iCloudAccess.swift in Sources */,
 				DBCCBB872A1826D300EDF087 /* TabViews.swift in Sources */,
 				DBCCBB812A18263D00EDF087 /* ParameterView.swift in Sources */,
 				DBCCBB7D2A1825D200EDF087 /* GlobaleVariablen.swift in Sources */,
@@ -535,6 +541,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LeihenSchenken/LeihenSchenken.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"LeihenSchenken/Preview Content\"";
@@ -550,7 +557,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -572,6 +579,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LeihenSchenken/LeihenSchenken.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"LeihenSchenken/Preview Content\"";
@@ -587,7 +595,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

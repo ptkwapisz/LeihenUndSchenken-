@@ -122,15 +122,31 @@ struct ExportCSVProgressView: View {
     }// Ende var body
 } // Ende struct
 
-// Copy database file from to documents folder
+// Datensicherung local oder iCloud
 func backupDatabase() {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    
+    var backupDatabaseURL: URL
+    var userDatabaseURL: URL
+    
+    
     let fileManager = FileManager.default
+    // Wenn iCloud nicht verfügbar ist wird Datensicherung local gespeichert
+    if userSettingsDefaults.iCloudSwitch == false {
+        guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
+        userDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDb.db")
     
-    guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+    }else{
+        guard let documentsUrlDB = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let documentsUrlDBCopy = fileManager.url(forUbiquityContainerIdentifier:
+                                                    nil)?.appendingPathComponent("Documents")
+        backupDatabaseURL = documentsUrlDBCopy!.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
+        userDatabaseURL = documentsUrlDB.appendingPathComponent("LeiheUndSchenkeDb.db")
+        
+    } // Ende if/else
     
-    let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
-    let userDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDb.db")
     
     do {
         if !fileManager.fileExists(atPath: backupDatabaseURL.path) {
@@ -138,25 +154,44 @@ func backupDatabase() {
             try fileManager.copyItem(atPath: userDatabaseURL.path, toPath: backupDatabaseURL.path)
             
         } else {
-            print("Database file found at path: \(backupDatabaseURL.path)")
+            
             try fileManager.removeItem(atPath: backupDatabaseURL.path)
             try fileManager.copyItem(atPath: userDatabaseURL.path, toPath: backupDatabaseURL.path)
+        
+            print("Database file saved at path: \(backupDatabaseURL.path)")
+            
         } // Ende if/else
     } catch {
         print("Unable to copy LeiheUndSchenkeDb.db: \(error)")
     } // Ende do/catch
-    globaleVariable.showDBLadenMenueItem = false
+    
+    changeFileAttributes()
+    globaleVariable.disableDBLadenMenueItem = false
 } // Ende func
 
 
 func loadDatabase() {
-    //var showAlert: Bool = false
+    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    
+    var backupDatabaseURL: URL
+    var userDatabaseURL: URL
+    
     let fileManager = FileManager.default
+    // Wenn iClud nicht verfügbar ist wird Datensicherung local gespeichert
+    if userSettingsDefaults.iCloudSwitch == false {
+        guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
+        userDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDb.db")
+        print("Database Backup befindet sich lokal.")
+    }else{
+        guard let documentsUrlDB = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let documentsUrlDBCopy = fileManager.url(forUbiquityContainerIdentifier:
+                                                    nil)?.appendingPathComponent("Documents")
+        backupDatabaseURL = documentsUrlDBCopy!.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
+        userDatabaseURL = documentsUrlDB.appendingPathComponent("LeiheUndSchenkeDb.db")
+        print("Database Backup befindet sich in der iCloud.")
+    } // Ende if/else
     
-    guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-    
-    let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
-    let userDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDb.db")
     
     do {
         if !fileManager.fileExists(atPath: backupDatabaseURL.path) {
@@ -189,22 +224,51 @@ func loadDatabase() {
 
 
 // Diese Funktion wird benutzt um die egsistenz der Datenbank Copy Datei zu prüfen
-// Wenn diese Copy nicht existiert wird das Menue Button 'DB Laden' ausgegraut
+// Wenn diese LeiheUndSchenkeDbCopy nicht existiert wird das Menue Button 'DB Laden' ausgegraut
 
 func ifExistLeiheUndSchenkeDbCopy() -> Bool {
-    var parameter: Bool = false
+    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    
+    var resultat: Bool = false
+    var filePath: String = ""
     let fileManager = FileManager.default
-    guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return parameter}
+    var documentsUrl: URL
+    
+    if userSettingsDefaults.iCloudSwitch == false {
+        filePath = "local"
+        documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+    }else{
+        filePath = "iCloud"
+        documentsUrl = (fileManager.url(forUbiquityContainerIdentifier:
+                                            nil)?.appendingPathComponent("Documents"))!
+        
+    }// Ende if/else
     
     let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
     
     if !fileManager.fileExists(atPath: backupDatabaseURL.path) {
-        print("Database Copy file does not exist in documents folder")
-        parameter = true
+        print("Database Backup does not exist in documents \(filePath) folder")
+        resultat = true
         
     } else {
-        print("Database Copy file found at path: \(backupDatabaseURL.path)")
-        parameter = false
+        print("Database Backup found at path: \(backupDatabaseURL.path)")
+        resultat = false
     } // Ende if/else
-    return parameter
-}
+    return resultat
+} // Ende func
+
+// Diese Funktion fügt in die Alert Message den Zil der Sicherung: lokal oder iCloud
+func backupTarget() -> String {
+    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    var resultat: String = ""
+    if userSettingsDefaults.iCloudSwitch == true {
+        resultat = "iCloud Sicherung"
+        
+    }else{
+        resultat = "Lokale Sicherung"
+    }// Ende if/else
+    
+    return resultat
+    
+}// Ende func

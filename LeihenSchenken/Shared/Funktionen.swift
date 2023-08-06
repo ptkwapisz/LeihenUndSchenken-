@@ -239,33 +239,32 @@ func gegenstaendenInDatenbankSchreiben(par1: String, par2: String) {
     
 } // Ende func
 
+
+// Wird benutzt in den Eingabemasken für iPad und iPhone
+// Wird benutzt bei Alert bei zurückspieleung der Datnensicherung
 func dateToString(parDatum: Date) -> String {
     
-    var result: String = ""
-    
+    var resultat: String = ""
+    let calendar = Calendar(identifier: .gregorian)
     let inputDateString = parDatum
 
     let germanDateFormatter = DateFormatter()
     germanDateFormatter.locale = .init(identifier: "de")
-    germanDateFormatter.dateFormat = "d MMM yyyy"
-    germanDateFormatter.dateStyle = .short
-    germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-
-    //if inputDateString != nil {
-
-        result = germanDateFormatter.string(from: inputDateString)
-
-        print(result) //16.08.19, 07:04:12
-    //}else{
-        
-      //  result = "Keine umwandlung"
-    //} // Ende if/else
+    germanDateFormatter.dateFormat = "d MMM yyyy HH:mm:ss:Z"
+    germanDateFormatter.dateStyle = .medium
+    germanDateFormatter.timeStyle = .short
+    germanDateFormatter.timeZone = calendar.timeZone
     
-    return result
+    resultat = germanDateFormatter.string(from: inputDateString)
+        
+    return resultat
 } // Ende func
 
+ 
+ 
+// Wird benutzt bei editieren des Objekts-Datums
 func stringToDate(parDatum: String) -> Date {
-    
+    let calendar = Calendar(identifier: .gregorian)
     var result: Date
     
     let inputDateString = parDatum
@@ -274,16 +273,16 @@ func stringToDate(parDatum: String) -> Date {
     germanDateFormatter.locale = .init(identifier: "de")
     germanDateFormatter.dateFormat = "d MMM yyyy"
     germanDateFormatter.dateStyle = .short
-    germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+    germanDateFormatter.timeZone = calendar.timeZone
     
     result = germanDateFormatter.date(from: inputDateString)!
     
-    print(result) //16.08.19, 07:04:12
+    //print(result) //16.08.19, 07:04:12
     
     return result
 } // Ende func
 
-
+/*
 func stringToDate2(parameter1: [ObjectVariable] , parameter2: Int) -> Date {
     
     var result: Date
@@ -298,11 +297,11 @@ func stringToDate2(parameter1: [ObjectVariable] , parameter2: Int) -> Date {
     
     result = germanDateFormatter.date(from: inputDateString)!
     
-    print(result) //16.08.19, 07:04:12
+    //print(result) //16.08.19, 07:04:12
     
     return result
 } // Ende func
-
+*/
 
 // Diese Funktion erstellt den Titel mit dem hinweis
 // ob der Abfragefilter ein- oder ausgeschaltet ist.

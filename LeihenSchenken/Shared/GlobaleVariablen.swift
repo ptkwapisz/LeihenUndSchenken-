@@ -24,7 +24,8 @@ class GlobaleVariable: ObservableObject {
     
     @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
    
-    @Published var showDBLadenMenueItem: Bool = ifExistLeiheUndSchenkeDbCopy()
+    @Published var disableDBLadenMenueItem: Bool = ifExistLeiheUndSchenkeDbCopy()
+    @Published var disableDBSpeichernMenueItem: Bool = ifExistSpaceForLeiheUndSchenkeDbCopy()
     
     @Published var navigationTabView = 1
     @Published var farbenEbene0: Color = loadColor0A()
@@ -66,6 +67,11 @@ class UserSettingsDefaults: ObservableObject {
         } // Ende didSet
     } // Ende @Published
     
+    @Published var iCloudSwitch: Bool {
+        didSet {
+            UserDefaults.standard.set(iCloudSwitch, forKey: "iCloudSwitch")
+        } // Ende didSet
+    } // Ende @Published
     
     @Published var selectedFilterField1: String {
         didSet {
@@ -91,6 +97,7 @@ class UserSettingsDefaults: ObservableObject {
         
         self.selectedSprache = UserDefaults.standard.object(forKey: "selectedSprache") as? Int ?? 0
         self.showHandbuch = UserDefaults.standard.object(forKey: "showHandbuch") as? Bool ?? true
+        self.iCloudSwitch = UserDefaults.standard.object(forKey: "iCloudSwitch") as? Bool ?? false
         self.selectedFilterField1 = UserDefaults.standard.object(forKey: "selectedFilterField1") as? String ?? "Gegenstand"
         self.selectedFilterField2 = UserDefaults.standard.object(forKey: "selectedFilterField2") as? String ?? "gleich"
         self.selectedFilterField3 = UserDefaults.standard.object(forKey: "selectedFilterField3") as? String ?? "Buch"
@@ -217,7 +224,7 @@ class AlertMessageTexte: ObservableObject  {
     
     @Published var showDBSichernMessageText: String = "Die Datenbank inclusiwe aller Tabellen wird gesichert. Diese Sicherung überschreibt die letzte Sicherungsversion falls vorhanden!"
     
-    @Published var showDBLadenMessageText: String = "Die Datenbank inclusiwe aller Tabellen wird zurückgeladen. Diese Rücksicherung überschreibt unwiederuflich die jetzige Datenbank und ihre alle Tabellen, wie Objekte, Personen und Gegenstände. Dieser Vorgang kann nicht rückgängig gemacht Werden."
+    @Published var showDBLadenMessageText: String = "Die Datenbank inklusiwe aller Tabellen wird zurückgeladen. Diese Rücksicherung überschreibt unwiederuflich die jetzige Datenbank und ihre alle Tabellen, wie Objekte, Personen und Gegenstände. Dieser Vorgang kann nicht rückgängig gemacht Werden."
     
     
 } // Ende class

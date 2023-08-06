@@ -49,6 +49,7 @@ struct ChartView: View {
                                         showDetailPhoto = true
                                         print("Show Photo")
                                     } label: {
+                                        
                                         Image(base64Str: par1[par2].gegenstandBild)!
                                             .resizable()
                                             .scaledToFill()
@@ -56,8 +57,12 @@ struct ChartView: View {
                                             .clipped()
                                             .cornerRadius(10)
                                             .padding(5)
+                                            .border(.blue, width: 4)
+                                            .cornerRadius(10)
+                                        
                                     } // Ende label
-                                    
+                                    //.buttonStyle(.bordered)
+                                    //.tint(.blue)
                                     
                                 }else{
                                     Text("Kein Bild")
@@ -136,17 +141,29 @@ struct ChartView: View {
                                 .cornerRadius(10)
                                 .opacity(0.9)
                             
-                            /*
-                             .frame(width: 300, height: 150, alignment: .topLeading)
-                             .font(.system(size: 16, weight: .regular))
-                             .foregroundColor(Color.black)
-                             .background(Color.white)
-                             .cornerRadius(10)
-                             .opacity(0.9)
-                             */
+                            
+                            if UIDevice.current.userInterfaceIdiom != .phone {
+                                HStack {
+                                    Spacer()
+                                    Button {
+                                        self.presentationMode.wrappedValue.dismiss()
+                                        
+                                    } label: {
+                                        Label("Objektsicht verlassen", systemImage: "arrowshape.turn.up.backward.circle")
+                                        
+                                    } // Ende Button
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(Color.white)
+                                    //.buttonStyle(.bordered)
+                                    .buttonStyle(.borderedProminent)
+                                    Spacer()
+                                } // Ende HStack
+                                
+                            } // Ende if UIDevice
+                            
                         } // Ende List
                         .cornerRadius(10)
-                        
+                       
                         Spacer()
                         
                         HStack(alignment: .bottom) {
@@ -206,12 +223,13 @@ struct ChartView: View {
                             } // Ende alert
                             
                         } // Ende HStack
-                        .frame(width: UIScreen.screenWidth, height: 34, alignment: .leading)
-                        .background(.gray)
+                        .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
+                        .background(Color(UIColor.lightGray))
                         .foregroundColor(Color.black)
                         
                     } // Ende VStack
-                    .frame(width: geometry.size.width ,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .frame(width: geometry.size.width)
+                    //.frame(width: geometry.size.width ,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     .background(globaleVariable.farbenEbene1)
                     .cornerRadius(10)
                     
@@ -224,9 +242,7 @@ struct ChartView: View {
                 }) {Image(systemName: "questionmark.circle.fill")
                         .imageScale(.large)
                 } )
-                .alert("Hilfe für die Objektdeteilansicht", isPresented: $showChartHilfe, actions: {
-                    Button(" - OK - ") {}
-                }, message: { Text("Das ist die Beschreibung für den Bereich Objektdeteilansicht.") } // Ende message
+                .alert("Hilfe für die Objektdeteilansicht", isPresented: $showChartHilfe, actions: {}, message: { Text("Diese Objektdeteilansicht zeigt alle Daten eines Objektes. Falls das Foto vorhanden ist, können Sie durch das drücken auf das Bild eine vergröserte Ansicht dieses Bildes aufrufen. Unten links befindeen sich zwei Tasten: eine mit dem Kreis und Stift Symbol. Wenn Sie drauf drücken können Sie die Daten des Objektes bearbeiten. Mit der andren Taste mit dem Stappelzeichen und einem 'Minus' Symbol können Sie das Objekt löschen.") } // Ende message
                 ) // Ende alert
                 
                

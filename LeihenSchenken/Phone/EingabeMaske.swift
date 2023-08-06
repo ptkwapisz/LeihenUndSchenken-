@@ -9,7 +9,7 @@ import SwiftUI
 //import PhotosUI
 //import UIKit
 import SQLite3
-
+import Combine
 
 struct EingabeMaskeView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -51,7 +51,7 @@ struct EingabeMaskeView: View {
      
     private let numberFormatter: NumberFormatter
     private let perKeyFormatter: DateFormatter
-    private let germanDateFormatter: DateFormatter
+    //private let germanDateFormatter: DateFormatter
     
     init() {
         numberFormatter = NumberFormatter()
@@ -60,13 +60,13 @@ struct EingabeMaskeView: View {
         
         perKeyFormatter = DateFormatter()
         perKeyFormatter.dateFormat = "y MM dd, HH:mm"
-        
+        /*
         germanDateFormatter = DateFormatter()
         germanDateFormatter.locale = .init(identifier: "de")
         germanDateFormatter.dateFormat = "d MMM yyyy"
         germanDateFormatter.dateStyle = .long
         germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        
+        */
     } // Ende init
     
     var body: some View {
@@ -153,7 +153,7 @@ struct EingabeMaskeView: View {
                                     .font(.system(size: 16, weight: .regular))
                                 Spacer()
                                 //Text(String(repeating: " ", count: 28))
-                                TextField("0.00 €", text: $globaleVariable.preisWert)
+                                TextField("0,00 €", text: $globaleVariable.preisWert)
                                 
                                     .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
                                     .multilineTextAlignment(.trailing)
@@ -163,9 +163,31 @@ struct EingabeMaskeView: View {
                                     .font(.system(size: 16, weight: .regular))
                                     .keyboardType(.decimalPad)
                                     .focused($focusedField, equals: .amount)
-                                
-                                //Text("€").font(.system(size: 16, weight: .regular))
-                                
+                                    .onReceive(Just(globaleVariable.preisWert)) { newValue in
+                                        // Es soll verhindert werden mit cut/past nicht numerische Werte einzugeben. Zum Beispiel beim iPad
+                                        let allowedCharacters = "0123456789,"
+                                        var filtered = newValue.filter { allowedCharacters.contains($0) }
+                                        let numberOfOccurances = filtered.numberOfOccurrencesOf(string: ",")
+                                        
+                                        if filtered != newValue  {
+                                            globaleVariable.preisWert = filtered
+                                            
+                                        }else{
+                                            if numberOfOccurances > 1 { // Wenn mehr als eine "," eingegeben wurden, werden sie gelöscht
+                                                if let position = filtered.lastIndex(of: ",") {
+                                                    filtered.remove(at: position)
+                                                } // Ende if
+                                                globaleVariable.preisWert = filtered
+                                            }else{
+                                                if filtered.prefix(1) == "," { // Wenn das erste zeichen "," ist, wird "0" voreingestellt.
+                                                   filtered = "0" + filtered
+                                                   globaleVariable.preisWert = filtered
+                                                } // Ende if/else
+                                                
+                                            } // Ende if/else
+                                            
+                                        } // Ende if/else
+                                    } // Ende onReceive
                             } // Ende HStack
                             //.frame(width: UIScreen.screenWidth)
                             
@@ -216,8 +238,8 @@ struct EingabeMaskeView: View {
                                     Button(action: {showAlertAbbrechenButton = true}) { Text("Abbrechen") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                                         .alert(isPresented:$showAlertAbbrechenButton) {
                                             Alert(
-                                                title: Text("Möchten Sie alle Eingaben unwiederfuflich löschen?"),
-                                                message: Text("Man kann den Vorgang nicht rückgängich machen!"),
+                                                title: Text("Sie haben folgende Wahl."),
+                                                message: Text("Wenn Sie 'Abbrechen' drücken bleiben Sie bei der Eingabemaske. Wenn Sie 'Löschen' drücken, werden alle Daten, die Sie auf dieser Maske eingegeben haben gelöscht. Das hat zu folge, dass alle Ihre Angaben, fall Sie welche gemacht haben, verloren gehen."),
                                                 primaryButton: .destructive(Text("Löschen")) {
                                                     
                                                     // Die Parameterwerte werden gelöscht.
@@ -322,6 +344,9 @@ struct EingabeMaskeView: View {
                                 
                             } // Ende ToolbarItemGroup
                             } // Ende toolbar
+                            Text("Um ein Objekt speichern zu können müssen mimdestens ein Gegenstand und eine Person erfast werden.")
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundColor(.gray)
                             
                         } // Ende Form
                         .navigationTitle("Eingabemaske").navigationBarTitleDisplayMode(.inline)
@@ -336,7 +361,6 @@ struct EingabeMaskeView: View {
             
         }// Ende NavigationView
         
-       
     } // Ende var body
     
 } // Ende struct

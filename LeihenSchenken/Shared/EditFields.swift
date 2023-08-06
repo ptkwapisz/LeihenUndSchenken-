@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
 
 struct EditSheetView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -70,6 +70,9 @@ struct EditSheetView: View {
                                     
                                     updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey)
                                     par1[par2].gegenstandBild = gegenstandBildTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "preiswert", neueInhalt: preisWertTmp, perKey: par1[par2].perKey)
+                                    par1[par2].preisWert = preisWertTmp
                                     
                                     par1[par2].datum = dateToString(parDatum: datumTmp)
                                     updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey)
@@ -299,6 +302,31 @@ struct EditPreisWert: View {
                     .background(Color.blue)
                     .cornerRadius(5)
                     .opacity(0.4)
+                    .onReceive(Just(preisWertTmp)) { newValue in
+                        // Es soll verhindert werden mit cut/past nicht numerische Werte einzugeben. Zum Beispiel beim iPad
+                        let allowedCharacters = "0123456789,"
+                        var filtered = newValue.filter { allowedCharacters.contains($0) }
+                        let numberOfOccurances = filtered.numberOfOccurrencesOf(string: ",")
+                        
+                        if filtered != newValue  {
+                            preisWertTmp = filtered
+                            
+                        }else{
+                            if numberOfOccurances > 1 { // Wenn mehr als eine "," eingegeben wurden, werden sie gelöscht
+                                if let position = filtered.lastIndex(of: ",") {
+                                    filtered.remove(at: position)
+                                } // Ende if
+                                preisWertTmp = filtered
+                            }else{
+                                if filtered.prefix(1) == "," { // Wenn das erste zeichen "," ist, wird "0" voreingestellt.
+                                    filtered = "0" + filtered
+                                    preisWertTmp = filtered
+                                } // Ende if/else
+                                
+                            } // Ende if/else
+                            
+                        } // Ende if/else
+                    } // Ende onReceive
                     .toolbar {
                         ToolbarItemGroup(placement: .keyboard) {
                             if isInputPreisWertActive {

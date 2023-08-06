@@ -23,10 +23,16 @@ struct PDFKitRepresentedView: UIViewRepresentable {
         // Create a `PDFView` and set its `PDFDocument`.
         let pdfView = PDFView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: UIScreen.screenHeight)) // frame ist wigtig um Fehler zu verhindern
         pdfView.document = PDFDocument(url: self.url)
-        pdfView.autoScales = true
-        pdfView.displayDirection = .vertical
-        pdfView.minScaleFactor = 0.5 // 0.65 für iPhon  0.70 für iPhon Max
-        pdfView.maxScaleFactor = 5.0
+        
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            pdfView.displayDirection = .vertical
+            pdfView.autoScales = true
+            pdfView.minScaleFactor = 0.5 // 0.65 für iPhon  0.70 für iPhon Max
+            pdfView.maxScaleFactor = 5.0
+        }else{
+            pdfView.maxScaleFactor = 0.8
+            
+        }
         return pdfView
     } // Ende func
 
@@ -36,14 +42,15 @@ struct PDFKitRepresentedView: UIViewRepresentable {
 } // Ende struct
 
 struct PDFKitView: View {
-   
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var url: URL
     var body: some View {
         
+        
         PDFKitRepresentedView(url)
-               
-    }
-}
+        
+    } // Ende var body
+} // Ende struct
 
 

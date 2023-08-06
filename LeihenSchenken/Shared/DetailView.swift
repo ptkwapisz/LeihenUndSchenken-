@@ -12,6 +12,9 @@ struct DeteilView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
     @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
+    @ObservedObject var hilfeTexte = HilfeTexte.shared
+    
+    @State var showAllgemeinesInfo: Bool = false
     
     @State var showAbfrageModalView: Bool = false
     @State var isParameterBereich: Bool = false
@@ -78,6 +81,19 @@ struct DeteilView: View {
         .navigationTitle(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabName)
         
         .toolbar {
+            
+            
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button( action: {
+                    showAllgemeinesInfo = true
+                }) {Image(systemName: "house").imageScale(.large)} 
+                    .alert("Allgemeine Information", isPresented: $showAllgemeinesInfo, actions: {
+                        //Button(" - OK - ") {}
+                    }, message: { Text("\(hilfeTexte.allgemeineAppInfo)") } // Ende message
+                    ) // Ende alert
+            } // Ende ToolbarItemGroup
+            
+            
             // Wenn das Tab Handbuch gezeigt wird
             // werden andere Tabmenuepunkte ausgeblendet
             if globaleVariable.navigationTabView < 5 {
@@ -85,8 +101,9 @@ struct DeteilView: View {
                     Menu(content: {
                         
                         Menu("Datensicherung") { // Menue 1
-                            Button("DB sichern", action: {showDBSichern.toggle()})
-                            Button("DB zurückspielen", action: {showDBLaden.toggle()}).disabled(globaleVariable.showDBLadenMenueItem)
+                            Button("DB sichern", action: {showDBSichern.toggle()}).disabled(globaleVariable.disableDBSpeichernMenueItem)
+                            Button("DB zurückspielen", action: {showDBLaden.toggle()}).disabled(globaleVariable.disableDBLadenMenueItem)
+                            //Button("Export der Objekte to CSV", action: {showExportToCSV.toggle()}).disabled(globaleVariable.showDBSpeichernMenueItem)
                         } // Ende Menu
                     
                         Menu("App Parameter") {
@@ -96,7 +113,7 @@ struct DeteilView: View {
                         
                         Divider()
                         
-                        Button("Export to CSV", action: {showExportToCSV.toggle()})
+                        //Button("Export to CSV", action: {showExportToCSV.toggle()})
                         Button("Datenbank zurücksetzen", action: {showDBReset.toggle()})
                         
                     }) {
@@ -116,11 +133,11 @@ struct DeteilView: View {
                     ) // Ende alert
                     .alert("Trefen Sie eine Wahl!", isPresented: $showDBSichern, actions: {
                         Button("Abbrechen") {}; Button("DB Sichern") {backupDatabase()}
-                    }, message: { Text("\(alertMessageTexte.showDBSichernMessageText)") } // Ende message
+                    }, message: { Text(backupTarget() + ". \(alertMessageTexte.showDBSichernMessageText)") } // Ende message
                     ) // Ende alert
                     .alert("Trefen Sie eine Wahl!", isPresented: $showDBLaden, actions: {
                         Button("Abbrechen") {}; Button("DB Laden") {loadDatabase()}
-                    }, message: { Text("\(alertMessageTexte.showDBLadenMessageText)") } // Ende message
+                    }, message: { Text(backupTarget() + " vom " + getfileCreatedDate() + ". \(alertMessageTexte.showDBLadenMessageText)") } // Ende message
                     ) // Ende alert
                     .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
                     .sheet(isPresented: $showExport, content: { ExportCSVProgressView(isPresented: $showExport).presentationBackground(.clear)})
@@ -168,9 +185,7 @@ struct DeteilView: View {
                     Image(systemName: "questionmark.circle.fill")
                 } // Ende Button
                 
-                .alert("Hilfe für \(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabName)", isPresented: $showTabHilfe, actions: {
-                    Button(" - OK - ") {}
-                }, message: { Text("\(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabHilfe)")
+                .alert("Hilfe für \(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabName)", isPresented: $showTabHilfe, actions: {}, message: { Text("\(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabHilfe)")
                     
                 } // Ende message
                     

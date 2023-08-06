@@ -11,9 +11,6 @@ import PhotosUI
 //import SQLite3
 
 
-
-
-
 struct TextEditorWithPlaceholder: View {
         @Binding var text: String
         @Binding var platz: String

@@ -9,7 +9,7 @@ import SwiftUI
 //import PhotosUI
 //import UIKit
 import SQLite3
-
+import Combine
 
 struct EingabeMaskePadView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -17,7 +17,7 @@ struct EingabeMaskePadView: View {
     @StateObject var cameraManager = CameraManager()
     
     @State var showParameterHilfe: Bool = false
-    @State var showParameterAllgemeinesInfo: Bool = false
+    //@State var showParameterAllgemeinesInfo: Bool = false
     @State var showAlerOKButton: Bool = false
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
@@ -165,7 +165,31 @@ struct EingabeMaskePadView: View {
                                 .font(.system(size: 16, weight: .regular))
                                 .keyboardType(.decimalPad)
                                 .focused($focusedField, equals: .amount)
-                            
+                                .onReceive(Just(globaleVariable.preisWert)) { newValue in
+                                    // Es soll verhindert werden mit cut/past nicht numerische Werte einzugeben. Zum Beispiel beim iPad
+                                    let allowedCharacters = "0123456789,"
+                                    var filtered = newValue.filter { allowedCharacters.contains($0) }
+                                    let numberOfOccurances = filtered.numberOfOccurrencesOf(string: ",")
+                                    
+                                    if filtered != newValue  {
+                                        globaleVariable.preisWert = filtered
+                                        
+                                    }else{
+                                        if numberOfOccurances > 1 { // Wenn mehr als eine "," eingegeben wurden, werden sie gelöscht
+                                            if let position = filtered.lastIndex(of: ",") {
+                                                filtered.remove(at: position)
+                                            } // Ende if
+                                            globaleVariable.preisWert = filtered
+                                        }else{
+                                            if filtered.prefix(1) == "," { // Wenn das erste zeichen "," ist, wird "0" voreingestellt.
+                                                filtered = "0" + filtered
+                                                globaleVariable.preisWert = filtered
+                                            } // Ende if/else
+                                            
+                                        } // Ende if/else
+                                        
+                                    } // Ende if/else
+                                } // Ende onReceive
                             //Text("€").font(.system(size: 16, weight: .regular))
                                
                         } // Ende HStack
@@ -359,6 +383,7 @@ struct EingabeMaskePadView: View {
                // Button(" - OK - ") {}
             }, message: { Text("\(hilfeTexte.eingabeMaske)") } // Ende message
             ) // Ende alert
+        /*
             .navigationBarItems(trailing: Button( action: {
                 showParameterAllgemeinesInfo = true
             }) {Image(systemName: "house").imageScale(.large)} )
@@ -366,7 +391,7 @@ struct EingabeMaskePadView: View {
                 //Button(" - OK - ") {}
             }, message: { Text("\(hilfeTexte.allgemeineAppInfo)") } // Ende message
             ) // Ende alert
-       
+       */
     } // Ende var body
     
 } // Ende struct
