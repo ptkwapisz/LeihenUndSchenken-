@@ -241,8 +241,29 @@ func gegenstaendenInDatenbankSchreiben(par1: String, par2: String) {
 
 
 // Wird benutzt in den Eingabemasken für iPad und iPhone
-// Wird benutzt bei Alert bei zurückspieleung der Datnensicherung
 func dateToString(parDatum: Date) -> String {
+    
+    var resultat: String = ""
+    let calendar = Calendar(identifier: .gregorian)
+    let inputDateString = parDatum
+
+    let germanDateFormatter = DateFormatter()
+    germanDateFormatter.locale = .init(identifier: "de")
+    germanDateFormatter.dateFormat = "d MMM yyyy"
+    germanDateFormatter.dateStyle = .short
+    //germanDateFormatter.dateFormat = "d MMM yyyy HH:mm:ss:Z"
+    //germanDateFormatter.dateStyle = .medium
+    //germanDateFormatter.timeStyle = .short
+    germanDateFormatter.timeZone = calendar.timeZone
+    
+    resultat = germanDateFormatter.string(from: inputDateString)
+        
+    return resultat
+} // Ende func
+
+
+// Wird benutzt bei Alert bei zurückspieleung der Datnensicherung
+func dateToStringWithTime(parDatum: Date) -> String {
     
     var resultat: String = ""
     let calendar = Calendar(identifier: .gregorian)
@@ -260,8 +281,9 @@ func dateToString(parDatum: Date) -> String {
     return resultat
 } // Ende func
 
- 
- 
+
+
+
 // Wird benutzt bei editieren des Objekts-Datums
 func stringToDate(parDatum: String) -> Date {
     let calendar = Calendar(identifier: .gregorian)

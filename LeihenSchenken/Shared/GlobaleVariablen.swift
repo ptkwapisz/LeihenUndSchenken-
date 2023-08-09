@@ -226,6 +226,10 @@ class AlertMessageTexte: ObservableObject  {
     
     @Published var showDBLadenMessageText: String = "Die Datenbank inklusiwe aller Tabellen wird zurückgeladen. Diese Rücksicherung überschreibt unwiederuflich die jetzige Datenbank und ihre alle Tabellen, wie Objekte, Personen und Gegenstände. Dieser Vorgang kann nicht rückgängig gemacht Werden."
     
+    @Published var leereDbMessageTextiPhone: String = "Es befinden sich keine Objekte in der Datenbank. Drücken Sie unten links auf den Stappel mit + Zeichen, um ein neues Objekt zu erfassen und dann in die Datenbank zu speichern."
+   
+    @Published var leereDbMessageTextiPad: String = "Es befinden sich keine Objekte in der Datenbank. Bitte erfassen Sie ein neues Objekt in der Eingabemaske und speichern es in die Datenbank."
+    
     
 } // Ende class
 
@@ -241,3 +245,13 @@ class Contact: Identifiable {
     }
     
 } // Ende class
+
+// Diese enum wird für Alertmeldung bei der Tab Benuzuer aufgerufen
+enum ActiveAlert {
+    case error, delete, information
+} // Ende enum
+
+// Diese enum wird für Alertmeldung bei der Tab1 (Objektliste) aufgerufen, wenn db leerist
+enum ActiveAlertLeereDB {
+    case informationiPad, informationiPhone
+} // Ende enum

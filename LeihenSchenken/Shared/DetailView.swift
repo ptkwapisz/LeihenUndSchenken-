@@ -106,9 +106,9 @@ struct DeteilView: View {
                             //Button("Export der Objekte to CSV", action: {showExportToCSV.toggle()}).disabled(globaleVariable.showDBSpeichernMenueItem)
                         } // Ende Menu
                     
-                        Menu("App Parameter") {
-                            Button("Parameter bearbeiten", action: {showSetupEdit.toggle()})
-                            Button("Parameter zurücksetzen", action: {showSetupReset.toggle()})
+                        Menu("App Einstellungen") {
+                            Button("Einstellungen bearbeiten", action: {showSetupEdit.toggle()})
+                            Button("Einstellungen zurücksetzen", action: {showSetupReset.toggle()})
                         } // Ende Menu
                         
                         Divider()
@@ -209,7 +209,7 @@ func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String
     
     switch tabNummer {
         case 1:
-            returnWert = (tabName: "Objektenliste", tabHilfe: "\(hilfeTexte.tabObjektenListe)")
+            returnWert = (tabName: "Die Liste der Objekte", tabHilfe: "\(hilfeTexte.tabObjektenListe)")
         case 2:
             returnWert = (tabName: "Gegenstände", tabHilfe: "\(hilfeTexte.tabGegenstandListe)")
         case 3:

@@ -10,11 +10,12 @@ import SwiftUI
 struct deteilTab1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     //@Binding var sideBarWidth: CGFloat
+    @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     
     @State var zeile: Int = 0
     @State var showEingabeMaske: Bool = false
     @State private var showAlert = false
-    @State private var activeAlert: ActiveAlert = .error
+    @State private var activeAlertLeereDb: ActiveAlertLeereDB = .informationiPhone
     var body: some View {
         
         
@@ -53,8 +54,16 @@ struct deteilTab1: View {
                                                 Spacer()
                                                 
                                             } // Ende HStack
-                                            
                                             .font(.system(size: 16, weight: .medium)).bold()
+                                            
+                                            HStack {
+                                                if objekte[item].gegenstandText != "" {
+                                                    Text("\(subStringOfTextField(parameter: objekte[item].gegenstandText))")
+                                                        .font(.system(size: 16, weight: .medium))//.bold()
+                                                    Text("...")
+                                                    Spacer()
+                                                }
+                                            } // Ende HStack
                                             
                                             HStack {
                                                 
@@ -84,7 +93,6 @@ struct deteilTab1: View {
                                                     } // Ende Label
                                                     .frame(width:35, height: 25, alignment: .center)
                                                     .cornerRadius(10)
-                                                    //.foregroundColor(.white)
                                                     // Diese Zeile bewirkt, dass Label rechtsbündig kurz vor dem > erscheint
                                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                                     
@@ -126,23 +134,7 @@ struct deteilTab1: View {
                         .font(.system(size: 30, weight: .medium))
                         .foregroundColor(Color.white)
                         .offset(x: 10)
-                        .alert(isPresented: $showAlert) {
-                            switch activeAlert {
-                                    
-                                case .error:
-                                    // Dummy Alert
-                                    return Alert(title: Text(""), message: Text(""), dismissButton: .default(Text("OK")))
-                                case .delete:
-                                    // Dummy Alert
-                                    return Alert(title: Text(""), message: Text(""), dismissButton: .default(Text("OK")))
-                                    
-                                case .information:
-                                    return Alert(
-                                        title: Text("Wichtige Information!"),
-                                        message: Text("Es befinden sich keine Objekte in der Datenbank. Drücken Sie unten links auf den Stappel mit + Zeichen, um ein neues Objekt zu erfassen und in die Datenbank zu speichern."), dismissButton: .default(Text("OK")))
-                                    
-                            } // Ende switch
-                        } // Ende alert
+                        
                         
                         Text("|")
                             .offset(x:3, y: -7)
@@ -164,11 +156,30 @@ struct deteilTab1: View {
                     // Wenn sich keine Objekte in der Datenbanktabelle befinden
                     // wird eine Information gezeigt.
                     showAlert = true
-                    activeAlert = .information
+                    
+                    if UIDevice.current.userInterfaceIdiom == .phone {
+                        activeAlertLeereDb = .informationiPhone
+                    }else{
+                        activeAlertLeereDb = .informationiPad
+                    } // Ende if/else
                     
                 } // Ende if
                 
             } // Ende onAppear
+            .alert(isPresented: $showAlert) {
+                switch activeAlertLeereDb {
+                    
+                case .informationiPhone:
+                    return Alert(
+                        title: Text("Wichtige Information!"),
+                        message: Text("\(alertMessageTexte.leereDbMessageTextiPhone)"), dismissButton: .default(Text("OK")))
+                case .informationiPad:
+                    return Alert(
+                        title: Text("Wichtige Information!"),
+                        message: Text("\(alertMessageTexte.leereDbMessageTextiPad)"), dismissButton: .default(Text("OK")))
+                    
+                } // Ende switch
+            } // Ende alert
         } // Ende GeometryReader
     } // Ende var body
     

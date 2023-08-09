@@ -49,7 +49,7 @@ func detailViewBottomToolbarHight() -> CGFloat {
     var resultat: CGFloat = 0.0
     
     if UIDevice.current.userInterfaceIdiom == .phone {
-        resultat =  34.0
+        resultat =  36.0
     }else{
         resultat =  50.0
     } // Ende if/else
@@ -94,7 +94,7 @@ func getfileCreatedDate() -> String {
         //let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
         let attributes = try? FileManager.default.attributesOfItem(atPath: backupDatabaseURL.path)
         
-        theCreationDate = dateToString(parDatum: (attributes?[.creationDate])! as! Date)
+        theCreationDate = dateToStringWithTime(parDatum: (attributes?[.creationDate])! as! Date)
     }// Ende if
 
     return theCreationDate
@@ -278,7 +278,7 @@ extension URL {
     } // Ende var
 } // Ende extension URL
 
-// Diese Funktion prüft ob es lokal genügt Speicher für die Backupdatei Gibt
+// Diese Funktion prüft ob es lokal genügt Speicher für die Backupdatei gibt
 func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
     var resultat: Bool = true
     let dbFileSitze = getFlieSitze()
@@ -309,4 +309,21 @@ func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
     
     return resultat
     
+} // Ende func
+
+// Zweite Zeile bei der Liste der Objekte
+func subStringOfTextField(parameter: String) -> String {
+    var resultat: String = ""
+    
+    if UIDevice.current.userInterfaceIdiom == .phone {
+        
+       resultat = String(parameter.prefix(30))
+        
+    }else{
+        
+        resultat = String(parameter.prefix(50))
+        
+    } // Ende if/else
+    
+    return resultat
 } // Ende func

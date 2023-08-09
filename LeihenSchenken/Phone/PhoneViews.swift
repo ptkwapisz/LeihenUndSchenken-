@@ -83,7 +83,3 @@ func perKeyBestimmenPerson(par: String) -> [String] {
     return result
 } // Ende func
 
-// Diese enum wird für Alertmeldung bei der Tab Benuzuer aufgerufen
-enum ActiveAlert {
-    case error, delete, information
-} // Ende enum

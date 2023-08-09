@@ -10,6 +10,7 @@
 import SwiftUI
 import UIKit
 
+
 // Das ist die View für detalierte Objektangaben mit Foto
 struct ChartView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -252,4 +253,5 @@ struct ChartView: View {
             .sheet(isPresented: $showDetailPhoto, content: { ShapeShowDetailPhoto(isPresentedShowDetailPhoto: $showDetailPhoto, par1: $par1, par2: $par2)})
     } // Ende var body
 } // Ende struc ChartView
+
 
