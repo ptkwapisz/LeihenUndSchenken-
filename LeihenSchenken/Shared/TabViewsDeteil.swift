@@ -9,28 +9,55 @@ import SwiftUI
 
 struct deteilTab1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@Binding var sideBarWidth: CGFloat
     @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     
     @State var zeile: Int = 0
     @State var showEingabeMaske: Bool = false
     @State private var showAlert = false
     @State private var activeAlertLeereDb: ActiveAlertLeereDB = .informationiPhone
+    @State var sortObjekte: Bool = true
+    
+    
     var body: some View {
-        
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
         let objekteTmp = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
-        let objekte = objekteTmp.sorted {($0.vorgang, $0.personNachname, $0.personVorname) < ($1.vorgang, $1.personNachname, $1.personVorname)}
+        
+        let objektTmpWithFilter = serchObjectArray(parameter: objekteTmp)
+        
+        //let objekte = objektTmpWithFilter.sorted {($0.vorgang, $0.datum) < ($1.vorgang, $1.datum)}
+        
+        let objekte = sortiereObjekte(par1: objektTmpWithFilter, par2: sortObjekte)
+        
         let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen, Schänken oder bekommen
-        //let gegVorgang = gegVorgang0.sorted()
+        
         let anzahl: Int = objekte.count
         
         GeometryReader{ geometry in
             VStack {
                 Text("")
-                Text("\(tempErgaenzung)").bold()
-                    .frame(maxWidth: .infinity, alignment: .center)
+                HStack {
+                    
+                        Text("\(tempErgaenzung)").bold()  // arrow.up.arrow.down
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 20)
+                    if anzahl > 1 {
+                        Button() {
+                            sortObjekte.toggle()
+                            
+                        } label: {  Label("", systemImage: "arrow.up.arrow.down")
+                            
+                        }// Ende Button/label
+                        .buttonStyle(.bordered)
+                        .font(.system(size: 16, weight: .medium))
+                        .background(Color.blue.opacity(5))
+                        .foregroundColor(Color.white)
+                        .padding(.leading, 10)
+                        .frame(width: 40)
+                        .cornerRadius(10)
+                        .padding(.trailing, 20)
+                    }// Ende if
+                }// Ende HStack
                 
                 List {
                     
@@ -121,32 +148,35 @@ struct deteilTab1: View {
                 .cornerRadius(10)
                 Spacer()
                 
-                // Bei iPad muss das Eingabenmasken Button nicht erscheinen
-                if UIDevice.current.userInterfaceIdiom == .phone {
-                    
                     HStack(alignment: .bottom) {
-                        
-                        Button {showEingabeMaske = true
-                            
-                        } label: { Label("", systemImage: "rectangle.stack.fill.badge.plus")
-                            
-                        } // Ende Button
-                        .font(.system(size: 30, weight: .medium))
-                        .foregroundColor(Color.white)
-                        .offset(x: 10)
-                        
-                        
-                        Text("|")
-                            .offset(x:3, y: -7)
+                        // Bei iPad muss das Eingabenmasken Button nicht erscheinen
+                        if UIDevice.current.userInterfaceIdiom == .phone {
+                            Button {showEingabeMaske = true
+                                
+                            } label: { Label("", systemImage: "rectangle.stack.fill.badge.plus")
+                                
+                            } // Ende Button
+                            .font(.system(size: 30, weight: .medium))
                             .foregroundColor(Color.white)
+                            .offset(x: 10)
+                            
+                            
+                            Text("|")
+                                .offset(x:3, y: -7)
+                                .foregroundColor(Color.white)
+                        } // Ende if UIDevice
+                        // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
+                        if objekteTmp.count > 0 {
+                            serchFullTextInObjekten()
+                        }// Ende if
                         
                     } // Ende HStack
                     .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
                     .background(Color(UIColor.lightGray))
                     .foregroundColor(Color.black)
-                    .sheet(isPresented: $showEingabeMaske, content: { EingabeMaskeView() })
+                    .sheet(isPresented: $showEingabeMaske, content: { EingabeMaskePhoneView() })
                     
-                } // Ende if UIDevice
+                
                 
             } // Ende VStack
             .background(globaleVariable.farbenEbene1)
@@ -164,6 +194,7 @@ struct deteilTab1: View {
                     } // Ende if/else
                     
                 } // Ende if
+                
                 
             } // Ende onAppear
             .alert(isPresented: $showAlert) {

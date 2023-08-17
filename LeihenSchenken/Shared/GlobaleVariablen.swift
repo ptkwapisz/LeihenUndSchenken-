@@ -15,6 +15,8 @@ class GlobaleVariable: ObservableObject {
     @Published var parameterVorgang: [String] =  ["Verleihen", "Verschenken", "Bekommen"]
     @Published var parameterGegenstand: [String] = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
     
+    @Published var searchTextObjekte: String = ""
+    @Published var searchTextAdressBook: String = ""
     
     @Published var abfrageFilter: Bool = false
     @Published var abfrageQueryString: String = ""
@@ -48,8 +50,7 @@ class GlobaleVariable: ObservableObject {
     @Published var textAllgemeineNotizen: String = ""
     @Published var datum: Date = Date()
     
-    
-    
+
 } // ende class
 
 class UserSettingsDefaults: ObservableObject {

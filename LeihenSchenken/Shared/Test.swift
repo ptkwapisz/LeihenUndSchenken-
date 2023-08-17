@@ -6,12 +6,11 @@
 //
 import SwiftUI
 
-
 //import Foundation
 //import Contacts
 
 /*
-struct EmptyView: View {
+struct emptyView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     var breite: CGFloat = 370
     var hoehe: CGFloat = 320
@@ -59,15 +58,7 @@ func detailViewBottomToolbarHight() -> CGFloat {
 }// Ende func
 
 
-// Diese Erweiterung wird benutzt, um zu ermitteln, wie oft ein bestimmtes Zeichen in einem String vorkommt.
-extension String {
-    func numberOfOccurrencesOf(string: String) -> Int {
-        return self.components(separatedBy:string).count - 1
-    } // Ende func
-} // Ende extension
-
-
-// Ermitteln von Erstellungsdatum der Backup-Datei
+// Ermitteln von der Erstellungsdatum der Backup-Datei
 func getfileCreatedDate() -> String {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
@@ -142,94 +133,6 @@ func changeFileAttributes(){
     //print("\(filePath)" + "\(attributesCreationDate)")
 } // Ende func
 
-/*
-func moveDbBackup() {
-    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    //let fileManager = FileManager.default
-    
-    if userSettingsDefaults.iCloudSwitch == true {
-       print("iCloud eingeschaltet")
-        
-    }else{
-        print("iCloud ausgeschaltet")
-        
-    }// Ende if/else
-    
-    
-    
-} // Ende func
-
-*/
-
-// Das ist die extension für erfassung des lokalen Speicherplatzes
-// Die benutzung:
-// print(UIDevice.current.freeDiskSpaceInGB)
-// print(UIDevice.current.usedDiskSpaceInGB)
-extension UIDevice {
-    func MBFormatter(_ bytes: Int64) -> String {
-        let formatter = ByteCountFormatter()
-        formatter.allowedUnits = ByteCountFormatter.Units.useMB
-        formatter.countStyle = ByteCountFormatter.CountStyle.decimal
-        formatter.includesUnit = false
-        return formatter.string(fromByteCount: bytes) as String
-    } // Ende func
-    
-    //MARK: Get String Value
-    var totalDiskSpaceInGB:String {
-        return ByteCountFormatter.string(fromByteCount: totalDiskSpaceInBytes, countStyle: ByteCountFormatter.CountStyle.decimal)
-    } // Ende var
-    
-    var freeDiskSpaceInGB:String {
-        return ByteCountFormatter.string(fromByteCount: freeDiskSpaceInBytes, countStyle: ByteCountFormatter.CountStyle.decimal)
-    } // Ende var
-    
-    var usedDiskSpaceInGB:String {
-        return ByteCountFormatter.string(fromByteCount: usedDiskSpaceInBytes, countStyle: ByteCountFormatter.CountStyle.decimal)
-    } // Ende var
-    
-    var totalDiskSpaceInMB:String {
-        return MBFormatter(totalDiskSpaceInBytes)
-    } // Ende var
-    
-    var freeDiskSpaceInMB:String {
-        return MBFormatter(freeDiskSpaceInBytes)
-    } // Ende var
-    
-    var usedDiskSpaceInMB:String {
-        return MBFormatter(usedDiskSpaceInBytes)
-    } // Ende var
-    
-    //MARK: Get raw value
-    var totalDiskSpaceInBytes:Int64 {
-        guard let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory() as String),
-              let space = (systemAttributes[FileAttributeKey.systemSize] as? NSNumber)?.int64Value else { return 0 }
-        return space
-    } // Ende var
-    
-    var freeDiskSpaceInBytes:Int64 {
-        /*
-        if #available(iOS 11.0, *) {
-            if let space = try? URL(fileURLWithPath: NSHomeDirectory() as String).resourceValues(forKeys: [URLResourceKey.volumeAvailableCapacityForImportantUsageKey]).volumeAvailableCapacityForImportantUsage {
-                return space // ?? 0
-            } else {
-                return 0
-            } // Ende if/else
-        } else {
-         */
-            if let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory() as String),
-               let freeSpace = (systemAttributes[FileAttributeKey.systemFreeSize] as? NSNumber)?.int64Value {
-                return freeSpace
-            } else {
-                return 0
-            }// Ende if/else
-        //} // Ende if/else
-    } // Ende var
-    
-    var usedDiskSpaceInBytes:Int64 {
-        return totalDiskSpaceInBytes - freeDiskSpaceInBytes
-    } // Ende var
-    
-} // Ende extension
 
 func getFlieSitze() -> (numMB: UInt64, strMB: String) {
    
@@ -253,30 +156,6 @@ func getFlieSitze() -> (numMB: UInt64, strMB: String) {
     
 } // Ende func getFile....
 
-
-// Das ist die Extension für die getFileSitze funktion
-extension URL {
-    var attributes: [FileAttributeKey : Any]? {
-        do {
-            return try FileManager.default.attributesOfItem(atPath: path)
-        } catch let error as NSError {
-            print("FileAttribute error: \(error)")
-        } // Ende catch
-        return nil
-    } // Ende var
-    
-    var fileSize: UInt64 {
-        return attributes?[.size] as? UInt64 ?? UInt64(0)
-    } // Ende var
-    
-    var fileSizeString: String {
-        return ByteCountFormatter.string(fromByteCount: Int64(fileSize), countStyle: .file)
-    }// Ende var
-    
-    var creationDate: Date? {
-        return attributes?[.creationDate] as? Date
-    } // Ende var
-} // Ende extension URL
 
 // Diese Funktion prüft ob es lokal genügt Speicher für die Backupdatei gibt
 func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
@@ -327,3 +206,230 @@ func subStringOfTextField(parameter: String) -> String {
     
     return resultat
 } // Ende func
+
+
+// Das ist die View für den Full Search in den Objekten
+// Aufgerufen in der Tab1 View
+struct serchFullTextInObjekten: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    @FocusState var isInputSarchFullTextInObjektenActive: Bool
+    
+    var body: some View {
+        
+        TextField("", text: $globaleVariable.searchTextObjekte)
+            .focused($isInputSarchFullTextInObjektenActive)
+            .frame(height: detailViewBottomToolbarHight() - 36)
+            .font(.system(size: 18, weight: .medium))
+            .disableAutocorrection (true)
+            .submitLabel(.done)
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.gray)
+            .cornerRadius(10)
+            .onTapGesture {
+                isInputSarchFullTextInObjektenActive = true
+                
+                
+            } // Ende onTapGesture
+            .padding(.horizontal, 15)
+            .padding(.vertical, 5)
+            .overlay(
+                HStack {
+                    if globaleVariable.searchTextObjekte.isEmpty && isInputSarchFullTextInObjektenActive == false{
+                        
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.white)
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 20)
+                    }else{
+                        if !globaleVariable.searchTextObjekte.isEmpty {
+                            Button(action: {
+                                self.globaleVariable.searchTextObjekte = ""
+                                
+                            }) {
+                                
+                                Image(systemName: "multiply.circle.fill")
+                                    .foregroundColor(.white)
+                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
+                                    .padding(.trailing, 20)
+                            }// Button Image
+                        }
+                    } // Ende if/else
+                })
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    if isInputSarchFullTextInObjektenActive {
+                        HStack {
+                            Text("")
+                            Spacer()
+                            Button("Abbrechen") {
+                                self.globaleVariable.searchTextObjekte = ""
+                                isInputSarchFullTextInObjektenActive = false
+                                
+                            } // Ende Button
+                            .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                           
+                        } // Ende HStack
+                        .font(.system(size: 16, weight: .regular))
+                    }// Ende if
+                    
+                } // Ende ToolbarItemGroup
+            } // Ende toolbar
+            
+    } // Ende var body
+    
+} // Ende struct
+
+
+// Filter für die Fulltextsuche der Objekte
+// Diese func war notwändig weil if abfrage in der View nicht zuläsig ist.
+// Diese Funktion wird in der Tab1 View aufgerufen
+func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var resultat: [ObjectVariable] = []
+    
+    if globaleVariable.searchTextObjekte.isEmpty {
+        resultat = parameter
+    }else{
+        resultat = parameter.filter {
+            $0.gegenstandText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
+            $0.allgemeinerText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
+            //$0.datum.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
+            //$0.preisWert.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
+            $0.gegenstand.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
+            $0.personVorname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
+            $0.personNachname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte)
+            
+        }// Ende par.filter
+    }// Ende if/else
+    
+    return resultat
+}// Ende func
+
+
+// Funktion für die sortierung der Objekte nach Datum
+// Par1: Objektvariable mit gefilterten objekten
+// Per2: Logischer Operator true: aufsteigend, false: absteigend
+func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var resultat: [ObjectVariable] = []
+    
+    let sortDateFormatter: DateFormatter
+    
+    sortDateFormatter = DateFormatter()
+    sortDateFormatter.locale = .init(identifier: "de")
+    sortDateFormatter.dateFormat = "d MMM yyyy"
+    sortDateFormatter.dateStyle = .short
+    
+    if par2 == true {
+        
+        resultat = par1.sorted {($0.vorgang, sortDateFormatter.date(from: $0.datum)!) < ($1.vorgang, sortDateFormatter.date(from: $1.datum)!)}
+        
+        //print("Sortiert True")
+    }else{
+        
+        resultat = par1.sorted {($0.vorgang, sortDateFormatter.date(from: $0.datum)!) > ($1.vorgang, sortDateFormatter.date(from: $1.datum)!)}
+        
+        //print("Sortiert False")
+    }// Ende if/else
+    
+    return resultat
+}// Ende func
+
+// Das ist die View für den Full Search in den Objekten
+// Aufgerufen in der Tab1 View
+struct serchFullTextInAdressbook: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    @FocusState var isInputSarchFullTextInAdressbookActive: Bool
+    
+    var body: some View {
+        
+        TextField("", text: $globaleVariable.searchTextAdressBook)
+            .focused($isInputSarchFullTextInAdressbookActive)
+            .frame(height: detailViewBottomToolbarHight() - 36)
+            .font(.system(size: 18, weight: .medium))
+            .disableAutocorrection (true)
+            .submitLabel(.done)
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.gray)
+            .cornerRadius(10)
+            .onTapGesture {
+                isInputSarchFullTextInAdressbookActive = true
+                
+            } // Ende onTapGesture
+            .padding(.horizontal, 15)
+            .padding(.vertical, 5)
+            .overlay(
+                HStack {
+                    if globaleVariable.searchTextAdressBook.isEmpty && isInputSarchFullTextInAdressbookActive == false{
+                        
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.white)
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 20)
+                    }else{
+                        if !globaleVariable.searchTextAdressBook.isEmpty {
+                            Button(action: {
+                                self.globaleVariable.searchTextAdressBook = ""
+                                
+                            }) {
+                                
+                                Image(systemName: "multiply.circle.fill")
+                                    .foregroundColor(.white)
+                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
+                                    .padding(.trailing, 20)
+                            }// Button Image
+                        }
+                    } // Ende if/else
+                })
+        
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    if isInputSarchFullTextInAdressbookActive {
+                        HStack {
+                            Text("")
+                            Spacer()
+                            Button("Abbrechen") {
+                                self.globaleVariable.searchTextAdressBook = ""
+                                isInputSarchFullTextInAdressbookActive = false
+                                
+                            } // Ende Button
+                            .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                            
+                        } // Ende HStack
+                        .font(.system(size: 16, weight: .regular))
+                    }// Ende if
+                    
+                } // Ende ToolbarItemGroup
+            } // Ende toolbar
+        
+    } // Ende var body
+    
+} // Ende struct
+
+
+// Filter für die Fulltextsuche im Adressbook
+// Diese func war notwändig weil if abfrage in der View nicht zuläsig ist.
+// Diese Funktion wird in dem ShapeViewAddUser aufgerufen
+func serchInAdressBookArray(parameter:  [Contact]) ->  [Contact]{
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var resultat:  [Contact] = []
+    
+    if globaleVariable.searchTextAdressBook.isEmpty {
+        resultat = parameter
+    }else{
+        resultat = parameter.filter {
+            $0.firstName.localizedCaseInsensitiveContains(globaleVariable.searchTextAdressBook) ||
+            $0.lastName.localizedCaseInsensitiveContains(globaleVariable.searchTextAdressBook)
+            
+        }// Ende par.filter
+    }// Ende if/else
+    
+    return resultat
+}// Ende func

@@ -11,7 +11,7 @@ import SwiftUI
 import SQLite3
 import Combine
 
-struct EingabeMaskeView: View {
+struct EingabeMaskePhoneView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var hilfeTexte = HilfeTexte.shared

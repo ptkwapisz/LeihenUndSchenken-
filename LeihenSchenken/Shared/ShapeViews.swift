@@ -22,11 +22,15 @@ struct ShapeViewAddUser: View {
     
     @State var vorname: String = ""
     @State var name: String = ""
-    
-    @State var myContacts: [Contact] = fetchAllContacts()
-    
+   
+    //@State var myContacts: [Contact] = fetchAllContacts()
+    // Das laden der Kontakte erfolgt in .onAppear
+    @State var myContactsTmp: [Contact] = []
     
     var body: some View {
+        
+        let myContacts = serchInAdressBookArray(parameter: myContactsTmp)
+        
         NavigationView {
             Form {
                 Section() {
@@ -52,35 +56,35 @@ struct ShapeViewAddUser: View {
                     } // Ende Picker
                 } // Ende Section
                 .font(.system(size: 16, weight: .regular))
-                
-                Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
-                    
-                    ScrollView {
+                if myContactsTmp.count > 0 {
+                    Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
                         
+                        ScrollView {
+                            
                             LazyVStack {
                                 
                                 ForEach(myContacts.indices, id: \.self) { idx in
-                                   // GeometryReader { gemotry in
-                                        HStack{
+                                    // GeometryReader { gemotry in
+                                    HStack{
+                                        
+                                        if myContacts[idx].lastName != "" && myContacts[idx].firstName != "" {
+                                            Text(myContacts[idx].lastName + ", " + myContacts[idx].firstName)
+                                                .font(.system(size: 20, weight: .regular))
                                             
-                                            if myContacts[idx].lastName != "" && myContacts[idx].firstName != "" {
-                                                Text(myContacts[idx].lastName + ", " + myContacts[idx].firstName)
-                                                    .font(.system(size: 20, weight: .regular))
-                                                    
-                                                
-                                                Spacer()
-                                                
-                                            } // Ende if
                                             
-                                        } // Ende HStack
-                                        .background(idx % 2 == 0
-                                                    ? Color(.systemGray).opacity(0.2)
-                                                    : Color(.white).opacity(0.2)
-                                        )
-                                        .onTapGesture {
-                                            name = myContacts[idx].lastName
-                                            vorname = myContacts[idx].firstName
-                                        } // Ende onTapGesture
+                                            Spacer()
+                                            
+                                        } // Ende if
+                                        
+                                    } // Ende HStack
+                                    .background(idx % 2 == 0
+                                                ? Color(.systemGray).opacity(0.2)
+                                                : Color(.white).opacity(0.2)
+                                    )
+                                    .onTapGesture {
+                                        name = myContacts[idx].lastName
+                                        vorname = myContacts[idx].firstName
+                                    } // Ende onTapGesture
                                     //}// Ende GeometryReader
                                 } // Ende ForEach
                                 
@@ -88,26 +92,35 @@ struct ShapeViewAddUser: View {
                             .padding(5)
                             .background(Color(.systemGray6))
                             .cornerRadius(10)
-                        
-                    } // Ende Scrollview
-                    .frame(height: 200, alignment: .leading)
+                            
+                            
+                        } // Ende Scrollview
+                        .frame(height: 200, alignment: .leading)
+                        serchFullTextInAdressbook()
+                    }// Ende Section
                     
-                }// Ende Section
-               
+                }else{
+                    Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
+                        Text("Auswahl aus dem Adressbuch ist nicht möglich. Enweder gibt es im Adressbuch keine Einträge oder die Zugriffrechte auf das Adressbuch sind in den Einstellungen (das Zahnrad) eingeschränkt. ")
+                            .font(.system(size: 16, weight: .regular))
+                    }// Ende Section
+                } // Ende if/else
                     HStack {
                         Spacer()
-                        Button(action: { isPresented = false }) {Text("Abbrechen")}
+                        Button(action: {
+                            isPresented = false
+                            globaleVariable.searchTextAdressBook = ""
+                        }) {Text("Abbrechen")}
                             .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                         
                         Button(action: {
                             if vorname != "" && name != "" {
                                 if isParameterBereich {
-                                    //let tempPerson = name + ", " + vorname
-                                    //globaleVariable.parameterPerson.append(tempPerson)
+                                    
                                     personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
                                     // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
-                                    //globaleVariable.selectedPersonInt = globaleVariable.parameterPerson.count-1
                                     globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
+                                    globaleVariable.searchTextAdressBook = ""
                                     print("Person wird in die Auswahl hinzugefügt!")
                                     isPresented = false
                                 }else{
@@ -124,7 +137,7 @@ struct ShapeViewAddUser: View {
                                         globaleVariable.personenParameter.removeAll()
                                         globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
                                         
-                                        
+                                        globaleVariable.searchTextAdressBook = ""
                                         print("Person wurde in die Datenbank hinzugefügt!")
                                         isPresented = false
                                         
@@ -147,7 +160,7 @@ struct ShapeViewAddUser: View {
                         Spacer()
                     } // Ende HStack
                     .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
-                        Button(" - OK - ") {}
+                        Button("OK") {}
                     }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
                     ) // Ende alert
                     
@@ -168,7 +181,11 @@ struct ShapeViewAddUser: View {
             //.scrollDisabled(true)
             
         } // Ende NavigationView
-        
+        .onAppear{
+            DispatchQueue.main.async {
+                myContactsTmp = fetchAllContacts()
+            }// Ende Dispatch
+        } // Ende onApear
         
     } // Ende var body
     

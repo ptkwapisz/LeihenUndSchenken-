@@ -101,7 +101,7 @@ class CameraManager : ObservableObject {
         AVCaptureDevice.requestAccess(for: .video, completionHandler: {accessGranted in
             DispatchQueue.main.async {
                 self.permissionGranted = accessGranted
-            }
+            } // Ende DispatchQueue
         })
-    }
-}
+    } // Ende func
+} // Ende class

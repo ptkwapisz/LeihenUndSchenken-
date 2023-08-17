@@ -51,7 +51,7 @@ struct EingabeMaskePadView: View {
      
     private let numberFormatter: NumberFormatter
     private let perKeyFormatter: DateFormatter
-    private let germanDateFormatter: DateFormatter
+    //private let germanDateFormatter: DateFormatter
     
     init() {
         numberFormatter = NumberFormatter()
@@ -60,13 +60,13 @@ struct EingabeMaskePadView: View {
         
         perKeyFormatter = DateFormatter()
         perKeyFormatter.dateFormat = "y MM dd, HH:mm"
-        
+        /*
         germanDateFormatter = DateFormatter()
         germanDateFormatter.locale = .init(identifier: "de")
         germanDateFormatter.dateFormat = "d MMM yyyy"
-        germanDateFormatter.dateStyle = .long
+        germanDateFormatter.dateStyle = .short
         germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        
+        */
     } // Ende init
     
     var body: some View {
