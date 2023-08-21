@@ -96,15 +96,10 @@ struct deteilTab1: View {
                                                 
                                                 NavigationLink(destination: ChartView(par1: objekte, par2: item)) {
                                                     
-                                                    if gegVorgang[idx] == "Bekommen" {
-                                                        Text("von")
-                                                        //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                        //.font(.system(size: 15, weight: .medium)).bold()
-                                                    } else {
-                                                        Text("an")
-                                                        //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
-                                                        //.font(.system(size: 15, weight: .medium)).bold()
-                                                    } // Ende if/else
+                                                    let textPrefix = vorgangPrefixDeklination(vorgang:gegVorgang[idx] )
+                                                    Text("\(textPrefix)")
+                                                    
+                                                    
                                                     
                                                     Text(String(objekte[item].personVorname))
                                                     //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)
@@ -364,7 +359,7 @@ struct deteilTab3: View {
                 List(person, id: \.personPicker, selection: $selectedType) { index in
                     
                     Text(index.personPicker)
-                    
+
                 } // Ende List
                 .cornerRadius(10)
                 
@@ -383,9 +378,8 @@ struct deteilTab3: View {
                         .foregroundColor(Color.white)
                     Button {
                         
-                        selectedPickerTmp = "\(selectedPicker ?? "N/A")"
-                        
-                        //print("\(selectedPickerTmp ?? "N/A")")
+                        selectedPickerTmp = "\(selectedType ?? "N/A")"
+                        print("\(selectedPickerTmp)")
                         
                         if selectedPickerTmp == "N/A" {
                             errorMessageText = "Bitte markieren Sie zuerst eine Person, die Sie löschen möchten. Das tun sie durch das Klicken auf die entsprechende Zeile. Danach betätigen Sie noch mal das Minuszeichen, um die markierte Person zu löschen ."
@@ -418,6 +412,7 @@ struct deteilTab3: View {
                                         
                                         let perKeyTmp = perKeyBestimmenPerson(par: selectedPickerTmp)
                                         deleteItemsFromDatabase(tabelle: "Personen", perKey: perKeyTmp[0])
+                                       
                                         print("\(selectedPickerTmp)" + " wurde gelöscht")
                                         print(perKeyTmp)
                                         

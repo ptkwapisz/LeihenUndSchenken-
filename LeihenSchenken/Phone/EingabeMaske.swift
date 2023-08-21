@@ -239,8 +239,8 @@ struct EingabeMaskePhoneView: View {
                                         .alert(isPresented:$showAlertAbbrechenButton) {
                                             Alert(
                                                 title: Text("Sie haben folgende Wahl."),
-                                                message: Text("Wenn Sie 'Abbrechen' drücken bleiben Sie bei der Eingabemaske. Wenn Sie 'Löschen' drücken, werden alle Daten, die Sie auf dieser Maske eingegeben haben gelöscht. Das hat zu folge, dass alle Ihre Angaben, fall Sie welche gemacht haben, verloren gehen."),
-                                                primaryButton: .destructive(Text("Löschen")) {
+                                                message: Text("Wenn Sie 'Abbrechen' drücken bleiben Sie bei der Eingabemaske. Wenn Sie 'Verlassen' drücken, werden alle zurückgesetzt. Das hat zu folge, dass alle Ihre Angaben, fall Sie welche gemacht haben, verloren gehen."),
+                                                primaryButton: .destructive(Text("Verlassen")) {
                                                     
                                                     // Die Parameterwerte werden gelöscht.
                                                     cleanEingabeMaske()
@@ -302,7 +302,6 @@ struct EingabeMaskePhoneView: View {
                                 } // Ende HStack
                                 
                             } // Ende VStack
-                            
                             .toolbar {ToolbarItemGroup(placement: .keyboard) {
                                 
                                 if focusedField == .amount {
@@ -360,6 +359,7 @@ struct EingabeMaskePhoneView: View {
             } // Ende GeometryReader
             
         }// Ende NavigationView
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
     

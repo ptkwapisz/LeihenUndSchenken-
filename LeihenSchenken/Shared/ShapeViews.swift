@@ -23,7 +23,6 @@ struct ShapeViewAddUser: View {
     @State var vorname: String = ""
     @State var name: String = ""
    
-    //@State var myContacts: [Contact] = fetchAllContacts()
     // Das laden der Kontakte erfolgt in .onAppear
     @State var myContactsTmp: [Contact] = []
     
@@ -56,13 +55,21 @@ struct ShapeViewAddUser: View {
                     } // Ende Picker
                 } // Ende Section
                 .font(.system(size: 16, weight: .regular))
+                
                 if myContactsTmp.count > 0 {
                     Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
+                        
+                        // The search Field for Contacts list
+                        // The .if modyfier define the hieght between iPhone and iPad
+                        SerchFullTextInAdressbook()
+                        .if(UIDevice.current.userInterfaceIdiom == .phone) { view in
+                            view.frame(height: 20)
+                        } // Ende .if
                         
                         ScrollView {
                             
                             LazyVStack {
-                                
+                                //NavigationStack {
                                 ForEach(myContacts.indices, id: \.self) { idx in
                                     // GeometryReader { gemotry in
                                     HStack{
@@ -71,8 +78,7 @@ struct ShapeViewAddUser: View {
                                             Text(myContacts[idx].lastName + ", " + myContacts[idx].firstName)
                                                 .font(.system(size: 20, weight: .regular))
                                             
-                                            
-                                            Spacer()
+                                            Spacer() // Die Zeilen werden linksbündig
                                             
                                         } // Ende if
                                         
@@ -84,19 +90,20 @@ struct ShapeViewAddUser: View {
                                     .onTapGesture {
                                         name = myContacts[idx].lastName
                                         vorname = myContacts[idx].firstName
+                                        // Here we dismiss the kayboard by tap a name in the list
+                                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                     } // Ende onTapGesture
                                     //}// Ende GeometryReader
                                 } // Ende ForEach
                                 
-                            }// Ende LazyVStack
+                            }// Ende LazyVStack - NavigationStack
                             .padding(5)
                             .background(Color(.systemGray6))
                             .cornerRadius(10)
                             
-                            
                         } // Ende Scrollview
                         .frame(height: 200, alignment: .leading)
-                        serchFullTextInAdressbook()
+                        
                     }// Ende Section
                     
                 }else{
@@ -105,6 +112,8 @@ struct ShapeViewAddUser: View {
                             .font(.system(size: 16, weight: .regular))
                     }// Ende Section
                 } // Ende if/else
+  //--------------------------------------------------
+                VStack{
                     HStack {
                         Spacer()
                         Button(action: {
@@ -164,17 +173,24 @@ struct ShapeViewAddUser: View {
                     }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
                     ) // Ende alert
                     
-                    if isParameterBereich {
-                        
-                        Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Beim 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden der App aus der Liste gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern (favoriten Liste), gehen Sie bitte zum Tab 'Personen', dort auf '+' und geben die entsprechenden Persondaten ein.")
-                            .font(.system(size: 12, weight: .regular))
-                            .foregroundColor(.gray)
-                    }else{
-                        Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Beim  'Speichern' werden alle Daten in die Datenbank dauerhaft hinzugefügt.")
-                            .font(.system(size: 12, weight: .regular))
-                            .foregroundColor(.gray)
-                        
-                    } // Ende if/else
+                    VStack{
+                        if isParameterBereich {
+                            
+                            Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Beim 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden der App aus der Liste gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern (favoriten Liste), gehen Sie bitte zum Tab 'Personen', dort auf '+' und geben die entsprechenden Persondaten ein.")
+                            //.font(.system(size: 12, weight: .regular))
+                            //.foregroundColor(.gray)
+                        }else{
+                            Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Beim  'Speichern' werden alle Daten in die Datenbank dauerhaft hinzugefügt.")
+                            //.font(.system(size: 12, weight: .regular))
+                            //.foregroundColor(.gray)
+                            
+                        } // Ende if/else
+                    }// Ende Vstack
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundColor(.gray)
+                }// Ende VStack
+                
+                
                 
             } // Ende Form
             .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
@@ -183,13 +199,34 @@ struct ShapeViewAddUser: View {
         } // Ende NavigationView
         .onAppear{
             DispatchQueue.main.async {
-                myContactsTmp = fetchAllContacts()
+                self.myContactsTmp = fetchAllContacts()
             }// Ende Dispatch
         } // Ende onApear
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
+//---------------
+        /*
+        HStack{
+            //Text(" ")
+            Text("Suchfeld für Adressbuch.")
+                .font(.system(size: 12, weight: .regular))
+                .frame(height: 15)
+                .padding(.leading, 20)
+                
+            Spacer()
+            
+        }// Ende HStack
+        
+        serchFullTextInAdressbook()
+        .if(UIDevice.current.userInterfaceIdiom == .phone) { view in
+            view.frame(height: 20)
+        } // Ende .if
+        */
+//---------------
     } // Ende var body
     
 } // Ende struct
+
 
 struct ShapeViewAddGegenstand: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -303,6 +340,7 @@ struct ShapeViewAddGegenstand: View {
             .scrollContentBackground(.hidden)
             
         } // Ende NavigationView
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
 } // Ende struct
@@ -387,6 +425,7 @@ struct ShapeViewSettings: View {
             .navigationTitle("Applikations-Parameter").navigationBarTitleDisplayMode(.inline)
             
         } // Ende NavigationView
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
 } // Ende struct ShapeViewSettings
@@ -530,7 +569,7 @@ struct ShapeViewAbfrage: View {
                 
             }
         } // Ende VStack
-        
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
 } // Ende struct
@@ -608,6 +647,8 @@ struct ShapeViewEditUser: View {
             .navigationTitle("Benutzer bearbeiten").navigationBarTitleDisplayMode(.inline)
             
         } // Ende NavigationView
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
+        
     } // Ende var body
 } // Ende struct
 
@@ -654,6 +695,8 @@ struct ShapeShowDetailPhoto: View {
                 .navigationTitle("Detailsicht Photo").navigationBarTitleDisplayMode(.inline)
             } // Ende GeometryReader
         } // NavigationView
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
+        
     } // Ende var body
     
 } // Ende ShapeshowDetailPhoto

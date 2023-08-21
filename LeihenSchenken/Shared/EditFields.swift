@@ -288,7 +288,7 @@ struct EditPreisWert: View {
                 Text("Preis/Wert: ")
                     .font(.system(size: 16, weight: .regular))
                 Spacer()
-                TextField("", text: $preisWertTmp)
+                TextField("€", text: $preisWertTmp)
                     .focused($isInputPreisWertActive)
                     .padding(.leading, 6)
                     .foregroundColor(.black)
@@ -540,7 +540,7 @@ struct EditVorgang: View {
     @Binding var par2: Int
     @Binding var vorgangTmp: String
     
-    @State var vorgangArrayTmp: [String] =  ["Verleihen", "Verschenken", "Bekommen"]
+    @State var vorgangArrayTmp: [String] =  ["Verleihen", "Verschenken", "Bekommen", "Aufbewahren", "Geschenkidee"]
     
     @State var indexInt: Int = 0
     
@@ -561,7 +561,7 @@ struct EditVorgang: View {
                     } // Ende ForEach
                 }) // Picker
                 .font(.system(size: 16, weight: .regular))
-                .frame(width: 150, height: 30)
+                .frame(width: 180, height: 30)
                 .background(Color.blue)
                 .opacity(0.4)
                 .cornerRadius(5)

@@ -230,33 +230,36 @@ struct serchFullTextInObjekten: View {
             .onTapGesture {
                 isInputSarchFullTextInObjektenActive = true
                 
-                
             } // Ende onTapGesture
             .padding(.horizontal, 15)
             .padding(.vertical, 5)
             .overlay(
-                HStack {
-                    if globaleVariable.searchTextObjekte.isEmpty && isInputSarchFullTextInObjektenActive == false{
-                        
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.white)
-                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 20)
-                    }else{
-                        if !globaleVariable.searchTextObjekte.isEmpty {
-                            Button(action: {
-                                self.globaleVariable.searchTextObjekte = ""
-                                
-                            }) {
-                                
-                                Image(systemName: "multiply.circle.fill")
-                                    .foregroundColor(.white)
-                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
-                                    .padding(.trailing, 20)
-                            }// Button Image
-                        }
-                    } // Ende if/else
-                })
+                Group{
+                    HStack {
+                        if globaleVariable.searchTextObjekte.isEmpty && isInputSarchFullTextInObjektenActive == false{
+                            
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.white)
+                                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 20)
+                        }else{
+                            if !globaleVariable.searchTextObjekte.isEmpty {
+                                Button(action: {
+                                    globaleVariable.searchTextObjekte = ""
+                                    //isInputSarchFullTextInObjektenActive = false
+                                    
+                                }) {
+                                    
+                                    Image(systemName: "multiply.circle.fill")
+                                        .foregroundColor(.white)
+                                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
+                                        .padding(.trailing, 20)
+                                }// Button Image
+                            }
+                        } // Ende if/else
+                    } // Ende HStack
+                } // Ende Group
+            )
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     if isInputSarchFullTextInObjektenActive {
@@ -326,12 +329,30 @@ func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
     
     if par2 == true {
         
-        resultat = par1.sorted {($0.vorgang, sortDateFormatter.date(from: $0.datum)!) < ($1.vorgang, sortDateFormatter.date(from: $1.datum)!)}
+        //resultat = par1.sorted {($0.vorgang, sortDateFormatter.date(from: $0.datum)!) < ($1.vorgang, sortDateFormatter.date(from: $1.datum)!)}
+        
+        resultat = par1.sorted {
+            if $0.vorgang == $1.vorgang {
+                return sortDateFormatter.date(from: $0.datum)! < sortDateFormatter.date(from: $1.datum)!
+                
+            }
+            return $0.vorgang < $1.vorgang
+        }
         
         //print("Sortiert True")
     }else{
         
-        resultat = par1.sorted {($0.vorgang, sortDateFormatter.date(from: $0.datum)!) > ($1.vorgang, sortDateFormatter.date(from: $1.datum)!)}
+        //resultat = par1.sorted {($0.vorgang, sortDateFormatter.date(from: $0.datum)!) > ($1.vorgang, sortDateFormatter.date(from: $1.datum)!)}
+        
+        resultat = par1.sorted {
+            if $0.vorgang == $1.vorgang {
+                return sortDateFormatter.date(from: $0.datum)! > sortDateFormatter.date(from: $1.datum)!
+                
+            }
+            return $0.vorgang > $1.vorgang
+        }
+        
+        
         
         //print("Sortiert False")
     }// Ende if/else
@@ -339,64 +360,83 @@ func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
     return resultat
 }// Ende func
 
+
+
 // Das ist die View für den Full Search in den Objekten
 // Aufgerufen in der Tab1 View
-struct serchFullTextInAdressbook: View {
+struct SerchFullTextInAdressbook: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    @FocusState var isInputSarchFullTextInAdressbookActive: Bool
+    @FocusState var isInputActive: Bool
     
     var body: some View {
         
         TextField("", text: $globaleVariable.searchTextAdressBook)
-            .focused($isInputSarchFullTextInAdressbookActive)
+            .focused($isInputActive)
             .frame(height: detailViewBottomToolbarHight() - 36)
             .font(.system(size: 18, weight: .medium))
             .disableAutocorrection (true)
             .submitLabel(.done)
             .foregroundColor(.white)
             .padding()
-            .background(Color.gray)
+            .background(Color(.lightGray))
             .cornerRadius(10)
-            .onTapGesture {
-                isInputSarchFullTextInAdressbookActive = true
-                
-            } // Ende onTapGesture
             .padding(.horizontal, 15)
             .padding(.vertical, 5)
             .overlay(
-                HStack {
-                    if globaleVariable.searchTextAdressBook.isEmpty && isInputSarchFullTextInAdressbookActive == false{
-                        
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.white)
-                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 20)
-                    }else{
-                        if !globaleVariable.searchTextAdressBook.isEmpty {
-                            Button(action: {
-                                self.globaleVariable.searchTextAdressBook = ""
-                                
-                            }) {
-                                
+                Group{
+                    HStack {
+                        if globaleVariable.searchTextAdressBook.isEmpty && isInputActive == false {
+                            
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.white)
+                                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 20)
+                        }else{
+                            if !globaleVariable.searchTextAdressBook.isEmpty {
+                                /*
+                                Button(action: {
+                                    self.globaleVariable.searchTextAdressBook = ""
+                                    self.isInputSarchFullTextInAdressbookActive = false
+                                    print("Button X gedrückt!")
+                                }) {
+                                    
+                                    Image(systemName: "multiply.circle.fill")
+                                        .foregroundColor(.white)
+                                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
+                                        .padding(.trailing, 20)
+                                }// Button Image
+                                */
                                 Image(systemName: "multiply.circle.fill")
                                     .foregroundColor(.white)
                                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
                                     .padding(.trailing, 20)
-                            }// Button Image
-                        }
-                    } // Ende if/else
-                })
+                                    .onTapGesture {
+                                        self.globaleVariable.searchTextAdressBook = ""
+                                        self.isInputActive = false
+                                        print("Button X gedrückt!")
+                                    } // Ende onTapgesture
+                            
+                            } // Ende if
+                        } // Ende if/else
+                    }// Ende HStack
+                }// Ende Group
+            )// Ende .overlay
+            .onTapGesture {
+                
+                isInputActive = true
+                
+            } // Ende onTapGesture
         
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
-                    if isInputSarchFullTextInAdressbookActive {
+                    if isInputActive {
                         HStack {
                             Text("")
                             Spacer()
                             Button("Abbrechen") {
                                 self.globaleVariable.searchTextAdressBook = ""
-                                isInputSarchFullTextInAdressbookActive = false
+                                self.isInputActive = false
                                 
                             } // Ende Button
                             .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
@@ -408,9 +448,12 @@ struct serchFullTextInAdressbook: View {
                 } // Ende ToolbarItemGroup
             } // Ende toolbar
         
+        
+        
     } // Ende var body
     
 } // Ende struct
+
 
 
 // Filter für die Fulltextsuche im Adressbook
@@ -433,3 +476,5 @@ func serchInAdressBookArray(parameter:  [Contact]) ->  [Contact]{
     
     return resultat
 }// Ende func
+
+

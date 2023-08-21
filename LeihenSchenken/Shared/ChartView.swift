@@ -118,11 +118,15 @@ struct ChartView: View {
                             //.padding(.leading, 15)
                             
                             HStack {
+                                let textPrefix = vorgangPrefixDeklination(vorgang: par1[par2].vorgang )
+                                Text("\(textPrefix)")
+                                /*
                                 if par1[par2].vorgang == "Bekommen" {
                                     Text(" von ")
                                 }else{
                                     Text(" an ")
                                 } // Ende if/else
+                                */
                                 Spacer()
                                 Text("\(par1[par2].personNachname)" + ", " + "\(par1[par2].personVorname)" + " ")
                                     .modifierShowFields()

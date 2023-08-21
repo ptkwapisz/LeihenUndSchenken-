@@ -160,3 +160,15 @@ extension URL {
         return attributes?[.creationDate] as? Date
     } // Ende var
 } // Ende extension URL
+
+
+// Diese erweiterung erlaub einen .if Modyfier
+extension View {
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }// Ende if/else
+    } // Ende view
+}// Ende extension

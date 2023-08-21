@@ -68,16 +68,18 @@ func distingtArray(par1: [ObjectVariable], par2: String) -> [String]{
         resultat = Array(Set(par1.compactMap { $0.vorgang }))
         
     case "Gegenstand" :
-        
          resultat = Array(Set(par1.compactMap { $0.gegenstand }))
     
     default:
         print("Default")
     } // Ende Switch
     
+    resultat.sort()
+    
     return resultat
 } // Ende func
 
+ 
 func distingtArrayStatistiken(par1: [Statistiken], par2: String) -> [String]{
     
     var resultat: [String] = [""]
@@ -118,6 +120,7 @@ func cleanEingabeMaske () {
     
 } // Ende func
 
+// Diese Funktion dekliniert das Verb für die Objektliste
 func vorgangDeklination(vorgang: String)-> String {
     var resultat: String = ""
     
@@ -129,6 +132,10 @@ func vorgangDeklination(vorgang: String)-> String {
             resultat = "verschenkt"
         case "Bekommen":
             resultat = "bekommen"
+        case "Aufbewahren":
+            resultat = "erhalten"
+        case "Geschenkidee":
+            resultat = "für"
         default:
             print(vorgang)
             print("Keine übereinstimmung")
@@ -137,6 +144,32 @@ func vorgangDeklination(vorgang: String)-> String {
     
     return resultat
 }// Ende func
+
+// Diese Funktion dekliniert das Verb für die Objektliste
+func vorgangPrefixDeklination(vorgang: String)-> String {
+    var resultat: String = ""
+    
+    switch vorgang {
+            
+        case "Bekommen":
+            resultat = "von"
+        case "Erhalten":
+            resultat = "von"
+        case "Geschenkidee":
+            resultat = "für"
+        case "Verschenken":
+            resultat = "an"
+        case "Aufbewahren":
+            resultat = "von"
+        default:
+            resultat = "an"
+    }// Ende Switch
+    
+    return resultat
+}// Ende func
+
+
+
 
 /*
 // Aus der Datenbanktabelle Personen werden die Personendaten geladen, die bei Eingabemaske angezeigt werden.
@@ -393,11 +426,21 @@ func ladeStatistiken() -> [Statistiken] {
     let z4s1: String = "Erhaltene Objekte:"
     let z4S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Bekommen'")
     
+    let z5s0: String = "Objekte"
+    let z5s1: String = "Objekte zum Aufbewahren:"
+    let z5S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Aufbewahren'")
+    
+    let z6s0: String = "Objekte"
+    let z6s1: String = "Ideen für ein Objekt:"
+    let z6S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Geschenkidee'")
+    
     
     resultat.append(Statistiken(stGruppe: z1s0, stName: z1s1, stWert: z1S2.count == 0 ? "0" : z1S2[0]))
     resultat.append(Statistiken(stGruppe: z2s0, stName: z2s1, stWert: z2S2.count == 0 ? "0" : z2S2[0]))
     resultat.append(Statistiken(stGruppe: z3s0, stName: z3s1, stWert: z3S2.count == 0 ? "0" : z3S2[0]))
     resultat.append(Statistiken(stGruppe: z4s0, stName: z4s1, stWert: z4S2.count == 0 ? "0" : z4S2[0]))
+    resultat.append(Statistiken(stGruppe: z5s0, stName: z5s1, stWert: z5S2.count == 0 ? "0" : z5S2[0]))
+    resultat.append(Statistiken(stGruppe: z6s0, stName: z6s1, stWert: z6S2.count == 0 ? "0" : z6S2[0]))
     
     
     let tmp0 = querySQLAbfrageArray(queryTmp: "Select distinct(gegenstand) From Objekte")

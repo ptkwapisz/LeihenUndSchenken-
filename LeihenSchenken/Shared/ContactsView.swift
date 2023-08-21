@@ -59,36 +59,38 @@ func fetchAllContacts() -> [Contact] {
 
 import SwiftUI
 import Contacts
-
-func fetchAllContacts() -> [Contact] {
-    var resultat = [Contact]()
     
-    // Get access to the Contacts store
-    let store = CNContactStore()
-    
-    // Specify which data keys we want to fetch
-    let keys = [CNContactGivenNameKey, CNContactFamilyNameKey] as [CNKeyDescriptor]
-    
-    // Create fetch request
-    let fetchRequest = CNContactFetchRequest(keysToFetch: keys)
-    
-    do {
-        // Enumerate and process contacts
-        try store.enumerateContacts(with: fetchRequest) { contact, stopPointer in
-            // Append only non-empty contacts
-            if !contact.givenName.isEmpty || !contact.familyName.isEmpty {
-                resultat.append(Contact(firstName: contact.givenName, lastName: contact.familyName))
-            } // Ende if
-        } // Ende try
+    func fetchAllContacts() -> [Contact] {
+        var resultat = [Contact]()
         
-        // Sort the contacts by last name
-        resultat.sort { $0.lastName < $1.lastName }
+        // Get access to the Contacts store
+        let store = CNContactStore()
         
-    } catch {
-        // Handle errors
-        print("Error fetching contacts: \(error)")
-    } // Ende do/catch
+        // Specify which data keys we want to fetch
+        let keys = [CNContactGivenNameKey, CNContactFamilyNameKey] as [CNKeyDescriptor]
+        
+        // Create fetch request
+        let fetchRequest = CNContactFetchRequest(keysToFetch: keys)
+        
+        do {
+            
+            // Enumerate and process contacts
+            try store.enumerateContacts(with: fetchRequest) { contact, stopPointer in
+                // Append only non-empty contacts
+                if !contact.givenName.isEmpty || !contact.familyName.isEmpty {
+                    resultat.append(Contact(firstName: contact.givenName, lastName: contact.familyName))
+                } // Ende if
+            } // Ende try
+            
+            // Sort the contacts by last name
+            resultat.sort { $0.lastName < $1.lastName }
+            
+        } catch {
+            // Handle errors
+            print("Error fetching contacts: \(error)")
+        } // Ende do/catch
+        
+        return resultat
+    } // Ende func
     
-    return resultat
-} // Ende func
 

@@ -12,7 +12,7 @@ class GlobaleVariable: ObservableObject {
     static let shared = GlobaleVariable()
     
     @Published var parameterPersonSex: [String] =  ["Frau", "Mann", "Divers"]
-    @Published var parameterVorgang: [String] =  ["Verleihen", "Verschenken", "Bekommen"]
+    @Published var parameterVorgang: [String] =  ["Verleihen", "Verschenken", "Bekommen", "Aufbewahren", "Geschenkidee"]
     @Published var parameterGegenstand: [String] = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
     
     @Published var searchTextObjekte: String = ""
