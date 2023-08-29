@@ -13,6 +13,9 @@
 		DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E9F32A023BB000CBC354 /* Extention.swift */; };
 		DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A992A437D09001B2781 /* EditFields.swift */; };
 		DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A9B2A438393001B2781 /* ViewModifier.swift */; };
+		DBAC3B132A9DC1900061096F /* PrintObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAC3B122A9DC1900061096F /* PrintObjects.swift */; };
+		DBAC3B142A9DC1900061096F /* PrintObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAC3B122A9DC1900061096F /* PrintObjects.swift */; };
+		DBAC3B152A9DC1900061096F /* PrintObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAC3B122A9DC1900061096F /* PrintObjects.swift */; };
 		DBAD5E012A7707F1009AAF62 /* iCloudAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */; };
 		DBB7E9A02A6805D9007CD383 /* EingabeMaske.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB7E99F2A6805D9007CD383 /* EingabeMaske.swift */; };
 		DBB7E9A22A68069F007CD383 /* EingabeMaskePad.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB7E9A12A68069F007CD383 /* EingabeMaskePad.swift */; };
@@ -65,6 +68,7 @@
 		DB538A992A437D09001B2781 /* EditFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFields.swift; sourceTree = "<group>"; };
 		DB538A9B2A438393001B2781 /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		DB9160B62A79427E00E11ACC /* LeihenSchenken.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LeihenSchenken.entitlements; sourceTree = "<group>"; };
+		DBAC3B122A9DC1900061096F /* PrintObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintObjects.swift; sourceTree = "<group>"; };
 		DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudAccess.swift; sourceTree = "<group>"; };
 		DBB7E99F2A6805D9007CD383 /* EingabeMaske.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaske.swift; sourceTree = "<group>"; };
 		DBB7E9A12A68069F007CD383 /* EingabeMaskePad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaskePad.swift; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 				DBCCBB862A1826D300EDF087 /* TabViews.swift */,
 				DBD0BAB02A69D04C006CB53A /* TabViewsDeteil.swift */,
 				DB0160FA2A17CE15000A34CE /* PdfView.swift */,
+				DBAC3B122A9DC1900061096F /* PrintObjects.swift */,
 				DB538A9B2A438393001B2781 /* ViewModifier.swift */,
 				DBC541392A58B2EB00A8F01B /* ExportImport.swift */,
 				DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */,
@@ -371,6 +376,7 @@
 				DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */,
 				DBC5413A2A58B2EB00A8F01B /* ExportImport.swift in Sources */,
 				DBD0BAB12A69D04C006CB53A /* TabViewsDeteil.swift in Sources */,
+				DBAC3B132A9DC1900061096F /* PrintObjects.swift in Sources */,
 				DB27ACE02A0B83C7009BC26B /* PadViews.swift in Sources */,
 				DBBC7BA32A001A1C00177A52 /* PhoneViews.swift in Sources */,
 				DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */,
@@ -391,6 +397,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBAC3B142A9DC1900061096F /* PrintObjects.swift in Sources */,
 				DBCEF80B29D1ED7A0017A728 /* LeihenSchenkenTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,6 +406,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBAC3B152A9DC1900061096F /* PrintObjects.swift in Sources */,
 				DBCEF81729D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift in Sources */,
 				DBCEF81529D1ED7A0017A728 /* LeihenSchenkenUITests.swift in Sources */,
 			);

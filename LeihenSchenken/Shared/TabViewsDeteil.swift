@@ -21,13 +21,11 @@ struct deteilTab1: View {
     var body: some View {
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
-        let objekteTmp = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
+        let alleObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
         
-        let objektTmpWithFilter = serchObjectArray(parameter: objekteTmp)
+        let objektWithFilter = serchObjectArray(parameter: alleObjekte)
         
-        //let objekte = objektTmpWithFilter.sorted {($0.vorgang, $0.datum) < ($1.vorgang, $1.datum)}
-        
-        let objekte = sortiereObjekte(par1: objektTmpWithFilter, par2: sortObjekte)
+        let objekte = sortiereObjekte(par1: objektWithFilter, par2: sortObjekte)
         
         let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen, Schänken oder bekommen
         
@@ -161,7 +159,7 @@ struct deteilTab1: View {
                                 .foregroundColor(Color.white)
                         } // Ende if UIDevice
                         // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
-                        if objekteTmp.count > 0 {
+                        if alleObjekte.count > 0 {
                             serchFullTextInObjekten()
                         }// Ende if
                         
@@ -177,7 +175,7 @@ struct deteilTab1: View {
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)
             .onAppear() {
-                if objekteTmp.count == 0 {
+                if alleObjekte.count == 0 {
                     // Wenn sich keine Objekte in der Datenbanktabelle befinden
                     // wird eine Information gezeigt.
                     showAlert = true

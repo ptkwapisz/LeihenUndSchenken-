@@ -142,7 +142,7 @@ struct Tab5: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
-    let heightFaktor: Double = 0.99
+    //let heightFaktor: Double = 0.99
     
 var body: some View {
     GeometryReader { geometry in

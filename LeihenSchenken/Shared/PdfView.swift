@@ -9,9 +9,6 @@ import Foundation
 import SwiftUI
 import PDFKit
 
-
-import PDFKit
-
 struct PDFKitRepresentedView: UIViewRepresentable {
     let url: URL
 
@@ -21,7 +18,7 @@ struct PDFKitRepresentedView: UIViewRepresentable {
 
     func makeUIView(context: UIViewRepresentableContext<PDFKitRepresentedView>) -> PDFKitRepresentedView.UIViewType {
         // Create a `PDFView` and set its `PDFDocument`.
-        let pdfView = PDFView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: UIScreen.screenHeight)) // frame ist wigtig um Fehler zu verhindern
+        let pdfView = PDFView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: UIScreen.screenHeight)) // frame ist wichtig um Fehler zu verhindern
         pdfView.document = PDFDocument(url: self.url)
         
         if UIDevice.current.userInterfaceIdiom == .phone {
@@ -42,7 +39,7 @@ struct PDFKitRepresentedView: UIViewRepresentable {
 } // Ende struct
 
 struct PDFKitView: View {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    //@ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var url: URL
     var body: some View {
@@ -52,5 +49,8 @@ struct PDFKitView: View {
         
     } // Ende var body
 } // Ende struct
+
+
+
 
 

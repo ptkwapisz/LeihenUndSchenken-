@@ -193,7 +193,7 @@ struct ShapeViewAddUser: View {
                 
                 
             } // Ende Form
-            .navigationTitle("Neuer Benutzer").navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.inline)
             //.scrollDisabled(true)
             
         } // Ende NavigationView
@@ -256,7 +256,8 @@ struct ShapeViewAddGegenstand: View {
                         .disableAutocorrection(true)
                     
                 } // Ende Section
-                .toolbar {ToolbarItemGroup(placement: .keyboard) {
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
                     HStack {
                         Text("\(gegenstandNeu.count)/20")
                             .font(.system(size: 16, weight: .regular))
@@ -270,7 +271,7 @@ struct ShapeViewAddGegenstand: View {
                         } // Ende Button
                     } // Ende HStack
                     
-                }// Ende ToolbarItemGroup
+                } // Ende ToolbarItemGroup
                 } // Ende Toolbar
                 
                 HStack {

@@ -5,43 +5,111 @@
 //  Created by PIOTR KWAPISZ on 20.05.23.
 //
 import SwiftUI
+import Swift
+import Foundation
+//import AppKit
+//import Cocoa
 
-//import Foundation
-//import Contacts
-
-/*
-struct emptyView: View {
+struct EmptyTestView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    var breite: CGFloat = 370
-    var hoehe: CGFloat = 320
+    var breite: CGFloat = 400
+    var hoehe: CGFloat = 200
     
     var body: some View {
-        ZStack{
-            VStack{
-                Text("Info zu Tabellen").bold()
-                    .font(.title2)
-                    .frame(alignment: .center)
-                
-                Divider().background(Color.black)
+        
+        let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
+        let objekteTmp = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
+        
+        let objektTmpWithFilter = serchObjectArray(parameter: objekteTmp)
+        
+        let objekte = sortiereObjekte(par1: objektTmpWithFilter, par2: true)
+        
+        let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen, Schänken oder bekommen
+        
+        let anzahl: Int = objekte.count
+        
+        
+        VStack{
+            Text ("Liste der Objekte")
+                .font(.system(size: 20, weight: .heavy, design: .rounded))
+                .frame(alignment: .leading)
+            
+            Text(" ")
+            Text("\(tempErgaenzung)" + "!").bold()
+                .font(.system(size: 16, weight: .heavy, design: .rounded))
+                .frame(alignment: .leading)
+            
+            Divider().background(Color.black)
+            Text(" ")
+            
+            ForEach(gegVorgang.indices, id: \.self) { idx in
                 Text("")
-                Text("Die Tabellen können nur dann angezeigt werden, wenn mindestens ein Objekt gespeichert wurde. Gehen Sie bitte zu Eingabemaske zurück und geben sie den ersten Gegenstand ein. Bitte vergessen Sie nicht dann Ihre Eingaben zu speichern. Danach können Sie die Tabellen sehen.")
-                    .font(.system(size: 18))
-                Spacer()
+                Text("Vorgang: " + "\(gegVorgang[idx])").font(.system(size: 15, weight: .medium)).bold()
+                Text("")
                 
-            } // Ende Vstack
-            //.frame(width: breite, height: hoehe, alignment: .leading)
-            .padding(EdgeInsets(top: 40, leading: 20, bottom: 30, trailing: 20))
-            .frame(width: breite, height: hoehe, alignment: .leading)
-            .background(Color.gray.gradient)
-            .cornerRadius(10.0)
-            .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 15.0)
-        } // Ende ZStack
+                ForEach(0..<anzahl, id: \.self) { item in
+                    
+                    if gegVorgang[idx] == objekte[item].vorgang {
+                        VStack() {
+                            HStack {
+                                
+                                Text("\(objekte[item].gegenstand)")
+                                Text("am")
+                                Text("\(objekte[item].datum)")
+                                
+                                Spacer()
+                                
+                            } // Ende HStack
+                            .font(.system(size: 16, weight: .medium)).bold()
+                            
+                            HStack {
+                                if objekte[item].gegenstandText != "" {
+                                    Text("\(subStringOfTextField(parameter: objekte[item].gegenstandText))")
+                                        .font(.system(size: 16, weight: .medium))//.bold()
+                                    Text("...")
+                                    Spacer()
+                                }
+                            } // Ende HStack
+                            //.background(zeilenFarbe(par: item)).foregroundColor(Color.black)
+                            
+                            HStack {
+                                
+                                let textPrefix = vorgangPrefixDeklination(vorgang:gegVorgang[idx] )
+                                
+                                Text("\(textPrefix)")
+                                Text(String(objekte[item].personVorname))
+                                Text(String(objekte[item].personNachname))
+                                
+                                Spacer()
+                                
+                            } // Ende HStack
+                            //.background(zeilenFarbe(par: item)).foregroundColor(Color.black)
+                            .font(.system(size: 15, weight: .medium)).bold()
+                            
+                        } // Ende VStack
+                        .background(zeilenFarbe(par: item)).foregroundColor(Color.black)
+                        .foregroundColor(Color.black)
+                        
+                    } // Ende if gegVorgang
+                    
+                } // Ende ForEach
+                .listRowSeparatorTint(.black)
+                
+            } // Ende ForEach
+            
+        } // Ende Vstack
+        .frame(width: breite, alignment: .leading)
+        //.padding(EdgeInsets(top: 10, leading: 10, bottom: 20, trailing: 10))
+        //.frame(width: breite, height: hoehe, alignment: .leading)
+        //.background(Color.gray.gradient)
+        //.cornerRadius(10.0)
+        //.shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 15.0)
+        
     } // Ende var body
     
 } // Ende struct
 
 // ------------------------------------------
-*/
 
 // Höhe des unteren Toolbarstreifes bei den Tabs
 func detailViewBottomToolbarHight() -> CGFloat {
@@ -286,7 +354,7 @@ struct serchFullTextInObjekten: View {
 
 
 // Filter für die Fulltextsuche der Objekte
-// Diese func war notwändig weil if abfrage in der View nicht zuläsig ist.
+// Diese func war notwändig weil if-Abfrage in der View nicht zuläsig ist.
 // Diese Funktion wird in der Tab1 View aufgerufen
 func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -476,5 +544,7 @@ func serchInAdressBookArray(parameter:  [Contact]) ->  [Contact]{
     
     return resultat
 }// Ende func
+
+
 
 

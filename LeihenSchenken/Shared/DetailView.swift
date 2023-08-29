@@ -30,7 +30,9 @@ struct DeteilView: View {
     @State var showAppInfo: Bool = false
     @State var showTabHilfe: Bool = false
     @State var showExport: Bool = false
-    
+
+    @State var showObjectListeParameterView: Bool = false
+
     var body: some View {
     
         // Prüfen, ob sich Objekte in der Datenbank befinden
@@ -113,7 +115,8 @@ struct DeteilView: View {
                         
                         Divider()
                         
-                        //Button("Export to CSV", action: {showExportToCSV.toggle()})
+                        Button("Objektenliste erstellen", action: {showObjectListeParameterView.toggle()})
+                        
                         Button("Datenbank zurücksetzen", action: {showDBReset.toggle()})
                         
                     }) {
@@ -141,7 +144,8 @@ struct DeteilView: View {
                     ) // Ende alert
                     .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
                     .sheet(isPresented: $showExport, content: { ExportCSVProgressView(isPresented: $showExport).presentationBackground(.clear)})
-                   
+                    .sheet(isPresented: $showObjectListeParameterView, content: {ObjektListeParameter()})
+                    
                 } // Ende ToolbarItemGroup
                 
                 
