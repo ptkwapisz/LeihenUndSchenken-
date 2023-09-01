@@ -11,32 +11,25 @@ import Foundation
 
 struct ObjektListeParameter: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    @State var titel: String = ""
-    @State var unterTitel: String = ""
-    @State var sortObjekte: Bool = true
-    
+    @ObservedObject var data = SharedData.shared
+    @Binding var isPresented: Bool
+        
     @FocusState var isInputActiveTitel: Bool
     @FocusState var isInputActiveUntertitel: Bool
     
-    
     var body: some View {
        
-        let alleObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
-        
-        let objektWithFilter = serchObjectArray(parameter: alleObjekte)
-        
-        let objekte = sortiereObjekte(par1: objektWithFilter, par2: sortObjekte)
-        
         NavigationView {
             Form {
                 Section(header: Text("Kopfzeilen der Liste").foregroundColor(.gray).font(.system(size: 16, weight: .regular))) {
-                    TextField("Listentitel", text: $titel)
+                 
+                    TextField("Listentitel", text: $data.titel)
                         .focused($isInputActiveTitel)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
+                        /*
+                        .submitLabel(.done)
                         .disableAutocorrection(true)
                         .toolbar {
                             ToolbarItemGroup(placement: .keyboard) {
@@ -44,19 +37,20 @@ struct ObjektListeParameter: View {
                                     Spacer()
                                     Button("Abbrechen") {
                                         isInputActiveTitel = false
-                                        titel = ""
+                                        titelTmp = ""
                                     } // Ende Button
                                 } // Ende HStack
                                 
                             } // Ende ToolbarItemGroup
                         } // Ende Toolbar
-                    
-                    
-                    TextField("Listenuntertitel", text: $unterTitel)
+                    */
+                    TextField("Listenuntertitel", text: $data.unterTitel)
                         .focused($isInputActiveUntertitel)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
+                      /*
+                        .submitLabel(.done)
                         .disableAutocorrection(true)
                         .toolbar {
                             ToolbarItemGroup(placement: .keyboard) {
@@ -64,67 +58,62 @@ struct ObjektListeParameter: View {
                                     Spacer()
                                     Button("Abbrechen") {
                                         isInputActiveUntertitel = false
-                                        unterTitel = ""
+                                        unterTitelTmp = ""
                                     } // Ende Button
                                 } // Ende HStack
                                 
                             } // Ende ToolbarItemGroup
                         } // Ende Toolbar
-                    
+                    */
                 }// Ende Section
                 .font(.system(size: 16, weight: .regular))
-                
+                Section {
+                    Toggle("Das Feld Preis/Wert:", isOn: $globaleVariable.preisOderWert ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                } footer: {
+                        
+                        Text("Beim Einschalten wird das Feld Preis/Wert falls vorhanden, neben dem Gegenstand auf der Liste mitangezeigt.")
+                        
+                } // Ende Section
+                .font(.system(size: 16, weight: .regular))
                 
                 VStack{
                     Spacer()
+                    
                     HStack {
                         Spacer()
                         Button(action: {
-                            self.presentationMode.wrappedValue.dismiss()
+                            // Es wurden keine Angaben gemacht
+                            
+                            isPresented.toggle()
+                            
                         }) {Text("Abbrechen")}
                             .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                         
                         Button(action: {
-                            if titel.isEmpty {
-                                titel = "Das ist Header-Titel - First Line"
-                            }// Ende if
-                            if unterTitel.isEmpty {
-                                unterTitel = "Das ist Header-Untertitel - Second Line"
-                            } // Ende if
                             
-                            let pageHeader = titel + "\n" + unterTitel
+                            print("Titel und Untertitel wurden übernohmen!")
+                        
+                            data.save()
                             
-                            printItems(pageHeader: pageHeader, objektenArray: objekte)
-                            //printObjectsList(titel: titel, unterTitel: unterTitel)
+                            isPresented.toggle()
                             
-                        }) {Text("Liste generieren")}
+                        }) {Text("Daten übernehmen")}
                             .buttonStyle(.borderedProminent)
                             .foregroundColor(.white)
                             .font(.system(size: 16, weight: .regular))
                             .cornerRadius(10)
                         Spacer()
-                    }// Ende HStack
+                    } // Ende HStack
+                    
                 } // Ende VStack
             } // Ende Form
-            .navigationTitle("Objektlisten Parameter").navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Parameter für die Objektenliste.").navigationBarTitleDisplayMode(.inline)
+            
         } // Ende NavigationView
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
+        
     } // Ende var body
     
-} // Ende func
-
-
-// Convert UILabel to UIImage for printing
-func createUIImage(from label: UILabel) -> UIImage? {
-    UIGraphicsBeginImageContextWithOptions(label.bounds.size, false, 0.0)
-    defer { UIGraphicsEndImageContext() }  // This ensures UIGraphicsEndImageContext() is always called at the end
-    
-    if let context = UIGraphicsGetCurrentContext() {
-        label.layer.render(in: context)
-        return UIGraphicsGetImageFromCurrentImageContext()
-    } // Ende if
-    
-    return nil
 } // Ende func
 
 
@@ -143,13 +132,14 @@ func printItems(pageHeader: String, objektenArray: [ObjectVariable]) {
     
     printController.printInfo = printInfo
     
+    
     printController.printPageRenderer = PrintPageRenderer(items: items, headerText: pageHeader)
     
     printController.present(animated: true, completionHandler: nil)
-}
+     
+} // Ende func printItems
 
 class PrintItem: Identifiable {
-    //static let shared = UserSettingsDefaults()
     
     @Published var gegenstand: String
     @Published var gegenstandText: UIImage
@@ -191,16 +181,19 @@ class PrintPageRenderer: UIPrintPageRenderer {
         self.headerHeight = 50.0
         self.footerHeight = 50.0
         
+        // Dieser formatter verursachte fehler.
         // Create and add a print formatter to the renderer. This is a workaround to ensure headers and footers are drawn.
-        let formatter = UISimpleTextPrintFormatter(text: " ")
-        self.addPrintFormatter(formatter, startingAtPageAt: 0)
-    }
+        //let formatter = UISimpleTextPrintFormatter(text: " ")
+        //let formatter = UIMarkupTextPrintFormatter(markupText: " ")
+        //self.addPrintFormatter(formatter, startingAtPageAt: 0)
+        
+    } // Ende init
     
     // Calculate the total number of pages required to print all items.
     override var numberOfPages: Int {
         return (items.count + itemsPerPage - 1) / itemsPerPage
-    }
-    
+    } // Ende override func
+ 
     override func drawHeaderForPage(at pageIndex: Int, in headerRect: CGRect) {
         super.drawHeaderForPage(at: pageIndex, in: headerRect)
         
@@ -214,8 +207,7 @@ class PrintPageRenderer: UIPrintPageRenderer {
             .font: UIFont.systemFont(ofSize: 16),
             .foregroundColor: UIColor.darkGray
         ]
-        
-        
+ 
         // Split the header text into two separate lines.
         let headerLines = headerText.split(separator: "\n", maxSplits: 1)
         if headerLines.count == 2 {
@@ -247,9 +239,9 @@ class PrintPageRenderer: UIPrintPageRenderer {
             // Draw the header text.
             attributedHeaderText.draw(at: point)
             
-        }
-    }
-    
+        } // Ende if/else
+    } //ende override func
+
     // Method responsible for drawing the footer.
     override func drawFooterForPage(at pageIndex: Int, in footerRect: CGRect) {
         super.drawFooterForPage(at: pageIndex, in: footerRect)
@@ -271,10 +263,11 @@ class PrintPageRenderer: UIPrintPageRenderer {
         
         // Draw the footer text.
         attributedFooterText.draw(at: point)
-    }
-    
+    } // Ende override func
+
     // Method responsible for drawing the content of each page.
     override func drawContentForPage(at pageIndex: Int, in printableRect: CGRect) {
+        
         // Adjust the printableRect to avoid drawing over the header and footer areas.
         let adjustedPrintableRect = CGRect(x: printableRect.origin.x,
                                            y: printableRect.origin.y + headerHeight,
@@ -295,26 +288,43 @@ class PrintPageRenderer: UIPrintPageRenderer {
             
             // Draw the item in the calculated rectangle.
             drawItem(item, in: itemRect)
-        }
-    }
+        } // Ende for i
+    } // Ende override func
     
     // Method responsible for rendering a single PrintItem.
     private func drawItem(_ item: ObjectVariable, in rect: CGRect) {
+        @ObservedObject var globaleVariable = GlobaleVariable.shared
         
-        // Text attributes for the item's text.
-        let textAttributes: [NSAttributedString.Key: Any] = [
+        // Text attributes for the item textGegenstand.
+        let textGegenstandAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 12)
         ]
         
-        // Draw the item's text.
-        let text = item.gegenstand as NSString
-        text.draw(in: rect.insetBy(dx: 10, dy: 10), withAttributes: textAttributes)
+        // Draw the item textGegenstand.
+        let textGegenstand = item.gegenstand as NSString
+        textGegenstand.draw(in: rect.insetBy(dx: 25, dy: 10), withAttributes: textGegenstandAttributes)
         
         
-        // Draw the item's image.
-        let imageRect = CGRect(x: rect.minX + 10, y: rect.minY + 40, width: 50, height: 50)
-        if item.gegenstandBild == "Kein Bild" {
+        
+        if globaleVariable.preisOderWert == true {
             
+            let euroZeichen = (item.preisWert.isEmpty) ? "": " €"
+            // Text attributes for the item PreisWert.
+            let textPreisWertAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 12)
+                
+            ]
+            
+            // Draw the item textPreisWert.
+            let textPreisWert = item.preisWert + euroZeichen as NSString
+            let textGegenstandSize = textGegenstand.size(withAttributes: textGegenstandAttributes)
+            let textGegenstandWidth: CGFloat = textGegenstandSize.width
+            textPreisWert.draw(in: rect.insetBy(dx: 25 + textGegenstandWidth + 5, dy: 10), withAttributes: textPreisWertAttributes)
+        }
+            
+        // Draw the item's image.
+        let imageRect = CGRect(x: rect.minX + 25, y: rect.minY + 40, width: 50, height: 50)
+        if item.gegenstandBild == "Kein Bild" {
             
             let emptyGegenstandBild = createImageFromLabel(labelText: "Kein Bild")
             emptyGegenstandBild.draw(in: imageRect)
@@ -325,28 +335,40 @@ class PrintPageRenderer: UIPrintPageRenderer {
             let gegenstandBild = UIImage(base64Str: base64String)
             gegenstandBild!.draw(in: imageRect)
             
-            
         } // Ende if/else
         
-        // Draw the item's label (assuming this is an image due to the previous code, which is a bit confusing).
-        let labelRect = CGRect(x: rect.minX + 70, y: rect.minY + 40, width: 200, height: 50)
+        // Draw the item's label of gegenstandText
+        let labelRectgegenstandText = CGRect(x: rect.minX + 85, y: rect.minY + 40, width: 110, height: 50)
         if item.gegenstandText.isEmpty {
             
-            
             let emptyImageGegenstandText = createImageFromLabel(labelText: "Kein Gegenstandstext.")
-            emptyImageGegenstandText.draw(in: labelRect)
+            emptyImageGegenstandText.draw(in: labelRectgegenstandText)
             
         }else{
             
             let imageGegenstandText = createImageFromLabel(labelText: "\(item.gegenstandText)")
-            imageGegenstandText.draw(in: labelRect)
+            imageGegenstandText.draw(in: labelRectgegenstandText)
+            
+        } // Ende if/else
+        
+        // Draw the item's label of allgemeinerText
+        let labelRectallgemeinerText = CGRect(x: rect.minX + 205, y: rect.minY + 40, width: 110, height: 50)
+        if item.allgemeinerText.isEmpty {
+            
+            let emptyImageGegenstandText = createImageFromLabel(labelText: "Kein allgemeiner Text.")
+            emptyImageGegenstandText.draw(in: labelRectallgemeinerText)
+            
+        }else{
+            
+            let imageGegenstandText = createImageFromLabel(labelText: "\(item.allgemeinerText)")
+            imageGegenstandText.draw(in: labelRectallgemeinerText)
             
         } // Ende if/else
         
     } // Ende func drawItem
     
     
-}
+} // Ende class
 
 // This extention help to convert Image from base64String to UIImage
 extension UIImage {
@@ -358,30 +380,178 @@ extension UIImage {
     } // Ende convenince
 } // Ende extension
 
-
-
+/*
+// This function was used by direct printing
 func createImageFromLabel(labelText: String) -> UIImage {
-    var resultat: UIImage
+    var resultat: UIImage?
     var widthInt = 0
     
     if labelText == "Kein Bild" {
         widthInt = 50
     }else{
-        widthInt = 150
+        widthInt = 110
     } // Ende if/else
-    
-    let labelTmp = UILabel(frame: CGRect(x: 0, y: 0, width: widthInt, height: 50))
-            labelTmp.text = """
+    DispatchQueue.main.sync {
+        let labelTmp = UILabel(frame: CGRect(x: 0, y: 0, width: widthInt, height: 50))
+        labelTmp.text = """
              \(labelText)
             """
-            labelTmp.numberOfLines = 0
-            labelTmp.preferredMaxLayoutWidth = 50
-            labelTmp.font = labelTmp.font.withSize(8)
-            labelTmp.backgroundColor = UIColor.gray
-            labelTmp.textColor = UIColor.white
+        labelTmp.numberOfLines = 0
+        labelTmp.preferredMaxLayoutWidth = 50
+        labelTmp.font = labelTmp.font.withSize(8)
+        labelTmp.backgroundColor = UIColor.gray
+        labelTmp.textColor = UIColor.white
+        
+        resultat = createUIImage(from: labelTmp)!
+    } // Ende DispatchQueue
     
-    resultat = createUIImage(from: labelTmp)!
+    return resultat!
     
-    return resultat
+} // Ende func
+*/
+
+// This function ist used by generating of PDF Objects List
+func createImageFromLabel(labelText: String) -> UIImage {
+    var resultat: UIImage?
+    var widthInt = 0
+    
+    if labelText == "Kein Bild" {
+        widthInt = 50
+    } else {
+        widthInt = 110
+    }
+
+    // Use a semaphore to wait for the async task to complete.
+    //let semaphore = DispatchSemaphore(value: 0)
+
+    //DispatchQueue.main.async {
+
+        let labelTmp = UILabel(frame: CGRect(x: 0, y: 0, width: widthInt, height: 50))
+        labelTmp.text = """
+             \(labelText)
+            """
+        labelTmp.numberOfLines = 0
+        labelTmp.preferredMaxLayoutWidth = 50
+        labelTmp.font = labelTmp.font.withSize(8)
+        labelTmp.backgroundColor = UIColor.gray
+        labelTmp.textColor = UIColor.white
+        
+        resultat = createUIImage(from: labelTmp)
+        
+        //semaphore.signal()
+    //}
+
+    // Wait for the async task to complete.
+    //semaphore.wait()
+
+    return resultat!
+}
+
+// Convert UILabel to UIImage for printing
+func createUIImage(from label: UILabel) -> UIImage? {
+    UIGraphicsBeginImageContextWithOptions(label.bounds.size, false, 0.0)
+    defer { UIGraphicsEndImageContext() }  // This ensures UIGraphicsEndImageContext() is always called at the end
+    
+    if let context = UIGraphicsGetCurrentContext() {
+        label.layer.render(in: context)
+        return UIGraphicsGetImageFromCurrentImageContext()
+    } // Ende if
+    
+    return nil
+} // Ende func
+
+/*
+struct ShowObjektenListe: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    
+    let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    
+    var body: some View {
+        
+        let pdfPath = docDir!.appendingPathComponent("objektenListe.pdf")
+        GeometryReader { geometry in
+        NavigationView {
+            
+            Form {
+                
+                    VStack {
+                        
+                        if UIDevice.current.userInterfaceIdiom == .phone {
+                            
+                            PDFKitView(url: pdfPath)
+                              .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+                            
+                            
+                        } else {
+                            PDFKitView(url: pdfPath)
+                                .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                                .background(globaleVariable.farbenEbene1)
+                                .cornerRadius(10)
+                        }
+                    } // Ende VStack
+                    .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+                    .background(globaleVariable.farbenEbene0)
+                
+                
+            }
+            
+        }
+       } // Ende GeometryReader
+        .navigationTitle("Objektenliste").navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button(action:{
+                    
+                    printingHandbuchFile()
+                    
+                }) {
+                    Image(systemName: "printer") // printer.fill square.and.arrow.up
+                } // Ende Button
+            } // Ende ToolbarGroup
+            
+        }
+    } // Ende var body
+    
+} // Ende struc ShowObjektenListe
+
+*/
+
+func createObjektenListe(parTitel: String, parUnterTitel: String) -> Bool {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    var titelString: String = parTitel
+    var unterTitelString: String = parUnterTitel
+    
+    let sortObjekte: Bool = true
+    
+    //let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    
+    let alleObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: true)
+    
+    let objektWithFilter = serchObjectArray(parameter: alleObjekte)
+    let objekte = sortiereObjekte(par1: objektWithFilter, par2: sortObjekte)
+    //let resultat = docDir!.appendingPathComponent("objektenListe.pdf")
+    
+    if titelString.isEmpty {
+        print("GV.Titel ist empty")
+        titelString = "Das ist Header-Titel - First Line"
+        print("\(titelString)")
+    }else{
+        print("GV.Titel ist nicht empty")
+        print("\(titelString)")
+    }// Ende if
+    
+    if unterTitelString.isEmpty {
+        unterTitelString = "Das ist Header-Untertitel - Second Line"
+    }else{
+        
+    } // Ende if
+    
+    let pageHeader = titelString + "\n" + unterTitelString
+    
+    generatePDF(pageHeader: pageHeader, objektenArray: objekte)
+    
+    return true
     
 } // Ende func

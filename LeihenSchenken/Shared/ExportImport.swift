@@ -61,7 +61,7 @@ struct ExportCSVProgressView: View {
     
     var body: some View {
         
-        let alleDaten: [ObjectVariable] = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
+        let alleDaten: [ObjectVariable] = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: true)
         let maxNumber = alleDaten.count - 1
         
         VStack{

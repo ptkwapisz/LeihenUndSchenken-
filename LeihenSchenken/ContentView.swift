@@ -14,6 +14,7 @@ struct ContentView: View {
     //@State private var preferredColumn = NavigationSplitViewColumn.detail
     @State private var emptyDatabase:Bool = false
     
+    
     init() {
         
         let coloredAppearance = UINavigationBarAppearance()

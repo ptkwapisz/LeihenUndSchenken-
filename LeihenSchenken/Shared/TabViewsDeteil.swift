@@ -21,7 +21,7 @@ struct deteilTab1: View {
     var body: some View {
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
-        let alleObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
+        let alleObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: true)
         
         let objektWithFilter = serchObjectArray(parameter: alleObjekte)
         
@@ -96,8 +96,6 @@ struct deteilTab1: View {
                                                     
                                                     let textPrefix = vorgangPrefixDeklination(vorgang:gegVorgang[idx] )
                                                     Text("\(textPrefix)")
-                                                    
-                                                    
                                                     
                                                     Text(String(objekte[item].personVorname))
                                                     //.background(globaleVariable.farbenEbene0).foregroundColor(Color.white)

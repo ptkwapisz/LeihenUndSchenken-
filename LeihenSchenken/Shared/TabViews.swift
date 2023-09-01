@@ -85,84 +85,99 @@ struct Tab3: View {
     
     let heightFaktor: Double = 0.99
     
-var body: some View {
-    GeometryReader { geometry in
-        VStack {
-            
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                deteilTab3()
-                .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
-               
-            } else {
+    var body: some View {
+        GeometryReader { geometry in
+            VStack {
                 
-                deteilTab3()
-                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                    .background(globaleVariable.farbenEbene1)
-                    .cornerRadius(10)
-            } // Ende if/else
-        } // Ende VStack
-    
-        .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-        .background(globaleVariable.farbenEbene0)
-    } // Ende GeometryReader
-} // Ende var body
+                if UIDevice.current.userInterfaceIdiom == .phone {
+                    deteilTab3()
+                        .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+                    
+                } else {
+                    
+                    deteilTab3()
+                        .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                        .background(globaleVariable.farbenEbene1)
+                        .cornerRadius(10)
+                } // Ende if/else
+            } // Ende VStack
+            
+            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbenEbene0)
+        } // Ende GeometryReader
+    } // Ende var body
 } // Ende struc Tab3
 
+
+// Objektenliste
 struct Tab4: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    let heightFaktor: Double = 0.99
     
-var body: some View {
-    GeometryReader { geometry in
-        VStack {
-            
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                IphoneTable4()
-                .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
-               
-            } else {
-                IphoneTable4()
-                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                    .background(globaleVariable.farbenEbene1)
-                    .cornerRadius(10)
+    let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    
+    //let _: Bool = createObjektenListe()
+    
+    var body: some View {
+        
+        let pdfPath = docDir!.appendingPathComponent("objektenListe.pdf")
+        
+        GeometryReader { geometry in
+            VStack {
                 
-            } // Ende if/else
-            
-        } // Ende VStack
-        .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-        .background(globaleVariable.farbenEbene0)
-    } // Ende GeometryReader
-} // Ende var body
+                if UIDevice.current.userInterfaceIdiom == .phone {
+                    let _ = print("PDFKit ausgeführt aus Tab4")
+                    PDFKitView(url: pdfPath, tabNumber: 4)
+                        .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+                    
+                } else {
+                    PDFKitView(url: pdfPath, tabNumber: 4)
+                        .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                        .background(globaleVariable.farbenEbene1)
+                        .cornerRadius(10)
+                }
+            } // Ende VStack
+            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbenEbene0)
+        } // Ende GeometryReader
+        
+    } // Ende var body
+
 } // Ende struc Tab4
 
+
+// Das Handburch
 struct Tab5: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
+    
     let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
     //let heightFaktor: Double = 0.99
     
-var body: some View {
-    GeometryReader { geometry in
-        VStack {
-            
-            if UIDevice.current.userInterfaceIdiom == .phone {
+    var body: some View {
+        GeometryReader { geometry in
+            VStack {
                 
-                PDFKitView(url: pdfPath!)
-                    .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)
-            
-                
-            } else {
-                PDFKitView(url: pdfPath!)
-                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                    .background(globaleVariable.farbenEbene1)
-                    .cornerRadius(10)
-            }
-        } // Ende VStack
-        .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-        .background(globaleVariable.farbenEbene0)
-    } // Ende GeometryReader
-} // Ende var body
-} // Ende struc Tab5
+                if UIDevice.current.userInterfaceIdiom == .phone {
+                    
+                    PDFKitView(url: pdfPath!, tabNumber: 5)
+                        .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+                    
+                    
+                } else {
+                    PDFKitView(url: pdfPath!, tabNumber: 5)
+                        .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                        .background(globaleVariable.farbenEbene1)
+                        .cornerRadius(10)
+                }
+            } // Ende VStack
+            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbenEbene0)
+        } // Ende GeometryReader
+    } // Ende var body
+} // Ende struc Tab6
+
+
+

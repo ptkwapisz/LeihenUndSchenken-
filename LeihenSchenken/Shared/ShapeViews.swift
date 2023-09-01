@@ -190,8 +190,6 @@ struct ShapeViewAddUser: View {
                     .foregroundColor(.gray)
                 }// Ende VStack
                 
-                
-                
             } // Ende Form
             .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.inline)
             //.scrollDisabled(true)
@@ -383,13 +381,7 @@ struct ShapeViewSettings: View {
                 if isICloudContainerAvailable() {
                     Section {
                         Toggle("iCloud Sicherung", isOn: $userSettingsDefaults.iCloudSwitch ).toggleStyle(SwitchToggleStyle(tint: .blue))
-                        /*
-                            .onChange(of: userSettingsDefaults.iCloudSwitch, perform: { _ in
-                                // Hier wird die Datensicherung kopiert von iCloud to lokal oder umgekehrt
-                                // Noch nicht fertig.
-                                //moveDbBackup()
-                            }) // Ende onChange...
-                        */
+                        
                     } footer: {
                         
                         Text("Beim einschalten der iCloud Sicherung, wird die Datensicherung in der iCloud gespeichert. Dadurch wird es Möglich sein, diese Datensicherung auf einem anderen Gerät (iPhone oder iPad) einzuspielen.")
@@ -680,16 +672,8 @@ struct ShapeShowDetailPhoto: View {
                         } // Ende Button
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(Color.white)
-                        //.buttonStyle(.bordered)
                         .buttonStyle(.borderedProminent)
                         
-                        /*
-                        Button(action: { isPresentedShowDetailPhoto = false })
-                        {Text("Zurück")}
-                            .buttonStyle(.bordered)
-                            .foregroundColor(.blue)
-                            .font(.system(size: 16, weight: .regular))
-                         */
                     } // Ende Vstak
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.9)
                 } // Ende Form

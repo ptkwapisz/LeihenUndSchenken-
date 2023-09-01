@@ -375,16 +375,16 @@ func erstelleTitel(par: Bool) -> String {
 
 
 // Wird aus der DetailView aufgerufen
-func printingFile() {
+func printingHandbuchFile(pdfPath: URL, pdfName: String) {
     
-    let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
+    //let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
     
-    if UIPrintInteractionController.canPrint(pdfPath!) {
+    if UIPrintInteractionController.canPrint(pdfPath) {
         
         //notificationCenter.addObserver(self, selector: #selector(self.downloadFile), name: UIApplication.didBecomeActiveNotification, object: nil)
         
         let printInfo = UIPrintInfo(dictionary: nil)
-        printInfo.jobName = "Drucke Handbuch!"
+        printInfo.jobName = "Drucke \(pdfName)!"
         printInfo.outputType = UIPrintInfo.OutputType.general
         printInfo.duplex = UIPrintInfo.Duplex.longEdge
         printInfo.accessibilityViewIsModal = true
@@ -500,3 +500,29 @@ func parameterCheck(parGegenstand: String, parPerson: String) -> Bool {
 
     return resultat
 } // Ende func
+
+
+func perKeyBestimmenGegenstand(par: String) -> [String] {
+    var result: [String] = [""]
+    
+    if par != "N/A" {
+        result = querySQLAbfrageArray(queryTmp: "SELECT perKey FROM Gegenstaende WHERE gegenstandName = '\(par)'")
+    }else{
+        result = [""]
+    } // Ende if/else
+
+    return result
+} // Ende func
+
+func perKeyBestimmenPerson(par: String) -> [String] {
+    var result: [String] = [""]
+    
+    if par != "N/A" {
+        result = querySQLAbfrageArray(queryTmp: "SELECT perKey FROM Personen WHERE personPicker = '\(par)'")
+    }else{
+        result = [""]
+    } // Ende if/else
+
+    return result
+} // Ende func
+

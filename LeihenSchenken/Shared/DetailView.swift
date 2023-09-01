@@ -14,6 +14,7 @@ struct DeteilView: View {
     @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     @ObservedObject var hilfeTexte = HilfeTexte.shared
     
+    
     @State var showAllgemeinesInfo: Bool = false
     
     @State var showAbfrageModalView: Bool = false
@@ -31,12 +32,12 @@ struct DeteilView: View {
     @State var showTabHilfe: Bool = false
     @State var showExport: Bool = false
 
-    @State var showObjectListeParameterView: Bool = false
+    @State var showStatistikenView: Bool = false
 
     var body: some View {
     
         // Prüfen, ob sich Objekte in der Datenbank befinden
-        let anzahlDerObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
+        let anzahlDerObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: false)
         
         VStack(spacing: 10) {
             
@@ -63,12 +64,14 @@ struct DeteilView: View {
                 } // Ende Tab
                 .tag(3) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 
+                //Test(selectedTabView: $globaleVariable.navigationTabView).tabItem {
+                
                 Tab4(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Image(systemName: "chart.xyaxis.line")
-                    Text("Statistik")
+                    Image(systemName: "list.dash")
+                    Text("PDF Liste")
                     
                 } // Ende Tab
-                .tag(4) // Die Tags identifizieren die Tab und füren zum richtigen Titel
+                .tag(4) // Die Tags
                 
                 if userSettingsDefaults.showHandbuch == true {
                     Tab5(selectedTabView: $globaleVariable.navigationTabView).tabItem {
@@ -77,6 +80,7 @@ struct DeteilView: View {
                     } // Ende Tab
                     .tag(5) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 } // Ende if
+                
             } // Ende TabView
             
         } // Ende VStack
@@ -84,21 +88,21 @@ struct DeteilView: View {
         
         .toolbar {
             
-            
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button( action: {
-                    showAllgemeinesInfo = true
-                }) {Image(systemName: "house").imageScale(.large)} 
-                    .alert("Allgemeine Information", isPresented: $showAllgemeinesInfo, actions: {
-                        //Button(" - OK - ") {}
-                    }, message: { Text("\(hilfeTexte.allgemeineAppInfo)") } // Ende message
-                    ) // Ende alert
-            } // Ende ToolbarItemGroup
-            
+            if globaleVariable.navigationTabView == 1 {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button( action: {
+                        showAllgemeinesInfo = true
+                    }) {Image(systemName: "house").imageScale(.large)}
+                        .alert("Allgemeine Information", isPresented: $showAllgemeinesInfo, actions: {
+                            //Button(" - OK - ") {}
+                        }, message: { Text("\(hilfeTexte.allgemeineAppInfo)") } // Ende message
+                        ) // Ende alert
+                } // Ende ToolbarItemGroup
+            }
             
             // Wenn das Tab Handbuch gezeigt wird
             // werden andere Tabmenuepunkte ausgeblendet
-            if globaleVariable.navigationTabView < 5 {
+            if globaleVariable.navigationTabView < 6 {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Menu(content: {
                         
@@ -115,7 +119,8 @@ struct DeteilView: View {
                         
                         Divider()
                         
-                        Button("Objektenliste erstellen", action: {showObjectListeParameterView.toggle()})
+                        Button("Statistiken", action: {showStatistikenView.toggle()})
+                        
                         
                         Button("Datenbank zurücksetzen", action: {showDBReset.toggle()})
                         
@@ -144,41 +149,50 @@ struct DeteilView: View {
                     ) // Ende alert
                     .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
                     .sheet(isPresented: $showExport, content: { ExportCSVProgressView(isPresented: $showExport).presentationBackground(.clear)})
-                    .sheet(isPresented: $showObjectListeParameterView, content: {ObjektListeParameter()})
+                    .sheet(isPresented: $showStatistikenView, content: {Statistik()})
                     
                 } // Ende ToolbarItemGroup
                 
                 
                 // Wen sich keine Objekte in der Datenbank befinden
                 // dann wird die Abfrage deaktiviert.
-                
-                if anzahlDerObjekte.count != 0 {
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        
-                        Button(action: {showAbfrageModalView = true
+                if globaleVariable.navigationTabView == 1 || globaleVariable.navigationTabView == 4 {
+                    if anzahlDerObjekte.count != 0 {
+                        ToolbarItemGroup(placement: .navigationBarTrailing) {
                             
-                        }) {
-                            Image(systemName: "line.3.horizontal.decrease.circle") //"icons8-filter-25"  line.3.horizontal.decrease.circle
-                        } // Ende Button
-                        .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
-                        Spacer()
-                    } // Ende ToolbarItemGroup
+                            Button(action: {showAbfrageModalView = true
+                                
+                            }) {
+                                Image(systemName: "line.3.horizontal.decrease.circle") //"icons8-filter-25"  line.3.horizontal.decrease.circle
+                            } // Ende Button
+                            .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
+                            Spacer()
+                        } // Ende ToolbarItemGroup
+                    }
                 }
-                
             } // Ende if
             
-            // Wenn das Tab Handbuch gezeigt wird
+            // Wenn die Tabs PDF Liste oder Handbuch gezeigt werden
             // wird das Zeichen für Drucken gezeigt
-            if globaleVariable.navigationTabView == 5 {
+            if globaleVariable.navigationTabView == 4 || globaleVariable.navigationTabView == 5 {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action:{
+                        if globaleVariable.navigationTabView == 4 {
+                            let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+                            let pdfPath = docDir!.appendingPathComponent("objektenListe.pdf")
+                            printingHandbuchFile(pdfPath: pdfPath, pdfName: " PDF Liste")
+                        } // Ende if
                         
-                        printingFile()
+                        
+                        if globaleVariable.navigationTabView == 5 {
+                            let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
+                            printingHandbuchFile(pdfPath: pdfPath!, pdfName: " Handbuch")
+                        } // Ende if
                         
                     }) {
                         Image(systemName: "printer") // printer.fill square.and.arrow.up
                     } // Ende Button
-                } // Ende ToolbarItem
+                } // Ende ToolbarGroup
             } // Ende if
             
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -212,18 +226,18 @@ func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String
     let returnWert:  (tabName: String, tabHilfe: String)
     
     switch tabNummer {
-        case 1:
-            returnWert = (tabName: "Die Liste der Objekte", tabHilfe: "\(hilfeTexte.tabObjektenListe)")
-        case 2:
-            returnWert = (tabName: "Gegenstände", tabHilfe: "\(hilfeTexte.tabGegenstandListe)")
-        case 3:
-            returnWert = (tabName: "Personen", tabHilfe: "\(hilfeTexte.tabPersonenListe)")
-        case 4:
-            returnWert = (tabName: "Statistiken", tabHilfe: "\(hilfeTexte.tabStatistiken)")
-        case 5:
-            returnWert = (tabName: "Handbuch", tabHilfe: "\(hilfeTexte.tabHandbuch)")
-        default:
-            returnWert = (tabName: "", tabHilfe: "")
+    case 1:
+        returnWert = (tabName: "Die Liste der Objekte", tabHilfe: "\(hilfeTexte.tabObjektenListe)")
+    case 2:
+        returnWert = (tabName: "Gegenstände", tabHilfe: "\(hilfeTexte.tabGegenstandListe)")
+    case 3:
+        returnWert = (tabName: "Personen", tabHilfe: "\(hilfeTexte.tabPersonenListe)")
+    case 4:
+        returnWert = (tabName: "PDF Liste", tabHilfe: "\(hilfeTexte.tabObjektenPDFListe)")
+    case 5:
+        returnWert = (tabName: "Handbuch", tabHilfe: "\(hilfeTexte.tabHandbuch)")
+    default:
+        returnWert = (tabName: "", tabHilfe: "")
     } // Ende switch
     
     return returnWert

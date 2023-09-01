@@ -266,15 +266,21 @@ func refreschParameter(){
 } // Ende refreschParameter
 
 // Dierse Funktion fügt in eine Variable (Type Class) die Tabelle aus einer Datenbank
-func querySQLAbfrageClassObjecte(queryTmp: String) -> [ObjectVariable]  {
+// Das Parameter abfrage bestimmt, ob Query der Abfrage mit berücksichtigt werden soll (true)
+func querySQLAbfrageClassObjecte(queryTmp: String, abfrage: Bool) -> [ObjectVariable]  {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var name: [String] = ["","","","","","","","","","",""]
     
     var resultatClass: [ObjectVariable] = [ObjectVariable(perKey: "", gegenstand: "", gegenstandTex: "", gegenstandBild: "", preisWert: "", datum: "", vorgang: "", personVorname: "", personNachname: "", personSex: "", allgemeinerText: "")]
     
-    let queryString = queryTmp + globaleVariable.abfrageQueryString
+    var queryString: String = ""
     
+    if abfrage == true {
+        queryString = queryTmp + globaleVariable.abfrageQueryString
+    }else{
+        queryString = queryTmp
+    }
     //print(queryString)
     
     var statement: OpaquePointer?

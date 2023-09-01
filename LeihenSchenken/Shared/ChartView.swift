@@ -250,12 +250,10 @@ struct ChartView: View {
                 .alert("Hilfe für die Objektdeteilansicht", isPresented: $showChartHilfe, actions: {}, message: { Text("Diese Objektdeteilansicht zeigt alle Daten eines Objektes. Falls das Foto vorhanden ist, können Sie durch das drücken auf das Bild eine vergröserte Ansicht dieses Bildes aufrufen. Unten links befindeen sich zwei Tasten: eine mit dem Kreis und Stift Symbol. Wenn Sie drauf drücken können Sie die Daten des Objektes bearbeiten. Mit der andren Taste mit dem Stappelzeichen und einem 'Minus' Symbol können Sie das Objekt löschen.") } // Ende message
                 ) // Ende alert
                 
-               
             } // Ende GeometryReader
             .sheet(isPresented: $objektEditieren, content: {EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)})
-        
             .sheet(isPresented: $showDetailPhoto, content: { ShapeShowDetailPhoto(isPresentedShowDetailPhoto: $showDetailPhoto, par1: $par1, par2: $par2)})
+        
     } // Ende var body
 } // Ende struc ChartView
-
 
