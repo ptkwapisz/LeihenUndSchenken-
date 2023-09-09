@@ -13,60 +13,66 @@ struct ObjektListeParameter: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var data = SharedData.shared
     @Binding var isPresented: Bool
+    
+    /*
+    @FocusState private var focusedFields: Field?
+    
+    private enum Field: Int, CaseIterable {
+        case titel // Für titel
+        case unterTitel // Für Untertitel
         
-    @FocusState var isInputActiveTitel: Bool
-    @FocusState var isInputActiveUntertitel: Bool
+    } // Ende private enum
+    */
+    
+    //@FocusState var isInputActiveTitel: Bool
+    //@FocusState var isInputActiveUntertitel: Bool
     
     var body: some View {
-       
+        let _ = print("Struct ObjektListParameter wird aufgerufen!")
         NavigationView {
             Form {
                 Section(header: Text("Kopfzeilen der Liste").foregroundColor(.gray).font(.system(size: 16, weight: .regular))) {
                  
                     TextField("Listentitel", text: $data.titel)
-                        .focused($isInputActiveTitel)
+                        //.focused($focusedFields, equals: .titel)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
-                        /*
                         .submitLabel(.done)
                         .disableAutocorrection(true)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                HStack {
-                                    Spacer()
-                                    Button("Abbrechen") {
-                                        isInputActiveTitel = false
-                                        titelTmp = ""
-                                    } // Ende Button
-                                } // Ende HStack
-                                
-                            } // Ende ToolbarItemGroup
-                        } // Ende Toolbar
-                    */
+                   
                     TextField("Listenuntertitel", text: $data.unterTitel)
-                        .focused($isInputActiveUntertitel)
+                        //.focused($focusedFields, equals: .unterTitel)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
-                      /*
                         .submitLabel(.done)
                         .disableAutocorrection(true)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                HStack {
-                                    Spacer()
-                                    Button("Abbrechen") {
-                                        isInputActiveUntertitel = false
-                                        unterTitelTmp = ""
-                                    } // Ende Button
-                                } // Ende HStack
-                                
-                            } // Ende ToolbarItemGroup
-                        } // Ende Toolbar
-                    */
+                      
                 }// Ende Section
                 .font(.system(size: 16, weight: .regular))
+                /*
+                .toolbar { ToolbarItemGroup(placement: .keyboard) {
+                    
+                    HStack {
+                        
+                        Button("Abbrechen") {
+                            
+                            if focusedFields == .titel {
+                                focusedFields = nil
+                                print("Abbrechen Button titel wurde gedrückt!")
+                            }else if focusedFields == .unterTitel {
+                                
+                                focusedFields = nil
+                                print("Abbrechen Button unterTitel wurde gedrückt!")
+                            }
+                        } // Ende Button
+                        
+                    } // Ende HStack
+                    
+                } // Ende ToolbarItemGroup
+                }// Ende toolbar
+                */
                 Section {
                     Toggle("Das Feld Preis/Wert:", isOn: $globaleVariable.preisOderWert ).toggleStyle(SwitchToggleStyle(tint: .blue))
                 } footer: {
@@ -106,22 +112,25 @@ struct ObjektListeParameter: View {
                     } // Ende HStack
                     
                 } // Ende VStack
+                
+                
             } // Ende Form
             .navigationTitle("Parameter für die Objektenliste.").navigationBarTitleDisplayMode(.inline)
+
             
         } // Ende NavigationView
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
     
-} // Ende func
+} // Ende struct
 
 
 // This function start the printing prozess
 // Start from Sheet ObjektListeParameter
 func printItems(pageHeader: String, objektenArray: [ObjectVariable]) {
     
-    
+    let _ = print("Funktion printItems() wird aufgerufen!")
     let items: [ObjectVariable] = objektenArray
     
     let printController = UIPrintInteractionController.shared
@@ -180,12 +189,6 @@ class PrintPageRenderer: UIPrintPageRenderer {
         // Set the height for the header and footer spaces.
         self.headerHeight = 50.0
         self.footerHeight = 50.0
-        
-        // Dieser formatter verursachte fehler.
-        // Create and add a print formatter to the renderer. This is a workaround to ensure headers and footers are drawn.
-        //let formatter = UISimpleTextPrintFormatter(text: " ")
-        //let formatter = UIMarkupTextPrintFormatter(markupText: " ")
-        //self.addPrintFormatter(formatter, startingAtPageAt: 0)
         
     } // Ende init
     
@@ -337,8 +340,19 @@ class PrintPageRenderer: UIPrintPageRenderer {
             
         } // Ende if/else
         
+        //-----------------
+        // Text attributes for the item textGegenstandTitel.
+        let textGegenstandTitelAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 8)
+        ]
+        
+        // Draw the item textGegenstandTitel.
+        let textGegenstandTitel = "Gegenstand Beschreibung" as NSString
+        textGegenstandTitel.draw(in: rect.insetBy(dx: 85, dy: 38), withAttributes: textGegenstandTitelAttributes)
+        //------------------
+    
         // Draw the item's label of gegenstandText
-        let labelRectgegenstandText = CGRect(x: rect.minX + 85, y: rect.minY + 40, width: 110, height: 50)
+        let labelRectgegenstandText = CGRect(x: rect.minX + 85, y: rect.minY + 50, width: 110, height: 40)
         if item.gegenstandText.isEmpty {
             
             let emptyImageGegenstandText = createImageFromLabel(labelText: "Kein Gegenstandstext.")
@@ -350,9 +364,22 @@ class PrintPageRenderer: UIPrintPageRenderer {
             imageGegenstandText.draw(in: labelRectgegenstandText)
             
         } // Ende if/else
+       
+        //-----------------
+        // Text attributes for the item textGegenstandTitel.
+        let textAllgemeinTitelAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 8)
+        ]
         
+        // Draw the item textGegenstandTitel.
+        let textAllgemeinTitel = "Allgemeine Beschreibung" as NSString
+        textAllgemeinTitel.draw(in: rect.insetBy(dx: 205, dy: 38), withAttributes: textAllgemeinTitelAttributes)
+        //------------------
+        
+        
+    
         // Draw the item's label of allgemeinerText
-        let labelRectallgemeinerText = CGRect(x: rect.minX + 205, y: rect.minY + 40, width: 110, height: 50)
+        let labelRectallgemeinerText = CGRect(x: rect.minX + 205, y: rect.minY + 50, width: 110, height: 40)
         if item.allgemeinerText.isEmpty {
             
             let emptyImageGegenstandText = createImageFromLabel(labelText: "Kein allgemeiner Text.")
@@ -380,38 +407,10 @@ extension UIImage {
     } // Ende convenince
 } // Ende extension
 
-/*
-// This function was used by direct printing
-func createImageFromLabel(labelText: String) -> UIImage {
-    var resultat: UIImage?
-    var widthInt = 0
-    
-    if labelText == "Kein Bild" {
-        widthInt = 50
-    }else{
-        widthInt = 110
-    } // Ende if/else
-    DispatchQueue.main.sync {
-        let labelTmp = UILabel(frame: CGRect(x: 0, y: 0, width: widthInt, height: 50))
-        labelTmp.text = """
-             \(labelText)
-            """
-        labelTmp.numberOfLines = 0
-        labelTmp.preferredMaxLayoutWidth = 50
-        labelTmp.font = labelTmp.font.withSize(8)
-        labelTmp.backgroundColor = UIColor.gray
-        labelTmp.textColor = UIColor.white
-        
-        resultat = createUIImage(from: labelTmp)!
-    } // Ende DispatchQueue
-    
-    return resultat!
-    
-} // Ende func
-*/
-
 // This function ist used by generating of PDF Objects List
 func createImageFromLabel(labelText: String) -> UIImage {
+    let _ = print("Funktion createImageFromLabel() wird aufgerufen!")
+    
     var resultat: UIImage?
     var widthInt = 0
     
@@ -419,36 +418,28 @@ func createImageFromLabel(labelText: String) -> UIImage {
         widthInt = 50
     } else {
         widthInt = 110
-    }
-
-    // Use a semaphore to wait for the async task to complete.
-    //let semaphore = DispatchSemaphore(value: 0)
-
-    //DispatchQueue.main.async {
-
-        let labelTmp = UILabel(frame: CGRect(x: 0, y: 0, width: widthInt, height: 50))
-        labelTmp.text = """
+    } // Ende if/else
+    
+    
+    let labelTmp = UILabel(frame: CGRect(x: 0, y: 0, width: widthInt, height: 50))
+    labelTmp.text = """
              \(labelText)
             """
-        labelTmp.numberOfLines = 0
-        labelTmp.preferredMaxLayoutWidth = 50
-        labelTmp.font = labelTmp.font.withSize(8)
-        labelTmp.backgroundColor = UIColor.gray
-        labelTmp.textColor = UIColor.white
-        
-        resultat = createUIImage(from: labelTmp)
-        
-        //semaphore.signal()
-    //}
-
-    // Wait for the async task to complete.
-    //semaphore.wait()
-
+    labelTmp.numberOfLines = 0
+    labelTmp.preferredMaxLayoutWidth = 50
+    labelTmp.font = labelTmp.font.withSize(8)
+    labelTmp.backgroundColor = UIColor.gray
+    labelTmp.textColor = UIColor.white
+    
+    resultat = createUIImage(from: labelTmp)
+    
     return resultat!
-}
+} // Ende func createImage ..
 
 // Convert UILabel to UIImage for printing
 func createUIImage(from label: UILabel) -> UIImage? {
+    let _ = print("Funktion createUIImage() wird aufgerufen!")
+    
     UIGraphicsBeginImageContextWithOptions(label.bounds.size, false, 0.0)
     defer { UIGraphicsEndImageContext() }  // This ensures UIGraphicsEndImageContext() is always called at the end
     
@@ -460,64 +451,9 @@ func createUIImage(from label: UILabel) -> UIImage? {
     return nil
 } // Ende func
 
-/*
-struct ShowObjektenListe: View {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
-    
-    let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-    
-    var body: some View {
-        
-        let pdfPath = docDir!.appendingPathComponent("objektenListe.pdf")
-        GeometryReader { geometry in
-        NavigationView {
-            
-            Form {
-                
-                    VStack {
-                        
-                        if UIDevice.current.userInterfaceIdiom == .phone {
-                            
-                            PDFKitView(url: pdfPath)
-                              .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)
-                            
-                            
-                        } else {
-                            PDFKitView(url: pdfPath)
-                                .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                                .background(globaleVariable.farbenEbene1)
-                                .cornerRadius(10)
-                        }
-                    } // Ende VStack
-                    .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-                    .background(globaleVariable.farbenEbene0)
-                
-                
-            }
-            
-        }
-       } // Ende GeometryReader
-        .navigationTitle("Objektenliste").navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action:{
-                    
-                    printingHandbuchFile()
-                    
-                }) {
-                    Image(systemName: "printer") // printer.fill square.and.arrow.up
-                } // Ende Button
-            } // Ende ToolbarGroup
-            
-        }
-    } // Ende var body
-    
-} // Ende struc ShowObjektenListe
-
-*/
 
 func createObjektenListe(parTitel: String, parUnterTitel: String) -> Bool {
+    let _ = print("Funktion createObjektenListe() wird aufgerufen!")
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var titelString: String = parTitel
@@ -534,12 +470,12 @@ func createObjektenListe(parTitel: String, parUnterTitel: String) -> Bool {
     //let resultat = docDir!.appendingPathComponent("objektenListe.pdf")
     
     if titelString.isEmpty {
-        print("GV.Titel ist empty")
+        
         titelString = "Das ist Header-Titel - First Line"
         print("\(titelString)")
     }else{
-        print("GV.Titel ist nicht empty")
-        print("\(titelString)")
+        
+        print("Das ist Header-Titel: \(titelString)")
     }// Ende if
     
     if unterTitelString.isEmpty {

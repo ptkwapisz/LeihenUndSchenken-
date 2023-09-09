@@ -242,7 +242,7 @@ class AlertMessageTexte: ObservableObject  {
     
     @Published var showDBResetMessageText: String = "Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt."
     
-    @Published var showExportToCSVMessageText: String = "Alle Objekte aus der Datenbank werden in dem Format SCV in die Datei 'LeiheUndSchenkeDB.CSV' exportiert. Diese Datei überschreibt die letzte Exportversion falls vorhanden!"
+    //@Published var showExportToCSVMessageText: String = "Alle Objekte aus der Datenbank werden in dem Format SCV in die Datei 'LeiheUndSchenkeDB.CSV' exportiert. Diese Datei überschreibt die letzte Exportversion falls vorhanden!"
     
     @Published var showDBSichernMessageText: String = "Die Datenbank inclusiwe aller Tabellen wird gesichert. Diese Sicherung überschreibt die letzte Sicherungsversion falls vorhanden!"
     

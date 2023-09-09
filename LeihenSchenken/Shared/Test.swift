@@ -10,6 +10,7 @@ import Foundation
 
 // Höhe des unteren Toolbarstreifes bei den Tabs
 func detailViewBottomToolbarHight() -> CGFloat {
+    let _ = print("Funktion detailViewBottomToolbarHight() wird aufgerufen!")
     var resultat: CGFloat = 0.0
     
     if UIDevice.current.userInterfaceIdiom == .phone {
@@ -22,16 +23,14 @@ func detailViewBottomToolbarHight() -> CGFloat {
     
 }// Ende func
 
-
 // Ermitteln von der Erstellungsdatum der Backup-Datei
 func getfileCreatedDate() -> String {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    
+    let _ = print("Funktion getfileCreatedDate() wird aufgerufen!")
     var theCreationDate: String = ""
     var documentsUrl: URL
   
-    
     let fileManager = FileManager.default
     // Wenn iCloud ist ausgeschaltet (nicht verfügbar) ist wird Datensicherung local gespeichert
     if userSettingsDefaults.iCloudSwitch == false {
@@ -45,7 +44,6 @@ func getfileCreatedDate() -> String {
     
     let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
     
-    
     if fileManager.fileExists(atPath: backupDatabaseURL.path) {
         //let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
         let attributes = try? FileManager.default.attributesOfItem(atPath: backupDatabaseURL.path)
@@ -57,14 +55,13 @@ func getfileCreatedDate() -> String {
     
 } // Ende func
 
-
 // Diese function verändert die File Attribute (Datum) bei der BackupDatei
 // Die Backupdatei wird erstellt durch kopieren der Datenbank. Dadurch werden
 // die Attribute der Datenbank übernohmen. Das kann dazufüren, dass das Erstellungsdatum oder
 // Modifikationsdatum weit in der Vergangenheit liegen.
 func changeFileAttributes(){
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    //let calendar = Calendar(identifier: .gregorian)
+    let _ = print("Funktion changeFileAttributes() wird aufgerufen!")
     
     let myDateObject = Date()
     
@@ -98,9 +95,8 @@ func changeFileAttributes(){
     //print("\(filePath)" + "\(attributesCreationDate)")
 } // Ende func
 
-
 func getFlieSitze() -> (numMB: UInt64, strMB: String) {
-   
+    let _ = print("Funktion getFlieSitze() wird aufgerufen!")
     var numValueMB: UInt64
     var strValueMB: String
     
@@ -118,12 +114,11 @@ func getFlieSitze() -> (numMB: UInt64, strMB: String) {
     
     return (numValueMB, strValueMB)
     
-    
 } // Ende func getFile....
-
 
 // Diese Funktion prüft ob es lokal genügt Speicher für die Backupdatei gibt
 func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
+    let _ = print("Funktion ifExistSpaceForLeiheUndSchenkeDbCopy() wird aufgerufen!")
     var resultat: Bool = true
     let dbFileSitze = getFlieSitze()
     
@@ -157,6 +152,7 @@ func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
 
 // Zweite Zeile bei der Liste der Objekte
 func subStringOfTextField(parameter: String) -> String {
+    let _ = print("Funktion subStringOfTextField() wird aufgerufen!")
     var resultat: String = ""
     
     if UIDevice.current.userInterfaceIdiom == .phone {
@@ -172,7 +168,6 @@ func subStringOfTextField(parameter: String) -> String {
     return resultat
 } // Ende func
 
-
 // Das ist die View für den Full Search in den Objekten
 // Aufgerufen in der Tab1 View
 struct serchFullTextInObjekten: View {
@@ -181,7 +176,7 @@ struct serchFullTextInObjekten: View {
     @FocusState var isInputSarchFullTextInObjektenActive: Bool
     
     var body: some View {
-        
+        let _ = print("struct serchFullTextInObjekten wird aufgerufen!")
         TextField("", text: $globaleVariable.searchTextObjekte)
             .focused($isInputSarchFullTextInObjektenActive)
             .frame(height: detailViewBottomToolbarHight() - 36)
@@ -249,13 +244,12 @@ struct serchFullTextInObjekten: View {
     
 } // Ende struct
 
-
 // Filter für die Fulltextsuche der Objekte
 // Diese func war notwändig weil if-Abfrage in der View nicht zuläsig ist.
 // Diese Funktion wird in der Tab1 View aufgerufen
 func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    let _ = print("Funktion serchObjectArray() wird aufgerufen!")
     var resultat: [ObjectVariable] = []
     
     if globaleVariable.searchTextObjekte.isEmpty {
@@ -276,13 +270,12 @@ func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
     return resultat
 }// Ende func
 
-
 // Funktion für die sortierung der Objekte nach Datum
 // Par1: Objektvariable mit gefilterten objekten
 // Per2: Logischer Operator true: aufsteigend, false: absteigend
 func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    let _ = print("Funktion sortiereObjekte() wird aufgerufen!")
     var resultat: [ObjectVariable] = []
     
     let sortDateFormatter: DateFormatter
@@ -323,8 +316,6 @@ func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
     return resultat
 }// Ende func
 
-
-
 // Das ist die View für den Full Search in den Objekten
 // Aufgerufen in der Tab1 View
 struct SerchFullTextInAdressbook: View {
@@ -333,6 +324,7 @@ struct SerchFullTextInAdressbook: View {
     @FocusState var isInputActive: Bool
     
     var body: some View {
+        let _ = print("Struct SerchFullTextInAdressbook wird aufgerufen!")
         
         TextField("", text: $globaleVariable.searchTextAdressBook)
             .focused($isInputActive)
@@ -417,14 +409,12 @@ struct SerchFullTextInAdressbook: View {
     
 } // Ende struct
 
-
-
 // Filter für die Fulltextsuche im Adressbook
 // Diese func war notwändig weil if abfrage in der View nicht zuläsig ist.
 // Diese Funktion wird in dem ShapeViewAddUser aufgerufen
 func serchInAdressBookArray(parameter:  [Contact]) ->  [Contact]{
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    let _ = print("Funktion serchInAdressBookArray() wird aufgerufen!")
     var resultat:  [Contact] = []
     
     if globaleVariable.searchTextAdressBook.isEmpty {

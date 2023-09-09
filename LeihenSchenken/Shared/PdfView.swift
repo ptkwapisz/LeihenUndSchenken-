@@ -9,114 +9,6 @@ import Foundation
 import SwiftUI
 import PDFKit
 
-
-/*
-struct PDFKitRepresentedView: UIViewRepresentable {
-    
-    let url: URL
-    
-    init(_ url: URL) {
-        self.url = url
-    } // Ende init
-    
-    func makeUIView(context: UIViewRepresentableContext<PDFKitRepresentedView>) -> PDFKitRepresentedView.UIViewType {
-        // Create a `PDFView` and set its `PDFDocument`.
-        let pdfView = PDFView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: UIScreen.screenHeight)) // frame ist wichtig um Fehler zu verhindern
-    
-        var cacheBustedURL: URL {
-            var components = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
-            components.queryItems = [URLQueryItem(name: "cacheBust", value: "\(Date().timeIntervalSince1970)")]
-            return components.url!
-        }
-        
-        pdfView.document = PDFDocument(url: cacheBustedURL)
-     
-        //pdfView.document = PDFDocument(url: self.url)
-        
-        print("Pdf wurde geladen")
-        
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            pdfView.displayDirection = .vertical
-            pdfView.autoScales = true
-            pdfView.minScaleFactor = 0.5 // 0.65 für iPhon  0.70 für iPhon Max
-            pdfView.maxScaleFactor = 5.0
-        }else{
-            pdfView.maxScaleFactor = 0.8
-            
-        } // Ende if/else
-        
-        return pdfView
-    } // Ende func
-    
-    
-    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<PDFKitRepresentedView>) {
-        
-        // Update the view.
-    } // Ende func
-     
-} // Ende struct
-
-
-
-struct PDFKitRepresentedView: UIViewRepresentable {
-    
-    let url: URL
-    
-    init(_ url: URL) {
-        self.url = url
-    }
-
-    func makeUIView(context: UIViewRepresentableContext<PDFKitRepresentedView>) -> PDFKitRepresentedView.UIViewType {
-        let pdfView = PDFView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: UIScreen.screenHeight))
-
-        fetchPDFData { data in
-            if let data = data {
-                pdfView.document = PDFDocument(data: data)
-                print("Pdf wurde geladen")
-            }
-        }
-        
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            pdfView.displayDirection = .vertical
-            pdfView.autoScales = true
-            pdfView.minScaleFactor = 0.5
-            pdfView.maxScaleFactor = 5.0
-        } else {
-            pdfView.maxScaleFactor = 0.8
-        }
-        
-        return pdfView
-    }
-    
-    func updateUIView(_ uiView: PDFView, context: UIViewRepresentableContext<PDFKitRepresentedView>) {
-        // Update the view when necessary.
-        fetchPDFData { data in
-            if let data = data {
-                uiView.document = PDFDocument(data: data)
-                uiView.displayDirection = .vertical
-                uiView.autoScales = true
-                uiView.minScaleFactor = 0.5
-                uiView.maxScaleFactor = 5.0
-            }
-        }
-    }
-
-    private func fetchPDFData(completion: @escaping (Data?) -> Void) {
-        URLSession.shared.dataTask(with: self.url) { data, response, error in
-            if let data = data {
-                DispatchQueue.main.async {
-                    completion(data)
-                }
-            } else {
-                print("Failed to fetch PDF data: \(error?.localizedDescription ?? "Unknown error")")
-                completion(nil)
-            }
-        }.resume()
-    }
-}
-
-*/
-
 struct PDFKitRepresentedView: UIViewRepresentable {
     
     let url: URL
@@ -129,9 +21,11 @@ struct PDFKitRepresentedView: UIViewRepresentable {
     init(_ url: URL, version: Int) {
         self.url = url
         self.version = version
-    }
+    } //Ende init
     
     func makeUIView(context: UIViewRepresentableContext<PDFKitRepresentedView>) -> PDFKitRepresentedView.UIViewType {
+        let _ = print("Function makeUIView() wird von Struct PDFKitRepresentedView aufgerufen!")
+        
         let pdfView = PDFView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: UIScreen.screenHeight))
         loadPDF(into: pdfView)
         if UIDevice.current.userInterfaceIdiom == .phone {
@@ -141,15 +35,17 @@ struct PDFKitRepresentedView: UIViewRepresentable {
             pdfView.maxScaleFactor = 5.0
         } else {
             pdfView.maxScaleFactor = 0.8
-        }
+        } // Ende if/else
         return pdfView
-    }
+    } // Ende func
     
     func updateUIView(_ uiView: PDFView, context: UIViewRepresentableContext<PDFKitRepresentedView>) {
+        let _ = print("Function updateUIView() wird von Struct PDFKitRepresentedView aufgerufen!")
         loadPDF(into: uiView)
-    }
+    } // Ende func
     
     private func loadPDF(into pdfView: PDFView) {
+        let _ = print("Function loadPDF() wird von Struct PDFKitRepresentedView aufgerufen!")
         fetchPDFData { data in
             if let data = data {
                 pdfView.document = PDFDocument(data: data)
@@ -160,25 +56,26 @@ struct PDFKitRepresentedView: UIViewRepresentable {
                     pdfView.maxScaleFactor = 5.0
                 } else {
                     pdfView.maxScaleFactor = 0.8
-                }
-                print("Pdf wurde geladen")
-            }
-        }
-    }
+                } // Ende if/else
+                print("Pdf wurde geladen von Funktion loadPDF 'PDFKitRepresentedView'")
+            } // Ende if let
+        } // Ende fetchPDFData
+    } // Ende private func
     
     private func fetchPDFData(completion: @escaping (Data?) -> Void) {
+        let _ = print("Function fetchPDFData() wird von Struct PDFKitRepresentedView aufgerufen!")
         URLSession.shared.dataTask(with: self.url) { data, response, error in
             if let data = data {
                 DispatchQueue.main.async {
                     completion(data)
-                }
+                } // Ende DispatchQueue
             } else {
                 print("Failed to fetch PDF data: \(error?.localizedDescription ?? "Unknown error")")
                 completion(nil)
-            }
+            } // Ende if/else
         }.resume()
-    }
-}
+    } // Ende private func
+} // Ende struct
 
 
 struct PDFKitView: View {
@@ -195,6 +92,7 @@ struct PDFKitView: View {
     var tabNumber: Int
 
     var body: some View {
+        let _ = print("Struct PDFKitView wird aufgerufen!")
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
         
@@ -216,7 +114,6 @@ struct PDFKitView: View {
                 
                 if tabNumber == 4 {
                     HStack(alignment: .bottom) {
-                        
                         
                         Button {isSheetPresented.toggle()
                             
@@ -250,25 +147,25 @@ struct PDFKitView: View {
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)
             .onAppear() {
-               versionCounter += 1
-                print("Das ist die Anzahl von onAppear: \(versionCounter)")
-                let _: Bool = createObjektenListe(parTitel: data.titel, parUnterTitel: data.unterTitel)
-                
+                if tabNumber == 4 { // Objektenliste
+                    versionCounter += 1
+                    print("Das ist die Anzahl von onAppear in PDFKitView: \(versionCounter)")
+                    let _: Bool = createObjektenListe(parTitel: data.titel, parUnterTitel: data.unterTitel)
+                }
             } // Ende on Appear
 
-            
         } // Ende GeometryReader
         
     } // Ende var body
     
-
 } // Ende struct
-
 
 // Diese Funktion generiert eine PDF File from ObjektenListe
 // Call fom func createObjektListe
 
 func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
+    let _ = print("Function generatePDF() wird aufgerufen!")
+    
     //@ObservedObject var globaleVariable = GlobaleVariable.shared
     
     // Create an instance of the PrintPageRenderer with the provided items and header.
@@ -291,7 +188,7 @@ func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
         renderer.drawHeaderForPage(at: i, in: CGRect(x: 0, y: 0, width: pdfBounds.width, height: renderer.headerHeight))
         renderer.drawFooterForPage(at: i, in: CGRect(x: 0, y: pdfBounds.height - renderer.footerHeight, width: pdfBounds.width, height: renderer.footerHeight))
         renderer.drawContentForPage(at: i, in: pdfBounds.insetBy(dx: 0, dy: renderer.headerHeight))
-    }
+    } // Ende for i
     
     // End the PDF context.
     UIGraphicsEndPDFContext()
@@ -302,8 +199,8 @@ func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
         pdfData.write(to: pdfPath, atomically: true)
         print("PDF saved at path: \(pdfPath)")
         //globaleVariable.pdfFileVersion += 1
-    }
-}
+    } // Ende if let
+} // Ende func
 
 
 

@@ -114,12 +114,13 @@ struct Tab4: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     
     //let _: Bool = createObjektenListe()
     
     var body: some View {
+    
+        let _ = print("Struct Tab4 wird aufgerufen!")
         
         let pdfPath = docDir!.appendingPathComponent("objektenListe.pdf")
         
@@ -127,7 +128,7 @@ struct Tab4: View {
             VStack {
                 
                 if UIDevice.current.userInterfaceIdiom == .phone {
-                    let _ = print("PDFKit ausgeführt aus Tab4")
+                    
                     PDFKitView(url: pdfPath, tabNumber: 4)
                         .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)
                     

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import SQLite3
 
-// Das Löschen/Zurücksetzen der UserDefaults wird hier durch zuweisen der Standardswerte vollzogen.
+// Das Löschen/Zurücksetzen der UserDefaults wird hier durch das Zuweisen der Standardswerte vollzogen.
 func deleteUserDefaults() {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     //@ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
@@ -167,9 +167,6 @@ func vorgangPrefixDeklination(vorgang: String)-> String {
     
     return resultat
 }// Ende func
-
-
-
 
 /*
 // Aus der Datenbanktabelle Personen werden die Personendaten geladen, die bei Eingabemaske angezeigt werden.
@@ -401,72 +398,6 @@ func printingHandbuchFile(pdfPath: URL, pdfName: String) {
     
     // https://nshipster.com/uiprintinteractioncontroller/
     
-} // Ende func
-
-
-func ladeStatistiken() -> [Statistiken] {
-    var resultat: [Statistiken] = [Statistiken(stGruppe: "", stName: "", stWert: "")]
-    resultat.removeAll()
-    
-    let z1s0: String = "Objekte"
-    let z1s1: String = "Alle Objekte:"
-    let z1S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte")
-    
-    
-    
-    let z2s0: String = "Objekte"
-    let z2s1: String = "Verschenkte Objekte:"
-    let z2S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Verschenken'")
-    
-    let z3s0: String = "Objekte"
-    let z3s1: String = "Verliehene Objekte:"
-    let z3S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Verleihen'")
-    
-    let z4s0: String = "Objekte"
-    let z4s1: String = "Erhaltene Objekte:"
-    let z4S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Bekommen'")
-    
-    let z5s0: String = "Objekte"
-    let z5s1: String = "Objekte zum Aufbewahren:"
-    let z5S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Aufbewahren'")
-    
-    let z6s0: String = "Objekte"
-    let z6s1: String = "Ideen für ein Objekt:"
-    let z6S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte Where vorgang = 'Geschenkidee'")
-    
-    
-    resultat.append(Statistiken(stGruppe: z1s0, stName: z1s1, stWert: z1S2.count == 0 ? "0" : z1S2[0]))
-    resultat.append(Statistiken(stGruppe: z2s0, stName: z2s1, stWert: z2S2.count == 0 ? "0" : z2S2[0]))
-    resultat.append(Statistiken(stGruppe: z3s0, stName: z3s1, stWert: z3S2.count == 0 ? "0" : z3S2[0]))
-    resultat.append(Statistiken(stGruppe: z4s0, stName: z4s1, stWert: z4S2.count == 0 ? "0" : z4S2[0]))
-    resultat.append(Statistiken(stGruppe: z5s0, stName: z5s1, stWert: z5S2.count == 0 ? "0" : z5S2[0]))
-    resultat.append(Statistiken(stGruppe: z6s0, stName: z6s1, stWert: z6S2.count == 0 ? "0" : z6S2[0]))
-    
-    
-    let tmp0 = querySQLAbfrageArray(queryTmp: "Select distinct(gegenstand) From Objekte")
-    
-    if tmp0.count != 0 {
-        
-        for n in 0...tmp0.count - 1 {
-            
-            let tmp1 = querySQLAbfrageArray(queryTmp: "Select count() gegenstand From Objekte Where gegenstand = '\(tmp0[n])'")
-            
-            if Int("\(tmp1[0])") != 0 {
-                
-                resultat.append(Statistiken(stGruppe: "Gegenstände", stName: "\(tmp0[n])", stWert: tmp1[0]))
-                
-            } // Ende if
-            
-        }// Ende for
-        
-    }else{
-        
-        // Wenn Tabelle Objekte leer ist:
-        resultat.append(Statistiken(stGruppe: "Gegenstände", stName: "Anzahl der Gegenstände", stWert: "0"))
-        
-    } // Ende if/else
-    
-    return resultat
 } // Ende func
 
 

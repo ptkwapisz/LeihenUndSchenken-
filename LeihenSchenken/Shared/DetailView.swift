@@ -30,7 +30,7 @@ struct DeteilView: View {
     
     @State var showAppInfo: Bool = false
     @State var showTabHilfe: Bool = false
-    @State var showExport: Bool = false
+    //@State var showExport: Bool = false  // Diese MenuePunkt wurde deaktiviert
 
     @State var showStatistikenView: Bool = false
 
@@ -135,10 +135,12 @@ struct DeteilView: View {
                         Button("Abbrechen") {}; Button("Ausführen") {datenbankReset()}
                     }, message: { Text("\(alertMessageTexte.showDBResetMessageText)") } // Ende message
                     ) // Ende alert
+                    /*
                     .alert("Trefen Sie eine Wahl!", isPresented: $showExportToCSV, actions: {
                         Button("Abbrechen") {}; Button("Ausführen") {showExport = true}
                     }, message: { Text("\(alertMessageTexte.showExportToCSVMessageText)") } // Ende message
                     ) // Ende alert
+                    */
                     .alert("Trefen Sie eine Wahl!", isPresented: $showDBSichern, actions: {
                         Button("Abbrechen") {}; Button("DB Sichern") {backupDatabase()}
                     }, message: { Text(backupTarget() + ". \(alertMessageTexte.showDBSichernMessageText)") } // Ende message
@@ -148,11 +150,10 @@ struct DeteilView: View {
                     }, message: { Text(backupTarget() + " vom " + getfileCreatedDate() + ". \(alertMessageTexte.showDBLadenMessageText)") } // Ende message
                     ) // Ende alert
                     .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
-                    .sheet(isPresented: $showExport, content: { ExportCSVProgressView(isPresented: $showExport).presentationBackground(.clear)})
+                    //.sheet(isPresented: $showExport, content: { ExportCSVProgressView(isPresented: $showExport).presentationBackground(.clear)})
                     .sheet(isPresented: $showStatistikenView, content: {Statistik()})
                     
                 } // Ende ToolbarItemGroup
-                
                 
                 // Wen sich keine Objekte in der Datenbank befinden
                 // dann wird die Abfrage deaktiviert.
@@ -168,8 +169,8 @@ struct DeteilView: View {
                             .sheet(isPresented: $showAbfrageModalView, content:  { ShapeViewAbfrage(isPresented: $showAbfrageModalView) }) // Zahnrad
                             Spacer()
                         } // Ende ToolbarItemGroup
-                    }
-                }
+                    } // Ende if anzahlDerObjekte
+                } // Ende if globaleVariable
             } // Ende if
             
             // Wenn die Tabs PDF Liste oder Handbuch gezeigt werden
