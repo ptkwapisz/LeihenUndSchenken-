@@ -10,7 +10,6 @@
 import SwiftUI
 import UIKit
 
-
 // Das ist die View für detalierte Objektangaben mit Foto
 struct ChartView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared

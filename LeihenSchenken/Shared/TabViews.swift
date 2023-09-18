@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-
 struct Tab1: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared

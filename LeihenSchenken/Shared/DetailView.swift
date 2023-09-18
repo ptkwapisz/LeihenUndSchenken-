@@ -14,7 +14,6 @@ struct DeteilView: View {
     @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     @ObservedObject var hilfeTexte = HilfeTexte.shared
     
-    
     @State var showAllgemeinesInfo: Bool = false
     
     @State var showAbfrageModalView: Bool = false

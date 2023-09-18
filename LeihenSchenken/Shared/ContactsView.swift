@@ -5,7 +5,6 @@
 //  Created by PIOTR KWAPISZ on 16.07.23.
 //
 
-
 import SwiftUI
 import Contacts
 import Foundation

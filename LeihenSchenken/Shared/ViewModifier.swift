@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-
 struct EditFields: ViewModifier {
     func body(content: Content) -> some View {
         content

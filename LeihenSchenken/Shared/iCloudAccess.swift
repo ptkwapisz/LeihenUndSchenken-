@@ -8,7 +8,6 @@
 import SwiftUI
 import Foundation
 
-
 // Prüfen ob iCloud ist verfügbar
 // Wenn User nicht eingelogt ist, dann return ist false
 func isICloudContainerAvailable() -> Bool {

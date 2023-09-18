@@ -17,7 +17,6 @@ struct deteilTab1: View {
     @State private var activeAlertLeereDb: ActiveAlertLeereDB = .informationiPhone
     @State var sortObjekte: Bool = true
     
-    
     var body: some View {
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)

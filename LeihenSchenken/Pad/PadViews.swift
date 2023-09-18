@@ -9,10 +9,7 @@ import Foundation
 import SwiftUI
 
 
-
 /*
-
-
 struct TestTable: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
