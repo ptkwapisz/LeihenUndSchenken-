@@ -53,8 +53,6 @@ return result
     
 } // Ende func
 
-
-
 // In dieser Funktion werden verdichtete Werte aus dem Array (distinct) erstellt
 // Erster Parameter ist Array
 // Zweiter Parameter ist String für die Verdichtung
@@ -109,9 +107,6 @@ func cleanEingabeMaske () {
     globaleVariable.preisWert = ""
     globaleVariable.datum = Date()
     globaleVariable.textAllgemeineNotizen = ""
-    //globaleVariable.selectedPersonVariable.removeAll()
-    //globaleVariable.parameterPerson.removeAll()
-    //globaleVariable.parameterPerson = personenArray()
     globaleVariable.personenParameter.removeAll()
     globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
     
@@ -167,34 +162,6 @@ func vorgangPrefixDeklination(vorgang: String)-> String {
     
     return resultat
 }// Ende func
-
-/*
-// Aus der Datenbanktabelle Personen werden die Personendaten geladen, die bei Eingabemaske angezeigt werden.
-// Dabei wird das Format "Name, Vorname" erstellt.
-func personenArray() -> [String] {
-    var resultat: [String] = [""]
-    
-    var tempPicker: [String]
-    var tempNachUndVor: String
-    
-    tempPicker = querySQLAbfrageArray(queryTmp: "Select personPicker from Personen")
-    
-    if tempPicker.count > 0 {
-        for n in 0...tempPicker.count - 1 {
-            
-            tempNachUndVor = tempPicker[n]
-            
-            resultat.append("\(tempNachUndVor)")
-            
-        } // Ende for n
-    } // Ende if tempNachname
-    
-    resultat[0] = "Neue Person"
-    
-    return resultat.unique()
-} // Ende func
-
-*/
 
 
 // Diese Funktion speichert die Personendaten in die Datenbank in die Tabelle Personen
@@ -312,8 +279,6 @@ func dateToStringWithTime(parDatum: Date) -> String {
 } // Ende func
 
 
-
-
 // Wird benutzt bei editieren des Objekts-Datums
 func stringToDate(parDatum: String) -> Date {
     let calendar = Calendar(identifier: .gregorian)
@@ -334,26 +299,6 @@ func stringToDate(parDatum: String) -> Date {
     return result
 } // Ende func
 
-/*
-func stringToDate2(parameter1: [ObjectVariable] , parameter2: Int) -> Date {
-    
-    var result: Date
-    
-    let inputDateString = parameter1[parameter2].datum
-    
-    let germanDateFormatter = DateFormatter()
-    germanDateFormatter.locale = .init(identifier: "de")
-    germanDateFormatter.dateFormat = "d MMM yyyy"
-    germanDateFormatter.dateStyle = .short
-    germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-    
-    result = germanDateFormatter.date(from: inputDateString)!
-    
-    //print(result) //16.08.19, 07:04:12
-    
-    return result
-} // Ende func
-*/
 
 // Diese Funktion erstellt den Titel mit dem hinweis
 // ob der Abfragefilter ein- oder ausgeschaltet ist.
@@ -374,11 +319,7 @@ func erstelleTitel(par: Bool) -> String {
 // Wird aus der DetailView aufgerufen
 func printingHandbuchFile(pdfPath: URL, pdfName: String) {
     
-    //let pdfPath = Bundle.main.url(forResource: "L&S Handbuch", withExtension: "pdf")
-    
     if UIPrintInteractionController.canPrint(pdfPath) {
-        
-        //notificationCenter.addObserver(self, selector: #selector(self.downloadFile), name: UIApplication.didBecomeActiveNotification, object: nil)
         
         let printInfo = UIPrintInfo(dictionary: nil)
         printInfo.jobName = "Drucke \(pdfName)!"
@@ -392,7 +333,6 @@ func printingHandbuchFile(pdfPath: URL, pdfName: String) {
         printController.showsNumberOfCopies = true
         printController.printingItem = pdfPath
         printController.present(animated: true, completionHandler: nil)
-        
         
     } // Ende if
     

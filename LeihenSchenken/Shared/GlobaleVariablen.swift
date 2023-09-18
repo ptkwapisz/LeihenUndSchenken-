@@ -58,6 +58,7 @@ class GlobaleVariable: ObservableObject {
    
 } // ende class
 
+// Wird in der PrintObjects Struckts aufgerufen
 class SharedData: ObservableObject {
     static let shared = SharedData()
     
@@ -66,7 +67,7 @@ class SharedData: ObservableObject {
     @Published var didSave: Bool = false
 
     func save() {
-        // Example function to trigger changes
+        // Function to trigger changes
         didSave.toggle()
     } // Ende func
 }// Ende class

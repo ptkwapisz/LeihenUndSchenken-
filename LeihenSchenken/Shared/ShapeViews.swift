@@ -30,7 +30,7 @@ struct ShapeViewAddUser: View {
         
         let myContacts = serchInAdressBookArray(parameter: myContactsTmp)
         
-        NavigationView {
+        NavigationStack {
             Form {
                 Section() {
                     
@@ -69,9 +69,9 @@ struct ShapeViewAddUser: View {
                         ScrollView {
                             
                             LazyVStack {
-                                //NavigationStack {
+                                
                                 ForEach(myContacts.indices, id: \.self) { idx in
-                                    // GeometryReader { gemotry in
+                                    
                                     HStack{
                                         
                                         if myContacts[idx].lastName != "" && myContacts[idx].firstName != "" {
@@ -93,7 +93,7 @@ struct ShapeViewAddUser: View {
                                         // Here we dismiss the kayboard by tap a name in the list
                                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                     } // Ende onTapGesture
-                                    //}// Ende GeometryReader
+                                    
                                 } // Ende ForEach
                                 
                             }// Ende LazyVStack - NavigationStack
@@ -194,7 +194,7 @@ struct ShapeViewAddUser: View {
             .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.inline)
             //.scrollDisabled(true)
             
-        } // Ende NavigationView
+        } // Ende NavigationStack
         .onAppear{
             DispatchQueue.main.async {
                 self.myContactsTmp = fetchAllContacts()
@@ -202,25 +202,6 @@ struct ShapeViewAddUser: View {
         } // Ende onApear
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
-//---------------
-        /*
-        HStack{
-            //Text(" ")
-            Text("Suchfeld für Adressbuch.")
-                .font(.system(size: 12, weight: .regular))
-                .frame(height: 15)
-                .padding(.leading, 20)
-                
-            Spacer()
-            
-        }// Ende HStack
-        
-        serchFullTextInAdressbook()
-        .if(UIDevice.current.userInterfaceIdiom == .phone) { view in
-            view.frame(height: 20)
-        } // Ende .if
-        */
-//---------------
     } // Ende var body
     
 } // Ende struct
@@ -241,7 +222,7 @@ struct ShapeViewAddGegenstand: View {
     
     var body: some View {
         
-        NavigationView {
+        NavigationStack {
             
             Form {
                 Section(){
@@ -338,7 +319,7 @@ struct ShapeViewAddGegenstand: View {
             .navigationTitle("Neuer Gegenstand").navigationBarTitleDisplayMode(.inline)
             .scrollContentBackground(.hidden)
             
-        } // Ende NavigationView
+        } // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
@@ -359,7 +340,7 @@ struct ShapeViewSettings: View {
     var body: some View {
        
         
-        NavigationView {
+        NavigationStack {
             
             Form {
                 
@@ -417,7 +398,7 @@ struct ShapeViewSettings: View {
             .font(.system(size: 14, weight: .regular))
             .navigationTitle("Applikations-Parameter").navigationBarTitleDisplayMode(.inline)
             
-        } // Ende NavigationView
+        } // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
@@ -446,7 +427,7 @@ struct ShapeViewAbfrage: View {
         VStack {
             //Text("")
             //Text("Abfragefilter").bold()
-            NavigationView {
+            NavigationStack {
                 Form {
                     Section(header: Text("Bedingung").font(.system(size: 16, weight: .regular))) {
                         Picker("Wenn ", selection: $selectedAbfrageFeld1, content: {
@@ -560,7 +541,7 @@ struct ShapeViewAbfrage: View {
                 .background(globaleVariable.farbenEbene1)
                 .cornerRadius(10)
                 
-            }
+            } // Ende NavigationStack
         } // Ende VStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
@@ -580,7 +561,7 @@ struct ShapeViewEditUser: View {
     @State var selectedPerson_sexInt: Int = 0
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section() {
                     
@@ -639,7 +620,7 @@ struct ShapeViewEditUser: View {
             } // Ende Form
             .navigationTitle("Benutzer bearbeiten").navigationBarTitleDisplayMode(.inline)
             
-        } // Ende NavigationView
+        } // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
@@ -651,7 +632,7 @@ struct ShapeShowDetailPhoto: View {
     @Binding var par2: Int
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             GeometryReader { geometry in
                 Form {
                     VStack{
@@ -679,7 +660,7 @@ struct ShapeShowDetailPhoto: View {
                 } // Ende Form
                 .navigationTitle("Detailsicht Photo").navigationBarTitleDisplayMode(.inline)
             } // Ende GeometryReader
-        } // NavigationView
+        } // NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body

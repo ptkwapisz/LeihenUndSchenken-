@@ -25,11 +25,12 @@ func fetchAllContacts() -> [Contact] {
             }// Ende if
         } // Ende store
         
-        return contacts.sorted(by: { $0.lastName < $1.lastName })
+        let filteredContacts = contacts.filter {$0.firstName != "" && $0.lastName != ""}
+        return filteredContacts.sorted(by: { $0.lastName < $1.lastName })
         
     } catch {
         print("Error fetching contacts: \(error)")
         return []
-    }// Ende do/catch
+    } // Ende do/catch
 } // Ende func
 

@@ -60,13 +60,7 @@ struct EingabeMaskePadView: View {
         
         perKeyFormatter = DateFormatter()
         perKeyFormatter.dateFormat = "y MM dd, HH:mm"
-        /*
-        germanDateFormatter = DateFormatter()
-        germanDateFormatter.locale = .init(identifier: "de")
-        germanDateFormatter.dateFormat = "d MMM yyyy"
-        germanDateFormatter.dateStyle = .short
-        germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        */
+        
     } // Ende init
     
     var body: some View {
@@ -97,6 +91,7 @@ struct EingabeMaskePadView: View {
             } // Ende set
         ) // Ende let
         
+        NavigationStack {
             GeometryReader { geometry in
                 
                 VStack {
@@ -114,7 +109,7 @@ struct EingabeMaskePadView: View {
                         .sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich )})
                         
                         TextEditorWithPlaceholder(text: $globaleVariable.textGegenstandbeschreibung, platz: $platzText1)
-                           .focused($focusedField, equals: .str1)
+                            .focused($focusedField, equals: .str1)
                         
                         HStack {
                             Text("Gegenstandsbild:   ")
@@ -124,7 +119,7 @@ struct EingabeMaskePadView: View {
                             ImageSelector()
                             Text(" ")
                             if cameraManager.permissionGranted {
-                               PhotoSelector()
+                                PhotoSelector()
                             }
                             //Text(" ")
                             
@@ -191,7 +186,7 @@ struct EingabeMaskePadView: View {
                                     } // Ende if/else
                                 } // Ende onReceive
                             //Text("€").font(.system(size: 16, weight: .regular))
-                               
+                            
                         } // Ende HStack
                         //.frame(width: UIScreen.screenWidth)
                         
@@ -203,7 +198,7 @@ struct EingabeMaskePadView: View {
                                 .labelsHidden()
                                 .colorInvert()
                                 .colorMultiply(Color.gray)
-                                //.font(.system(size: 16, weight: .regular))
+                            //.font(.system(size: 16, weight: .regular))
                                 .multilineTextAlignment (.center)
                                 .environment(\.locale, Locale.init(identifier: "de"))
                                 .transformEffect(.init(scaleX: 0.9, y: 0.9))
@@ -211,9 +206,9 @@ struct EingabeMaskePadView: View {
                                 .onChange(of: globaleVariable.datum, perform: { _ in
                                     calendarId += 1
                                 }) // Ende onChange...
-                                
+                            
                         } //Ende HStack
-                     
+                        
                         
                         Picker("Vorgang: ", selection: $globaleVariable.selectedVorgangInt, content: {
                             ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
@@ -311,10 +306,11 @@ struct EingabeMaskePadView: View {
                                     focusedField = nil
                                     print("OK Button wurde gedrückt!")
                                 } // Ende Button
+                                //.font(.system(size: 16, weight: .regular))
                             }else if focusedField == .str1 {
                                 HStack {
                                     Text("\(globaleVariable.textGegenstandbeschreibung.count)/100")
-                                        .font(.system(size: 16, weight: .regular))
+                                    //.font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.gray)
                                         .padding()
                                     Spacer()
@@ -324,12 +320,12 @@ struct EingabeMaskePadView: View {
                                         focusedField = nil
                                         print("Abbrechen Button Str1 wurde gedrückt!")
                                     } // Ende Button
-                                    .font(.system(size: 16, weight: .regular))
+                                    //.font(.system(size: 16, weight: .regular))
                                 } // Ende HStack
                             }else if focusedField == .str2  {
                                 HStack{
                                     Text("\(globaleVariable.textAllgemeineNotizen.count)/100")
-                                        .font(.system(size: 16, weight: .regular))
+                                    //.font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.gray)
                                     Spacer()
                                     Button("Abbrechen") {
@@ -345,15 +341,17 @@ struct EingabeMaskePadView: View {
                         } // Ende toolbar
                         
                     } // Ende Form
+                    //.font(.system(size: 16, weight: .regular))
                     
                 } // Ende VStack
                 .frame(width: geometry.size.width, height: geometry.size.height)
+                .font(.system(size: 16, weight: .regular))
                 .background(globaleVariable.farbenEbene0)
                 
                 
             } // Ende GeometryReader
             .navigationTitle("Eingabemaske")
-        
+        } // Ende NavigationStack
             .toolbar {ToolbarItem(placement: .navigationBarLeading) {
                 
                 if UIDevice.current.userInterfaceIdiom == .phone {
@@ -383,15 +381,7 @@ struct EingabeMaskePadView: View {
                // Button(" - OK - ") {}
             }, message: { Text("\(hilfeTexte.eingabeMaske)") } // Ende message
             ) // Ende alert
-        /*
-            .navigationBarItems(trailing: Button( action: {
-                showParameterAllgemeinesInfo = true
-            }) {Image(systemName: "house").imageScale(.large)} )
-            .alert("Allgemeine Information", isPresented: $showParameterAllgemeinesInfo, actions: {
-                //Button(" - OK - ") {}
-            }, message: { Text("\(hilfeTexte.allgemeineAppInfo)") } // Ende message
-            ) // Ende alert
-       */
+        
     } // Ende var body
     
 } // Ende struct

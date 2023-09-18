@@ -61,6 +61,7 @@ func getfileCreatedDate() -> String {
 // Modifikationsdatum weit in der Vergangenheit liegen.
 func changeFileAttributes(){
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    
     let _ = print("Funktion changeFileAttributes() wird aufgerufen!")
     
     let myDateObject = Date()
@@ -97,6 +98,7 @@ func changeFileAttributes(){
 
 func getFlieSitze() -> (numMB: UInt64, strMB: String) {
     let _ = print("Funktion getFlieSitze() wird aufgerufen!")
+    
     var numValueMB: UInt64
     var strValueMB: String
     
@@ -106,8 +108,6 @@ func getFlieSitze() -> (numMB: UInt64, strMB: String) {
     let documentsUrlDB = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
     
     userDatabaseURL = documentsUrlDB!.appendingPathComponent("LeiheUndSchenkeDb.db")
-    
-    //print("file size = \(userDatabaseURL.fileSize), \(userDatabaseURL.fileSizeString)")
     
     numValueMB = userDatabaseURL.fileSize
     strValueMB = userDatabaseURL.fileSizeString

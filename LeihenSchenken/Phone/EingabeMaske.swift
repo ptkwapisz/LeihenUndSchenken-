@@ -60,13 +60,7 @@ struct EingabeMaskePhoneView: View {
         
         perKeyFormatter = DateFormatter()
         perKeyFormatter.dateFormat = "y MM dd, HH:mm"
-        /*
-        germanDateFormatter = DateFormatter()
-        germanDateFormatter.locale = .init(identifier: "de")
-        germanDateFormatter.dateFormat = "d MMM yyyy"
-        germanDateFormatter.dateStyle = .long
-        germanDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        */
+        
     } // Ende init
     
     var body: some View {
@@ -96,7 +90,7 @@ struct EingabeMaskePhoneView: View {
                 } // Ende if
             } // Ende set
         ) // Ende let
-        NavigationView {
+        NavigationStack {
             GeometryReader { geometry in
                 
                     VStack {
@@ -311,6 +305,8 @@ struct EingabeMaskePhoneView: View {
                                         focusedField = nil
                                         print("OK Button wurde gedrückt!")
                                     } // Ende Button
+                                    .buttonStyle(.bordered)
+                                    //.font(.system(size: 16, weight: .regular))
                                 }else if focusedField == .str1 {
                                     HStack {
                                         Text("\(globaleVariable.textGegenstandbeschreibung.count)/100")
@@ -324,12 +320,12 @@ struct EingabeMaskePhoneView: View {
                                             focusedField = nil
                                             print("Abbrechen Button Str1 wurde gedrückt!")
                                         } // Ende Button
-                                        .font(.system(size: 16, weight: .regular))
+                                        //.font(.system(size: 16, weight: .regular))
                                     } // Ende HStack
                                 }else if focusedField == .str2  {
                                     HStack{
                                         Text("\(globaleVariable.textAllgemeineNotizen.count)/100")
-                                            .font(.system(size: 16, weight: .regular))
+                                            //.font(.system(size: 16, weight: .regular))
                                             .foregroundColor(.gray)
                                         Spacer()
                                         Button("Abbrechen") {
@@ -342,7 +338,9 @@ struct EingabeMaskePhoneView: View {
                                 } // Ende if/else
                                 
                             } // Ende ToolbarItemGroup
+                            
                             } // Ende toolbar
+                            
                             Text("Um ein Objekt speichern zu können müssen mimdestens ein Gegenstand und eine Person erfast werden.")
                                 .font(.system(size: 12, weight: .regular))
                                 .foregroundColor(.gray)
@@ -353,12 +351,13 @@ struct EingabeMaskePhoneView: View {
                         
                     } // Ende VStack
                     .frame(width: geometry.size.width, height: geometry.size.height)
+                    .font(.system(size: 16, weight: .regular))
                     .background(globaleVariable.farbenEbene0)
                     
                 
             } // Ende GeometryReader
             
-        }// Ende NavigationView
+        } // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body

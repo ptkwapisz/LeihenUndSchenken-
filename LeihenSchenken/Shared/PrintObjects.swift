@@ -14,7 +14,6 @@ struct ObjektListeParameter: View {
     @ObservedObject var data = SharedData.shared
     @Binding var isPresented: Bool
     
-    /*
     @FocusState private var focusedFields: Field?
     
     private enum Field: Int, CaseIterable {
@@ -22,57 +21,60 @@ struct ObjektListeParameter: View {
         case unterTitel // Für Untertitel
         
     } // Ende private enum
-    */
-    
-    //@FocusState var isInputActiveTitel: Bool
-    //@FocusState var isInputActiveUntertitel: Bool
     
     var body: some View {
-        let _ = print("Struct ObjektListParameter wird aufgerufen!")
-        NavigationView {
+        //let _ = print("Struct ObjektListParameter wird aufgerufen!")
+        
+        NavigationStack {
             Form {
                 Section(header: Text("Kopfzeilen der Liste").foregroundColor(.gray).font(.system(size: 16, weight: .regular))) {
-                 
-                    TextField("Listentitel", text: $data.titel)
-                        //.focused($focusedFields, equals: .titel)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .submitLabel(.done)
-                        .disableAutocorrection(true)
-                   
-                    TextField("Listenuntertitel", text: $data.unterTitel)
-                        //.focused($focusedFields, equals: .unterTitel)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .submitLabel(.done)
-                        .disableAutocorrection(true)
-                      
+                    VStack {
+                        TextField("Listentitel", text: $data.titel)
+                            .padding(5)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(5)
+                            .submitLabel(.done)
+                            .disableAutocorrection(true)
+                            .focused($focusedFields, equals: .titel)
+                        
+                        TextField("Listenuntertitel", text: $data.unterTitel)
+                            .padding(5)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(5)
+                            .submitLabel(.done)
+                            .disableAutocorrection(true)
+                            .focused($focusedFields, equals: .unterTitel)
+                    } // Ende VStack
+                    .toolbar { ToolbarItemGroup(placement: .keyboard) {
+                        
+                                if focusedFields == .titel {
+                                    HStack{
+                                        Spacer()
+                                        Button("Abbrechen") {
+                                            
+                                            print("Abbrechen Button titel wurde gedrückt!")
+                                            focusedFields = nil
+                                        } // Ende Button
+                                    } // Ende HStack
+                                }else if focusedFields == .unterTitel {
+                                    HStack{
+                                        Spacer()
+                                        Button("Abbrechen") {
+                                    
+                                            print("Abbrechen Button unterTitel wurde gedrückt!")
+                                            focusedFields = nil
+                                        } // Ende Button
+                                    } // Ende HStack
+                                
+                        } // Ende if/else
+                        
+                    } // Ende ToolbarItemGroup
+                    }// Ende toolbar
+                    
+                
                 }// Ende Section
                 .font(.system(size: 16, weight: .regular))
-                /*
-                .toolbar { ToolbarItemGroup(placement: .keyboard) {
-                    
-                    HStack {
-                        
-                        Button("Abbrechen") {
-                            
-                            if focusedFields == .titel {
-                                focusedFields = nil
-                                print("Abbrechen Button titel wurde gedrückt!")
-                            }else if focusedFields == .unterTitel {
-                                
-                                focusedFields = nil
-                                print("Abbrechen Button unterTitel wurde gedrückt!")
-                            }
-                        } // Ende Button
-                        
-                    } // Ende HStack
-                    
-                } // Ende ToolbarItemGroup
-                }// Ende toolbar
-                */
+                
                 Section {
                     Toggle("Das Feld Preis/Wert:", isOn: $globaleVariable.preisOderWert ).toggleStyle(SwitchToggleStyle(tint: .blue))
                 } footer: {
@@ -98,7 +100,7 @@ struct ObjektListeParameter: View {
                         Button(action: {
                             
                             print("Titel und Untertitel wurden übernohmen!")
-                        
+                            // Is defined in GlobaleVariablen
                             data.save()
                             
                             isPresented.toggle()
@@ -113,13 +115,13 @@ struct ObjektListeParameter: View {
                     
                 } // Ende VStack
                 
-                
             } // Ende Form
             .navigationTitle("Parameter für die Objektenliste.").navigationBarTitleDisplayMode(.inline)
-
             
-        } // Ende NavigationView
+            
+        } // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
+        
         
     } // Ende var body
     

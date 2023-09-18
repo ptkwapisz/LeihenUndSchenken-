@@ -68,7 +68,7 @@ struct DeteilView: View {
                 
                 Tab4(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                     Image(systemName: "list.dash")
-                    Text("PDF Liste")
+                    Text("PDF-Liste")
                     
                 } // Ende Tab
                 .tag(4) // Die Tags
@@ -234,7 +234,7 @@ func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String
     case 3:
         returnWert = (tabName: "Personen", tabHilfe: "\(hilfeTexte.tabPersonenListe)")
     case 4:
-        returnWert = (tabName: "PDF Liste", tabHilfe: "\(hilfeTexte.tabObjektenPDFListe)")
+        returnWert = (tabName: "PDF-Liste", tabHilfe: "\(hilfeTexte.tabObjektenPDFListe)")
     case 5:
         returnWert = (tabName: "Handbuch", tabHilfe: "\(hilfeTexte.tabHandbuch)")
     default:
