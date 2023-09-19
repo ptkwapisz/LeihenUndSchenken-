@@ -222,8 +222,7 @@ struct EingabeMaskePhoneView: View {
                             .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
                             
                             TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
-                            //.focused($preisWertIsFocused)
-                                .focused($focusedField, equals: .str2)
+                            .focused($focusedField, equals: .str2)
                             
                             VStack{
                                 Text("").frame(height: 20)
@@ -312,7 +311,7 @@ struct EingabeMaskePhoneView: View {
                                     HStack {
                                         Text("\(globaleVariable.textGegenstandbeschreibung.count)/100")
                                             .font(.system(size: 16, weight: .regular))
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(.brown)
                                             .padding()
                                         Spacer()
                                         Button("Abbrechen") {

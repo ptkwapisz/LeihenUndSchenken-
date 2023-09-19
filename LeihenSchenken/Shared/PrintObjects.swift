@@ -24,7 +24,7 @@ struct ObjektListeParameter: View {
     } // Ende private enum
     
     var body: some View {
-        //let _ = print("Struct ObjektListParameter wird aufgerufen!")
+        let _ = print("Struct ObjektListParameter wird aufgerufen!")
         
         NavigationStack {
             Form {
@@ -46,30 +46,31 @@ struct ObjektListeParameter: View {
                             .disableAutocorrection(true)
                             .focused($focusedFields, equals: .unterTitel)
                     } // Ende VStack
-                    .toolbar { ToolbarItemGroup(placement: .keyboard) {
-                        
-                                if focusedFields == .titel {
-                                    HStack{
-                                        Spacer()
-                                        Button("Abbrechen") {
-                                            
-                                            print("Abbrechen Button titel wurde gedrückt!")
-                                            focusedFields = nil
-                                        } // Ende Button
-                                    } // Ende HStack
-                                }else if focusedFields == .unterTitel {
-                                    HStack{
-                                        Spacer()
-                                        Button("Abbrechen") {
-                                    
-                                            print("Abbrechen Button unterTitel wurde gedrückt!")
-                                            focusedFields = nil
-                                        } // Ende Button
-                                    } // Ende HStack
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            
+                            if focusedFields == .titel {
+                                HStack{
+                                    Spacer()
+                                    Button("Abbrechen") {
+                                        
+                                        print("Abbrechen Button titel wurde gedrückt!")
+                                        focusedFields = nil
+                                    } // Ende Button
+                                } // Ende HStack
+                            }else if focusedFields == .unterTitel {
+                                HStack{
+                                    Spacer()
+                                    Button("Abbrechen") {
+                                        
+                                        print("Abbrechen Button unterTitel wurde gedrückt!")
+                                        focusedFields = nil
+                                    } // Ende Button
+                                } // Ende HStack
                                 
-                        } // Ende if/else
-                        
-                    } // Ende ToolbarItemGroup
+                            } // Ende if/else
+                            
+                        } // Ende ToolbarItemGroup
                     }// Ende toolbar
                     
                 

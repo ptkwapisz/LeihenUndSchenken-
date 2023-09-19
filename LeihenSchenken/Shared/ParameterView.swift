@@ -8,67 +8,65 @@
 
 import SwiftUI
 import PhotosUI
-//import UIKit
-//import SQLite3
-
 
 struct TextEditorWithPlaceholder: View {
-        @Binding var text: String
-        @Binding var platz: String
+    @Binding var text: String
+    @Binding var platz: String
+    
+    @State var lastText: String = ""
+    
+    @FocusState private var textIsFocussed: Bool
     
     @State var totalCHarsText: Int = 100
-        @State var lastText: String = ""
-       
-        @FocusState private var textIsFocussed: Bool
-    
-        var body: some View {
-           
-                ZStack(alignment: .leading) {
-                    if text.isEmpty {
-                        VStack {
-                            Text("\(platz)")
-                                .padding(.top, 10)
-                                .padding(.leading, 6)
-                                .font(.system(size: 16, weight: .regular))
-                                .foregroundColor(Color.black)
-                                .opacity(0.6)
-                            Spacer()
-                        } // Ende VStack
-                    } // Ende if
-                    
+    var body: some View {
+        let _ = print("Struckt TextEditorWithPlaceHolder wird aufgerufen!")
+        
+        NavigationStack {
+            ZStack(alignment: .leading) {
+                if text.isEmpty {
                     VStack {
-                        TextField("\(platz)", text: $text, axis: .vertical)
-                            .focused($textIsFocussed)
+                        Text("\(platz)")
+                            .padding(.top, 10)
+                            .padding(.leading, 6)
                             .font(.system(size: 16, weight: .regular))
-                            .cornerRadius(5)
-                            .disableAutocorrection(true)
-                            .lineLimit(3, reservesSpace: true)
-                            .textFieldStyle(.roundedBorder)
-                            .submitLabel(.done)
-                            .onChange(of: text, perform: { newValue in
-                                if newValue.count <= 100 {
-                                    lastText = newValue
-                                    //print(lastText.count)
-                                }else{
-                                    self.text = lastText
-                                } // Ende else
-                                
-                                guard let newValueLastChar = newValue.last else { return }
-                                
-                                if newValueLastChar == "\n" {
-                                    text.removeLast()
-                                    textIsFocussed = false
-                                } // Ende if
-                                
-                            }) // Ende onChange
-                            
-                        
+                            .foregroundColor(Color.black)
+                            .opacity(0.6)
+                        Spacer()
                     } // Ende VStack
+                } // Ende if
+                
+                VStack {
+                    TextField("\(platz)", text: $text, axis: .vertical)
+                        .focused($textIsFocussed)
+                        .font(.system(size: 16, weight: .regular))
+                        .cornerRadius(5)
+                        .disableAutocorrection(true)
+                        .lineLimit(3, reservesSpace: true)
+                        .textFieldStyle(.roundedBorder)
+                        .submitLabel(.done)
+                        .onChange(of: text, perform: { newValue in
+                            if newValue.count <= 100 {
+                                lastText = newValue
+                                //print(lastText.count)
+                            }else{
+                                self.text = lastText
+                            } // Ende else
+                            
+                            guard let newValueLastChar = newValue.last else { return }
+                            
+                            if newValueLastChar == "\n" {
+                                text.removeLast()
+                                textIsFocussed = false
+                            } // Ende if
+                            
+                        }) // Ende onChange
                     
-                } // Ende ZStack
-    
-        }// Ende var body
-    }// Ende struckt
+                } // Ende VStack
+                
+            } // Ende ZStack
+        } // Ende NavigationStack
+    }// Ende var body
+}// Ende struckt
 
 
 struct ImageSelector: View {

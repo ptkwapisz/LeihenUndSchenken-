@@ -28,8 +28,6 @@ struct EditSheetView: View {
     @State var personPickerTmp: String = ""
     @State var neuePersonTmp: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
     
-    //@FocusState var isInputActive: Bool
-    
     @FocusState private var focusedField: Field?
     
     private enum Field: Int, CaseIterable {
@@ -155,7 +153,7 @@ struct EditSheetView: View {
                                 
                                 Spacer()
                                 Button("Fertig") {
-                                    preisWertTmp = par1[par2].preisWert
+                                    //preisWertTmp = par1[par2].preisWert
                                     focusedField = nil
                                 } // Ende Button
                                 .buttonStyle(.bordered)
@@ -219,29 +217,6 @@ struct EditGegenstand: View {
                 .padding(.leading, 6)
                 .foregroundColor(.black)
                 .modifierEditFields()
-            /*
-             .toolbar {
-             if isInputGegenstandActive {
-             ToolbarItemGroup(placement: .keyboard) {
-             //if isInputGegenstandActive {
-             HStack {
-             
-             Text("\(gegenstandTmp.count)/25")
-             .font(.system(size: 16, weight: .regular))
-             .foregroundColor(.gray)
-             Spacer()
-             Button("Abbrechen") {
-             isInputGegenstandActive = false
-             gegenstandTmp = par1[par2].gegenstand
-             } // Ende Button
-             .buttonStyle(.bordered)
-             } // Ende HStack
-             .font(.system(size: 16, weight: .regular))
-             //} // Ende if
-             } // Ende ToolbarItemGroup
-             } // Ende if
-             } // Ende toolbar
-             */
                 .onAppear(){
                     gegenstandTmp = par1[par2].gegenstand
                 } // Ende onAppear
@@ -290,28 +265,6 @@ struct EditGegenstandText: View {
                 .background(Color.blue)
                 .opacity(0.3)
                 .cornerRadius(5)
-            /*
-             .toolbar {
-             if isInputGegenstandTextActive {
-             ToolbarItemGroup(placement: .keyboard) {
-             // if isInputGegenstandTextActive {
-             HStack {
-             Text("\(gegenstandTextTmp.count)/100")
-             .font(.system(size: 16, weight: .regular))
-             .foregroundColor(.gray)
-             Spacer()
-             Button("Abbrechen") {
-             isInputGegenstandTextActive = false
-             gegenstandTextTmp = par1[par2].gegenstandText
-             } // Ende Button
-             .buttonStyle(.bordered)
-             } // Ende HStack
-             .font(.system(size: 16, weight: .regular))
-             //}
-             } // Ende ToolbarItemGroup
-             }
-             } // Ende toolbar
-             */
                 .onAppear(){
                     gegenstandTextTmp = par1[par2].gegenstandText
                 } // Ende onAppear
@@ -358,7 +311,6 @@ struct EditPreisWert: View {
                 .padding(.leading, 6)
                 .foregroundColor(.black)
                 .keyboardType(.decimalPad)
-                .disableAutocorrection (true)
                 .frame(width: 150, height: 30, alignment: .trailing)
                 .multilineTextAlignment(.trailing)
                 .modifier(TextFieldEuro(textParameter: $preisWertTmp))
@@ -397,27 +349,6 @@ struct EditPreisWert: View {
                 } // Ende onAppear
             
         }// Ende HStack
-        /*
-         .toolbar {
-         if isInputPreisWertActive {
-         ToolbarItemGroup(placement: .keyboard) {
-         //if isInputPreisWertActive {
-         HStack {
-         
-         Spacer()
-         Button("Fertig") {
-         isInputPreisWertActive = false
-         //preisWertTmp = par1[par2].preisWert
-         } // Ende Button
-         .buttonStyle(.bordered)
-         } // Ende HStack
-         .font(.system(size: 16, weight: .regular))
-         //} // Ende if
-         } // Ende ToolbarItemGroup
-         }// Ende if
-         } // Ende toolbar
-         */
-        //} // Ende NavigationStack
         
     } // Ende var body
 } // Ende struct PreisWert
@@ -498,28 +429,6 @@ struct EditAllgemeinerText: View {
                 .background(Color.blue)
                 .opacity(0.3)
                 .cornerRadius(5)
-            /*
-             .toolbar {
-             if isInputAllgemeinerTextActive {
-             ToolbarItemGroup(placement: .keyboard) {
-             //if isInputAllgemeinerTextActive {
-             HStack {
-             Text("\(allgemeinerTextTmp.count)/100")
-             .font(.system(size: 16, weight: .regular))
-             .foregroundColor(.gray)
-             Spacer()
-             Button("Abbrechen") {
-             isInputAllgemeinerTextActive = false
-             allgemeinerTextTmp = par1[par2].allgemeinerText
-             } // Ende Button
-             .buttonStyle(.bordered)
-             } // Ende HStack
-             .font(.system(size: 16, weight: .regular))
-             // }
-             } // Ende ToolbarItemGroup
-             } // Ende if
-             } // Ende toolbar
-             */
                 .onAppear(){
                     allgemeinerTextTmp = par1[par2].allgemeinerText
                 } // Ende onAppear
@@ -686,7 +595,6 @@ struct EditPerson: View {
                 personPickerTmp = " " + par1[par2].personNachname + ", " + par1[par2].personVorname + " "
             } // Ende onAppear
             .sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})
-            
             
         }// Ende HStack
         //} // Ende NavigationStack
