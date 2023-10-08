@@ -41,20 +41,7 @@ struct Statistik: View {
             
         } // Ende GeometryReader
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
-        /*
-        Button {
         
-            // Diese Zeile bewirkt, dass die View geschlossen wird
-            self.presentationMode.wrappedValue.dismiss()
-            
-        } label: {
-            Label("Ansicht verlassen", systemImage: "arrowshape.turn.up.backward.circle")
-            
-        } // Ende Button
-        .font(.system(size: 16, weight: .medium))
-        .foregroundColor(Color.white)
-        .buttonStyle(.borderedProminent)
-        */
     } // Ende var body
 } // Ende struc Tab%
 
@@ -193,3 +180,21 @@ func ladeStatistiken() -> [Statistiken] {
     
     return resultat
 } // Ende func
+
+
+func distingtArrayStatistiken(par1: [Statistiken], par2: String) -> [String]{
+    
+    var resultat: [String] = [""]
+    
+    switch par2 {
+            
+        case "stGruppe" :
+            resultat = Array(Set(par1.compactMap { $0.stGruppe }))
+            
+        default:
+            print("Default")
+    } // Ende Switch
+    
+    return resultat
+} // Ende func
+ 

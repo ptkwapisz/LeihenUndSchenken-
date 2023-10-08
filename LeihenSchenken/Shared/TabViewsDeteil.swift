@@ -35,9 +35,9 @@ struct deteilTab1: View {
                 Text("")
                 HStack {
                     
-                        Text("\(tempErgaenzung)").bold()  // arrow.up.arrow.down
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 20)
+                    Text("\(tempErgaenzung)").bold()  // arrow.up.arrow.down
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 20)
                     if anzahl > 1 {
                         Button() {
                             sortObjekte.toggle()
@@ -138,34 +138,37 @@ struct deteilTab1: View {
                 .cornerRadius(10)
                 Spacer()
                 
-                    HStack(alignment: .bottom) {
-                        // Bei iPad muss das Eingabenmasken Button nicht erscheinen
-                        if UIDevice.current.userInterfaceIdiom == .phone {
-                            Button {showEingabeMaske = true
-                                
-                            } label: { Label("", systemImage: "rectangle.stack.fill.badge.plus")
-                                
-                            } // Ende Button
-                            .font(.system(size: 30, weight: .medium))
-                            .foregroundColor(Color.white)
-                            .offset(x: 10)
+                HStack(alignment: .bottom) {
+                    // Bei iPad muss das Eingabenmasken Button nicht erscheinen
+                    if UIDevice.current.userInterfaceIdiom == .phone {
+                        Button {showEingabeMaske = true
                             
+                        } label: { Label("", systemImage: "rectangle.stack.fill.badge.plus")
                             
-                            Text("|")
-                                .offset(x:3, y: -7)
-                                .foregroundColor(Color.white)
-                        } // Ende if UIDevice
-                        // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
-                        if alleObjekte.count > 0 {
-                            serchFullTextInObjekten()
-                        }// Ende if
+                        } // Ende Button
+                        .font(.system(size: 30, weight: .medium))
+                        .foregroundColor(Color.white)
+                        .offset(x: 10)
                         
-                    } // Ende HStack
-                    .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
-                    .background(Color(UIColor.lightGray))
-                    .foregroundColor(Color.black)
-                    .sheet(isPresented: $showEingabeMaske, content: { EingabeMaskePhoneView() })
+                        
+                        Text("|")
+                            .offset(x:3, y: -7)
+                            .foregroundColor(Color.white)
+                    } // Ende if UIDevice
+                    // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
+                    if alleObjekte.count > 0 {
+                        serchFullTextInObjekten()
+                    }// Ende if
                     
+                } // Ende HStack
+                .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
+                .background(Color(UIColor.lightGray))
+                .foregroundColor(Color.black)
+                //.sheet(isPresented: $showEingabeMaske, content: { EingabeMaskePhoneAndPadView() })
+                .navigationDestination(isPresented: $showEingabeMaske, destination: { EingabeMaskePhoneAndPadView()
+                        .navigationBarBackButtonHidden()
+                        .navigationBarTitleDisplayMode(.inline)
+                })
                 
                 
             } // Ende VStack
@@ -189,19 +192,21 @@ struct deteilTab1: View {
             } // Ende onAppear
             .alert(isPresented: $showAlert) {
                 switch activeAlertLeereDb {
-                    
-                case .informationiPhone:
-                    return Alert(
-                        title: Text("Wichtige Information!"),
-                        message: Text("\(alertMessageTexte.leereDbMessageTextiPhone)"), dismissButton: .default(Text("OK")))
-                case .informationiPad:
-                    return Alert(
-                        title: Text("Wichtige Information!"),
-                        message: Text("\(alertMessageTexte.leereDbMessageTextiPad)"), dismissButton: .default(Text("OK")))
-                    
+                        
+                    case .informationiPhone:
+                        return Alert(
+                            title: Text("Wichtige Information!"),
+                            message: Text("\(alertMessageTexte.leereDbMessageTextiPhone)"), dismissButton: .default(Text("OK")))
+                    case .informationiPad:
+                        return Alert(
+                            title: Text("Wichtige Information!"),
+                            message: Text("\(alertMessageTexte.leereDbMessageTextiPad)"), dismissButton: .default(Text("OK")))
+                        
                 } // Ende switch
             } // Ende alert
         } // Ende GeometryReader
+        
+    
     } // Ende var body
     
 } // Ende struct
@@ -221,9 +226,9 @@ struct deteilTab2: View {
     @State private var activeAlert: ActiveAlert = .error
     
     var body: some View {
-      
-      let gegenstaende = querySQLAbfrageClassGegenstaende(queryTmp: "Select * FROM Gegenstaende")
         
+        let gegenstaende = querySQLAbfrageClassGegenstaende(queryTmp: "Select * FROM Gegenstaende")
+        NavigationStack {
         GeometryReader { geometry in
             VStack {
                 Text("")
@@ -306,7 +311,11 @@ struct deteilTab2: View {
                 .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
                 .background(Color(UIColor.lightGray))
                 .foregroundColor(Color.black)
-                .sheet(isPresented: $gegenstandHinzufuegen, content: { ShapeViewAddGegenstand(isPresented: $gegenstandHinzufuegen, isParameterBereich: $isParameterBereich) })
+                //.sheet(isPresented: $gegenstandHinzufuegen, content: { ShapeViewAddGegenstand(isPresented: $gegenstandHinzufuegen, isParameterBereich: $isParameterBereich) })
+                .navigationDestination(isPresented: $gegenstandHinzufuegen, destination: { ShapeViewAddGegenstand(isPresented: $gegenstandHinzufuegen, isParameterBereich: $isParameterBereich)
+                        .navigationBarBackButtonHidden()
+                        .navigationBarTitleDisplayMode(.inline)
+                })
                 
             } // Ende Vstack
             .background(globaleVariable.farbenEbene1)
@@ -319,13 +328,13 @@ struct deteilTab2: View {
                 } // Ende if
             } // Ende onAppear
         } // Ende GeometryReader
+    }
     }// Ende var body
     
 } // Ende struct
 
 struct deteilTab3: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@Binding var sideBarWidth: CGFloat
     
     @State var isParameterBereich: Bool = false
     @State var personHinzufuegen: Bool = false
@@ -344,118 +353,122 @@ struct deteilTab3: View {
     var body: some View {
       
         let person = querySQLAbfrageClassPerson(queryTmp: "Select * from Personen", isObjectTabelle: false)
-        
-        GeometryReader { geometry in
-            
-            VStack {
-                Text("")
-                Text("Favoritenliste").bold()
+        NavigationStack {
+            GeometryReader { geometry in
                 
-                List(person, id: \.personPicker, selection: $selectedType) { index in
+                VStack {
+                    Text("")
+                    Text("Favoritenliste").bold()
                     
-                    Text(index.personPicker)
-
-                } // Ende List
-                .cornerRadius(10)
-                
-                HStack(alignment: .bottom) {
-                    Button {
-                        personHinzufuegen = true
-                    } label: {
-                        Label("",systemImage: "person.fill.badge.plus")
-                    } // Ende Button/label
-                    .font(.system(size: 30, weight: .medium))
-                    .foregroundColor(Color.white)
-                    .offset(x: 10)
+                    List(person, id: \.personPicker, selection: $selectedType) { index in
+                        
+                        Text(index.personPicker)
+                        
+                    } // Ende List
+                    .cornerRadius(10)
                     
-                    Text(" |")
-                        .offset(x:3, y: -7)
+                    HStack(alignment: .bottom) {
+                        Button {
+                            personHinzufuegen = true
+                        } label: {
+                            Label("",systemImage: "person.fill.badge.plus")
+                        } // Ende Button/label
+                        .font(.system(size: 30, weight: .medium))
                         .foregroundColor(Color.white)
-                    Button {
+                        .offset(x: 10)
                         
-                        selectedPickerTmp = "\(selectedType ?? "N/A")"
-                        print("\(selectedPickerTmp)")
-                        
-                        if selectedPickerTmp == "N/A" {
-                            errorMessageText = "Bitte markieren Sie zuerst eine Person, die Sie löschen möchten. Das tun sie durch das Klicken auf die entsprechende Zeile. Danach betätigen Sie noch mal das Minuszeichen, um die markierte Person zu löschen ."
+                        Text(" |")
+                            .offset(x:3, y: -7)
+                            .foregroundColor(Color.white)
+                        Button {
                             
-                            showAlert = true
-                            activeAlert = .error
-                        }else{
+                            selectedPickerTmp = "\(selectedType ?? "N/A")"
+                            print("\(selectedPickerTmp)")
                             
-                            showAlert = true
-                            activeAlert = .delete
-                            
-                        }// Ende if/else
-                    } label: {
-                        
-                        Label("",systemImage: "person.fill.badge.minus")
-                        
-                    } // Ende Button/label
-                    .font(.system(size: 30, weight: .medium))
-                    .foregroundColor(Color.white)
-                    .offset(x: 10)
-                    .alert(isPresented: $showAlert) {
-                        switch activeAlert {
-                            case .error:
-                                return Alert(title: Text("Wichtige Information"), message: Text(errorMessageText), dismissButton: .default(Text("OK")))
-                            case .delete:
-                                return Alert(
-                                    title: Text("Wichtige Information!"),
-                                    message: Text("Die Person: \(selectedPickerTmp) wird unwiederfuflich gelöscht! Man kann diesen Vorgang nicht rückgängich machen!"),
-                                    primaryButton: .destructive(Text("Löschen")) {
-                                        
-                                        let perKeyTmp = perKeyBestimmenPerson(par: selectedPickerTmp)
-                                        deleteItemsFromDatabase(tabelle: "Personen", perKey: perKeyTmp[0])
-                                       
-                                        print("\(selectedPickerTmp)" + " wurde gelöscht")
-                                        print(perKeyTmp)
-                                        
-                                        refreshAllViews()
-                                        
-                                    },
-                                    secondaryButton: .cancel(Text("Abbrechen")){
-                                        print("\(selectedPickerTmp)" + " wurde nicht gelöscht")
-                                        print("Abgebrochen ....")
-                                    } // Ende secondary Button
-                                ) // Ende Alert
-                            case .information:
-                                return Alert(
-                                    title: Text("Wichtige Information!"),
-                                    message: Text("Es befinden sich keine Personen in der Datenbank. Drücken Sie unten links auf das Männchen mit + Zeichen, um eine neue Person in diese Liste hinzufügen."), dismissButton: .default(Text("OK")))
+                            if selectedPickerTmp == "N/A" {
+                                errorMessageText = "Bitte markieren Sie zuerst eine Person, die Sie löschen möchten. Das tun sie durch das Klicken auf die entsprechende Zeile. Danach betätigen Sie noch mal das Minuszeichen, um die markierte Person zu löschen ."
                                 
-                        } // Ende switch
-                    } // Ende alert
-                    
-                    Text(" |")
-                        .offset(x:3, y: -7)
+                                showAlert = true
+                                activeAlert = .error
+                            }else{
+                                
+                                showAlert = true
+                                activeAlert = .delete
+                                
+                            }// Ende if/else
+                        } label: {
+                            
+                            Label("",systemImage: "person.fill.badge.minus")
+                            
+                        } // Ende Button/label
+                        .font(.system(size: 30, weight: .medium))
                         .foregroundColor(Color.white)
+                        .offset(x: 10)
+                        .alert(isPresented: $showAlert) {
+                            switch activeAlert {
+                                case .error:
+                                    return Alert(title: Text("Wichtige Information"), message: Text(errorMessageText), dismissButton: .default(Text("OK")))
+                                case .delete:
+                                    return Alert(
+                                        title: Text("Wichtige Information!"),
+                                        message: Text("Die Person: \(selectedPickerTmp) wird unwiederfuflich gelöscht! Man kann diesen Vorgang nicht rückgängich machen!"),
+                                        primaryButton: .destructive(Text("Löschen")) {
+                                            
+                                            let perKeyTmp = perKeyBestimmenPerson(par: selectedPickerTmp)
+                                            deleteItemsFromDatabase(tabelle: "Personen", perKey: perKeyTmp[0])
+                                            
+                                            print("\(selectedPickerTmp)" + " wurde gelöscht")
+                                            print(perKeyTmp)
+                                            
+                                            refreshAllViews()
+                                            
+                                        },
+                                        secondaryButton: .cancel(Text("Abbrechen")){
+                                            print("\(selectedPickerTmp)" + " wurde nicht gelöscht")
+                                            print("Abgebrochen ....")
+                                        } // Ende secondary Button
+                                    ) // Ende Alert
+                                case .information:
+                                    return Alert(
+                                        title: Text("Wichtige Information!"),
+                                        message: Text("Es befinden sich keine Personen in der Datenbank. Drücken Sie unten links auf das Männchen mit + Zeichen, um eine neue Person in diese Liste hinzufügen."), dismissButton: .default(Text("OK")))
+                                    
+                            } // Ende switch
+                        } // Ende alert
+                        
+                        Text(" |")
+                            .offset(x:3, y: -7)
+                            .foregroundColor(Color.white)
+                        
+                    } // Ende HStack
+                    .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
+                    .background(Color(UIColor.lightGray))
+                    .foregroundColor(Color.black)
+                    //.sheet(isPresented: $personHinzufuegen, content: {ShapeViewAddUser(isPresented: $personHinzufuegen, isParameterBereich: $isParameterBereich)})
+                    .navigationDestination(isPresented: $personHinzufuegen, destination: { ShapeViewAddUser(isPresented: $personHinzufuegen, isParameterBereich: $isParameterBereich)
+                            .navigationBarBackButtonHidden()
+                            .navigationBarTitleDisplayMode(.inline)
+                    })
                     
-                } // Ende HStack
-                .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
-                .background(Color(UIColor.lightGray))
-                .foregroundColor(Color.black)
-                .sheet(isPresented: $personHinzufuegen, content: {ShapeViewAddUser(isPresented: $personHinzufuegen, isParameterBereich: $isParameterBereich)})
-                
-                
-            } // Ende Vstack
-            .background(globaleVariable.farbenEbene1)
-            .cornerRadius(10)
-            .onAppear() {
-                if person.count == 0 {
-                    // Wenn sich keine Personen in der Datenbanktabelle befinden
-                    // wird eine Information gezeigt.
-                    showAlert = true
-                    activeAlert = .information
-                    
-                } // Ende if
-                // Wenn die Datenbank nicht leer ist:
-                // wird der Wert zugewiesen damit in der Liste die erste Zeile markiert wird
-                if person.count != 0 {
-                    selectedType = person[0].personPicker
-                } // Ende if
-            } // Ende onAppear
-        }
+                } // Ende Vstack
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
+                .onAppear() {
+                    if person.count == 0 {
+                        // Wenn sich keine Personen in der Datenbanktabelle befinden
+                        // wird eine Information gezeigt.
+                        showAlert = true
+                        activeAlert = .information
+                        
+                    } // Ende if
+                    // Wenn die Datenbank nicht leer ist:
+                    // wird der Wert zugewiesen damit in der Liste die erste Zeile markiert wird
+                    if person.count != 0 {
+                        selectedType = person[0].personPicker
+                    } // Ende if
+                } // Ende onAppear
+            } // Ende GeometryReader
+        } // Ende NAvigationStack
     }// Ende var body
     
 } // Ende struct

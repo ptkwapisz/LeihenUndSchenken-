@@ -10,11 +10,10 @@ import Foundation
 import SwiftUI
 import Contacts
 
-
-
 struct ShapeViewAddGegenstand: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    //@Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+   
     @Binding var isPresented: Bool
     @Binding var isParameterBereich: Bool
     
@@ -27,7 +26,7 @@ struct ShapeViewAddGegenstand: View {
     
     var body: some View {
         
-        NavigationStack {
+       //NavigationStack {
             
             Form {
                 Section(){
@@ -52,6 +51,7 @@ struct ShapeViewAddGegenstand: View {
                         Button("Abbrechen") {
                             isInputActive = false
                             gegenstandNeu = ""
+                           
                         } // Ende Button
                     } // Ende HStack
                     
@@ -60,7 +60,12 @@ struct ShapeViewAddGegenstand: View {
                 
                 HStack {
                     Spacer()
-                    Button(action: { isPresented = false }) {Text("Abbrechen")}
+                    Button(action: {
+                        isPresented = false
+                      
+                        //self.presentationMode.wrappedValue.dismiss()
+                        print("Gegenstand wurde in die Auswahl nicht hinzugefügt!")
+                    }) {Text("Abbrechen")}
                         .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                     
                     Button(action: {
@@ -124,7 +129,7 @@ struct ShapeViewAddGegenstand: View {
             .navigationTitle("Neuer Gegenstand").navigationBarTitleDisplayMode(.inline)
             .scrollContentBackground(.hidden)
             
-        } // Ende NavigationStack
+        //} // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
@@ -170,7 +175,7 @@ struct ShapeViewSettings: View {
                         
                     } footer: {
                         
-                        Text("Beim einschalten der iCloud Sicherung, wird die Datensicherung in der iCloud gespeichert. Dadurch wird es Möglich sein, diese Datensicherung auf einem anderen Gerät (iPhone oder iPad) einzuspielen.")
+                        Text("Beim einschalten der iCloud Sicherung, wird die Datensicherung in der iCloud gespeichert. Dadurch wird es möglich sein, diese Datensicherung auf Ihrem anderen Gerät (iPhone oder iPad) einzuspielen.")
                         
                     } // Ende Section
                 
@@ -185,7 +190,7 @@ struct ShapeViewSettings: View {
                         isPresented = false
                     }label: {
                      //Text("Parameterfenster verlassen.")
-                        Label("Parameterfenster verlassen", systemImage: "arrowshape.turn.up.backward.circle")
+                        Label("Einstellungenfenster verlassen", systemImage: "arrowshape.turn.up.backward.circle")
                         
                     } // Ende Button Text
                     .buttonStyle(.borderedProminent)
@@ -195,13 +200,13 @@ struct ShapeViewSettings: View {
                     Spacer()
                 } // Ende HStack
                 
-                Text("Beim Drücken auf 'Parameterfenster verlassen' wird das Parameterfenster geschloßen und die einzehlen Parameter werden gespeichert.")
+                Text("Beim Drücken auf 'Einstellungenfenster verlassen' wird das Fenster geschloßen und die einzehlen Parameter werden gespeichert.")
                     .font(.system(size: 12, weight: .regular))
                     .foregroundColor(.gray)
                 
             } // Ende Form
             .font(.system(size: 14, weight: .regular))
-            .navigationTitle("Applikations-Parameter").navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("App-Einstellungen").navigationBarTitleDisplayMode(.inline)
             
         } // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
@@ -353,11 +358,10 @@ struct ShapeViewAbfrage: View {
     } // Ende var body
 } // Ende struct
 
-
+// Wird bei Objekt editieren aufgerufen und nicht bei Tab Personen
 struct ShapeViewEditUser: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @Binding var isPresentedShapeViewEditUser: Bool
-    //@Binding var neuePersonTmp: [String]
     @Binding var personPickerTmp: String
     @Binding var neuePersonTmp: [PersonClassVariable]
     
@@ -365,23 +369,38 @@ struct ShapeViewEditUser: View {
     
     @State var selectedPerson_sexInt: Int = 0
     
+    @FocusState private var focusedField: Field?
+    
+    private enum Field: Int, CaseIterable {
+        case vorname // Für Vorname
+        case name // Für Nachname
+        
+    } // Ende private enum
+    
     var body: some View {
-        NavigationStack {
+        //NavigationStack {
             Form {
                 Section() {
                     
                     TextField("Vorname", text: $neuePersonTmp[0].personVorname)
+                        .focused($focusedField, equals: .vorname)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
+                        .submitLabel(.done)
                         .disableAutocorrection(true)
                     
                     TextField("Namen", text: $neuePersonTmp[0].personNachname)
+                        .focused($focusedField, equals: .name)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
+                        .submitLabel(.done)
                         .disableAutocorrection(true)
-                    
+                } // Ende Section
+                
+                
+                Section() {
                     Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
                         
                         ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
@@ -425,8 +444,50 @@ struct ShapeViewEditUser: View {
             } // Ende Form
             .navigationTitle("Benutzer bearbeiten").navigationBarTitleDisplayMode(.inline)
             
-        } // Ende NavigationStack
+        //} // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                if focusedField == .vorname {
+                    HStack {
+                        
+                        Text("\(neuePersonTmp[0].personVorname.count)/15")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.gray)
+                            .padding()
+                        
+                        Spacer()
+                        
+                         Button("Abbrechen") {
+                         //neuePersonTmp[0].personVorname = ""
+                         focusedField = nil
+                         print("Abbrechen Button Vorname wurde gedrückt!")
+                         } // Ende Button
+                         
+                    } // Ende HStack
+                }else if focusedField == .name  {
+                    HStack{
+                        
+                        Text("\(neuePersonTmp[0].personNachname.count)/25")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.gray)
+                            .padding()
+                        
+                        Spacer()
+                        
+                         Button("Abbrechen") {
+                         //neuePersonTmp[0].personNachname = ""
+                         focusedField = nil
+                         print("Abbrechen Button Nachname wurde gedrückt!")
+                         } // Ende Button
+                         
+                    } // Ende HStack
+                } // Ende if/else
+                
+            } // Ende ToolbarItemGroup
+            
+        } // Ende toolbar
+        .font(.system(size: 16, weight: .regular))
         
     } // Ende var body
 } // Ende struct

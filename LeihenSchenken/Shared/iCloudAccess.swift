@@ -11,7 +11,7 @@ import Foundation
 // Prüfen ob iCloud ist verfügbar
 // Wenn User nicht eingelogt ist, dann return ist false
 func isICloudContainerAvailable() -> Bool {
-    
+    let _ = print("Funktion isICloudContainerAvailable() wird aufgerufen!")
     if let _ = FileManager.default.ubiquityIdentityToken {
         print("iCloud vorhanden")
         return true

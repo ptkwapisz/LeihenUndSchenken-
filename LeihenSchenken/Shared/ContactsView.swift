@@ -26,24 +26,36 @@ struct ShapeViewAddUser: View {
     // Das laden der Kontakte erfolgt in .onAppear
     @State var myContactsTmp: [Contact] = []
     
-    var body: some View {
+    @FocusState private var focusedField: Field?
+    
+    private enum Field: Int, CaseIterable {
+        case vornameFokus // Für Vorname
+        case nameFokus // Für Nachname
         
+    } // Ende private enum
+    
+    var body: some View {
+        let _ = print("Struct ShapeViewAddUser wird aufgerufen!")
         let myContacts = serchInAdressBookArray(parameter: myContactsTmp)
         
-        NavigationStack {
+        //NavigationStack {
             Form {
                 Section() {
                     
                     TextField("Vorname", text: $vorname)
+                        .focused($focusedField, equals: .vornameFokus)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
+                        .submitLabel(.done)
                         .disableAutocorrection(true)
                     
                     TextField("Name", text: $name)
+                        .focused($focusedField, equals: .nameFokus)
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(5)
+                        .submitLabel(.done)
                         .disableAutocorrection(true)
                     
                     Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
@@ -55,6 +67,8 @@ struct ShapeViewAddUser: View {
                     } // Ende Picker
                 } // Ende Section
                 .font(.system(size: 16, weight: .regular))
+                
+                
                 
                 if myContactsTmp.count > 0 {
                     Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
@@ -194,7 +208,7 @@ struct ShapeViewAddUser: View {
             .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.inline)
             //.scrollDisabled(true)
             
-        } // Ende NavigationStack
+        //} // Ende NavigationStack
         .onAppear{
             
             fetchAllContacts { fetchedContacts in
@@ -203,6 +217,52 @@ struct ShapeViewAddUser: View {
             
         } // Ende onApear
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                if focusedField == .vornameFokus {
+                    HStack {
+                    
+                    Text("\(vorname.count)/15")
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(.gray)
+                        .padding()
+                    
+                    Spacer()
+                    
+                     Button("Abbrechen") {
+                     //neuePersonTmp[0].personVorname = ""
+                     focusedField = nil
+                     print("Abbrechen Button Vorname wurde gedrückt!")
+                     } // Ende Button
+                     
+                    } // Ende HStack
+                }else if focusedField == .nameFokus  {
+                    HStack{
+                    
+                    Text("\(name.count)/25")
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(.gray)
+                        .padding()
+                    
+                    Spacer()
+                    
+                     Button("Abbrechen") {
+                     //neuePersonTmp[0].personNachname = ""
+                     focusedField = nil
+                     print("Abbrechen Button Nachname wurde gedrückt!")
+                     } // Ende Button
+                     
+                    } // Ende HStack
+                } // Ende if/else
+                
+            } // Ende ToolbarItemGroup
+            
+        } // Ende toolbar
+        .font(.system(size: 16, weight: .regular))
+        
+        
+        
+        
         
     } // Ende var body
     

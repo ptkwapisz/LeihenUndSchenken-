@@ -13,10 +13,9 @@ import SQLite3
 // Das Löschen/Zurücksetzen der UserDefaults wird hier durch das Zuweisen der Standardswerte vollzogen.
 func deleteUserDefaults() {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    
     let colorData = ColorData()
     
-    //userSettingsDefaults.selectedSprache = 0
     globaleVariable.farbenEbene0 = Color.blue
     globaleVariable.farbenEbene1 = Color.green
     colorData.saveColor(color0: globaleVariable.farbenEbene0, color1: globaleVariable.farbenEbene1)
@@ -74,23 +73,6 @@ func distingtArray(par1: [ObjectVariable], par2: String) -> [String]{
     } // Ende Switch
     
     resultat.sort()
-    
-    return resultat
-} // Ende func
-
- 
-func distingtArrayStatistiken(par1: [Statistiken], par2: String) -> [String]{
-    
-    var resultat: [String] = [""]
-    
-    switch par2 {
-        
-    case "stGruppe" :
-        resultat = Array(Set(par1.compactMap { $0.stGruppe }))
-        
-    default:
-        print("Default")
-    } // Ende Switch
     
     return resultat
 } // Ende func
@@ -372,7 +354,6 @@ func parameterCheck(parGegenstand: String, parPerson: String) -> Bool {
 
     return resultat
 } // Ende func
-
 
 func perKeyBestimmenGegenstand(par: String) -> [String] {
     var result: [String] = [""]

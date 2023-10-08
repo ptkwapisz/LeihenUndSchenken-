@@ -1,33 +1,34 @@
 //
-//  EingabeMaskePad.swift
+//  EingabeMaske.swift
 //  LeihenSchenken
 //
-//  Created by PIOTR KWAPISZ on 19.07.23.
+//  Created by PIOTR KWAPISZ on 24.09.23.
 //
 
-
 import SwiftUI
-//import PhotosUI
-//import UIKit
+import PhotosUI
 import SQLite3
 import Combine
 
-struct EingabeMaskePadView: View {
+struct EingabeMaskePhoneAndPadView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode> // Only in iPhon
+    
     @ObservedObject var hilfeTexte = HilfeTexte.shared
+    @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
+    
     @StateObject var cameraManager = CameraManager()
     
     @State var showParameterHilfe: Bool = false
-    //@State var showParameterAllgemeinesInfo: Bool = false
+    @State var showParameterAllgemeinesInfo: Bool = false // Only in iPhon
     @State var showAlerOKButton: Bool = false
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
-    
-    //@State var showCameraButton: Bool = false
-    
     @State var showSheetPerson: Bool = false
     @State var showSheetGegenstand: Bool = false
     @State var isParameterBereich: Bool = true
+    @State var paddingHeight: CGFloat = 0.0
     
     @FocusState private var focusedField: Field?
     
@@ -49,10 +50,11 @@ struct EingabeMaskePadView: View {
     @State private var platz: String = ""
     
     @State var imageData = UIImage()
-     
+    
     private let numberFormatter: NumberFormatter
     private let perKeyFormatter: DateFormatter
     //private let germanDateFormatter: DateFormatter
+    @State var customButton: String = ""
     
     init() {
         numberFormatter = NumberFormatter()
@@ -65,14 +67,15 @@ struct EingabeMaskePadView: View {
     } // Ende init
     
     var body: some View {
+        let _ = print("Struct EingabeMaskePhoneAndPadView wird aufgerufen!")
         
         let tapOptionGegenstand = Binding<Int>(
             get: { globaleVariable.selectedGegenstandInt }, set: { globaleVariable.selectedGegenstandInt = $0
                 
                 //Add the onTapGesture contents here
                 if globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt] == "Neuer Gegenstand" {
-                   showSheetGegenstand = true
-                   selectedGegenstand = "Neuer Gegenstand"
+                    showSheetGegenstand = true
+                    selectedGegenstand = "Neuer Gegenstand"
                 }else{
                     selectedGegenstand = globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt]
                 } // Ende if
@@ -84,21 +87,21 @@ struct EingabeMaskePadView: View {
                 
                 //Add the onTapGesture contents here
                 if globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personPicker == "Neue Person" {
-                   showSheetPerson = true
-                   selectedPerson = "Neue Person"
+                    showSheetPerson = true
+                    selectedPerson = "Neue Person"
                 }else{
                     selectedPerson = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personPicker
                 } // Ende if
             } // Ende set
         ) // Ende let
-        
-        NavigationStack {
+    
+        //NavigationStack() {
+            
             GeometryReader { geometry in
-                
-                VStack {
-                    Text("")
-                    Form {
-                        
+            
+                Form {
+                    
+                    Section {
                         
                         Picker("Gegenstand: ", selection: tapOptionGegenstand, content: {
                             ForEach(0..<$globaleVariable.parameterGegenstand.count, id: \.self) { index in
@@ -107,7 +110,13 @@ struct EingabeMaskePadView: View {
                             
                         })
                         .font(.system(size: 16, weight: .regular))
-                        .sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich )})
+                        //.sheet(isPresented: $showSheetGegenstand, content: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich )})
+                        
+                        .navigationDestination(isPresented: $showSheetGegenstand, destination: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich)
+                                .navigationBarBackButtonHidden()
+                                .navigationBarTitleDisplayMode(.inline)
+                        })
+                        
                         
                         TextEditorWithPlaceholder(text: $globaleVariable.textGegenstandbeschreibung, platz: $platzText1)
                             .focused($focusedField, equals: .str1)
@@ -121,8 +130,7 @@ struct EingabeMaskePadView: View {
                             Text(" ")
                             if cameraManager.permissionGranted {
                                 PhotoSelector()
-                            }
-                            //Text(" ")
+                            } // Ende if
                             
                             if globaleVariable.parameterImageString != "Kein Bild" {
                                 let imageData = Data (base64Encoded: globaleVariable.parameterImageString)!
@@ -151,7 +159,7 @@ struct EingabeMaskePadView: View {
                                 .font(.system(size: 16, weight: .regular))
                             Spacer()
                             //Text(String(repeating: " ", count: 28))
-                            TextField("0.00 €", text: $globaleVariable.preisWert)
+                            TextField("0,00 €", text: $globaleVariable.preisWert)
                             
                                 .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
                                 .multilineTextAlignment(.trailing)
@@ -186,10 +194,8 @@ struct EingabeMaskePadView: View {
                                         
                                     } // Ende if/else
                                 } // Ende onReceive
-                            //Text("€").font(.system(size: 16, weight: .regular))
-                            
                         } // Ende HStack
-                        //.frame(width: UIScreen.screenWidth)
+                        
                         
                         HStack{
                             Text("Datum:")
@@ -224,12 +230,18 @@ struct EingabeMaskePadView: View {
                             } // Ende ForEach
                         }) // Picker
                         .font(.system(size: 16, weight: .regular))
-                        .sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
+                        //.sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
+                        .navigationDestination(isPresented: $showSheetPerson, destination: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) 
+                                .navigationBarBackButtonHidden()
+                                .navigationBarTitleDisplayMode(.inline)
+                        })
+                        
                         
                         TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
-                        //.focused($preisWertIsFocused)
                             .focused($focusedField, equals: .str2)
-                        
+                    } // Ende Section
+                   
+                    Section {
                         VStack{
                             Text("").frame(height: 20)
                             
@@ -238,13 +250,17 @@ struct EingabeMaskePadView: View {
                                 Button(action: {showAlertAbbrechenButton = true}) { Text("Abbrechen") } .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                                     .alert(isPresented:$showAlertAbbrechenButton) {
                                         Alert(
-                                            title: Text("Möchten Sie alle Eingaben unwiederfuflich löschen?"),
-                                            message: Text("Man kann den Vorgang nicht rückgängich machen!"),
-                                            primaryButton: .destructive(Text("Löschen")) {
-                                                
+                                            title: Text("Sie haben folgende Wahl."),
+                                            message: Text("\(alertMessageTexte.alertTextForEingabemaske)"),
+                                            primaryButton: .destructive(Text("\(customButton)")) {
+  //
                                                 // Die Parameterwerte werden gelöscht.
                                                 cleanEingabeMaske()
-                                                
+                                                //
+                                                if UIDevice.current.userInterfaceIdiom == .phone {
+                                                    // Diese Zeile bewirkt, dass die View in iPhone geschlossen wird
+                                                    self.presentationMode.wrappedValue.dismiss() // Nur iPhon
+                                                } // Ende if
                                             },
                                             secondaryButton: .cancel(Text("Abbrechen")){
                                                 //print("\(globaleVariable.parameterPerson[globaleVariable.selectedPersonInt])")
@@ -263,26 +279,31 @@ struct EingabeMaskePadView: View {
                                             message: Text("Die Daten werden in die Datenbank gespeichert und die Eingabemaske wird geleert!"),
                                             primaryButton: .destructive(Text("Speichern")) {
                                                 
-                                                // perKey ist die einmahlige Zahgl zum eindeutigen definieren jeden Datensatzes
+                                                // perKey ist die einmahlige Zahl zum eindeutigen definieren jeden Datensatzes
                                                 let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
                                                 
-                                                //let personIntTmp = globaleVariable.selectedPersonInt
                                                 let personVornameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personVorname
                                                 let personNachnameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personNachname
                                                 let persoSexTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personSex
                                                 
                                                 let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt])', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(personVornameTmp)', '\(personNachnameTmp)', '\(persoSexTmp)', '\(globaleVariable.textAllgemeineNotizen)')"
                                                 
-                                                if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
-                                                    SQLITE_OK {
+                                                
+                                                // Die Parameterwerte werden in die SQL Tabelle Objekte geschrieben.
+                                                if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) != SQLITE_OK {
                                                     let errmsg = String(cString: sqlite3_errmsg(db)!)
                                                     print("error -->: \(errmsg)")
                                                     print("Daten wurden nicht hinzugefügt")
+                                                    
                                                 }else{
-                                                    
-                                                    // Die Parameterwerte wurden in die Tabelle geschrieben.
-                                                    
+                                                    // Die Felder der Eingabemaske werden zurückgesetzt
                                                     cleanEingabeMaske()
+                                                    
+                                                    if UIDevice.current.userInterfaceIdiom == .phone {
+                                                        // Diese Zeile bewirkt, dass die View in iPhone geschlossen wird
+                                                        self.presentationMode.wrappedValue.dismiss() // Only iPhon
+                                                    } // Ende if
+                                                    
                                                     print("In der Tabelle Gespeichert...")
                                                     
                                                 } // End if/else
@@ -298,91 +319,221 @@ struct EingabeMaskePadView: View {
                             
                         } // Ende VStack
                         
-                        .toolbar {ToolbarItemGroup(placement: .keyboard) {
-                            
-                            if focusedField == .amount {
-                                Spacer()
-                                Button("Fertig") {
-                                    //preisWertIsFocused = false
-                                    focusedField = nil
-                                    print("OK Button wurde gedrückt!")
-                                } // Ende Button
-                                //.font(.system(size: 16, weight: .regular))
-                            }else if focusedField == .str1 {
-                                HStack {
-                                    Text("\(globaleVariable.textGegenstandbeschreibung.count)/100")
-                                    //.font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(.gray)
-                                        .padding()
-                                    Spacer()
-                                    Button("Abbrechen") {
-                                        //preisWertIsFocused = false
-                                        globaleVariable.textGegenstandbeschreibung = ""
-                                        focusedField = nil
-                                        print("Abbrechen Button Str1 wurde gedrückt!")
-                                    } // Ende Button
-                                    //.font(.system(size: 16, weight: .regular))
-                                } // Ende HStack
-                            }else if focusedField == .str2  {
-                                HStack{
-                                    Text("\(globaleVariable.textAllgemeineNotizen.count)/100")
-                                    //.font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(.gray)
-                                    Spacer()
-                                    Button("Abbrechen") {
-                                        //preisWertIsFocused = false
-                                        globaleVariable.textAllgemeineNotizen = ""
-                                        focusedField = nil
-                                        print("Abbrechen Button Str2 wurde gedrückt!")
-                                    } // Ende Button
-                                } // Ende HStack
-                            } // Ende if/else
-                            
-                        } // Ende ToolbarItemGroup
-                        } // Ende toolbar
-                        
-                    } // Ende Form
-                    //.font(.system(size: 16, weight: .regular))
-                    
-                } // Ende VStack
+                        // Only iPhon
+                        Text("Um ein Objekt speichern zu können müssen mimdestens ein Gegenstand und eine Person erfast werden.")
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundColor(.gray)
+                    } // Ende Section
+                   
+                } // Ende Form
+                //.navigationTitle("Eingabemaske").navigationBarTitleDisplayMode(.inline) // Only iPhon
+                .padding(.top, paddingHeight)
+                .navigationTitle("Eingabemaske")
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .font(.system(size: 16, weight: .regular))
                 .background(globaleVariable.farbenEbene0)
-                
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        
+                        if focusedField == .amount {
+                            Spacer()
+                            Button("Fertig") {
+                                //preisWertIsFocused = false
+                                focusedField = nil
+                                print("OK Button wurde gedrückt!")
+                            } // Ende Button
+                            .buttonStyle(.bordered)
+                            //.font(.system(size: 16, weight: .regular))
+                        }else if focusedField == .str1 {
+                            HStack {
+                                Text("\(globaleVariable.textGegenstandbeschreibung.count)/100")
+                                    .font(.system(size: 16, weight: .regular))
+                                    .foregroundColor(.brown)
+                                    .padding()
+                                Spacer()
+                                Button("Abbrechen") {
+                                    //preisWertIsFocused = false
+                                    globaleVariable.textGegenstandbeschreibung = ""
+                                    focusedField = nil
+                                    print("Abbrechen Button Str1 wurde gedrückt!")
+                                } // Ende Button
+                                //.font(.system(size: 16, weight: .regular))
+                            } // Ende HStack
+                        }else if focusedField == .str2  {
+                            HStack{
+                                Text("\(globaleVariable.textAllgemeineNotizen.count)/100")
+                                //.font(.system(size: 16, weight: .regular))
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Button("Abbrechen") {
+                                    //preisWertIsFocused = false
+                                    globaleVariable.textAllgemeineNotizen = ""
+                                    focusedField = nil
+                                    print("Abbrechen Button Str2 wurde gedrückt!")
+                                } // Ende Button
+                            } // Ende HStack
+                        } // Ende if/else
+                        
+                    } // Ende ToolbarItemGroup
+                    
+                    if UIDevice.current.userInterfaceIdiom == .pad {
+                        ToolbarItemGroup(placement: .navigationBarLeading) {
+                            
+                            if UIDevice.current.userInterfaceIdiom == .phone {
+                                
+                                if anzahlDerDatensaetze(tableName: "Objekte") == 0 {
+                                    NavigationLink(destination: EmptyView()){
+                                        Label("", systemImage: "sidebar.left")
+                                        
+                                    } // Ende NavigationLink
+                                }else{
+                                    NavigationLink(destination: DeteilView()){
+                                        Label("", systemImage: "sidebar.left")
+                                        
+                                    } // Ende NavigationLink
+                                    
+                                } // Ende if/else
+                                
+                            } // Ende UIDevice
+                            
+                        } // Ende ToolbarItem
+                        
+                        
+                    } // Ende if
+                    
+                } // Ende toolbar
                 
             } // Ende GeometryReader
             .navigationTitle("Eingabemaske")
-        } // Ende NavigationStack
-            .toolbar {ToolbarItem(placement: .navigationBarLeading) {
-                
-                if UIDevice.current.userInterfaceIdiom == .phone {
-                    
-                    if anzahlDerDatensaetze(tableName: "Objekte") == 0 {
-                        NavigationLink(destination: EmptyView()){
-                            Label("", systemImage: "sidebar.left")
-                            
-                        } // Ende NavigationLink
-                    }else{
-                        NavigationLink(destination: DeteilView()){
-                            Label("", systemImage: "sidebar.left")
-                            
-                        } // Ende NavigationLink
-                        
-                    } // Ende if/else
-                    
-                } // Ende UIDevice
-                
-            } // Ende ToolbarItem
-                
-            } // Ende toolbar
-            .navigationBarItems(trailing: Button( action: {
-                showParameterHilfe = true
-            }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
-            .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
-               // Button(" - OK - ") {}
-            }, message: { Text("\(hilfeTexte.eingabeMaske)") } // Ende message
-            ) // Ende alert
+            .onAppear{
+                // Abstand der Form von der oberen Kante
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    paddingHeight = 10 // For iPad
+                    customButton = "Löschen"
+                } else {
+                    paddingHeight = 0 // For iPhone
+                    customButton = "Verlassen"
+                } // Ende if/else
+               
+            } // Ende onApear
+        //} // Ende NavigationStack
+        // Gilt nur für ipad
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe. Only iPhon
+        .navigationBarItems(trailing: Button( action: {
+            showParameterHilfe = true
+        }) {Image(systemName: "questionmark.circle.fill").imageScale(.large)} )
+        .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
+            // Button(" - OK - ") {}
+        }, message: { Text("\(hilfeTexte.eingabeMaske)") } // Ende message
+        ) // Ende alert
         
     } // Ende var body
     
 } // Ende struct
+
+
+struct TextEditorWithPlaceholder: View {
+    @Binding var text: String
+    @Binding var platz: String
+    
+    @State var lastText: String = ""
+    
+    @FocusState private var textIsFocussed: Bool
+    
+    @State var totalCHarsText: Int = 100
+    var body: some View {
+        let _ = print("Struct TextEditorWithPlaceHolder wird aufgerufen!")
+        
+            ZStack(alignment: .leading) {
+                if text.isEmpty {
+                    VStack {
+                        Text("\(platz)")
+                            .padding(.top, 10)
+                            .padding(.leading, 6)
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(Color.black)
+                            .opacity(0.6)
+                        Spacer()
+                    } // Ende VStack
+                } // Ende if
+                
+                VStack {
+                    TextField("\(platz)", text: $text, axis: .vertical)
+                        .focused($textIsFocussed)
+                        .font(.system(size: 16, weight: .regular))
+                        .cornerRadius(5)
+                        .disableAutocorrection(true)
+                        .lineLimit(3, reservesSpace: true)
+                        .textFieldStyle(.roundedBorder)
+                        .submitLabel(.done)
+                        .onChange(of: text, perform: { newValue in
+                            if newValue.count <= 100 {
+                                lastText = newValue
+                                //print(lastText.count)
+                            }else{
+                                self.text = lastText
+                            } // Ende else
+                            
+                            guard let newValueLastChar = newValue.last else { return }
+                            
+                            if newValueLastChar == "\n" {
+                                text.removeLast()
+                                textIsFocussed = false
+                            } // Ende if
+                            
+                        }) // Ende onChange
+                    
+                } // Ende VStack
+                
+            } // Ende ZStack
+        
+    }// Ende var body
+}// Ende struckt
+
+
+struct ImageSelector: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @State private var selectedItem: PhotosPickerItem?
+    @State private var selectedPhotoData: Data?
+    let filter: PHPickerFilter = .not(.any( of: [
+        .videos,
+        .slomoVideos,
+        .bursts,
+        .livePhotos,
+        .screenRecordings,
+        .cinematicVideos,
+        .timelapseVideos,
+        .screenshots,
+        .depthEffectPhotos
+    ]))
+    
+    var body: some View {
+        let _ = print("Struct ImageSelector wird aufgerufen!")
+        PhotosPicker(selection: $selectedItem, matching: filter, photoLibrary: .shared()) {
+                    Image(systemName: "photo.fill.on.rectangle.fill")
+                        .symbolRenderingMode(.multicolor)
+                        .font(.system(size: 30))
+                        .foregroundColor(.accentColor)
+                } // Ende PhotoPicker
+                .buttonStyle(.borderless)
+                .onChange(of: selectedItem) { newItem in
+                    Task {
+                        
+                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                           selectedPhotoData = data
+                           
+                        } // Ende if let
+                        
+                        if let selectedPhotoData, let _ = UIImage(data: selectedPhotoData) {
+                            // Transferiere Photo in ein jpgPhoto
+                            let tmpPhoto = UIImage(data: selectedPhotoData)?.jpegData(compressionQuality: 0.5)
+                            // transferiere jpgPhoto in String
+                            globaleVariable.parameterImageString = tmpPhoto!.base64EncodedString()
+                         
+                            print("Photo wurde ausgewählt")
+                        } // Ende if
+                        
+                    } // Ende Task
+                } // Ende onChange
+    } // Ende var body
+} //Ende struckt PhotoSelector

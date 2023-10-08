@@ -36,7 +36,11 @@ extension UIScreen{
    static let screenSize = UIScreen.main.bounds.size
 } // Ende Extension
 
-
+// Diese Extension ist notwändig, um in ContentVie folgende Einstellungen zu machn:
+// Ausschalten des Dark-Modus für die App
+//.preferredColorScheme(.light)
+// Das setzt die dynamische Taxtgrösse auf .large.
+//.dynamicTypeSize(.large)
 extension View {
     @ViewBuilder func phoneOnlyStackNavigationView() -> some View {
         if UIDevice.current.userInterfaceIdiom == .phone {
@@ -46,6 +50,7 @@ extension View {
         } // Ende else
     } // Ende some View
 } // Ende extension
+
 
 // Diese Extension wird für Längeneinschränkung beim TextField benutzt
 // In der View ShapeViewAddGegenstand

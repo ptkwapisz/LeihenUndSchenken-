@@ -254,8 +254,18 @@ class AlertMessageTexte: ObservableObject  {
    
     @Published var leereDbMessageTextiPad: String = "Es befinden sich keine Objekte in der Datenbank. Bitte erfassen Sie ein neues Objekt in der Eingabemaske und speichern es in die Datenbank."
     
+    @Published var alertTextForEingabemaske: String = ""
+    
+    init() {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken bleiben Sie bei der Eingabemaske. Wenn Sie 'Verlassen' drücken, werden alle Angaben, fall Sie welche gemacht haben gelöscht. Sie verlassen dann die Eingabemaske und kehren zurück zu der Objektenliste."
+        } else {
+            alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken können Sie weiter Ihre Daten auf der Eingabemaske einfügen. Wenn Sie 'Löschen' drücken, werden alle Felder der Eingabemaske gelöscht und Sie können mit der Eingabe neu anfangen."
+        } // Ende if/else
+    } // Ende init
     
 } // Ende class
+
 
 class Contact: Identifiable {
     var id = UUID()
@@ -266,7 +276,7 @@ class Contact: Identifiable {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
-    }
+    } // Ende init
     
 } // Ende class
 
@@ -275,7 +285,10 @@ enum ActiveAlert {
     case error, delete, information
 } // Ende enum
 
-// Diese enum wird für Alertmeldung bei der Tab1 (Objektliste) aufgerufen, wenn db leerist
+// Diese enum wird für Alertmeldung bei der Tab1 (Objektliste) aufgerufen, wenn db leer ist
 enum ActiveAlertLeereDB {
     case informationiPad, informationiPhone
 } // Ende enum
+
+
+

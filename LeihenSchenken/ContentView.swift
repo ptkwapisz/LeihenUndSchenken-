@@ -5,7 +5,6 @@
 //  Created by PIOTR KWAPISZ on 27.03.23.
 //
 
-
 import SwiftUI
 
 struct ContentView: View {
@@ -39,14 +38,14 @@ struct ContentView: View {
     var body: some View {
         
         if UIDevice.current.userInterfaceIdiom == .phone {
-            NavigationStack{
+            NavigationStack() {
                 
                 DeteilView()
                 
             } // Ende NavigationStack
-            .listStyle(SidebarListStyle()).font(.title3) // Veraltet mit Navigationview
-            .environmentObject(globaleVariable)
-            .phoneOnlyStackNavigationView()
+            //.listStyle(SidebarListStyle()).font(.title3) // Veraltet mit Navigationview
+            //.environmentObject(globaleVariable)
+            //.phoneOnlyStackNavigationView()
             // Ausschalten des Dark-Modus für die App
             .preferredColorScheme(.light)
             // Das setzt die dynamische Taxtgrösse auf .large.
@@ -58,20 +57,26 @@ struct ContentView: View {
                 // Und die iCloud kann auserhalb der App ausgeschaltet werden
                 if isICloudContainerAvailable() == false {
                     userSettingsDefaults.iCloudSwitch = false
-                }// Ende if
-                
-            }// Ende onApear
+                } // Ende if
+            
+            } // Ende onApear
         }else{
             
             NavigationSplitView(columnVisibility: $columnVisibility) {
                 
-                EingabeMaskePadView()
-            } detail: {
-                DeteilView()
+                EingabeMaskePhoneAndPadView()
                 
+                //.navigationTitle("Eingabemaske").navigationBarTitleDisplayMode(.inline)
+            } detail: {
+                // NavigationStack ist notwändig, damit die Toolbars für Keyboard gezeigt werden.
+                NavigationStack {
+                    
+                    DeteilView()
+                    
+                } // Ende NavigationStack
             } // Ende NavigationSplitView
-            .environmentObject(globaleVariable)
-            .phoneOnlyStackNavigationView()
+            //.environmentObject(globaleVariable)
+            //.phoneOnlyStackNavigationView()
             // Ausschalten des Dark-Modus für die App
             .preferredColorScheme(.light)
             // Das setzt die dynamische Taxtgrösse auf .large.
@@ -84,12 +89,11 @@ struct ContentView: View {
                 // Und die iCloud kann auserhalb der App ausgeschaltet werden
                 if isICloudContainerAvailable() == false {
                     userSettingsDefaults.iCloudSwitch = false
-                }// Ende if
+                } // Ende if
                 
-            }// Ende onApear
+            } // Ende onApear
             
         } // Ende if/else
-        
         
     } // Ende var body
 } // Ende struct ContentView

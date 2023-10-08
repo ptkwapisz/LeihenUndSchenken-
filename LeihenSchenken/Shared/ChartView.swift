@@ -31,7 +31,7 @@ struct ChartView: View {
     @State var isPresentedTestView: Bool = true
     
     var body: some View {
-      
+        //NavigationStack {
             GeometryReader { geometry in
                 
                 VStack {
@@ -120,12 +120,12 @@ struct ChartView: View {
                                 let textPrefix = vorgangPrefixDeklination(vorgang: par1[par2].vorgang )
                                 Text("\(textPrefix)")
                                 /*
-                                if par1[par2].vorgang == "Bekommen" {
-                                    Text(" von ")
-                                }else{
-                                    Text(" an ")
-                                } // Ende if/else
-                                */
+                                 if par1[par2].vorgang == "Bekommen" {
+                                 Text(" von ")
+                                 }else{
+                                 Text(" an ")
+                                 } // Ende if/else
+                                 */
                                 Spacer()
                                 Text("\(par1[par2].personNachname)" + ", " + "\(par1[par2].personVorname)" + " ")
                                     .modifierShowFields()
@@ -167,7 +167,7 @@ struct ChartView: View {
                             
                         } // Ende List
                         .cornerRadius(10)
-                       
+                        
                         Spacer()
                         
                         HStack(alignment: .bottom) {
@@ -215,7 +215,7 @@ struct ChartView: View {
                                     // Diese Zeile bewirkt, dass die View geschlossen wird
                                     self.presentationMode.wrappedValue.dismiss()
                                 },
-                                    secondaryButton: .cancel(Text("Abbrechen")){
+                                       secondaryButton: .cancel(Text("Abbrechen")){
                                     print("\(par1[par2].gegenstand)" + " wurde nicht gelöscht")
                                     print("Abgebrochen ....")
                                     refreshAllViews()
@@ -250,9 +250,15 @@ struct ChartView: View {
                 ) // Ende alert
                 
             } // Ende GeometryReader
-            .sheet(isPresented: $objektEditieren, content: {EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)})
             .sheet(isPresented: $showDetailPhoto, content: { ShapeShowDetailPhoto(isPresentedShowDetailPhoto: $showDetailPhoto, par1: $par1, par2: $par2)})
-        
+            //.sheet(isPresented: $objektEditieren, content: {EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)})
+            
+            .navigationDestination(isPresented: $objektEditieren, destination:{EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)
+                    .navigationBarBackButtonHidden()
+                    .navigationBarTitleDisplayMode(.inline)
+            })
+            
+        //} // Ende NavigationStack
     } // Ende var body
 } // Ende struc ChartView
 

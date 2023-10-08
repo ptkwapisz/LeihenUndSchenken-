@@ -28,9 +28,9 @@ struct EditSheetView: View {
     @State var personPickerTmp: String = ""
     @State var neuePersonTmp: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
     
-    @FocusState private var focusedField: Field?
+    @FocusState private var focusedEditField: editField?
     
-    private enum Field: Int, CaseIterable {
+    private enum editField: Int, CaseIterable {
         case gegenstandKeyboard // Für Gegenstand
         case betragKeyboard // Für Preis/Wert
         case text1Keyboard // Für Gegenstandbeschreibung
@@ -40,25 +40,25 @@ struct EditSheetView: View {
     
     var body: some View {
         
-        NavigationStack {
+        //NavigationStack {
             GeometryReader { geometry in
                 
                 Form {
                     Section{
                         
                         EditGegenstand(par1: $par1, par2: $par2, gegenstandTmp: $gegenstandTmp)
-                            .focused($focusedField, equals: .gegenstandKeyboard)
+                            .focused($focusedEditField, equals: .gegenstandKeyboard)
                         EditGegenstandText(par1: $par1, par2: $par2, gegenstandTextTmp: $gegenstandTextTmp)
-                            .focused($focusedField, equals: .text1Keyboard)
+                            .focused($focusedEditField, equals: .text1Keyboard)
                         EditGegenstandBild(par1: $par1, par2: $par2, gegenstandBildTmp: $gegenstandBildTmp)
                         EditPreisWert(par1: $par1, par2: $par2, preisWertTmp: $preisWertTmp)
-                            .focused($focusedField, equals: .betragKeyboard)
+                            .focused($focusedEditField, equals: .betragKeyboard)
                         EditDatum(par1: $par1, par2: $par2, datumTmp: $datumTmp)
                         EditVorgang(par1: $par1, par2: $par2, vorgangTmp: $vorgangTmp)
                         EditPerson(par1: $par1, par2: $par2, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
                         EditAllgemeinerText(par1: $par1, par2: $par2, allgemeinerTextTmp: $allgemeinerTextTmp)
-                            .focused($focusedField, equals: .text2Keyboard)
-                    } // Ende Section Gegenstand
+                            .focused($focusedEditField, equals: .text2Keyboard)
+                    } // Ende Section
                     
                     Section{
                         HStack {
@@ -120,7 +120,7 @@ struct EditSheetView: View {
                     .toolbar {
                         ToolbarItemGroup(placement: .keyboard) {
                         
-                        if focusedField == .gegenstandKeyboard {
+                        if focusedEditField == .gegenstandKeyboard {
                             HStack {
                                 Text("\(gegenstandTmp.count)/25")
                                     .font(.system(size: 16, weight: .regular))
@@ -129,12 +129,12 @@ struct EditSheetView: View {
                                 Button("Abbrechen") {
                                     //isInputGegenstandActive = false
                                     gegenstandTmp = par1[par2].gegenstand
-                                    focusedField = nil
+                                    focusedEditField = nil
                                 } // Ende Button
                                 .buttonStyle(.bordered)
                             } // Ende HStack
                             .font(.system(size: 16, weight: .regular))
-                        } else if focusedField == .text1Keyboard {
+                        } else if focusedEditField == .text1Keyboard {
                             HStack {
                                 Text("\(gegenstandTextTmp.count)/100")
                                     .font(.system(size: 16, weight: .regular))
@@ -142,24 +142,24 @@ struct EditSheetView: View {
                                 Spacer()
                                 Button("Abbrechen") {
                                     gegenstandTextTmp = par1[par2].gegenstandText
-                                    focusedField = nil
+                                    focusedEditField = nil
                                 } // Ende Button
                                 .buttonStyle(.bordered)
                             } // Ende HStack
                             .font(.system(size: 16, weight: .regular))
                             
-                        } else if focusedField == .betragKeyboard {
+                        } else if focusedEditField == .betragKeyboard {
                             HStack {
                                 
                                 Spacer()
                                 Button("Fertig") {
                                     //preisWertTmp = par1[par2].preisWert
-                                    focusedField = nil
+                                    focusedEditField = nil
                                 } // Ende Button
                                 .buttonStyle(.bordered)
                             } // Ende HStack
                             .font(.system(size: 16, weight: .regular))
-                        } else if focusedField == .text2Keyboard {
+                        } else if focusedEditField == .text2Keyboard {
                             HStack {
                                 Text("\(allgemeinerTextTmp.count)/100")
                                     .font(.system(size: 16, weight: .regular))
@@ -167,7 +167,7 @@ struct EditSheetView: View {
                                 Spacer()
                                 Button("Abbrechen") {
                                     allgemeinerTextTmp = par1[par2].allgemeinerText
-                                    focusedField = nil
+                                    focusedEditField = nil
                                 } // Ende Button
                                 .buttonStyle(.bordered)
                             } // Ende HStack
@@ -188,10 +188,11 @@ struct EditSheetView: View {
             
             .navigationTitle("Objekt bearbeiten").navigationBarTitleDisplayMode(.inline)
             
-        } // Ende NavigationStack
+       //} // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
+    
 } // Ende struc TestView
 
 
@@ -350,7 +351,9 @@ struct EditPreisWert: View {
             
         }// Ende HStack
         
+        
     } // Ende var body
+    
 } // Ende struct PreisWert
 
 struct EditDatum: View {
@@ -594,7 +597,12 @@ struct EditPerson: View {
             .onAppear(){
                 personPickerTmp = " " + par1[par2].personNachname + ", " + par1[par2].personVorname + " "
             } // Ende onAppear
-            .sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})
+            //.sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})
+            .navigationDestination(isPresented: $personEditieren, destination: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
+                    .navigationBarBackButtonHidden()
+                    .navigationBarTitleDisplayMode(.inline)
+            })
+            
             
         }// Ende HStack
         //} // Ende NavigationStack
