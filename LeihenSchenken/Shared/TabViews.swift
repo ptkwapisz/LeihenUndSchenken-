@@ -12,25 +12,23 @@ struct Tab1: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    @State var tmp: CGFloat = 0
+    //@State var tmp: CGFloat = 0
     
-    let heightFaktor: Double = 0.99
-    //let test = addDataGegenstaende()
-    
-    //let test = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte")
-    
+    //let heightFaktor: Double = 0.99
+   
 var body: some View {
+    
     GeometryReader { geometry in
         VStack {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
                 deteilTab1()
                 .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
-               
+                
             } else {
                 
                 deteilTab1()
-                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     .background(globaleVariable.farbenEbene1)
                     .cornerRadius(10)
             } // Ende if/else
@@ -46,9 +44,9 @@ struct Tab2: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    @State var tmp: CGFloat = 0
+    //@State var tmp: CGFloat = 0
     
-    let heightFaktor: Double = 0.99
+    //let heightFaktor: Double = 0.99
     
     
 var body: some View {
@@ -62,7 +60,7 @@ var body: some View {
                 
             } else {
                 deteilTab2()
-                    .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     .background(globaleVariable.farbenEbene1)
                     .cornerRadius(10)
                 
@@ -82,7 +80,7 @@ struct Tab3: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @State var tmp: CGFloat = 0
     
-    let heightFaktor: Double = 0.99
+    //let heightFaktor: Double = 0.99
     
     var body: some View {
         GeometryReader { geometry in
@@ -95,7 +93,7 @@ struct Tab3: View {
                 } else {
                     
                     deteilTab3()
-                        .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                        .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                         .background(globaleVariable.farbenEbene1)
                         .cornerRadius(10)
                 } // Ende if/else
@@ -133,7 +131,7 @@ struct Tab4: View {
                     
                 } else {
                     PDFKitView(url: pdfPath, tabNumber: 4)
-                        .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                        .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                         .background(globaleVariable.farbenEbene1)
                         .cornerRadius(10)
                 }
@@ -168,7 +166,7 @@ struct Tab5: View {
                     
                 } else {
                     PDFKitView(url: pdfPath!, tabNumber: 5)
-                        .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                        .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                         .background(globaleVariable.farbenEbene1)
                         .cornerRadius(10)
                 }

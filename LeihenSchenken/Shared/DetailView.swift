@@ -30,7 +30,8 @@ struct DeteilView: View {
     @State var showTabHilfe: Bool = false
     
     @State var showStatistikenView: Bool = false
-
+    @State var backupTargetStr: String = backupTarget()
+    
     var body: some View {
         
             // Prüfen, ob sich Objekte in der Datenbank befinden
@@ -140,11 +141,11 @@ struct DeteilView: View {
                          */
                         .alert("Trefen Sie eine Wahl!", isPresented: $showDBSichern, actions: {
                             Button("Abbrechen") {}; Button("DB Sichern") {backupDatabase()}
-                        }, message: { Text(backupTarget() + ". \(alertMessageTexte.showDBSichernMessageText)") } // Ende message
+                        }, message: { Text(backupTargetStr + ". \(alertMessageTexte.showDBSichernMessageText)") } // Ende message
                         ) // Ende alert
                         .alert("Trefen Sie eine Wahl!", isPresented: $showDBLaden, actions: {
                             Button("Abbrechen") {}; Button("DB Laden") {loadDatabase()}
-                        }, message: { Text(backupTarget() + " vom " + getfileCreatedDate() + ". \(alertMessageTexte.showDBLadenMessageText)") } // Ende message
+                        }, message: { Text(backupTargetStr + " vom " + getfileCreatedDate() + ". \(alertMessageTexte.showDBLadenMessageText)") } // Ende message
                         ) // Ende alert
                         .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
                         //.sheet(isPresented: $showExport, content: { ExportCSVProgressView(isPresented: $showExport).presentationBackground(.clear)})

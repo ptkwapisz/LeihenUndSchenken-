@@ -264,6 +264,7 @@ func ifExistLeiheUndSchenkeDbCopy() -> Bool {
     return resultat
 } // Ende func
 
+
 // Diese Funktion fügt in die Alert Message den Ziel der Sicherung: lokal oder iCloud
 func backupTarget() -> String {
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
@@ -280,3 +281,4 @@ func backupTarget() -> String {
     return resultat
     
 }// Ende func
+

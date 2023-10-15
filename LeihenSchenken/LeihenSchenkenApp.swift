@@ -14,7 +14,8 @@ var db: OpaquePointer?
 @main
 
 struct LeihenSchenkenApp: App {
-
+    
+    
     var body: some Scene {
         
         let _: Bool = ifDatabaseExist()
@@ -33,4 +34,5 @@ struct LeihenSchenkenApp: App {
         } // Ende WindowGroup
     } // Ende var body
 } // Ende struckt
+
 

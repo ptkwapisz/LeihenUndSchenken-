@@ -37,7 +37,7 @@ class GlobaleVariable: ObservableObject {
     @Published var heightFaktorEbene0: Double = 0.99
     
     @Published var heightFaktorEbene1: Double = 0.97
-    @Published var widthFaktorEbene1: Double = 0.97
+    //@Published var widthFaktorEbene1: Double = 0.97
     
     @Published var refreshViews: Bool = false
     
@@ -47,7 +47,7 @@ class GlobaleVariable: ObservableObject {
     @Published var selectedVorgangInt: Int = 0
     @Published var selectedPersonInt: Int = 0
     
-    @Published var preisWert: String = ""
+    @Published var preisWert: String = "0,0"
     @Published var textAllgemeineNotizen: String = ""
     @Published var datum: Date = Date()
     
@@ -57,6 +57,8 @@ class GlobaleVariable: ObservableObject {
     @Published var versionCounter: Int = 0
     @Published var preisOderWert: Bool = false
    
+    @Published var columnVisibility = NavigationSplitViewVisibility.all
+    
 } // ende class
 
 // Wird in der PrintObjects Struckts aufgerufen
@@ -72,7 +74,6 @@ class SharedData: ObservableObject {
         didSave.toggle()
     } // Ende func
 }// Ende class
-
 
 class UserSettingsDefaults: ObservableObject {
     static let shared = UserSettingsDefaults()
@@ -291,4 +292,10 @@ enum ActiveAlertLeereDB {
 } // Ende enum
 
 
+// Diese Class definiert Variable die bei änderung keinene refresh der View verursachen
 
+class GlobalStorage {
+    
+    static var widthFaktorEbene1: Double = 0.97
+    static var bottonToolBarHight: Double = tabViewBottomToolbarHight()
+} // Ende class

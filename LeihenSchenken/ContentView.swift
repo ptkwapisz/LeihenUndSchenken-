@@ -10,10 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    @State private var columnVisibility = NavigationSplitViewVisibility.all
+    
+    //@State private var columnVisibility = NavigationSplitViewVisibility.all
     //@State private var preferredColumn = NavigationSplitViewColumn.detail
     @State private var emptyDatabase:Bool = false
-    
+ 
     
     init() {
         
@@ -43,9 +44,7 @@ struct ContentView: View {
                 DeteilView()
                 
             } // Ende NavigationStack
-            //.listStyle(SidebarListStyle()).font(.title3) // Veraltet mit Navigationview
-            //.environmentObject(globaleVariable)
-            //.phoneOnlyStackNavigationView()
+
             // Ausschalten des Dark-Modus für die App
             .preferredColorScheme(.light)
             // Das setzt die dynamische Taxtgrösse auf .large.
@@ -62,11 +61,11 @@ struct ContentView: View {
             } // Ende onApear
         }else{
             
-            NavigationSplitView(columnVisibility: $columnVisibility) {
+            NavigationSplitView(columnVisibility: $globaleVariable.columnVisibility) {
+             
+                    EingabeMaskePhoneAndPadView()
+                    .applyModifier(UIDevice.current.userInterfaceIdiom == .pad){$0.toolbar(removing: .sidebarToggle)}
                 
-                EingabeMaskePhoneAndPadView()
-                
-                //.navigationTitle("Eingabemaske").navigationBarTitleDisplayMode(.inline)
             } detail: {
                 // NavigationStack ist notwändig, damit die Toolbars für Keyboard gezeigt werden.
                 NavigationStack {
@@ -75,8 +74,7 @@ struct ContentView: View {
                     
                 } // Ende NavigationStack
             } // Ende NavigationSplitView
-            //.environmentObject(globaleVariable)
-            //.phoneOnlyStackNavigationView()
+            
             // Ausschalten des Dark-Modus für die App
             .preferredColorScheme(.light)
             // Das setzt die dynamische Taxtgrösse auf .large.
@@ -97,6 +95,7 @@ struct ContentView: View {
         
     } // Ende var body
 } // Ende struct ContentView
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

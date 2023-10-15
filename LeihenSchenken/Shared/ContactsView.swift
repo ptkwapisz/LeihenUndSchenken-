@@ -22,9 +22,14 @@ struct ShapeViewAddUser: View {
     
     @State var vorname: String = ""
     @State var name: String = ""
-   
+    
     // Das laden der Kontakte erfolgt in .onAppear
     @State var myContactsTmp: [Contact] = []
+    
+    var myContacts: [Contact] {
+        return serchInAdressBookArray(parameter: myContactsTmp)
+    } // Ende var
+    
     
     @FocusState private var focusedField: Field?
     
@@ -36,184 +41,140 @@ struct ShapeViewAddUser: View {
     
     var body: some View {
         let _ = print("Struct ShapeViewAddUser wird aufgerufen!")
-        let myContacts = serchInAdressBookArray(parameter: myContactsTmp)
         
-        //NavigationStack {
-            Form {
-                Section() {
+        GeometryReader { geometry in
+            VStack {
+                VStack {
+                    Text("")
+                    Text("Person eingeben").bold()
                     
-                    TextField("Vorname", text: $vorname)
-                        .focused($focusedField, equals: .vornameFokus)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .submitLabel(.done)
-                        .disableAutocorrection(true)
-                    
-                    TextField("Name", text: $name)
-                        .focused($focusedField, equals: .nameFokus)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .submitLabel(.done)
-                        .disableAutocorrection(true)
-                    
-                    Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
-                        
-                        ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
-                            Text("\(globaleVariable.parameterPersonSex[index])")
+                    List {
+                        Section() {
                             
-                        } // Ende ForEach
-                    } // Ende Picker
-                } // Ende Section
-                .font(.system(size: 16, weight: .regular))
-                
-                
-                
-                if myContactsTmp.count > 0 {
-                    Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
-                        
-                        // The search Field for Contacts list
-                        // The .if modyfier define the hieght between iPhone and iPad
-                        SerchFullTextInAdressbook()
-                        .if(UIDevice.current.userInterfaceIdiom == .phone) { view in
-                            view.frame(height: 20)
-                        } // Ende .if
-                        
-                        ScrollView {
+                            TextField("Vorname", text: $vorname)
+                                .focused($focusedField, equals: .vornameFokus)
+                                .padding(5)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(5)
+                                .submitLabel(.done)
+                                .disableAutocorrection(true)
                             
-                            LazyVStack {
+                            TextField("Name", text: $name)
+                                .focused($focusedField, equals: .nameFokus)
+                                .padding(5)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(5)
+                                .submitLabel(.done)
+                                .disableAutocorrection(true)
+                            
+                            Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
                                 
-                                ForEach(myContacts.indices, id: \.self) { idx in
-                                    
-                                    HStack{
-                                        
-                                        if myContacts[idx].lastName != "" && myContacts[idx].firstName != "" {
-                                            Text(myContacts[idx].lastName + ", " + myContacts[idx].firstName)
-                                                .font(.system(size: 20, weight: .regular))
-                                            
-                                            Spacer() // Die Zeilen werden linksbündig
-                                            
-                                        } // Ende if
-                                        
-                                    } // Ende HStack
-                                    .background(idx % 2 == 0
-                                                ? Color(.systemGray).opacity(0.2)
-                                                : Color(.white).opacity(0.2)
-                                    )
-                                    .onTapGesture {
-                                        name = myContacts[idx].lastName
-                                        vorname = myContacts[idx].firstName
-                                        // Here we dismiss the kayboard by tap a name in the list
-                                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                                    } // Ende onTapGesture
+                                ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
+                                    Text("\(globaleVariable.parameterPersonSex[index])")
                                     
                                 } // Ende ForEach
-                                
-                            }// Ende LazyVStack - NavigationStack
-                            .padding(5)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(10)
+                            } // Ende Picker
+                        } // Ende Section
+                        .font(.system(size: 16, weight: .regular))
+                        
+                        contactsSection()
+                        
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                isPresented = false
+                                globaleVariable.searchTextAdressBook = ""
+                            }) {Text("Abbrechen")}
+                                .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
                             
-                        } // Ende Scrollview
-                        .frame(height: 200, alignment: .leading)
-                        
-                    }// Ende Section
-                    
-                }else{
-                    Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
-                        Text("Auswahl aus dem Adressbuch ist nicht möglich. Enweder gibt es im Adressbuch keine Einträge oder die Zugriffrechte auf das Adressbuch sind in den Einstellungen (das Zahnrad) eingeschränkt. ")
-                            .font(.system(size: 16, weight: .regular))
-                    }// Ende Section
-                } // Ende if/else
-  //--------------------------------------------------
-                VStack{
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            isPresented = false
-                            globaleVariable.searchTextAdressBook = ""
-                        }) {Text("Abbrechen")}
-                            .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
-                        
-                        Button(action: {
-                            if vorname != "" && name != "" {
-                                if isParameterBereich {
-                                    
-                                    personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                                    // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
-                                    globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
-                                    globaleVariable.searchTextAdressBook = ""
-                                    print("Person wird in die Auswahl hinzugefügt!")
-                                    isPresented = false
-                                }else{
-                                    
-                                    if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
+                            Button(action: {
+                                if vorname != "" && name != "" {
+                                    if isParameterBereich {
                                         
-                                        showWarnung = true
-                                        
+                                        personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                        // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
+                                        globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
+                                        globaleVariable.searchTextAdressBook = ""
+                                        print("Person wird in die Auswahl hinzugefügt!")
+                                        isPresented = false
                                     }else{
                                         
-                                        personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                                        //globaleVariable.parameterPerson.removeAll()
-                                        //globaleVariable.parameterPerson = personenArray()
-                                        globaleVariable.personenParameter.removeAll()
-                                        globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                                        if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
+                                            
+                                            showWarnung = true
+                                            
+                                        }else{
+                                            
+                                            personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                            //globaleVariable.parameterPerson.removeAll()
+                                            //globaleVariable.parameterPerson = personenArray()
+                                            globaleVariable.personenParameter.removeAll()
+                                            globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                                            
+                                            globaleVariable.searchTextAdressBook = ""
+                                            print("Person wurde in die Datenbank hinzugefügt!")
+                                            isPresented = false
+                                            
+                                        } // Ende if/else
                                         
-                                        globaleVariable.searchTextAdressBook = ""
-                                        print("Person wurde in die Datenbank hinzugefügt!")
-                                        isPresented = false
-                                        
-                                    } // Ende if/else
+                                    }// Ende if/else
                                     
-                                }// Ende if/else
+                                } // Ende if/else
+                                
+                            }) {
+                                
+                                Text("Speichern")
+                                
+                            } // Ende Button
+                            .disabled(vorname != "" && name != "" ? false : true)
+                            .buttonStyle(.borderedProminent)
+                            .foregroundColor(.white)
+                            .font(.system(size: 16, weight: .regular))
+                            .cornerRadius(10)
+                            Spacer()
+                        } // Ende HStack
+                        .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
+                            Button("OK") {}
+                        }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
+                        ) // Ende alert
+                        
+                        VStack{
+                            if isParameterBereich {
+                                
+                                Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Beim 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden der App aus der Liste gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern (favoriten Liste), gehen Sie bitte zum Tab 'Personen', dort auf '+' und geben die entsprechenden Persondaten ein.")
+                                //.font(.system(size: 12, weight: .regular))
+                                //.foregroundColor(.gray)
+                            }else{
+                                Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Beim  'Speichern' werden alle Daten in die Datenbank dauerhaft hinzugefügt.")
+                                //.font(.system(size: 12, weight: .regular))
+                                //.foregroundColor(.gray)
                                 
                             } // Ende if/else
-                            
-                        }) {
-                            
-                            Text("Speichern")
-                            
-                        } // Ende Button
-                        .disabled(vorname != "" && name != "" ? false : true)
-                        .buttonStyle(.borderedProminent)
-                        .foregroundColor(.white)
-                        .font(.system(size: 16, weight: .regular))
-                        .cornerRadius(10)
-                        Spacer()
-                    } // Ende HStack
-                    .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
-                        Button("OK") {}
-                    }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
-                    ) // Ende alert
+                        }// Ende Vstack
+                        .font(.system(size: 12, weight: .regular))
+                        .foregroundColor(.gray)
+                        
+                        //}// Ende VStack
+                        
+                    } // Ende List
                     
-                    VStack{
-                        if isParameterBereich {
-                            
-                            Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Beim 'Speichern' werden die Personendaten nur zur Auswahl in der Eingabemaske hinzugefügt. Sie werden nach beenden der App aus der Liste gelöscht. Möchten Sie eine Person dauerhaft zur Auswahl in der Eingabemaske speichern (favoriten Liste), gehen Sie bitte zum Tab 'Personen', dort auf '+' und geben die entsprechenden Persondaten ein.")
-                            //.font(.system(size: 12, weight: .regular))
-                            //.foregroundColor(.gray)
-                        }else{
-                            Text("Die Taste 'Speichern' wird aktiv, wenn der Vorname und der Nachname erfasst wurden. Beim  'Speichern' werden alle Daten in die Datenbank dauerhaft hinzugefügt.")
-                            //.font(.system(size: 12, weight: .regular))
-                            //.foregroundColor(.gray)
-                            
-                        } // Ende if/else
-                    }// Ende Vstack
-                    .font(.system(size: 12, weight: .regular))
-                    .foregroundColor(.gray)
-                }// Ende VStack
+                    //.scrollDisabled(true)
+                } // Ende VStack
+                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
                 
-            } // Ende Form
-            .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.inline)
-            //.scrollDisabled(true)
+            } // Ende Vstack
+            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbenEbene0)
+            .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.large)
             
-        //} // Ende NavigationStack
+        } // Ende GeometryReader
         .onAppear{
             
             fetchAllContacts { fetchedContacts in
-                    myContactsTmp = fetchedContacts
-                } // Ende fetchAllContacts
+                myContactsTmp = fetchedContacts
+            } // Ende fetchAllContacts
             
         } // Ende onApear
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
@@ -221,37 +182,37 @@ struct ShapeViewAddUser: View {
             ToolbarItemGroup(placement: .keyboard) {
                 if focusedField == .vornameFokus {
                     HStack {
-                    
-                    Text("\(vorname.count)/15")
-                        .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(.gray)
-                        .padding()
-                    
-                    Spacer()
-                    
-                     Button("Abbrechen") {
-                     //neuePersonTmp[0].personVorname = ""
-                     focusedField = nil
-                     print("Abbrechen Button Vorname wurde gedrückt!")
-                     } // Ende Button
-                     
+                        
+                        Text("\(vorname.count)/15")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.gray)
+                            .padding()
+                        
+                        Spacer()
+                        
+                        Button("Abbrechen") {
+                            //neuePersonTmp[0].personVorname = ""
+                            focusedField = nil
+                            print("Abbrechen Button Vorname wurde gedrückt!")
+                        } // Ende Button
+                        
                     } // Ende HStack
                 }else if focusedField == .nameFokus  {
                     HStack{
-                    
-                    Text("\(name.count)/25")
-                        .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(.gray)
-                        .padding()
-                    
-                    Spacer()
-                    
-                     Button("Abbrechen") {
-                     //neuePersonTmp[0].personNachname = ""
-                     focusedField = nil
-                     print("Abbrechen Button Nachname wurde gedrückt!")
-                     } // Ende Button
-                     
+                        
+                        Text("\(name.count)/25")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.gray)
+                            .padding()
+                        
+                        Spacer()
+                        
+                        Button("Abbrechen") {
+                            //neuePersonTmp[0].personNachname = ""
+                            focusedField = nil
+                            print("Abbrechen Button Nachname wurde gedrückt!")
+                        } // Ende Button
+                        
                     } // Ende HStack
                 } // Ende if/else
                 
@@ -260,13 +221,75 @@ struct ShapeViewAddUser: View {
         } // Ende toolbar
         .font(.system(size: 16, weight: .regular))
         
-        
-        
-        
-        
     } // Ende var body
     
+    private func contactsSection() -> some View {
+        
+        if myContactsTmp.count > 0 {
+            return AnyView(
+                Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
+                    
+                    // The search Field for Contacts list
+                    SerchFullTextInAdressbook()
+                        .if(UIDevice.current.userInterfaceIdiom == .phone) { view in
+                            view.frame(height: 20)
+                        }
+                    
+                    ScrollView {
+                        
+                        LazyVStack {
+                            
+                            ForEach(myContacts.indices, id: \.self) { idx in
+                                
+                                HStack{
+                                    
+                                    if myContacts[idx].lastName != "" && myContacts[idx].firstName != "" {
+                                        Text(myContacts[idx].lastName + ", " + myContacts[idx].firstName)
+                                            .font(.system(size: 20, weight: .regular))
+                                        
+                                        Spacer() // Die Zeilen werden linksbündig
+                                        
+                                    } // Ende if
+                                    
+                                } // Ende HStack
+                                .background(idx % 2 == 0
+                                            ? Color(.systemGray).opacity(0.2)
+                                            : Color(.white).opacity(0.2)
+                                ) // Ende background
+                                .onTapGesture {
+                                    name = myContacts[idx].lastName
+                                    vorname = myContacts[idx].firstName
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                } // Ende onTapGesture
+                                
+                            } // Ende ForEach
+                            
+                        } // Ende LazyStack
+                        .padding(5)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(10)
+                        
+                    } // Ende ScrollView
+                    .frame(height: 200, alignment: .leading)
+                    
+                } // Ende Section
+            ) // Ende return AnyView
+            
+        } else {
+            return AnyView(
+                Section(header: Text("Auswahl aus dem Adressbuch").font(.system(size: 15, weight: .medium)).bold()) {
+                    Text("Auswahl aus dem Adressbuch ist nicht möglich. Enweder gibt es im Adressbuch keine Einträge oder die Zugriffrechte auf das Adressbuch sind in den Einstellungen (das Zahnrad) eingeschränkt. ")
+                        .font(.system(size: 16, weight: .regular))
+                } // Ende Section
+            ) // Ende return AnyView
+        } // Ende if/else
+    } // Ende private func
+    
 } // Ende struct
+
+
+
+
 
 
 
@@ -282,7 +305,7 @@ struct SerchFullTextInAdressbook: View {
         
         TextField("", text: $globaleVariable.searchTextAdressBook)
             .focused($isInputActive)
-            .frame(height: detailViewBottomToolbarHight() - 36)
+            .frame(height: GlobalStorage.bottonToolBarHight - 36)
             .font(.system(size: 18, weight: .medium))
             .disableAutocorrection (true)
             .submitLabel(.done)

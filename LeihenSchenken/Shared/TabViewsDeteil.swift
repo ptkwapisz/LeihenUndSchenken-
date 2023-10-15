@@ -10,6 +10,7 @@ import SwiftUI
 struct deteilTab1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
+ 
     
     @State var zeile: Int = 0
     @State var showEingabeMaske: Bool = false
@@ -91,7 +92,9 @@ struct deteilTab1: View {
                                             
                                             HStack {
                                                 
-                                                NavigationLink(destination: ChartView(par1: objekte, par2: item)) {
+                                                NavigationLink(destination: ChartView(par1: objekte, par2: item)
+                                                    .applyModifier(UIDevice.current.userInterfaceIdiom == .pad){$0.navigationBarBackButtonHidden()}
+                                                ) {
                                                     
                                                     let textPrefix = vorgangPrefixDeklination(vorgang:gegVorgang[idx] )
                                                     Text("\(textPrefix)")
@@ -161,13 +164,13 @@ struct deteilTab1: View {
                     }// Ende if
                     
                 } // Ende HStack
-                .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
+                .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
                 .background(Color(UIColor.lightGray))
                 .foregroundColor(Color.black)
                 //.sheet(isPresented: $showEingabeMaske, content: { EingabeMaskePhoneAndPadView() })
                 .navigationDestination(isPresented: $showEingabeMaske, destination: { EingabeMaskePhoneAndPadView()
                         .navigationBarBackButtonHidden()
-                        .navigationBarTitleDisplayMode(.inline)
+                        //.navigationBarTitleDisplayMode(.inline)
                 })
                 
                 
@@ -308,13 +311,13 @@ struct deteilTab2: View {
                         .offset(x:3, y: -7)
                         .foregroundColor(Color.white)
                 } // Ende HStack
-                .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
+                .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
                 .background(Color(UIColor.lightGray))
                 .foregroundColor(Color.black)
                 //.sheet(isPresented: $gegenstandHinzufuegen, content: { ShapeViewAddGegenstand(isPresented: $gegenstandHinzufuegen, isParameterBereich: $isParameterBereich) })
                 .navigationDestination(isPresented: $gegenstandHinzufuegen, destination: { ShapeViewAddGegenstand(isPresented: $gegenstandHinzufuegen, isParameterBereich: $isParameterBereich)
                         .navigationBarBackButtonHidden()
-                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationBarTitleDisplayMode(.large)
                 })
                 
             } // Ende Vstack
@@ -441,7 +444,7 @@ struct deteilTab3: View {
                             .foregroundColor(Color.white)
                         
                     } // Ende HStack
-                    .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
+                    .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
                     .background(Color(UIColor.lightGray))
                     .foregroundColor(Color.black)
                     //.sheet(isPresented: $personHinzufuegen, content: {ShapeViewAddUser(isPresented: $personHinzufuegen, isParameterBereich: $isParameterBereich)})

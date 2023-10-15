@@ -10,7 +10,7 @@ import Swift
 import Foundation
 
 // Höhe des unteren Toolbarstreifes bei den Tabs
-func detailViewBottomToolbarHight() -> CGFloat {
+func tabViewBottomToolbarHight() -> CGFloat {
     let _ = print("Funktion detailViewBottomToolbarHight() wird aufgerufen!")
     var resultat: CGFloat = 0.0
     
@@ -153,7 +153,7 @@ func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
 
 // Zweite Zeile bei der Liste der Objekte
 func subStringOfTextField(parameter: String) -> String {
-    let _ = print("Funktion subStringOfTextField() wird aufgerufen!")
+    //let _ = print("Funktion subStringOfTextField() wird aufgerufen!")
     var resultat: String = ""
     
     if UIDevice.current.userInterfaceIdiom == .phone {
@@ -180,7 +180,7 @@ struct serchFullTextInObjekten: View {
         let _ = print("struct serchFullTextInObjekten wird aufgerufen!")
         TextField("", text: $globaleVariable.searchTextObjekte)
             .focused($isInputSarchFullTextInObjektenActive)
-            .frame(height: detailViewBottomToolbarHight() - 36)
+            .frame(height: GlobalStorage.bottonToolBarHight - 36)
             .font(.system(size: 18, weight: .medium))
             .disableAutocorrection (true)
             .submitLabel(.done)

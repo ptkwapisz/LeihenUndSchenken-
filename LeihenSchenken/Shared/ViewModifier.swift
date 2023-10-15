@@ -15,9 +15,9 @@ struct EditFields: ViewModifier {
             .frame(width: 150, height: 30, alignment: .trailing)
             .submitLabel(.done)
             .font(.system(size: 16, weight: .regular))
-            .background(Color.blue)
+            .background(Color.blue.opacity(0.3))
             .cornerRadius(5)
-            .opacity(0.3)
+            .foregroundColor(.black)
             
     } // Ende func
 } // Ende struct
@@ -53,8 +53,8 @@ struct TextFieldEuro: ViewModifier {
             content
             if !textParameter.isEmpty {
                 Text("€")
-                    .foregroundColor(Color(UIColor.opaqueSeparator))
-                    
+                    //.foregroundColor(Color(UIColor.opaqueSeparator))
+                    .foregroundColor(.black.opacity(0.3))
             } //Ende if !text
         } // Ende HStack
     } // Ende func body

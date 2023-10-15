@@ -24,16 +24,16 @@ struct PhotoSelector: View {
             showSheet = true
         } label: {
             Label("", systemImage: "camera.on.rectangle.fill")
-                .font(.system(size: 28, weight: .bold))
+                .font(.system(size: 20, weight: .bold))
                 .foregroundColor(.blue)
         } // Ende Button
         .sheet(isPresented: $showSheet) {
             ImagePicker(sourceType: .camera, selectedImage: self.$image)
         } // Ende sheet
-        .onChange(of: self.image) { newItem in
+        .onChange(of: self.image) {
             Task {
                 
-                let tmp = UIImage(data: newItem.jpegData(compressionQuality: 0)!)
+                let tmp = UIImage(data: image.jpegData(compressionQuality: 0)!)
                 let tmp2: String = (tmp?.jpegData(compressionQuality: 0.5)!.base64EncodedString())!
                 
                 globaleVariable.parameterImageString = tmp2

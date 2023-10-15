@@ -178,3 +178,36 @@ extension View {
         }// Ende if/else
     } // Ende view
 }// Ende extension
+
+// Diese Erwiterung erlaubt if/else für nutzung eines Modifiers
+// How to use:
+// .applyIf( Bedienung, apply: {$0.sheet() {} ...}, else: {$0.sheet() {}} )
+extension View {
+    @ViewBuilder
+    func applyIf<T: View, U: View>(
+        _ condition: Bool,
+        apply: (Self) -> T,
+        else: (Self) -> U
+    ) -> some View {
+        if condition {
+            apply(self)
+        } else {
+            `else`(self)
+        } // Ende if/else
+    } // Ende some View
+} // Ende View
+
+
+// Diese erweiterung erlaubt if für nutzung eines Modifiers
+// How to use:
+//.applyModifier(Bedinung){$0.modifier}
+extension View {
+    @ViewBuilder
+    func applyModifier<T: View>(_ condition: Bool, apply: (Self) -> T) -> some View {
+        if condition {
+            apply(self)
+        } else {
+            self
+        }
+    }
+}

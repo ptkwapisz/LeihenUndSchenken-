@@ -27,6 +27,30 @@ struct EditSheetView: View {
     @State var vorgangTmp: String = ""
     @State var personPickerTmp: String = ""
     @State var neuePersonTmp: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
+ 
+    
+    // Das ist eigenes Button
+    // Ohne dieses Button wird der Name der View angezeigt (Gegenstandsname)
+    // Wenn man aber den Gegenstandsname ändert bleibt es in der Anzeige als zurück der alte Name.
+    var btnBack : some View { Button(action: {
+        isPresentedChartViewEdit = false
+    }) {
+        HStack {
+            Image(systemName: "chevron.left").bold()
+                .offset(x: -7)
+            Text("Zurück")
+                .offset(x: -11)
+            Spacer()
+        } // Ende HStack
+        .onDisappear() {
+            // It is like a Cancel Button
+            print("Disappear in EditSheetView wurde ausgeführt.")
+            //isPresentedChartViewEdit = false
+            globaleVariable.parameterImageString = "Kein Bild"
+        } // Ende onDisappear
+    } // Ende Button Label
+    } // Ende some View
+    
     
     @FocusState private var focusedEditField: editField?
     
@@ -39,86 +63,113 @@ struct EditSheetView: View {
     } // Ende private enum
     
     var body: some View {
-        
         //NavigationStack {
             GeometryReader { geometry in
-                
-                Form {
-                    Section{
-                        
-                        EditGegenstand(par1: $par1, par2: $par2, gegenstandTmp: $gegenstandTmp)
-                            .focused($focusedEditField, equals: .gegenstandKeyboard)
-                        EditGegenstandText(par1: $par1, par2: $par2, gegenstandTextTmp: $gegenstandTextTmp)
-                            .focused($focusedEditField, equals: .text1Keyboard)
-                        EditGegenstandBild(par1: $par1, par2: $par2, gegenstandBildTmp: $gegenstandBildTmp)
-                        EditPreisWert(par1: $par1, par2: $par2, preisWertTmp: $preisWertTmp)
-                            .focused($focusedEditField, equals: .betragKeyboard)
-                        EditDatum(par1: $par1, par2: $par2, datumTmp: $datumTmp)
-                        EditVorgang(par1: $par1, par2: $par2, vorgangTmp: $vorgangTmp)
-                        EditPerson(par1: $par1, par2: $par2, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
-                        EditAllgemeinerText(par1: $par1, par2: $par2, allgemeinerTextTmp: $allgemeinerTextTmp)
-                            .focused($focusedEditField, equals: .text2Keyboard)
-                    } // Ende Section
-                    
-                    Section{
-                        HStack {
-                            Spacer()
-                            Button("Abbrechen"){
-                                isPresentedChartViewEdit = false
-                                globaleVariable.parameterImageString = "Kein Bild"
-                            } // Ende Button
-                            .buttonStyle(.bordered)
-                            .foregroundColor(.blue)
-                            .fontWeight(.semibold)
-                            .font(.system(size: 16, weight: .regular))
+                VStack {
+                    VStack {
+                        Text("")
+                        Text("Objekt bearbeiten").bold()
+                        List {
                             
-                            Button("Speichern") {
+                            EditGegenstand(par1: $par1, par2: $par2, gegenstandTmp: $gegenstandTmp)
+                                .focused($focusedEditField, equals: .gegenstandKeyboard)
+                            EditGegenstandText(par1: $par1, par2: $par2, gegenstandTextTmp: $gegenstandTextTmp)
+                                .focused($focusedEditField, equals: .text1Keyboard)
+                            EditGegenstandBild(par1: $par1, par2: $par2, gegenstandBildTmp: $gegenstandBildTmp)
+                            EditPreisWert(par1: $par1, par2: $par2, preisWertTmp: $preisWertTmp)
+                                .focused($focusedEditField, equals: .betragKeyboard)
+                            EditDatum(par1: $par1, par2: $par2, datumTmp: $datumTmp)
+                            EditVorgang(par1: $par1, par2: $par2, vorgangTmp: $vorgangTmp)
+                            EditPerson(par1: $par1, par2: $par2, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
+                            
+                            EditAllgemeinerText(par1: $par1, par2: $par2, allgemeinerTextTmp: $allgemeinerTextTmp)
+                                .focused($focusedEditField, equals: .text2Keyboard)
+                            
+                            HStack {
+                                Spacer()
                                 
-                                updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: gegenstandTmp, perKey: par1[par2].perKey)
-                                par1[par2].gegenstand = gegenstandTmp
-                                
-                                updateSqliteTabellenField(sqliteFeld: "gegenstandText", neueInhalt: gegenstandTextTmp, perKey: par1[par2].perKey)
-                                par1[par2].gegenstandText = gegenstandTextTmp
-                                
-                                updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey)
-                                par1[par2].gegenstandBild = gegenstandBildTmp
-                                
-                                updateSqliteTabellenField(sqliteFeld: "preiswert", neueInhalt: preisWertTmp, perKey: par1[par2].perKey)
-                                par1[par2].preisWert = preisWertTmp
-                                
-                                par1[par2].datum = dateToString(parDatum: datumTmp)
-                                updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey)
-                                
-                                updateSqliteTabellenField(sqliteFeld: "vorgang", neueInhalt: vorgangTmp, perKey: par1[par2].perKey)
-                                par1[par2].vorgang = vorgangTmp
-                                
-                                updateSqliteTabellenField(sqliteFeld: "personVorname", neueInhalt: neuePersonTmp[0].personVorname, perKey: par1[par2].perKey)
-                                par1[par2].personVorname = neuePersonTmp[0].personVorname
-                                
-                                updateSqliteTabellenField(sqliteFeld: "personNachname", neueInhalt: neuePersonTmp[0].personNachname, perKey: par1[par2].perKey)
-                                par1[par2].personNachname = neuePersonTmp[0].personNachname
-                                
-                                updateSqliteTabellenField(sqliteFeld: "personSex", neueInhalt: neuePersonTmp[0].personSex, perKey: par1[par2].perKey)
-                                par1[par2].personSex = neuePersonTmp[0].personSex
-                                
-                                updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: allgemeinerTextTmp, perKey: par1[par2].perKey)
-                                par1[par2].allgemeinerText = allgemeinerTextTmp
-                                
-                                globaleVariable.parameterImageString = "Kein Bild"
-                                refreshAllViews()
-                                isPresentedChartViewEdit = false
-                                
-                            } // Ende Button
-                            .buttonStyle(.borderedProminent)
-                            .foregroundColor(.white)
-                            .fontWeight(.semibold)
-                            .font(.system(size: 16, weight: .regular))
-                            .disabled(disableSpeichern)
-                            Spacer()
-                        } // Ende HStack
-                    } // Ende Section
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard) {
+                                if UIDevice.current.userInterfaceIdiom == .pad {
+                                    Button("Abbrechen"){
+                                        isPresentedChartViewEdit = false
+                                        globaleVariable.parameterImageString = "Kein Bild"
+                                    } // Ende Button
+                                    .buttonStyle(.bordered)
+                                    .foregroundColor(.blue)
+                                    .fontWeight(.semibold)
+                                    .font(.system(size: 16, weight: .regular))
+                                } // Ende if
+                                Button("Speichern") {
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: gegenstandTmp, perKey: par1[par2].perKey)
+                                    par1[par2].gegenstand = gegenstandTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstandText", neueInhalt: gegenstandTextTmp, perKey: par1[par2].perKey)
+                                    par1[par2].gegenstandText = gegenstandTextTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey)
+                                    par1[par2].gegenstandBild = gegenstandBildTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "preiswert", neueInhalt: preisWertTmp, perKey: par1[par2].perKey)
+                                    par1[par2].preisWert = preisWertTmp
+                                    
+                                    par1[par2].datum = dateToString(parDatum: datumTmp)
+                                    updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey)
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "vorgang", neueInhalt: vorgangTmp, perKey: par1[par2].perKey)
+                                    par1[par2].vorgang = vorgangTmp
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "personVorname", neueInhalt: neuePersonTmp[0].personVorname, perKey: par1[par2].perKey)
+                                    par1[par2].personVorname = neuePersonTmp[0].personVorname
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "personNachname", neueInhalt: neuePersonTmp[0].personNachname, perKey: par1[par2].perKey)
+                                    par1[par2].personNachname = neuePersonTmp[0].personNachname
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "personSex", neueInhalt: neuePersonTmp[0].personSex, perKey: par1[par2].perKey)
+                                    par1[par2].personSex = neuePersonTmp[0].personSex
+                                    
+                                    updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: allgemeinerTextTmp, perKey: par1[par2].perKey)
+                                    par1[par2].allgemeinerText = allgemeinerTextTmp
+                                    
+                                    globaleVariable.parameterImageString = "Kein Bild"
+                                    refreshAllViews()
+                                    isPresentedChartViewEdit = false
+                                    
+                                } // Ende Button
+                                .buttonStyle(.borderedProminent)
+                                .foregroundColor(.white)
+                                .fontWeight(.semibold)
+                                .font(.system(size: 16, weight: .regular))
+                                .disabled(disableSpeichern)
+                                Spacer()
+                            } // Ende HStack
+                            
+                        } // Ende List
+                        .onAppear(){
+                            neuePersonTmp[0].personPicker = " " + par1[par2].personNachname + ", " + par1[par2].personVorname
+                            neuePersonTmp[0].personVorname = par1[par2].personVorname
+                            neuePersonTmp[0].personNachname  = par1[par2].personNachname
+                            neuePersonTmp[0].personSex = par1[par2].personSex
+                        }// Ende onApear
+                        
+                        /*
+                        .onDisappear(){
+                            isPresentedChartViewEdit = false
+                            globaleVariable.parameterImageString = "Kein Bild"
+                            
+                        } // Ende onDisapear
+                        */
+                        
+                    } // Ende VStack
+                    .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    //.frame(width: geometry.size.width)
+                    .background(globaleVariable.farbenEbene1)
+                    .cornerRadius(10)
+                    
+                } // Ende VStack
+                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+                .background(globaleVariable.farbenEbene0)
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
                         
                         if focusedEditField == .gegenstandKeyboard {
                             HStack {
@@ -174,23 +225,13 @@ struct EditSheetView: View {
                             .font(.system(size: 16, weight: .regular))
                         } // Ende if/else
                     } // Ende ToolbarGroup
-                    } // Ende toolbar
-                    
-                    
-                } // Ende Form
-                .onAppear(){
-                    neuePersonTmp[0].personPicker = " " + par1[par2].personNachname + ", " + par1[par2].personVorname
-                    neuePersonTmp[0].personVorname = par1[par2].personVorname
-                    neuePersonTmp[0].personNachname  = par1[par2].personNachname
-                    neuePersonTmp[0].personSex = par1[par2].personSex
-                }// Ende onApear
+                } // Ende toolbar
             } // Ende GeometryReader
-            
-            .navigationTitle("Objekt bearbeiten").navigationBarTitleDisplayMode(.inline)
-            
-       //} // Ende NavigationStack
-        .interactiveDismissDisabled()  // Disable dismiss with a swipe
+            .navigationTitle("\(gegenstandTmp)").navigationBarTitleDisplayMode(.large)
+            .interactiveDismissDisabled()  // Disable dismiss with a swipe
+            .navigationBarItems(leading: btnBack)
         
+        //} // Ende NavigationStack
     } // Ende var body
     
 } // Ende struc TestView
@@ -221,14 +262,14 @@ struct EditGegenstand: View {
                 .onAppear(){
                     gegenstandTmp = par1[par2].gegenstand
                 } // Ende onAppear
-                .onChange(of: gegenstandTmp, perform: { newValue in
-                    if newValue.count <= 25 {
-                        lastText = newValue
+                .onChange(of: gegenstandTmp) {
+                    if gegenstandTmp.count <= 25 {
+                        lastText = gegenstandTmp
                     }else{
                         self.gegenstandTmp = lastText
                     } // Ende else
                     
-                }) // Ende onChange
+                } // Ende onChange
         }// Ende HStack
         
         //} // Ende NavigationStack
@@ -248,12 +289,13 @@ struct EditGegenstandText: View {
     var body: some View {
         //NavigationStack {
         VStack{
+            /*
             HStack {
                 Text("GegenstandText: ")
                     .font(.system(size: 16, weight: .regular))
                 Spacer()
             } // Ende HStack
-            
+            */
             TextField("", text: $gegenstandTextTmp, axis: .vertical)
                 .focused($isInputGegenstandTextActive)
                 .padding(.top, 10)
@@ -262,28 +304,27 @@ struct EditGegenstandText: View {
                 .frame(height: 90, alignment: .topTrailing)
                 .submitLabel(.done)
                 .font(.system(size: 16, weight: .regular))
-                .foregroundColor(Color.black)
-                .background(Color.blue)
-                .opacity(0.3)
+                .foregroundColor(Color.black.opacity(0.3))
+                .background(Color.blue.opacity(0.3))
                 .cornerRadius(5)
                 .onAppear(){
                     gegenstandTextTmp = par1[par2].gegenstandText
                 } // Ende onAppear
-                .onChange(of: gegenstandTextTmp, perform: { newValue in
-                    if newValue.count <= 100 {
-                        lastText = newValue
+                .onChange(of: gegenstandTextTmp) {
+                    if gegenstandTextTmp.count <= 100 {
+                        lastText = gegenstandTextTmp
                     }else{
                         self.gegenstandTextTmp = lastText
                     } // Ende else
                     
-                    guard let newValueLastChar = newValue.last else { return }
+                    guard let newValueLastChar = gegenstandTextTmp.last else { return }
                     
                     if newValueLastChar == "\n" {
                         gegenstandTextTmp.removeLast()
                         isInputGegenstandTextActive = false
                     } // Ende if
                     
-                }) // Ende onChange
+                } // Ende onChange
         }// Ende HStack
         // } // Ende NavigationStack
     } // Ende var body
@@ -308,6 +349,7 @@ struct EditPreisWert: View {
                 .font(.system(size: 16, weight: .regular))
             Spacer()
             TextField("€", text: $preisWertTmp)
+                .modifier(TextFieldEuro(textParameter: $preisWertTmp))
                 .focused($isInputPreisWertActive)
                 .padding(.leading, 6)
                 .foregroundColor(.black)
@@ -317,9 +359,8 @@ struct EditPreisWert: View {
                 .modifier(TextFieldEuro(textParameter: $preisWertTmp))
                 .submitLabel(.done)
                 .font(.system(size: 16, weight: .regular))
-                .background(Color.blue)
+                .background(Color.blue.opacity(0.4))
                 .cornerRadius(5)
-                .opacity(0.4)
                 .onReceive(Just(preisWertTmp)) { newValue in
                     // Es soll verhindert werden mit cut/past nicht numerische Werte einzugeben. Zum Beispiel beim iPad
                     let allowedCharacters = "0123456789,"
@@ -379,23 +420,22 @@ struct EditDatum: View {
             Spacer()
             DatePicker("", selection: $datumTmp, displayedComponents: [.date])
                 .labelsHidden()
-                .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 5))
+                .background(Color.blue.opacity(0.3), in: RoundedRectangle(cornerRadius: 5))
                 .foregroundColor(.black)
-                .background(Color.blue)
-                .opacity(0.3)
                 .multilineTextAlignment (.center)
                 .environment(\.locale, Locale.init(identifier: "de"))
                 .font(.system(size: 16, weight: .regular))
                 .cornerRadius(5)
                 .id(calendarId)
-                .onChange(of: datumTmp, perform: { _ in
+                .onChange(of: datumTmp ) {
                     calendarId += 1
-                }) // Ende onChange...
+                } // Ende onChange...
                 .onAppear{
                     datumTmp = stringToDate(parDatum: "\(datumTmpString)")
                 } // Ende onAppear
             
         }// Ende HStack
+        
         //} // Ende NavigationStack
     } // Ende var body
 } // Ende struct PreisWert
@@ -414,12 +454,13 @@ struct EditAllgemeinerText: View {
     var body: some View {
         //NavigationStack {
         VStack{
+            /*
             HStack {
                 Text("AllgemeinerText: ")
                     .font(.system(size: 16, weight: .regular))
                 Spacer()
             } // Ende HStack
-            
+            */
             TextField("", text: $allgemeinerTextTmp, axis: .vertical)
                 .focused($isInputAllgemeinerTextActive)
                 .padding(.top, 10)
@@ -435,21 +476,21 @@ struct EditAllgemeinerText: View {
                 .onAppear(){
                     allgemeinerTextTmp = par1[par2].allgemeinerText
                 } // Ende onAppear
-                .onChange(of: allgemeinerTextTmp, perform: { newValue in
-                    if newValue.count <= 100 {
-                        lastText = newValue
+                .onChange(of: allgemeinerTextTmp) {
+                    if allgemeinerTextTmp.count <= 100 {
+                        lastText = allgemeinerTextTmp
                     }else{
                         self.allgemeinerTextTmp = lastText
                     } // Ende else
                     
-                    guard let newValueLastChar = newValue.last else { return }
+                    guard let newValueLastChar = allgemeinerTextTmp.last else { return }
                     
                     if newValueLastChar == "\n" {
                         allgemeinerTextTmp.removeLast()
                         isInputAllgemeinerTextActive = false
                     } // Ende if
                     
-                }) // Ende onChange
+                } // Ende onChange
         }// Ende HStack
         //} // Ende NavigationStack
     } // Ende var body
@@ -507,13 +548,13 @@ struct EditGegenstandBild: View {
             gegenstandBildTmp = par1[par2].gegenstandBild
             
         } // Ende onAppear
-        .onChange(of: globaleVariable.parameterImageString, perform: { _ in
+        .onChange(of: globaleVariable.parameterImageString) {
             print("Foto ausgesucht!")
             gegenstandBildTmp = globaleVariable.parameterImageString
             //par1[par2].gegenstandBild = bildTmp
             //globaleVariable.parameterImageString = "Kein Bild"
             print("\(gegenstandBildTmp)")
-        }) // Ende onChange
+        } // Ende onChange
         
         //} // Ende NavigationStack
         
@@ -545,19 +586,19 @@ struct EditVorgang: View {
                 ForEach(0..<$vorgangArrayTmp.count, id: \.self) { index in
                     Text("\(vorgangArrayTmp[index])")//.tag(index)
                 } // Ende ForEach
-            }) // Picker
+            }) // Ende Picker
             .font(.system(size: 16, weight: .regular))
             .frame(width: 180, height: 30)
-            .background(Color.blue)
-            .opacity(0.4)
+            .background(Color.blue.opacity(0.4))
+            .foregroundColor(.black)
             .cornerRadius(5)
             .onAppear(){
                 vorgangTmp = par1[par2].vorgang
                 indexInt = indexIntTmp
             } // Ende onAppear
-            .onChange(of: indexInt, perform: { _ in
+            .onChange(of: indexInt) {
                 vorgangTmp = vorgangArrayTmp[indexInt]
-            }) // Ende onChange
+            } // Ende onChange
             
         }// Ende HStack
         //} // Ende NavigationStack
@@ -589,22 +630,24 @@ struct EditPerson: View {
                 Text("\(personPickerTmp)")
                     .font(.system(size: 16, weight: .regular))
                     .frame(height: 30)
-                    .background(Color.blue)
-                    .opacity(0.4)
+                    .background(Color.blue.opacity(0.4))
+                    .foregroundColor(.black)
                     .cornerRadius(5)
                 
             } // Ende Button
-            .onAppear(){
-                personPickerTmp = " " + par1[par2].personNachname + ", " + par1[par2].personVorname + " "
-            } // Ende onAppear
-            //.sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})
-            .navigationDestination(isPresented: $personEditieren, destination: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
-                    .navigationBarBackButtonHidden()
-                    .navigationBarTitleDisplayMode(.inline)
-            })
-            
             
         }// Ende HStack
+        .onAppear(){
+            personPickerTmp = " " + par1[par2].personNachname + ", " + par1[par2].personVorname + " "
+        } // Ende onAppear
+        
+        //.sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})
+        
+        .applyIf(UIDevice.current.userInterfaceIdiom == .phone, apply: { $0.navigationDestination(isPresented: $personEditieren, destination: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
+                .navigationBarBackButtonHidden()
+                .navigationBarTitleDisplayMode(.large)
+        })}, else: {$0.sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})})
+        
         //} // Ende NavigationStack
     } // Ende var body
 } // Ende struct EditVorgang

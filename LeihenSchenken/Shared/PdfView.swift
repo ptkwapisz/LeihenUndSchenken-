@@ -130,11 +130,11 @@ struct PDFKitView: View {
                             .foregroundColor(Color.white)
                         
                     } // Ende HStack
-                    .frame(width: geometry.size.width, height: detailViewBottomToolbarHight(), alignment: .leading)
+                    .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
                     .background(Color(UIColor.lightGray))
                     .foregroundColor(Color.black)
                     .sheet(isPresented: $isSheetPresented, content: { ObjektListeParameter(data: data, isPresented: $isSheetPresented)})
-                    .onChange(of: data.didSave) { _ in
+                    .onChange(of: data.didSave) {
                                // This will run every time "didSave" changes.
                                // You can place your logic here as a substitute to .onAppear().
                                 versionCounter += 1

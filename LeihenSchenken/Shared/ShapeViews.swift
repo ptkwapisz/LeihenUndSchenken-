@@ -13,7 +13,7 @@ import Contacts
 struct ShapeViewAddGegenstand: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     //@Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-   
+    
     @Binding var isPresented: Bool
     @Binding var isParameterBereich: Bool
     
@@ -24,113 +24,158 @@ struct ShapeViewAddGegenstand: View {
     
     @FocusState var isInputActive: Bool
     
+    // Das ist eigenes Button
+    // Ohne dieses Button wird der Name der View angezeigt (Gegenstandsname)
+    // Wenn man aber den Gegenstandsname ändert bleibt es in der Anzeige als zurück der alte Name.
+    var btnBack : some View { Button(action: {
+        isPresented = false
+    }) {
+        HStack {
+            Image(systemName: "chevron.left").bold()
+                .offset(x: -7)
+            Text("Zurück")
+                .offset(x: -11)
+            Spacer()
+        } // Ende HStack
+        .onDisappear() {
+            // It is like a Cancel Button
+            print("Disappear in shapeViewEditUser wurde ausgeführt.")
+        } // Ende onDisappear
+        
+    } // Ende Button Label
+    } // Ende some View
+    
+    
     var body: some View {
         
-       //NavigationStack {
-            
-            Form {
-                Section(){
-                    TextField("Gegenstand", text: $gegenstandNeu.max(20))
-                        .focused($isInputActive)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .submitLabel(.done)
-                        .cornerRadius(5)
-                        .disableAutocorrection(true)
+        GeometryReader { geometry in
+            VStack {
+                VStack {
                     
-                } // Ende Section
-                .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
+                    Text("")
                     HStack {
-                        Text("\(gegenstandNeu.count)/20")
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(.gray)
-                            .padding()
-                        Spacer()
+                        Text("Gegenstand hinzufügen").bold()
+                            .padding(.leading, 20)
                         
-                        Button("Abbrechen") {
-                            isInputActive = false
-                            gegenstandNeu = ""
-                           
-                        } // Ende Button
-                    } // Ende HStack
+                    }
                     
-                } // Ende ToolbarItemGroup
-                } // Ende Toolbar
-                
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        isPresented = false
-                      
-                        //self.presentationMode.wrappedValue.dismiss()
-                        print("Gegenstand wurde in die Auswahl nicht hinzugefügt!")
-                    }) {Text("Abbrechen")}
-                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
-                    
-                    Button(action: {
-                        if gegenstandNeu != "" {
+                    List {
+                        Section(){
+                            TextField("Gegenstand", text: $gegenstandNeu.max(20))
+                                .focused($isInputActive)
+                                .padding(5)
+                                .background(Color(.systemGray6))
+                                .submitLabel(.done)
+                                .cornerRadius(5)
+                                .disableAutocorrection(true)
+                        }
+                        Section(){
+                            
+                            HStack {
+                                
+                                Spacer()
+                                if UIDevice.current.userInterfaceIdiom == .pad {
+                                    Button(action: {
+                                        isPresented = false
+                                        
+                                        //self.presentationMode.wrappedValue.dismiss()
+                                        print("Gegenstand wurde in die Auswahl nicht hinzugefügt!")
+                                    }) {Text("Abbrechen")}
+                                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                                } // Ende if
+                                Button(action: {
+                                    if gegenstandNeu != "" {
+                                        if isParameterBereich {
+                                            globaleVariable.parameterGegenstand.append(gegenstandNeu)
+                                            // Es wird in der Eingabemaske bei Gegenstand der neue Gegenstand ausgewählt
+                                            globaleVariable.selectedGegenstandInt = globaleVariable.parameterGegenstand.count-1
+                                            isPresented = false
+                                            print("Gegenstand wurde in die Auswahl hinzugefügt!")
+                                        }else{
+                                            if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
+                                                
+                                                showWarnung = true
+                                                
+                                            }else{
+                                                
+                                                gegenstandInDatenbankSchreiben(par1: gegenstandNeu)
+                                                globaleVariable.parameterGegenstand.removeAll()
+                                                globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
+                                                
+                                                print("Gegenstand wurde in die Datenbank hinzugefügt!")
+                                                
+                                                isPresented = false
+                                            } // Ende guard/else
+                                            
+                                        } // Ende if/else
+                                        
+                                    } // Ende if
+                                }) {
+                                    
+                                    Text("Speichern")
+                                    
+                                }// Ende Button
+                                .disabled(gegenstandNeu != "" ? false : true)
+                                .buttonStyle(.borderedProminent)
+                                .foregroundColor(.white)
+                                .font(.system(size: 16, weight: .regular))
+                                .cornerRadius(10)
+                                
+                                Spacer()
+                                
+                            } // Ende Hstack
+                            .alert("Warnung zu neuem Gegenstand", isPresented: $showWarnung, actions: {
+                                Button(" - OK - ") {}
+                            }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Gegenständen gespeichert werden!") } // Ende message
+                            ) // Ende alert
+                            
                             if isParameterBereich {
-                                globaleVariable.parameterGegenstand.append(gegenstandNeu)
-                                // Es wird in der Eingabemaske bei Gegenstand der neue Gegenstand ausgewählt
-                                globaleVariable.selectedGegenstandInt = globaleVariable.parameterGegenstand.count-1
-                                isPresented = false
-                                print("Gegenstand wurde in die Auswahl hinzugefügt!")
+                                Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann mit drücken auf 'Speichern' wird der Gegenstand nur zur Auswahl in die Eingabemaske hinzugefügt. Er wird nach beenden der App entfernt. Möchten Sie ein Gegenstand dauerhaft zur Auswahl in der Eingabemaske hinzufügen, gehen Sie bitte zum Tab 'Gegenstände' und dort unten links auf das '+' Symbol. Auf der entsprechender Maske geben Sie den Gegenstand ein und speichen ihn.")
+                                    .font(.system(size: 14, weight: .regular))
+                                    .foregroundColor(.gray)
                             }else{
-                                if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
-                                    
-                                    showWarnung = true
-                                    
-                                }else{
-                                    
-                                    gegenstandInDatenbankSchreiben(par1: gegenstandNeu)
-                                    globaleVariable.parameterGegenstand.removeAll()
-                                    globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
-                                    
-                                    print("Gegenstand wurde in die Datenbank hinzugefügt!")
-                                    
-                                    isPresented = false
-                                } // Ende guard/else
+                                Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann beim drücken auf 'Speichern' wird der neue Gegenstand dauerhaft in die Datenbank hinzugefügt.")
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundColor(.gray)
                                 
                             } // Ende if/else
-                            
-                        } // Ende if
-                    }) {
-                        
-                        Text("Speichern")
-                        
-                    }// Ende Button
-                    .disabled(gegenstandNeu != "" ? false : true)
-                    .buttonStyle(.borderedProminent)
-                    .foregroundColor(.white)
+                        } // Ende Section
+                    } // Ende List
+                    //.frame(width: geometry.size.width, height: geometry.size.height)
                     .font(.system(size: 16, weight: .regular))
-                    .cornerRadius(10)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            HStack {
+                                Text("\(gegenstandNeu.count)/20")
+                                    .font(.system(size: 16, weight: .regular))
+                                    .foregroundColor(.gray)
+                                    .padding()
+                                Spacer()
+                                
+                                Button("Abbrechen") {
+                                    isInputActive = false
+                                    gegenstandNeu = ""
+                                    
+                                } // Ende Button
+                            } // Ende HStack
+                            
+                        } // Ende ToolbarItemGroup
+                    } // Ende Toolbar
                     
-                    Spacer()
-                    
-                } // Ende Hstack
-                .alert("Warnung zu neuem Gegenstand", isPresented: $showWarnung, actions: {
-                    Button(" - OK - ") {}
-                }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Gegenständen gespeichert werden!") } // Ende message
-                ) // Ende alert
+                } // Ende Vstack
+                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
                 
-                if isParameterBereich {
-                    Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann mit drücken auf 'Speichern' wird der Gegenstand nur zur Auswahl in die Eingabemaske hinzugefügt. Er wird nach beenden der App entfernt. Möchten Sie ein Gegenstand dauerhaft zur Auswahl in der Eingabemaske hinzufügen, gehen Sie bitte zum Tab 'Gegenstände' und dort unten links auf das '+' Symbol. Auf der entsprechender Maske geben Sie den Gegenstand ein und speichen ihn.")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                }else{
-                    Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann beim drücken auf 'Speichern' wird der neue Gegenstand dauerhaft in die Datenbank hinzugefügt.")
-                        .font(.system(size: 12, weight: .regular))
-                        .foregroundColor(.gray)
-                    
-                } // Ende if/else
                 
-            } // Ende Form
-            .navigationTitle("Neuer Gegenstand").navigationBarTitleDisplayMode(.inline)
-            .scrollContentBackground(.hidden)
+            } // Ende VStack
+            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbenEbene0)
+            .navigationTitle("Neuer Gegenstand")
             
-        //} // Ende NavigationStack
+        } // Ende GeometryReader
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
+        .navigationBarItems(leading: btnBack)
         
     } // Ende var body
 } // Ende struct
@@ -149,8 +194,11 @@ struct ShapeViewSettings: View {
     
     var body: some View {
        
-        
-        NavigationStack {
+        //NavigationStack {
+        VStack{
+            Text("")
+            Text("App-Einstellungen").bold()
+            
             
             Form {
                 
@@ -178,7 +226,7 @@ struct ShapeViewSettings: View {
                         Text("Beim einschalten der iCloud Sicherung, wird die Datensicherung in der iCloud gespeichert. Dadurch wird es möglich sein, diese Datensicherung auf Ihrem anderen Gerät (iPhone oder iPad) einzuspielen.")
                         
                     } // Ende Section
-                
+                    
                 } // Ende if
                 HStack {
                     Spacer()
@@ -189,14 +237,14 @@ struct ShapeViewSettings: View {
                         //presentationMode.wrappedValue.dismiss()
                         isPresented = false
                     }label: {
-                     //Text("Parameterfenster verlassen.")
+                        //Text("Parameterfenster verlassen.")
                         Label("Einstellungenfenster verlassen", systemImage: "arrowshape.turn.up.backward.circle")
                         
                     } // Ende Button Text
                     .buttonStyle(.borderedProminent)
                     .foregroundColor(.white)
                     .font(.system(size: 16, weight: .regular))
-                        
+                    
                     Spacer()
                 } // Ende HStack
                 
@@ -206,11 +254,18 @@ struct ShapeViewSettings: View {
                 
             } // Ende Form
             .font(.system(size: 14, weight: .regular))
-            .navigationTitle("App-Einstellungen").navigationBarTitleDisplayMode(.inline)
+            //.navigationTitle("App-Einstellungen").navigationBarTitleDisplayMode(.inline)
             
-        } // Ende NavigationStack
+        } // Ende Vstack
+        .background(globaleVariable.farbenEbene1)
+        .cornerRadius(10)
+            
+            
+        //} // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
+            
+            
     } // Ende var body
 } // Ende struct ShapeViewSettings
 
@@ -252,12 +307,12 @@ struct ShapeViewAbfrage: View {
                             abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
                             print("Feld1 onAppear")
                         })
-                        .onChange(of: selectedAbfrageFeld1, perform: { _ in
+                        .onChange(of: selectedAbfrageFeld1) {
                             
                             abfrageFeld3 = abfrageField3(field1: selectedAbfrageFeld1)
                             selectedAbfrageFeld3 = abfrageFeld3[0]
                             print("Feld1 onChange")
-                        }) // Ende onChange...
+                        } // Ende onChange...
                         
                         HStack{
                             Text("ist  ")
@@ -284,10 +339,10 @@ struct ShapeViewAbfrage: View {
                             print("\(selectedAbfrageFeld3)")
                             print("Feld3 onAppear")
                         })
-                        .onChange(of: selectedAbfrageFeld3, perform: {  _ in
+                        .onChange(of: selectedAbfrageFeld3) {
                             print("\(selectedAbfrageFeld3)")
                             print("Feld3 onChange")
-                        })
+                        }
                     } // Ende Section
                     
                     Section(header: Text("Filteraktivierung").font(.system(size: 16, weight: .regular))) {
@@ -361,6 +416,7 @@ struct ShapeViewAbfrage: View {
 // Wird bei Objekt editieren aufgerufen und nicht bei Tab Personen
 struct ShapeViewEditUser: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    //@Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var isPresentedShapeViewEditUser: Bool
     @Binding var personPickerTmp: String
     @Binding var neuePersonTmp: [PersonClassVariable]
@@ -377,74 +433,121 @@ struct ShapeViewEditUser: View {
         
     } // Ende private enum
     
+    // Das ist eigenes Button
+    // Ohne dieses Button wird der Name der View angezeigt (Gegenstandsname)
+    // Wenn man aber den Gegenstandsname ändert bleibt es in der Anzeige als zurück der alte Name.
+    var btnBack : some View { Button(action: {
+        isPresentedShapeViewEditUser = false
+    }) {
+        HStack {
+            Image(systemName: "chevron.left").bold()
+                .offset(x: -7)
+            Text("Zurück")
+                .offset(x: -11)
+            Spacer()
+        } // Ende HStack
+        .onDisappear() {
+            // It is like a Cancel Button
+            print("Disappear in shapeViewEditUser wurde ausgeführt.")
+        } // Ende onDisappear
+        
+    } // Ende Button Label
+    } // Ende some View
+    
     var body: some View {
         //NavigationStack {
-            Form {
-                Section() {
+        GeometryReader { geometry in
+            VStack {
+                VStack {
+                    Text("")
+                    Text("Person bearbeiten").bold()
                     
-                    TextField("Vorname", text: $neuePersonTmp[0].personVorname)
-                        .focused($focusedField, equals: .vorname)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .submitLabel(.done)
-                        .disableAutocorrection(true)
-                    
-                    TextField("Namen", text: $neuePersonTmp[0].personNachname)
-                        .focused($focusedField, equals: .name)
-                        .padding(5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(5)
-                        .submitLabel(.done)
-                        .disableAutocorrection(true)
-                } // Ende Section
-                
-                
-                Section() {
-                    Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
-                        
-                        ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
-                            Text("\(globaleVariable.parameterPersonSex[index])")
+                    List {
+                        Section() {
                             
-                        } // Ende ForEach
-                    } // Ende Picker
-                   
-                } // Ende Section
-                
-                HStack {
-                    Spacer()
-                    Button(action: { isPresentedShapeViewEditUser = false }) {Text("Abbrechen")}
-                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
-                    
-                    Button(action: {
-                        // Hier aktion für speichern
-                        
-                        if neuePersonTmp[0].personVorname != "" || neuePersonTmp[0].personNachname != "" {
-                            personPickerTmp = " " + neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
-                            isPresentedShapeViewEditUser = false
+                            TextField("Vorname", text: $neuePersonTmp[0].personVorname)
+                                .focused($focusedField, equals: .vorname)
+                                .padding(5)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(5)
+                                .submitLabel(.done)
+                                .disableAutocorrection(true)
                             
-                        } else {
+                            TextField("Namen", text: $neuePersonTmp[0].personNachname)
+                                .focused($focusedField, equals: .name)
+                                .padding(5)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(5)
+                                .submitLabel(.done)
+                                .disableAutocorrection(true)
+                        } // Ende Section
+                        
+                        
+                        Section() {
+                            Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
+                                
+                                ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
+                                    Text("\(globaleVariable.parameterPersonSex[index])")
+                                    
+                                } // Ende ForEach
+                            } // Ende Picker
                             
-                            print("Die Felder sind leer")
-                        } // Ende if/else
+                        } // Ende Section
                         
-                    }) {
-                        
-                        Text("Speichern")
-                        
-                    } // Ende Button
-                    .buttonStyle(.borderedProminent)
-                    .foregroundColor(.white)
-                    .font(.system(size: 16, weight: .regular))
-                    .cornerRadius(10)
-                    Spacer()
-                } // Ende HStack
+                        HStack {
+                            Spacer()
+                            
+                            if UIDevice.current.userInterfaceIdiom == .pad {
+                                Button(action: {
+                                    isPresentedShapeViewEditUser = false
+                                }) {Text("Abbrechen")}
+                                    .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                            } // Ende if
+                            
+                            Button(action: {
+                                
+                                if neuePersonTmp[0].personVorname != "" || neuePersonTmp[0].personNachname != "" {
+                                    personPickerTmp = " " + neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
+                                    isPresentedShapeViewEditUser = false
+                                    
+                                } else {
+                                    
+                                    print("Die Felder sind leer")
+                                } // Ende if/else
+                                //self.presentationMode.wrappedValue.dismiss()
+                                
+                            }) {
+                                
+                                Text("Speichern")
+                                
+                            } // Ende Button
+                            .buttonStyle(.borderedProminent)
+                            .foregroundColor(.white)
+                            .font(.system(size: 16, weight: .regular))
+                            .cornerRadius(10)
+                            Spacer()
+                        } // Ende HStack
+                    }//Ende List
+                } // Ende VStack
+                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
                 
-                
-            } // Ende Form
-            .navigationTitle("Benutzer bearbeiten").navigationBarTitleDisplayMode(.inline)
+                /*
+                .frame(width: geometry.size.width)
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
+                */
+            } // Ende VStack
+            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbenEbene0)
+            .navigationTitle("\(neuePersonTmp[0].personVorname + " " + neuePersonTmp[0].personNachname)").navigationBarTitleDisplayMode(.large)
             
+            } // Ende Geometry Reader
+        .navigationBarItems(leading: btnBack)
+        
         //} // Ende NavigationStack
+       
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {

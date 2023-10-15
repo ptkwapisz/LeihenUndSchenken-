@@ -27,7 +27,7 @@ struct Statistik: View {
                     
                 } else {
                     StatistikView()
-                        .frame(width: geometry.size.width * globaleVariable.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                        .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                         .background(globaleVariable.farbenEbene1)
                         .cornerRadius(10)
                     
