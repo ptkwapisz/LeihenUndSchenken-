@@ -23,113 +23,148 @@ struct ObjektListeParameter: View {
         
     } // Ende private enum
     
+    // Das ist eigenes Button
+    // Ohne dieses Button wird der Name der View angezeigt (Gegenstandsname)
+    // Wenn man aber den Gegenstandsname ändert bleibt es in der Anzeige als zurück der alte Name.
+    var btnBack : some View { Button(action: {
+        isPresented = false
+    }) {
+        HStack {
+            Image(systemName: "chevron.left").bold()
+                .offset(x: -7)
+            Text("Zurück")
+                .offset(x: -11)
+            Spacer()
+        } // Ende HStack
+        .onDisappear() {
+            // It is like a Cancel Button
+            print("Disappear in ObjektListeParameter wurde ausgeführt.")
+            
+        } // Ende onDisappear
+    } // Ende Button Label
+    } // Ende some View
+    
+    
     var body: some View {
         let _ = print("Struct ObjektListParameter wird aufgerufen!")
         
-        NavigationStack {
-            Form {
-                Section(header: Text("Kopfzeilen der Liste").foregroundColor(.gray).font(.system(size: 16, weight: .regular))) {
-                    VStack {
-                        TextField("Listentitel", text: $data.titel)
-                            .padding(5)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(5)
-                            .submitLabel(.done)
-                            .disableAutocorrection(true)
-                            .focused($focusedFields, equals: .titel)
-                        
-                        TextField("Listenuntertitel", text: $data.unterTitel)
-                            .padding(5)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(5)
-                            .submitLabel(.done)
-                            .disableAutocorrection(true)
-                            .focused($focusedFields, equals: .unterTitel)
-                    } // Ende VStack
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            
-                            if focusedFields == .titel {
-                                HStack{
-                                    Spacer()
-                                    Button("Abbrechen") {
-                                        
-                                        print("Abbrechen Button titel wurde gedrückt!")
-                                        focusedFields = nil
-                                    } // Ende Button
-                                } // Ende HStack
-                            }else if focusedFields == .unterTitel {
-                                HStack{
-                                    Spacer()
-                                    Button("Abbrechen") {
-                                        
-                                        print("Abbrechen Button unterTitel wurde gedrückt!")
-                                        focusedFields = nil
-                                    } // Ende Button
-                                } // Ende HStack
+        GeometryReader { geometry in
+            
+            VStack {
+                VStack {
+                    Text("")
+                    Text("Parameter").bold()
+                    List {
+                        Section(header: Text("Kopfzeilen der Liste").foregroundColor(.gray).font(.system(size: 16, weight: .regular))) {
+                            VStack {
+                                TextField("Listentitel", text: $data.titel)
+                                    .padding(5)
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(5)
+                                    .submitLabel(.done)
+                                    .disableAutocorrection(true)
+                                    .focused($focusedFields, equals: .titel)
                                 
-                            } // Ende if/else
+                                TextField("Listenuntertitel", text: $data.unterTitel)
+                                    .padding(5)
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(5)
+                                    .submitLabel(.done)
+                                    .disableAutocorrection(true)
+                                    .focused($focusedFields, equals: .unterTitel)
+                            } // Ende VStack
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    
+                                    if focusedFields == .titel {
+                                        HStack{
+                                            Spacer()
+                                            Button("Abbrechen") {
+                                                
+                                                print("Abbrechen Button titel wurde gedrückt!")
+                                                focusedFields = nil
+                                            } // Ende Button
+                                        } // Ende HStack
+                                    }else if focusedFields == .unterTitel {
+                                        HStack{
+                                            Spacer()
+                                            Button("Abbrechen") {
+                                                
+                                                print("Abbrechen Button unterTitel wurde gedrückt!")
+                                                focusedFields = nil
+                                            } // Ende Button
+                                        } // Ende HStack
+                                        
+                                    } // Ende if/else
+                                    
+                                } // Ende ToolbarItemGroup
+                            }// Ende toolbar
                             
-                        } // Ende ToolbarItemGroup
-                    }// Ende toolbar
+                            
+                        }// Ende Section
+                        .font(.system(size: 16, weight: .regular))
+                        
+                        Section {
+                            Toggle("Das Feld Preis/Wert:", isOn: $globaleVariable.preisOderWert ).toggleStyle(SwitchToggleStyle(tint: .blue)).font(.system(size: 16, weight: .regular))
+                        } footer: {
+                            
+                            Text("Beim Einschalten wird das Feld Preis/Wert falls vorhanden, neben dem Gegenstand auf der Liste mitangezeigt.").font(.system(size: 12, weight: .regular))
+                            
+                        } // Ende Section
+                        
+                            
+                            HStack {
+                                Spacer()
+                               
+                                Button {
+                                    print("Titel und Untertitel wurden übernohmen!")
+                                    // Is defined in GlobaleVariablen
+                                    data.save()
+                                    
+                                    isPresented.toggle()
+                                    
+                                } label: {
+                                    Label("Daten übernehmen", systemImage: "arrowshape.turn.up.backward.circle")
+                                    
+                                } // Ende Button
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(Color.white)
+                                .buttonStyle(.borderedProminent)
+                                .cornerRadius(10)
+                                
+                                Spacer()
+                            } // Ende HStack
+                            .padding()
+                            
+                        Text("Beim Drücken auf 'Daten übernehmen' wird das Fenster geschloßen und die einzehlen Parameter werden gespeichert.")
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundColor(.gray)
+                        
+                    } // Ende List
                     
-                
-                }// Ende Section
-                .font(.system(size: 16, weight: .regular))
-                
-                Section {
-                    Toggle("Das Feld Preis/Wert:", isOn: $globaleVariable.preisOderWert ).toggleStyle(SwitchToggleStyle(tint: .blue))
-                } footer: {
-                        
-                        Text("Beim Einschalten wird das Feld Preis/Wert falls vorhanden, neben dem Gegenstand auf der Liste mitangezeigt.")
-                        
-                } // Ende Section
-                .font(.system(size: 16, weight: .regular))
-                
-                VStack{
-                    Spacer()
-                    
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            // Es wurden keine Angaben gemacht
-                            
-                            isPresented.toggle()
-                            
-                        }) {Text("Abbrechen")}
-                            .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
-                        
-                        Button(action: {
-                            
-                            print("Titel und Untertitel wurden übernohmen!")
-                            // Is defined in GlobaleVariablen
-                            data.save()
-                            
-                            isPresented.toggle()
-                            
-                        }) {Text("Daten übernehmen")}
-                            .buttonStyle(.borderedProminent)
-                            .foregroundColor(.white)
-                            .font(.system(size: 16, weight: .regular))
-                            .cornerRadius(10)
-                        Spacer()
-                    } // Ende HStack
                     
                 } // Ende VStack
+                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
                 
-            } // Ende Form
-            .navigationTitle("Parameter für die Objektenliste.").navigationBarTitleDisplayMode(.inline)
+            } // Ende VStack
+            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbenEbene0)
+            .navigationTitle("PDF Objektliste").navigationBarTitleDisplayMode(.large)
+            .navigationBarBackButtonHidden()
+            .navigationBarItems(leading: btnBack)
             
             
-        } // Ende NavigationStack
+        } // Ende GeometryReader
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
-        
+        //.navigationBarTitleDisplayMode(.large)
         
     } // Ende var body
     
 } // Ende struct
 
-
+/*
 // This function start the printing prozess
 // Start from Sheet ObjektListeParameter
 func printItems(pageHeader: String, objektenArray: [ObjectVariable]) {
@@ -164,6 +199,8 @@ class PrintItem: Identifiable {
         self.gegenstandBild = gegenstandBild
     } // Ende init
 } // Ende class
+*/
+
 
 // A custom class that subclasses UIPrintPageRenderer to handle the layout and rendering of content for printing.
 class PrintPageRenderer: UIPrintPageRenderer {
@@ -310,8 +347,6 @@ class PrintPageRenderer: UIPrintPageRenderer {
         // Draw the item textGegenstand.
         let textGegenstand = item.gegenstand as NSString
         textGegenstand.draw(in: rect.insetBy(dx: 25, dy: 10), withAttributes: textGegenstandAttributes)
-        
-        
         
         if globaleVariable.preisOderWert == true {
             

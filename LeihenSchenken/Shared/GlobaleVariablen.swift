@@ -25,7 +25,7 @@ class GlobaleVariable: ObservableObject {
     @Published var parameterDatum: Date = Date()
     @Published var parameterImageString: String = "Kein Bild"
     
-    @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+    @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
    
     @Published var disableDBLadenMenueItem: Bool = ifExistLeiheUndSchenkeDbCopy()
     @Published var disableDBSpeichernMenueItem: Bool = ifExistSpaceForLeiheUndSchenkeDbCopy()
@@ -41,13 +41,13 @@ class GlobaleVariable: ObservableObject {
     
     @Published var refreshViews: Bool = false
     
-    @Published var selectedGegenstand: String = "Neuer Gegenstand"
+    @Published var selectedGegenstand: String = "Neuer ..."
     @Published var selectedGegenstandInt: Int = 0
     @Published var textGegenstandbeschreibung: String = ""
     @Published var selectedVorgangInt: Int = 0
     @Published var selectedPersonInt: Int = 0
     
-    @Published var preisWert: String = "0,0"
+    @Published var preisWert: String = ""
     @Published var textAllgemeineNotizen: String = ""
     @Published var datum: Date = Date()
     
@@ -281,21 +281,31 @@ class Contact: Identifiable {
     
 } // Ende class
 
-// Diese enum wird für Alertmeldung bei der Tab Benuzuer aufgerufen
+// Diese enum wird für Alertmeldung bei der Tab Gegenstand aufgerufen
 enum ActiveAlert {
     case error, delete, information
 } // Ende enum
 
-// Diese enum wird für Alertmeldung bei der Tab1 (Objektliste) aufgerufen, wenn db leer ist
-enum ActiveAlertLeereDB {
-    case informationiPad, informationiPhone
+// Diese enum wird für Alertmeldung bei der Tab Personne aufgerufen
+enum ActiveAlertTab3 {
+    case error, delete
 } // Ende enum
 
 
-// Diese Class definiert Variable die bei änderung keinene refresh der View verursachen
+// Diese enum wird für Alertmeldung bei der Tab1 (Objektliste) aufgerufen, wenn db leer ist
+// oder wenn bei löschen durch swip nach links
+enum ActiveAlertTab1 {
+    case leereDBinformationiPad, leereDBinformationiPhone, deleteObject
+} // Ende enum
 
+
+// Diese Class definiert globale Variable die bei Änderung keinene refresh der View verursachen
 class GlobalStorage {
     
     static var widthFaktorEbene1: Double = 0.97
     static var bottonToolBarHight: Double = tabViewBottomToolbarHight()
+    static var selectedGegenstandTab2: String = ""
+    static var selectedPersonPickerTab3: String = ""
+    
+    
 } // Ende class

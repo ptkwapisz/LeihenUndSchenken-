@@ -64,7 +64,8 @@ struct ShapeViewAddGegenstand: View {
                             TextField("Gegenstand", text: $gegenstandNeu.max(20))
                                 .focused($isInputActive)
                                 .padding(5)
-                                .background(Color(.systemGray6))
+                                .background(Color.gray.opacity(0.4))
+                                .foregroundColor(.black.opacity(0.4))
                                 .submitLabel(.done)
                                 .cornerRadius(5)
                                 .disableAutocorrection(true)
@@ -213,7 +214,7 @@ struct ShapeViewSettings: View {
                     
                 }// Ende Section Farben
                 Section {
-                    Toggle("Tab Handbuch anzeigen", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                    Toggle("Handbuch/Hilfen anzeigen", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
                 } // Ende Section
                 
                 // Prüfen, ob iClaud verfügbar ist
@@ -254,7 +255,6 @@ struct ShapeViewSettings: View {
                 
             } // Ende Form
             .font(.system(size: 14, weight: .regular))
-            //.navigationTitle("App-Einstellungen").navigationBarTitleDisplayMode(.inline)
             
         } // Ende Vstack
         .background(globaleVariable.farbenEbene1)
@@ -290,9 +290,9 @@ struct ShapeViewAbfrage: View {
     var body: some View {
         
         VStack {
-            //Text("")
-            //Text("Abfragefilter").bold()
-            NavigationStack {
+            Text("")
+            Text("Abfragefilter").bold()
+            
                 Form {
                     Section(header: Text("Bedingung").font(.system(size: 16, weight: .regular))) {
                         Picker("Wenn ", selection: $selectedAbfrageFeld1, content: {
@@ -402,12 +402,10 @@ struct ShapeViewAbfrage: View {
                     
                     //} // Ende Section
                 } // Ende Form
-                .navigationTitle("Abfrage").navigationBarTitleDisplayMode(.inline)
-                .background(globaleVariable.farbenEbene1)
-                .cornerRadius(10)
                 
-            } // Ende NavigationStack
         } // Ende VStack
+        .background(globaleVariable.farbenEbene1)
+        .cornerRadius(10)
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
@@ -468,16 +466,16 @@ struct ShapeViewEditUser: View {
                             TextField("Vorname", text: $neuePersonTmp[0].personVorname)
                                 .focused($focusedField, equals: .vorname)
                                 .padding(5)
-                                .background(Color(.systemGray6))
-                                .cornerRadius(5)
+                                .background(Color.gray.opacity(0.4))
+                                .foregroundColor(.black.opacity(0.4))
                                 .submitLabel(.done)
                                 .disableAutocorrection(true)
                             
                             TextField("Namen", text: $neuePersonTmp[0].personNachname)
                                 .focused($focusedField, equals: .name)
                                 .padding(5)
-                                .background(Color(.systemGray6))
-                                .cornerRadius(5)
+                                .background(Color.gray.opacity(0.4))
+                                .foregroundColor(.black.opacity(0.4))
                                 .submitLabel(.done)
                                 .disableAutocorrection(true)
                         } // Ende Section

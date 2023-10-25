@@ -91,7 +91,7 @@ func cleanEingabeMaske () {
     globaleVariable.datum = Date()
     globaleVariable.textAllgemeineNotizen = ""
     globaleVariable.personenParameter.removeAll()
-    globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+    globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false)
     
     
     print("Die Eingabe-Variablen wurden zurückgesetzt.")
@@ -173,7 +173,7 @@ func personenDatenInDatenbankSchreiben(par1: String, par2: String, par3: String)
     // globaleVariable.parameterPerson.removeAll()
     // globaleVariable.parameterPerson = personenArray()
     globaleVariable.personenParameter.removeAll()
-    globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+    globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false)
     
     print("Personendaten wurden in die Tabelle gespeichert...")
     

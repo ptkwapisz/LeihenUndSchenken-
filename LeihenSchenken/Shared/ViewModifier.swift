@@ -15,10 +15,12 @@ struct EditFields: ViewModifier {
             .frame(width: 150, height: 30, alignment: .trailing)
             .submitLabel(.done)
             .font(.system(size: 16, weight: .regular))
-            .background(Color.blue.opacity(0.3))
+            .background(Color.blue.opacity(0.4))
+            .foregroundColor(.black.opacity(0.4))
             .cornerRadius(5)
-            .foregroundColor(.black)
             
+            
+        
     } // Ende func
 } // Ende struct
 
@@ -51,11 +53,11 @@ struct TextFieldEuro: ViewModifier {
     func body(content: Content) -> some View {
         HStack {
             content
-            if !textParameter.isEmpty {
+            //if !textParameter.isEmpty {
                 Text("€")
-                    //.foregroundColor(Color(UIColor.opaqueSeparator))
-                    .foregroundColor(.black.opacity(0.3))
-            } //Ende if !text
+                    .foregroundColor(.black.opacity(0.2))
+                    .padding(.trailing, 5)
+            //} //Ende if !text
         } // Ende HStack
     } // Ende func body
 } // Ende struc

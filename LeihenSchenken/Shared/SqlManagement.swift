@@ -260,17 +260,19 @@ func refreschParameter(){
     // Das Array mit den Standartwerten wird erstellt
     globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
     
-    globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+    globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
     
     //globaleVariable.parameterPerson = personenArray()
     
 } // Ende refreschParameter
 
+
+
 // Dierse Funktion fügt in eine Variable (Type Class) die Tabelle aus einer Datenbank
 // Das Parameter abfrage bestimmt, ob Query der Abfrage mit berücksichtigt werden soll (true)
 func querySQLAbfrageClassObjecte(queryTmp: String, abfrage: Bool) -> [ObjectVariable]  {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    let _ = print("Funktion querySQLAbfrageClassObjecte() wird aufgerufen!")
     var name: [String] = ["","","","","","","","","","",""]
     
     var resultatClass: [ObjectVariable] = [ObjectVariable(perKey: "", gegenstand: "", gegenstandTex: "", gegenstandBild: "", preisWert: "", datum: "", vorgang: "", personVorname: "", personNachname: "", personSex: "", allgemeinerText: "")]
@@ -299,7 +301,7 @@ func querySQLAbfrageClassObjecte(queryTmp: String, abfrage: Bool) -> [ObjectVari
             if let cString0 = sqlite3_column_text(statement, Int32(n)) {
                 name[n] = String(cString: cString0)
             } else {
-                print("Werticht gefunden")
+                print("Wert nicht gefunden")
             } // End if else
         } // Ende for n
         
@@ -319,9 +321,11 @@ func querySQLAbfrageClassObjecte(queryTmp: String, abfrage: Bool) -> [ObjectVari
     
 } // Ende func querySQLAbfrageClassObjekte
 
+ 
+ 
 func querySQLAbfrageClassGegenstaende(queryTmp: String) -> [GegenstandVariable]  {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    let _ = print("Funktion querySQLAbfrageClassGegenstaende() wird aufgerufen!")
     var name: [String] = ["",""]
     
     var resultatClass: [GegenstandVariable] = [GegenstandVariable(perKey: "", gegenstandName: "")]
@@ -346,7 +350,7 @@ func querySQLAbfrageClassGegenstaende(queryTmp: String) -> [GegenstandVariable] 
             if let cString0 = sqlite3_column_text(statement, Int32(n)) {
                 name[n] = String(cString: cString0)
             } else {
-                print("Werticht gefunden")
+                print("Wert nicht gefunden")
             } // End if else
         } // Ende for n
         
@@ -439,24 +443,29 @@ func updateSqliteTabellenField(sqliteFeld: String, neueInhalt: String, perKey: S
     
 } // Ende func
 
+
+
 // Dierse Funktion fügt in eine Variable (Type Class) die Personentabelle aus der Datenbank
 // Der erste parameter ist die Query-String
 // Der zweite Parameter besagt aus welcher Struct diese Funktion aufgerufen wurde
 // Nur bei der ObjectTabelle (Tab1) soll der Zusatz 'globaleVariable.abfrageQueryString' hinzugefügt werden
 // damit die Abfrage und Filter funktionieren.
 func querySQLAbfrageClassPerson(queryTmp: String, isObjectTabelle: Bool) -> [PersonClassVariable]  {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    //@ObservedObject var globaleVariable = GlobaleVariable.shared
     
+    let _ = print("Funktion querySQLAbfrageClassPerson() wird aufgerufen!")
     var name: [String] = ["","","","",""]
     var queryString: String = ""
     
     var resultatClass: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
     
-    if isObjectTabelle == true {
-        queryString = queryTmp + globaleVariable.abfrageQueryString
-    }else{
+    
+    //if isObjectTabelle == true {
+    //    queryString = queryTmp + globaleVariable.abfrageQueryString
+    //}else{
         queryString = queryTmp
-    } // Ende if/else
+    //} // Ende if/else
+    
     
     //print(queryString)
     
@@ -480,9 +489,10 @@ func querySQLAbfrageClassPerson(queryTmp: String, isObjectTabelle: Bool) -> [Per
             } // End if else
         } // Ende for n
         
-        if name[1] != "Neue Person" {
+        //if name[1] != "Neue Person" {
             resultatClass.append(PersonClassVariable(perKey: name[0], personPicker: name[1], personVorname: name[2], personNachname: name[3], personSex: name[4]))
-        }
+        //} // Ende if
+        
     } // Ende while
     
     if sqlite3_finalize(statement) != SQLITE_OK {
@@ -492,11 +502,66 @@ func querySQLAbfrageClassPerson(queryTmp: String, isObjectTabelle: Bool) -> [Per
 
     statement = nil
     
-    resultatClass.sort{($0.personNachname, $0.personVorname) < ($1.personNachname, $1.personVorname)}
+    if isObjectTabelle == true {
+        resultatClass = resultatClass.filter { $0.personNachname != "Neue Person" }
+        resultatClass.sort{($0.personNachname, $0.personVorname) < ($1.personNachname, $1.personVorname)}
+    } // Ende if
     
     return resultatClass
     
-} // Ende func querySQLAbfrageClassObjekte
+} // Ende func querySQLAbfrageClassPerson
+
+
+ /*
+// Dierse Funktion fügt in eine Variable (Type Class) die Personentabelle aus der Datenbank
+// Der erste parameter ist die Query-String
+func querySQLAbfrageClassPersonen(queryTmp: String) -> [PersonClassVariable]  {
+    //@ObservedObject var globaleVariable = GlobaleVariable.shared
+    let _ = print("Funktion querySQLAbfrageClassPersonen() wird aufgerufen!")
+    var name: [String] = ["","","","",""]
+    let queryString: String = queryTmp
+    
+    var resultatClass: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
+    
+    var statement: OpaquePointer?
+    
+    if sqlite3_prepare_v2(db, "\(queryString)", -1, &statement, nil) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error preparing query select: \(errmsg)")
+    }else{
+        resultatClass.removeAll()
+    } // End if
+    
+    while sqlite3_step(statement) == SQLITE_ROW {
+        
+        //var n = 0
+        for n in 0...name.count - 1 {
+            if let cString0 = sqlite3_column_text(statement, Int32(n)) {
+                name[n] = String(cString: cString0)
+            } else {
+                print("Wert nicht gefunden")
+            } // End if else
+        } // Ende for n
+        
+        
+        resultatClass.append(PersonClassVariable(perKey: name[0], personPicker: name[1], personVorname: name[2], personNachname: name[3], personSex: name[4]))
+        
+    } // Ende while
+    
+    if sqlite3_finalize(statement) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error finalizing prepared statement: \(errmsg)")
+    } // End if
+    
+    statement = nil
+    
+    //resultatClass.sort{($0.personNachname, $0.personVorname) < ($1.personNachname, $1.personVorname)}
+    
+    return resultatClass
+    
+} // Ende func querySQLAbfrageClassPersonen
+
+*/
 
 
 // Diese Funktion wird Eingesetzt, um zu prüfen, ob es Verdopellung bei erstellen der Gegenstände
@@ -507,6 +572,7 @@ func querySQLAbfrageClassPerson(queryTmp: String, isObjectTabelle: Bool) -> [Per
 // parPerson[2] = Sex
 // Die Funktion liefert 'true' wenn einer von der Parameter sich in der Datenbank befindet.
 func pruefenDieElementeDerDatenbank(parPerson: [String], parGegenstand: String) -> Bool {
+    let _ = print("Funktion pruefenDieElementeDerDatenbank() wird aufgerufen!")
     var resultat: Bool? = nil
     let parPersonTmp1: Int = parPerson[0].count + parPerson[1].count + parPerson[2].count
     let parGegenstandTmp: Int = parGegenstand.count
@@ -543,7 +609,7 @@ func pruefenDieElementeDerDatenbank(parPerson: [String], parGegenstand: String) 
 // Diese Funktion speichert ein Gegenstaend in die Datenbank in die Tabelle Gegenstaende
 func gegenstandInDatenbankSchreiben(par1: String) {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    let _ = print("Funktion gegenstandInDatenbankSchreiben() wird aufgerufen!")
     let perKeyFormatter: DateFormatter
     perKeyFormatter = DateFormatter()
     perKeyFormatter.dateFormat = "y MM dd, HH:mm"
@@ -565,53 +631,8 @@ func gegenstandInDatenbankSchreiben(par1: String) {
     
 } // Ende func
 
-// Dierse Funktion fügt in eine Variable (Type Class) die Personentabelle aus der Datenbank
-// Der erste parameter ist die Query-String
-func querySQLAbfrageClassPersonen(queryTmp: String) -> [PersonClassVariable]  {
-    //@ObservedObject var globaleVariable = GlobaleVariable.shared
-    
-    var name: [String] = ["","","","",""]
-    let queryString: String = queryTmp
-    
-    var resultatClass: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
-   
-    var statement: OpaquePointer?
-    
-    if sqlite3_prepare_v2(db, "\(queryString)", -1, &statement, nil) != SQLITE_OK {
-        let errmsg = String(cString: sqlite3_errmsg(db)!)
-        print("Error preparing query select: \(errmsg)")
-    }else{
-        resultatClass.removeAll()
-    } // End if
 
-    while sqlite3_step(statement) == SQLITE_ROW {
 
-        //var n = 0
-        for n in 0...name.count - 1 {
-            if let cString0 = sqlite3_column_text(statement, Int32(n)) {
-                name[n] = String(cString: cString0)
-            } else {
-                print("Wert nicht gefunden")
-            } // End if else
-        } // Ende for n
-        
-        
-        resultatClass.append(PersonClassVariable(perKey: name[0], personPicker: name[1], personVorname: name[2], personNachname: name[3], personSex: name[4]))
-        
-    } // Ende while
-    
-    if sqlite3_finalize(statement) != SQLITE_OK {
-        let errmsg = String(cString: sqlite3_errmsg(db)!)
-        print("Error finalizing prepared statement: \(errmsg)")
-    } // End if
-
-    statement = nil
-    
-    //resultatClass.sort{($0.personNachname, $0.personVorname) < ($1.personNachname, $1.personVorname)}
-    
-    return resultatClass
-    
-} // Ende func querySQLAbfrageClassObjekte
 
 
 // Diese Funktion wird in der struc ShapeViewAbfrage (ShapeView) aufgerufen, um den input field 3

@@ -153,14 +153,14 @@ func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
 
 // Zweite Zeile bei der Liste der Objekte
 func subStringOfTextField(parameter: String) -> String {
-    //let _ = print("Funktion subStringOfTextField() wird aufgerufen!")
+    let _ = print("Funktion subStringOfTextField() wird aufgerufen!")
     var resultat: String = ""
     
     if UIDevice.current.userInterfaceIdiom == .phone {
         
        resultat = String(parameter.prefix(30))
         
-    }else{
+    } else {
         
         resultat = String(parameter.prefix(50))
         
@@ -318,3 +318,21 @@ func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
 }// Ende func
 
 
+func genderSymbol(par: String) -> Image {
+   
+    var resultat: Image = Image("")
+    
+    if par == "Mann" {
+        resultat = Image("customMan")
+            
+    } else if par == "Frau" {
+        resultat = Image("cusomFemal")
+            
+    } else if par == "Divers" {
+        resultat = Image("customDiverse")
+           
+    } // Ende if
+    
+    return resultat
+    
+} // Ende func

@@ -32,7 +32,7 @@ struct ContentView: View {
         // Diese Farbe ist auch für den fileExporter und fileImporter gültig
         UINavigationBar.appearance().tintColor = .blue
         
-        UITableViewCell.appearance().backgroundColor = .clear
+        //UITableViewCell.appearance().backgroundColor = .clear
         
     } // Ende init
     
@@ -64,7 +64,11 @@ struct ContentView: View {
             NavigationSplitView(columnVisibility: $globaleVariable.columnVisibility) {
              
                     EingabeMaskePhoneAndPadView()
+                    //.navigationSplitViewColumnWidth(350)
+                    //.frame(minWidth: 300, idealWidth: 350, maxWidth: 350, minHeight: 800, idealHeight: 835, maxHeight: 835)
+                    //.offset(y: -23)
                     .applyModifier(UIDevice.current.userInterfaceIdiom == .pad){$0.toolbar(removing: .sidebarToggle)}
+                
                 
             } detail: {
                 // NavigationStack ist notwändig, damit die Toolbars für Keyboard gezeigt werden.

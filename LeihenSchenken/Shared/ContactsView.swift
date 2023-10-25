@@ -39,6 +39,29 @@ struct ShapeViewAddUser: View {
         
     } // Ende private enum
     
+    // Das ist eigenes Button
+    // Ohne dieses Button wird der Name der View angezeigt (Gegenstandsname)
+    // Wenn man aber den Gegenstandsname ändert bleibt es in der Anzeige als zurück der alte Name.
+    var btnBack : some View { Button(action: {
+        isPresented = false
+    }) {
+        HStack {
+            Image(systemName: "chevron.left").bold()
+                .offset(x: -7)
+            Text("Zurück")
+                .offset(x: -11)
+            Spacer()
+        } // Ende HStack
+        .onDisappear() {
+            // It is like a Cancel Button
+            globaleVariable.searchTextAdressBook = ""
+            print("Disappear in shapeViewAddUser wurde ausgeführt.")
+        } // Ende onDisappear
+        
+    } // Ende Button Label
+    } // Ende some View
+    
+
     var body: some View {
         let _ = print("Struct ShapeViewAddUser wird aufgerufen!")
         
@@ -54,7 +77,8 @@ struct ShapeViewAddUser: View {
                             TextField("Vorname", text: $vorname)
                                 .focused($focusedField, equals: .vornameFokus)
                                 .padding(5)
-                                .background(Color(.systemGray6))
+                                .background(Color.gray.opacity(0.4))
+                                .foregroundColor(.black.opacity(0.4))
                                 .cornerRadius(5)
                                 .submitLabel(.done)
                                 .disableAutocorrection(true)
@@ -62,7 +86,8 @@ struct ShapeViewAddUser: View {
                             TextField("Name", text: $name)
                                 .focused($focusedField, equals: .nameFokus)
                                 .padding(5)
-                                .background(Color(.systemGray6))
+                                .background(Color.gray.opacity(0.4))
+                                .foregroundColor(.black.opacity(0.4))
                                 .cornerRadius(5)
                                 .submitLabel(.done)
                                 .disableAutocorrection(true)
@@ -81,11 +106,14 @@ struct ShapeViewAddUser: View {
                         
                         HStack {
                             Spacer()
-                            Button(action: {
-                                isPresented = false
-                                globaleVariable.searchTextAdressBook = ""
-                            }) {Text("Abbrechen")}
-                                .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                            if UIDevice.current.userInterfaceIdiom == .pad {
+                               
+                                Button(action: {
+                                    isPresented = false
+                                    globaleVariable.searchTextAdressBook = ""
+                                }) {Text("Abbrechen")}
+                                    .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                            } // Ende if
                             
                             Button(action: {
                                 if vorname != "" && name != "" {
@@ -106,10 +134,8 @@ struct ShapeViewAddUser: View {
                                         }else{
                                             
                                             personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
-                                            //globaleVariable.parameterPerson.removeAll()
-                                            //globaleVariable.parameterPerson = personenArray()
                                             globaleVariable.personenParameter.removeAll()
-                                            globaleVariable.personenParameter = querySQLAbfrageClassPersonen(queryTmp: "Select * From Personen")
+                                            globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
                                             
                                             globaleVariable.searchTextAdressBook = ""
                                             print("Person wurde in die Datenbank hinzugefügt!")
@@ -133,6 +159,7 @@ struct ShapeViewAddUser: View {
                             .cornerRadius(10)
                             Spacer()
                         } // Ende HStack
+                        
                         .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
                             Button("OK") {}
                         }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
@@ -170,6 +197,8 @@ struct ShapeViewAddUser: View {
             .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.large)
             
         } // Ende GeometryReader
+        .navigationBarItems(leading: btnBack)
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
         .onAppear{
             
             fetchAllContacts { fetchedContacts in
@@ -177,7 +206,6 @@ struct ShapeViewAddUser: View {
             } // Ende fetchAllContacts
             
         } // Ende onApear
-        .interactiveDismissDisabled()  // Disable dismiss with a swipe
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 if focusedField == .vornameFokus {
@@ -233,8 +261,8 @@ struct ShapeViewAddUser: View {
                     SerchFullTextInAdressbook()
                         .if(UIDevice.current.userInterfaceIdiom == .phone) { view in
                             view.frame(height: 20)
-                        }
-                    
+                        } // Ende if
+                
                     ScrollView {
                         
                         LazyVStack {
@@ -264,15 +292,19 @@ struct ShapeViewAddUser: View {
                                 
                             } // Ende ForEach
                             
+                            
                         } // Ende LazyStack
+                       
                         .padding(5)
                         .background(Color(.systemGray6))
                         .cornerRadius(10)
                         
                     } // Ende ScrollView
-                    .frame(height: 200, alignment: .leading)
+                    .frame(height: 150, alignment: .leading)
                     
                 } // Ende Section
+                   
+                
             ) // Ende return AnyView
             
         } else {

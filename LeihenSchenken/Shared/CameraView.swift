@@ -19,6 +19,7 @@ struct PhotoSelector: View {
     //@StateObject var cameraManager = CameraManager()
     
     var body: some View {
+        let _ = print("Struct PhotoSelector wird aufgerufen!")
         
         Button {
             showSheet = true

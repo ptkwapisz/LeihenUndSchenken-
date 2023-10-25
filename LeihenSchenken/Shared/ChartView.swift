@@ -13,7 +13,7 @@ import UIKit
 // Das ist die View für detalierte Objektangaben mit Foto
 struct ChartView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
+    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State var par1: [ObjectVariable]
@@ -23,7 +23,7 @@ struct ChartView: View {
     
     @State var errorMessageText: String = ""
     @State private var showAlert: Bool = false
-    @State private var activeAlert: ActiveAlert = .error
+    //@State private var activeAlert: ActiveAlert = .error
     @State var showDetailPhoto: Bool = false
     @State var objektEditieren: Bool = false
     
@@ -32,8 +32,11 @@ struct ChartView: View {
     @State var isPresentedTestView: Bool = true
     
     var body: some View {
-        //NavigationStack {
+      
         GeometryReader { geometry in
+            
+            let gegenstandTextWidth = geometry.size.width / 2.6
+            let allgemeinerTextWidth = geometry.size.width / 1.25
             
             VStack {
                 VStack {
@@ -79,7 +82,7 @@ struct ChartView: View {
                             Text("\(par1[par2].gegenstandText)")
                                 .padding(.top, 10)
                                 .padding(.leading, 6)
-                                .frame(width: 160, height: 150, alignment: .topLeading)
+                                .frame(width: gegenstandTextWidth, height: 150, alignment: .topLeading) // - 230
                                 .font(.system(size: 16, weight: .regular))
                                 .foregroundColor(Color.black)
                                 .background(Color(UIColor.lightGray)).opacity(0.4)
@@ -129,7 +132,7 @@ struct ChartView: View {
                         Text("\(par1[par2].allgemeinerText)")
                             .padding(.top, 10)
                             .padding(.leading, 6)
-                            .frame(width: 320, height: 150, alignment: .topLeading)
+                            .frame(width: allgemeinerTextWidth, height: 150, alignment: .topLeading)
                             .font(.system(size: 16, weight: .regular))
                             .foregroundColor(Color.black)
                             .background(Color(UIColor.lightGray)).opacity(0.4)
@@ -162,7 +165,7 @@ struct ChartView: View {
                     .cornerRadius(10)
                     
                     Spacer()
-                    
+                    /*
                     HStack(alignment: .bottom) {
                         
                         Button {
@@ -223,23 +226,77 @@ struct ChartView: View {
                     .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
                     .background(Color(UIColor.lightGray))
                     .foregroundColor(Color.black)
-                    
+                    */
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                 .background(globaleVariable.farbenEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
             .background(globaleVariable.farbenEbene0)
             .navigationTitle("\(par1[par2].gegenstand)")
-            .navigationBarItems(trailing: Button( action: {
-                showChartHilfe = true
-            }) {Image(systemName: "questionmark.circle.fill")
-                    .imageScale(.large)
-            } )
-            .alert("Hilfe für die Objektdeteilansicht", isPresented: $showChartHilfe, actions: {}, message: { Text("Diese Objektdeteilansicht zeigt alle Daten eines Objektes. Falls das Foto vorhanden ist, können Sie durch das drücken auf das Bild eine vergröserte Ansicht dieses Bildes aufrufen. Unten links befindeen sich zwei Tasten: eine mit dem Kreis und Stift Symbol. Wenn Sie drauf drücken können Sie die Daten des Objektes bearbeiten. Mit der andren Taste mit dem Stappelzeichen und einem 'Minus' Symbol können Sie das Objekt löschen.") } // Ende message
-            ) // Ende alert
+            .toolbar{
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    
+                    Button( action: {
+                        objektEditieren = true
+                    }) {Image(systemName: "square.and.pencil")
+                            .imageScale(.large)
+                    } // Ende Image
+                    
+                } // Ende ToolbarGroup
+                
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    
+                    Button( action: {
+                        showAlert = true
+                    }) {Image(systemName: "trash")
+                            .imageScale(.large)
+                    } // Ende Image
+                    .alert(isPresented: $showAlert) {
+                        Alert( title: Text("Wichtige Information!"),
+                               message: Text("Das Objekt: \(par1[par2].gegenstand) wird unwiederuflich gelöscht! Man kann diesen Vorgang nicht rückgängich machen!"),
+                               primaryButton: .destructive(Text("Löschen")) {
+                            
+                            let perKeyTmp = par1[par2].perKey
+                            deleteItemsFromDatabase(tabelle: "Objekte", perKey: perKeyTmp)
+                            print("\(par1[par2].gegenstand)" + " wurde gelöscht")
+                            print(perKeyTmp)
+                            globaleVariable.navigationTabView = 1
+                            refreshAllViews()
+                            showAlert = false
+                            
+                            // Diese Zeile bewirkt, dass die View geschlossen wird
+                            self.presentationMode.wrappedValue.dismiss()
+                        },
+                               secondaryButton: .cancel(Text("Abbrechen")){
+                            print("\(par1[par2].gegenstand)" + " wurde nicht gelöscht")
+                            print("Abgebrochen ....")
+                            refreshAllViews()
+                            showAlert = false
+                        } // Ende secondary Button
+                               
+                        ) // Ende Alert
+                        
+                    } // Ende alert
+                    
+    
+                } // Ende ToolbarGroup
+                
+            
+                if userSettingsDefaults.showHandbuch == true {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        
+                        Button( action: {
+                            showChartHilfe = true
+                        }) {Image(systemName: "questionmark.circle.fill")
+                                .imageScale(.large)
+                        } // Ende Image
+                        
+                    } // Ende ToolbarGroup
+                } // Ende if
+            } // Ende toolbar
             
         } // Ende GeometryReader
         .sheet(isPresented: $showDetailPhoto, content: { ShapeShowDetailPhoto(isPresentedShowDetailPhoto: $showDetailPhoto, par1: $par1, par2: $par2)})
@@ -247,8 +304,8 @@ struct ChartView: View {
                  apply: {
             $0.navigationDestination(isPresented: $objektEditieren, destination:{EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)
                     .navigationBarBackButtonHidden()
-                    //.navigationBarTitleDisplayMode(.inline)
-                    
+                //.navigationBarTitleDisplayMode(.inline)
+                
             })
         }, else: {
             $0.sheet(isPresented: $objektEditieren, content: {EditSheetView(isPresentedChartViewEdit: $objektEditieren, par1: $par1, par2: $par2)
@@ -259,6 +316,9 @@ struct ChartView: View {
                 globaleVariable.columnVisibility = .detailOnly
             } // Ende if
         } // Ende onAppear
+        .alert("Hilfe für die Objektdeteilansicht", isPresented: $showChartHilfe, actions: {}, message: { Text("Diese Objektdeteilansicht zeigt alle Daten eines Objektes. Falls das Foto vorhanden ist, können Sie durch das drücken auf das Bild eine vergröserte Ansicht dieses Bildes aufrufen. Unten links befindeen sich zwei Tasten: eine mit dem Kreis und Stift Symbol. Wenn Sie drauf drücken können Sie die Daten des Objektes bearbeiten. Mit der andren Taste mit dem Stappelzeichen und einem 'Minus' Symbol können Sie das Objekt löschen.") } // Ende message
+        ) // Ende alert
+        
         
         //} // Ende NavigationStack
     } // Ende var body

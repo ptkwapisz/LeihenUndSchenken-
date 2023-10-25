@@ -113,40 +113,17 @@ struct PDFKitView: View {
                     PDFKitRepresentedView(url, version: 1)
                 } // Ende if/else
                 
-                if tabNumber == 4 {
-                    HStack(alignment: .bottom) {
-                        
-                        Button {isSheetPresented.toggle()
-                            
-                        } label: { Label("", systemImage: "pencil.and.outline")
-                            
-                        } // Ende Button
-                        .font(.system(size: 30, weight: .medium))
-                        .foregroundColor(Color.white)
-                        .offset(x: 10)
-                        
-                        Text("|")
-                            .offset(x:3, y: -7)
-                            .foregroundColor(Color.white)
-                        
-                    } // Ende HStack
-                    .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
-                    .background(Color(UIColor.lightGray))
-                    .foregroundColor(Color.black)
-                    .sheet(isPresented: $isSheetPresented, content: { ObjektListeParameter(data: data, isPresented: $isSheetPresented)})
-                    .onChange(of: data.didSave) {
-                               // This will run every time "didSave" changes.
-                               // You can place your logic here as a substitute to .onAppear().
-                                versionCounter += 1
-                        print("Das ist die Anzahl von onChange: \(versionCounter)")
-                        let _: Bool = createObjektenListe(parTitel: data.titel, parUnterTitel: data.unterTitel)
-                           }// Ende onChange
-                    
-                } // Ende if tabNummer
-                
             } // Ende VStack
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)
+            .onChange(of: data.didSave) {
+                // This will run every time "didSave" changes.
+                // You can place your logic here as a substitute to .onAppear().
+                versionCounter += 1
+                print("Das ist die Anzahl von onChange: \(versionCounter)")
+                let _: Bool = createObjektenListe(parTitel: data.titel, parUnterTitel: data.unterTitel)
+            }// Ende onChange
+            
             .onAppear() {
                 if tabNumber == 4 { // Objektenliste
                     versionCounter += 1
@@ -199,7 +176,7 @@ func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
         let pdfPath = docDir.appendingPathComponent("objektenListe.pdf")
         pdfData.write(to: pdfPath, atomically: true)
         print("PDF saved at path: \(pdfPath)")
-        //globaleVariable.pdfFileVersion += 1
+        
     } // Ende if let
 } // Ende func
 

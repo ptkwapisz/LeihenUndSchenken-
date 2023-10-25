@@ -151,14 +151,6 @@ struct EditSheetView: View {
                             neuePersonTmp[0].personSex = par1[par2].personSex
                         }// Ende onApear
                         
-                        /*
-                        .onDisappear(){
-                            isPresentedChartViewEdit = false
-                            globaleVariable.parameterImageString = "Kein Bild"
-                            
-                        } // Ende onDisapear
-                        */
-                        
                     } // Ende VStack
                     .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     //.frame(width: geometry.size.width)
@@ -257,7 +249,6 @@ struct EditGegenstand: View {
             TextField("", text: $gegenstandTmp)
                 .focused($isInputGegenstandActive)
                 .padding(.leading, 6)
-                .foregroundColor(.black)
                 .modifierEditFields()
                 .onAppear(){
                     gegenstandTmp = par1[par2].gegenstand
@@ -289,13 +280,7 @@ struct EditGegenstandText: View {
     var body: some View {
         //NavigationStack {
         VStack{
-            /*
-            HStack {
-                Text("GegenstandText: ")
-                    .font(.system(size: 16, weight: .regular))
-                Spacer()
-            } // Ende HStack
-            */
+            
             TextField("", text: $gegenstandTextTmp, axis: .vertical)
                 .focused($isInputGegenstandTextActive)
                 .padding(.top, 10)
@@ -352,14 +337,13 @@ struct EditPreisWert: View {
                 .modifier(TextFieldEuro(textParameter: $preisWertTmp))
                 .focused($isInputPreisWertActive)
                 .padding(.leading, 6)
-                .foregroundColor(.black)
+                .background(Color.blue.opacity(0.4))
+                .foregroundColor(Color.black.opacity(0.4))
                 .keyboardType(.decimalPad)
                 .frame(width: 150, height: 30, alignment: .trailing)
                 .multilineTextAlignment(.trailing)
-                .modifier(TextFieldEuro(textParameter: $preisWertTmp))
                 .submitLabel(.done)
                 .font(.system(size: 16, weight: .regular))
-                .background(Color.blue.opacity(0.4))
                 .cornerRadius(5)
                 .onReceive(Just(preisWertTmp)) { newValue in
                     // Es soll verhindert werden mit cut/past nicht numerische Werte einzugeben. Zum Beispiel beim iPad
@@ -420,8 +404,10 @@ struct EditDatum: View {
             Spacer()
             DatePicker("", selection: $datumTmp, displayedComponents: [.date])
                 .labelsHidden()
-                .background(Color.blue.opacity(0.3), in: RoundedRectangle(cornerRadius: 5))
-                .foregroundColor(.black)
+                .foregroundColor(.gray)
+                .opacity(0.4)
+                .background(Color.blue)
+                .opacity(0.4)
                 .multilineTextAlignment (.center)
                 .environment(\.locale, Locale.init(identifier: "de"))
                 .font(.system(size: 16, weight: .regular))
@@ -454,13 +440,7 @@ struct EditAllgemeinerText: View {
     var body: some View {
         //NavigationStack {
         VStack{
-            /*
-            HStack {
-                Text("AllgemeinerText: ")
-                    .font(.system(size: 16, weight: .regular))
-                Spacer()
-            } // Ende HStack
-            */
+            
             TextField("", text: $allgemeinerTextTmp, axis: .vertical)
                 .focused($isInputAllgemeinerTextActive)
                 .padding(.top, 10)
@@ -589,8 +569,9 @@ struct EditVorgang: View {
             }) // Ende Picker
             .font(.system(size: 16, weight: .regular))
             .frame(width: 180, height: 30)
+            .padding(.trailing, 5)
             .background(Color.blue.opacity(0.4))
-            .foregroundColor(.black)
+            .foregroundColor(.black.opacity(0.4))
             .cornerRadius(5)
             .onAppear(){
                 vorgangTmp = par1[par2].vorgang
@@ -631,7 +612,7 @@ struct EditPerson: View {
                     .font(.system(size: 16, weight: .regular))
                     .frame(height: 30)
                     .background(Color.blue.opacity(0.4))
-                    .foregroundColor(.black)
+                    .foregroundColor(.black.opacity(0.4))
                     .cornerRadius(5)
                 
             } // Ende Button
