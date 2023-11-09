@@ -215,53 +215,51 @@ class PersonClassVariable: Identifiable {
     
 } // Ende class
 
-class HilfeTexte: ObservableObject  {
-    static let shared = HilfeTexte()
+class HilfeTexte {
     
     // Aus dem Parameterbereich
-    @Published var allgemeineAppInfo: String = "Das ‚Schenk und Leih‘ App (eigentlich ‚Verschenk und Verleih‘ App) ist für die einfache Verwaltung von verliehenen, verschenkten oder auch erhaltenen Gegenständen konzipiert. Sie soll dabei helfen, mit Hilfe der Zuordnung zu festgelegten Personen, den Überblick über diese Gegenstände zu behalten. Informationen, wie: Gegenstandsbeschreibung, Gegenstandsbild, den Preis, das Datum können eingegeben und verwaltet werden. So hat man immer einen Überblick über alles, was man verliehen, verschenkt oder bekommen hat."
+    static var allgemeineAppInfo: String = "Das ‚Schenk und Leih‘ App (eigentlich ‚Verschenk und Verleih‘ App) ist für die einfache Verwaltung von verliehenen, verschenkten oder auch erhaltenen Gegenständen konzipiert. Sie soll dabei helfen, mit Hilfe der Zuordnung zu festgelegten Personen, den Überblick über diese Gegenstände zu behalten. Informationen, wie: Gegenstandsbeschreibung, Gegenstandsbild, den Preis, das Datum können eingegeben und verwaltet werden. So hat man immer einen Überblick über alles, was man verliehen, verschenkt oder bekommen hat."
     
-    @Published var eingabeMaske: String = "Die App beginnt mit der Eingabemaske, wo Sie verschenkte, verliehene oder erhaltene Gegenstände, wie Bücher, CDs, Werkzeuge oder Geld, erfassen können. Vier Standardgegenstände sind voreingestellt, aber Sie können auch eigene hinzufügen. Für zusätzliche Informationen nutzen Sie das Feld 'Gegenstandsbeschreibung', z.B. ISBN oder Genre bei Büchern. Fotos von Gegenständen lassen sich aus Ihrer iPhone-Mediathek ins Feld 'Gegenstandsbild' importieren. Geben Sie den ausgegebenen Betrag oder den verliehenen Geldbetrag im Feld 'Preis/Wert' ein. Im Feld 'Datum' vermerken Sie, wann Sie den Gegenstand verschenkt oder verliehen haben. Wählen Sie im Feld 'Was möchten Sie tun?' zwischen 'verschenken', 'verleihen' oder 'bekommen'. Geben Sie im Feld 'Person' ein, wer den Gegenstand erhalten hat. Im Feld 'Allgemeine Notizen' können Sie den Anlass oder die Situation beschreiben. Durch Abbrechen können Sie die Eingabemaske leeren und neu beginnen."
+    static var eingabeMaske: String = "Die App beginnt mit der Eingabemaske, wo Sie verschenkte, verliehene oder erhaltene Gegenstände, wie Bücher, CDs, Werkzeuge oder Geld, erfassen können. Vier Standardgegenstände sind voreingestellt, aber Sie können auch eigene hinzufügen. Für zusätzliche Informationen nutzen Sie das Feld 'Gegenstandsbeschreibung', z.B. ISBN oder Genre bei Büchern. Fotos von Gegenständen lassen sich aus Ihrer iPhone-Mediathek ins Feld 'Gegenstandsbild' importieren. Geben Sie den ausgegebenen Betrag oder den verliehenen Geldbetrag im Feld 'Preis/Wert' ein. Im Feld 'Datum' vermerken Sie, wann Sie den Gegenstand verschenkt oder verliehen haben. Wählen Sie im Feld 'Was möchten Sie tun?' zwischen 'verschenken', 'verleihen' oder 'bekommen'. Geben Sie im Feld 'Person' ein, wer den Gegenstand erhalten hat. Im Feld 'Allgemeine Notizen' können Sie den Anlass oder die Situation beschreiben. Durch Abbrechen können Sie die Eingabemaske leeren und neu beginnen."
     
-    @Published var tabObjektenListe: String = "In diesem Fenster sehen sie alle Ihre erfasten Objekte gruppiert nach den Vorgängen, wie 'verlien', 'verschenkt', 'bekommen', 'aufbewahren' oder die 'Ideenliste'. Sie können jede Zeile anklicken, um in die Deteilsicht des Objektes zu gelangen. Um ein neues Objekt hinzufügen drücken Sie den Button mit dem Stappel (und dem + Zeichen) unten Links."
+    static var tabObjektenListe: String = "In diesem Fenster sehen sie alle Ihre erfasten Objekte gruppiert nach den Vorgängen, wie 'verlien', 'verschenkt', 'bekommen', 'aufbewahren' oder die 'Ideenliste'. Sie können jede Zeile anklicken, um in die Deteilsicht des Objektes zu gelangen. Um ein neues Objekt hinzufügen drücken Sie den Button mit dem Stappel (und dem + Zeichen) unten Links."
     
-    @Published var tabGegenstandListe: String = "In diesem Fenster können Sie Ihre Gegenstände verwalten. Hier können Sie die Gegenstände löschen (das Icon mit dem Minuszeichen) oder neue Gegenstände eingeben (das Icon mit dem Pluszeichen. Diese Liste der Gegenstände erscheint dann in der Eingabemaske. Die vier Standardgegenstände, wie Buch, Werkzeug, Geld ... können nicht gelöscht werden."
+    static var tabGegenstandListe: String = "In diesem Fenster können Sie Ihre Gegenstände verwalten. Hier können Sie die Gegenstände löschen (das Icon mit dem Minuszeichen) oder neue Gegenstände eingeben (das Icon mit dem Pluszeichen. Diese Liste der Gegenstände erscheint dann in der Eingabemaske. Die vier Standardgegenstände, wie Buch, Werkzeug, Geld ... können nicht gelöscht werden."
     
-    @Published var tabPersonenListe: String = "In diesem Fenster können Sie die Personen verwalten, die Sie beschänken, an die Sie Sachen verleihen und von denen Sie Geschänke erhalten. Sie können die Personen löschen (das Icon mit dem Minuszeichen oder neue Personen eingeben (das Icon mit dem Pluszeichen). Diese Personenliste erscheint dann auch in der Eingabemaske, wenn Sie eine Person eingeben möchten."
+    static var tabPersonenListe: String = "In diesem Fenster können Sie die Personen verwalten, die Sie beschänken, an die Sie Sachen verleihen und von denen Sie Geschänke erhalten. Sie können die Personen löschen (das Icon mit dem Minuszeichen oder neue Personen eingeben (das Icon mit dem Pluszeichen). Diese Personenliste erscheint dann auch in der Eingabemaske, wenn Sie eine Person eingeben möchten."
     
-    @Published var tabObjektenPDFListe: String = "In diesem Fenster wird die Objektenliste gezeigt, die Sie auch von hier drucken können. Die Kopfzeilen können Sie anpassen indem Sie den Button mit dem Stift unten Links anklicken."
+    static var tabObjektenPDFListe: String = "In diesem Fenster wird die Objektenliste gezeigt, die Sie auch von hier drucken können. Die Kopfzeilen können Sie anpassen indem Sie den Button mit dem Stift unten Links anklicken."
     
-    @Published var tabStatistiken: String = "In diesem Fenster werden die Anzahl allen Gegenstände und die Anzahl der Vorgänge angezeigt. Die zahlen sind ungefiltert, das heißt, dass sie den gesamten Bestand also alle Objekte, die in dem Datenbank gespeichert sind, zeigen."
+    static var tabStatistiken: String = "In diesem Fenster werden die Anzahl allen Gegenstände und die Anzahl der Vorgänge angezeigt. Die zahlen sind ungefiltert, das heißt, dass sie den gesamten Bestand also alle Objekte, die in dem Datenbank gespeichert sind, zeigen."
     
-    @Published var tabHandbuch: String = "Das Handbuch beinhaltet alle Hilfetexte von dieser App und zusätzliche Informationen. Mann kann es auf dem Device lesen oder auch ausdrucken."
+    static var tabHandbuch: String = "Das Handbuch beinhaltet alle Hilfetexte von dieser App und zusätzliche Informationen. Mann kann es auf dem Device lesen oder auch ausdrucken."
     
 } // Ende class
 
-class AlertMessageTexte: ObservableObject  {
-    static let shared = AlertMessageTexte()
+class AlertMessageTexte  {
     
     // Menuepunkt: "Parameter zurücksetzen" in DeteilView
-    @Published var showSetupResetMessageText: String = "Durch das Zurücksetzen der Parameter werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün"
+    static var showSetupResetMessageText: String = "Durch das Zurücksetzen der Parameter werden alle Einstellungen auf die Standardwerte zurückgesetzt. Standardwerte sind: Farbe Ebene 0: blau, Farbe Ebene1: grün"
     
-    @Published var showDBResetMessageText: String = "Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt."
+    static var showDBResetMessageText: String = "Durch das Zurücksetzen der Datenbank werden die Datenbank und alle Tabellen gelöscht. Dabei gehen alle gespeicherte Daten verloren. Dies kann nicht rückgängig gemacht werden! Dann werden die Datenbank und alle Tabellen neu erstellt."
     
     //@Published var showExportToCSVMessageText: String = "Alle Objekte aus der Datenbank werden in dem Format SCV in die Datei 'LeiheUndSchenkeDB.CSV' exportiert. Diese Datei überschreibt die letzte Exportversion falls vorhanden!"
     
-    @Published var showDBSichernMessageText: String = "Die Datenbank inclusiwe aller Tabellen wird gesichert. Diese Sicherung überschreibt die letzte Sicherungsversion falls vorhanden!"
+    static var showDBSichernMessageText: String = "Die Datenbank inclusiwe aller Tabellen wird gesichert. Diese Sicherung überschreibt die letzte Sicherungsversion falls vorhanden!"
     
-    @Published var showDBLadenMessageText: String = "Die Datenbank inklusiwe aller Tabellen wird zurückgeladen. Diese Rücksicherung überschreibt unwiederuflich die jetzige Datenbank und ihre alle Tabellen, wie Objekte, Personen und Gegenstände. Dieser Vorgang kann nicht rückgängig gemacht Werden."
+    static var showDBLadenMessageText: String = "Die Datenbank inklusiwe aller Tabellen wird zurückgeladen. Diese Rücksicherung überschreibt unwiederuflich die jetzige Datenbank und ihre alle Tabellen, wie Objekte, Personen und Gegenstände. Dieser Vorgang kann nicht rückgängig gemacht Werden."
     
-    @Published var leereDbMessageTextiPhone: String = "Es befinden sich keine Objekte in der Datenbank. Drücken Sie unten links auf den Stappel mit + Zeichen, um ein neues Objekt zu erfassen und dann in die Datenbank zu speichern."
+    static var leereDbMessageTextiPhone: String = "Es befinden sich keine Objekte in der Datenbank. Drücken Sie unten links auf den Stappel mit + Zeichen, um ein neues Objekt zu erfassen und dann in die Datenbank zu speichern."
    
-    @Published var leereDbMessageTextiPad: String = "Es befinden sich keine Objekte in der Datenbank. Bitte erfassen Sie ein neues Objekt in der Eingabemaske und speichern es in die Datenbank."
+    static var leereDbMessageTextiPad: String = "Es befinden sich keine Objekte in der Datenbank. Bitte erfassen Sie ein neues Objekt in der Eingabemaske und speichern es in die Datenbank."
     
-    @Published var alertTextForEingabemaske: String = ""
+    static var alertTextForEingabemaske: String = ""
     
     init() {
         if UIDevice.current.userInterfaceIdiom == .phone {
-            alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken bleiben Sie bei der Eingabemaske. Wenn Sie 'Verlassen' drücken, werden alle Angaben, fall Sie welche gemacht haben gelöscht. Sie verlassen dann die Eingabemaske und kehren zurück zu der Objektenliste."
+            AlertMessageTexte.alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken bleiben Sie bei der Eingabemaske. Wenn Sie 'Verlassen' drücken, werden alle Angaben, fall Sie welche gemacht haben gelöscht. Sie verlassen dann die Eingabemaske und kehren zurück zu der Objektenliste."
         } else {
-            alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken können Sie weiter Ihre Daten auf der Eingabemaske einfügen. Wenn Sie 'Löschen' drücken, werden alle Felder der Eingabemaske gelöscht und Sie können mit der Eingabe neu anfangen."
+            AlertMessageTexte.alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken können Sie weiter Ihre Daten auf der Eingabemaske einfügen. Wenn Sie 'Löschen' drücken, werden alle Felder der Eingabemaske gelöscht und Sie können mit der Eingabe neu anfangen."
         } // Ende if/else
     } // Ende init
     

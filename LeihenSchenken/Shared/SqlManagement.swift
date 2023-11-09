@@ -399,9 +399,9 @@ func deleteItemsFromDatabase(tabelle: String, perKey: String) {
 
 // Diese Funktion ersetzt ein Tabellenfeld durch ein neues in der Datenbanktabelle Objekte
 // Vorher geschieht die Prüfung, ob die Felder sich unterscheiden
-func updateSqliteTabellenField(sqliteFeld: String, neueInhalt: String, perKey: String) {
+func updateSqliteTabellenField(sqliteFeld: String, neueInhalt: String, perKey: String, tabelle: String) {
     
-    let alterWertQuery = "SELECT \(sqliteFeld) FROM Objekte WHERE perKey = \(perKey)"
+    let alterWertQuery = "SELECT \(sqliteFeld) FROM '\(tabelle)' WHERE perKey = \(perKey)"
     
     let alterWert = querySQLAbfrageArray(queryTmp: alterWertQuery)
     
@@ -414,7 +414,7 @@ func updateSqliteTabellenField(sqliteFeld: String, neueInhalt: String, perKey: S
             print("Bilder sind gleich")
         } // Ende if
     }else{
-        let updateStatementString = "UPDATE Objekte SET \(sqliteFeld) = '\(neueInhalt)' WHERE perKey = \(perKey)"
+        let updateStatementString = "UPDATE '\(tabelle)' SET \(sqliteFeld) = '\(neueInhalt)' WHERE perKey = \(perKey)"
         
         var updateStatement: OpaquePointer?
         
@@ -579,7 +579,7 @@ func pruefenDieElementeDerDatenbank(parPerson: [String], parGegenstand: String) 
     var parPersonTmp2: String = ""
     
     if parGegenstandTmp > 0 {
-        let ergebnis = querySQLAbfrageArray(queryTmp: "SELECT count() gegenstand from Gegenstaende WHERE gegenstandName = '\(parGegenstand)'")
+        let ergebnis = querySQLAbfrageArray(queryTmp: "SELECT count() gegenstandName from Gegenstaende WHERE gegenstandName = '\(parGegenstand)'")
         if Int(ergebnis[0])! > 0 {
             resultat = true
         }else{
@@ -593,6 +593,10 @@ func pruefenDieElementeDerDatenbank(parPerson: [String], parGegenstand: String) 
     
     if parPersonTmp1 > 0 {
         parPersonTmp2 = parPerson[1] + ", " + parPerson[0]
+        print("-----------------------------------")
+        print(parPersonTmp1)
+        print(parPersonTmp2)
+        print(parPerson[2])
         let ergebnis = querySQLAbfrageArray(queryTmp: "SELECT count() personPicker from Personen WHERE personPicker = '\(parPersonTmp2)' AND personSex = '\(parPerson[2])'")
         if Int(ergebnis[0])! > 0 {
             resultat = true
@@ -616,7 +620,7 @@ func gegenstandInDatenbankSchreiben(par1: String) {
     
     let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
     
-    let insertDataToDatenbank = "INSERT INTO gegenstaende(perKey, gegenstandName) VALUES('\(perKey)','\(par1)')"
+    let insertDataToDatenbank = "INSERT INTO gegenstaende(perKey, gegenstandName) VALUES('\(perKey)','\(par1.trimmingCharacters(in: .whitespacesAndNewlines))')"
 
     if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
        SQLITE_OK {

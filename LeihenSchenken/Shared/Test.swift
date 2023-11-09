@@ -294,9 +294,9 @@ func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
             if $0.vorgang == $1.vorgang {
                 return sortDateFormatter.date(from: $0.datum)! < sortDateFormatter.date(from: $1.datum)!
                 
-            }
+            } // Ende if
             return $0.vorgang < $1.vorgang
-        }
+        } // Ende resultat
         
         //print("Sortiert True")
     }else{
@@ -309,15 +309,17 @@ func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
                 
             }
             return $0.vorgang > $1.vorgang
-        }
+        } // Ende resultat
         
         //print("Sortiert False")
-    }// Ende if/else
+    } // Ende if/else
     
     return resultat
-}// Ende func
+} // Ende func
 
 
+
+// Diese Funktion zeigt bei der Personenliste die Gender-Symbole
 func genderSymbol(par: String) -> Image {
    
     var resultat: Image = Image("")
@@ -336,3 +338,5 @@ func genderSymbol(par: String) -> Image {
     return resultat
     
 } // Ende func
+
+

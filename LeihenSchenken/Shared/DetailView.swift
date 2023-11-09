@@ -11,9 +11,10 @@ import SwiftUI
 struct DeteilView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
-    @ObservedObject var hilfeTexte = HilfeTexte.shared
-    
+    //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
+    //@ObservedObject var hilfeTexte = HilfeTexte.shared
+    @State var hilfeTexte = HilfeTexte()
+    @State var alertMessageTexte = AlertMessageTexte()
     
     @State var showAllgemeinesInfo: Bool = false
     
@@ -119,19 +120,19 @@ struct DeteilView: View {
                         } // Ende Menue Image
                         .alert("Trefen Sie eine Wahl!", isPresented: $showSetupReset, actions: {
                             Button("Abbrechen") {}; Button("Ausführen") {deleteUserDefaults()}
-                        }, message: { Text("\(alertMessageTexte.showSetupResetMessageText)") } // Ende message
+                        }, message: { Text("\(AlertMessageTexte.showSetupResetMessageText)") } // Ende message
                         ) // Ende alert
                         .alert("Trefen Sie eine Wahl!", isPresented: $showDBReset, actions: {
                             Button("Abbrechen") {}; Button("Ausführen") {datenbankReset()}
-                        }, message: { Text("\(alertMessageTexte.showDBResetMessageText)") } // Ende message
+                        }, message: { Text("\(AlertMessageTexte.showDBResetMessageText)") } // Ende message
                         ) // Ende alert
                         .alert("Trefen Sie eine Wahl!", isPresented: $showDBSichern, actions: {
                             Button("Abbrechen") {}; Button("DB Sichern") {backupDatabase()}
-                        }, message: { Text(backupTargetStr + ". \(alertMessageTexte.showDBSichernMessageText)") } // Ende message
+                        }, message: { Text(backupTargetStr + ". \(AlertMessageTexte.showDBSichernMessageText)") } // Ende message
                         ) // Ende alert
                         .alert("Trefen Sie eine Wahl!", isPresented: $showDBLaden, actions: {
                             Button("Abbrechen") {}; Button("DB Laden") {loadDatabase()}
-                        }, message: { Text(backupTargetStr + " vom " + getfileCreatedDate() + ". \(alertMessageTexte.showDBLadenMessageText)") } // Ende message
+                        }, message: { Text(backupTargetStr + " vom " + getfileCreatedDate() + ". \(AlertMessageTexte.showDBLadenMessageText)") } // Ende message
                         ) // Ende alert
                         .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
                         .sheet(isPresented: $showStatistikenView, content: {Statistik()})
@@ -161,21 +162,22 @@ struct DeteilView: View {
 
 func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String) {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @ObservedObject var hilfeTexte = HilfeTexte.shared
+    //@ObservedObject var hilfeTexte = HilfeTexte.shared
+    //var hilfeTexte = HilfeTexte()
     
     let returnWert:  (tabName: String, tabHilfe: String)
     
     switch tabNummer {
     case 1:
-        returnWert = (tabName: "Die Liste der Objekte", tabHilfe: "\(hilfeTexte.tabObjektenListe)")
+            returnWert = (tabName: "Die Liste der Objekte", tabHilfe: "\(HilfeTexte.tabObjektenListe)")
     case 2:
-        returnWert = (tabName: "Gegenstände", tabHilfe: "\(hilfeTexte.tabGegenstandListe)")
+            returnWert = (tabName: "Gegenstände", tabHilfe: "\(HilfeTexte.tabGegenstandListe)")
     case 3:
-        returnWert = (tabName: "Personen", tabHilfe: "\(hilfeTexte.tabPersonenListe)")
+            returnWert = (tabName: "Personen", tabHilfe: "\(HilfeTexte.tabPersonenListe)")
     case 4:
-        returnWert = (tabName: "PDF-Liste", tabHilfe: "\(hilfeTexte.tabObjektenPDFListe)")
+            returnWert = (tabName: "PDF-Liste", tabHilfe: "\(HilfeTexte.tabObjektenPDFListe)")
     case 5:
-        returnWert = (tabName: "Handbuch", tabHilfe: "\(hilfeTexte.tabHandbuch)")
+            returnWert = (tabName: "Handbuch", tabHilfe: "\(HilfeTexte.tabHandbuch)")
     default:
         returnWert = (tabName: "", tabHilfe: "")
     } // Ende switch
@@ -379,8 +381,8 @@ struct MyToolbarItemsHilfeButton: ToolbarContent {
         } // Ende if
         
         
-    }
-}
+    } // Ende var body
+} // Ende struct
 
 struct MyToolbarPlusButtonTab1: ToolbarContent {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -402,7 +404,7 @@ struct MyToolbarPlusButtonTab1: ToolbarContent {
                     $0.navigationDestination(isPresented: $showEingabeMaske, destination: { EingabeMaskePhoneAndPadView()
                         
                     })
-                }
+                } // Ende .applyModifier
                
             } // Ende ToolbarItemGroup
         
@@ -441,8 +443,6 @@ struct MyToolbarItemsPrintButton: ToolbarContent {
             } // Ende ToolbarGroup
         } // Ende if
         
-        
-        
     } // Ende var body
 } // Ende struct
 
@@ -474,14 +474,15 @@ struct MyToolbarItemsQueryButton: ToolbarContent {
             } // Ende if anzahlDerObjekte
         } // Ende if globaleVariable
         
-    }
-}
+    } // Ende var body
+} // Ende struct
 
 
 struct MyToolbarItemsHausButton: ToolbarContent {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    @ObservedObject var hilfeTexte = HilfeTexte.shared
+    //@ObservedObject var hilfeTexte = HilfeTexte.shared
+    @State var hilfeTexte = HilfeTexte()
     
     @State var showAllgemeinesInfo: Bool = false
     
@@ -495,7 +496,7 @@ struct MyToolbarItemsHausButton: ToolbarContent {
                     }) {Image(systemName: "house").imageScale(.large)}
                         .alert("Allgemeine Information", isPresented: $showAllgemeinesInfo, actions: {
                             //Button(" - OK - ") {}
-                        }, message: { Text("\(hilfeTexte.allgemeineAppInfo)") } // Ende message
+                        }, message: { Text("\(HilfeTexte.allgemeineAppInfo)") } // Ende message
                         ) // Ende alert
                 } // Ende ToolbarItemGroup
             } // Ende if globaleVariable
@@ -504,8 +505,6 @@ struct MyToolbarItemsHausButton: ToolbarContent {
         
     } // Ende var body
 } // Ende struct
-
-
 
 
 struct MyToolbarItemsEditButton: ToolbarContent {

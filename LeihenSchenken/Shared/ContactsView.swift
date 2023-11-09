@@ -74,7 +74,7 @@ struct ShapeViewAddUser: View {
                     List {
                         Section() {
                             
-                            TextField("Vorname", text: $vorname)
+                            TextField("Vorname", text: $vorname.max(15))
                                 .focused($focusedField, equals: .vornameFokus)
                                 .padding(5)
                                 .background(Color.gray.opacity(0.4))
@@ -83,7 +83,7 @@ struct ShapeViewAddUser: View {
                                 .submitLabel(.done)
                                 .disableAutocorrection(true)
                             
-                            TextField("Name", text: $name)
+                            TextField("Name", text: $name.max(25))
                                 .focused($focusedField, equals: .nameFokus)
                                 .padding(5)
                                 .background(Color.gray.opacity(0.4))
@@ -102,6 +102,7 @@ struct ShapeViewAddUser: View {
                         } // Ende Section
                         .font(.system(size: 16, weight: .regular))
                         
+                        // Auswahl aus dem Adressbuch
                         contactsSection()
                         
                         HStack {
@@ -117,7 +118,11 @@ struct ShapeViewAddUser: View {
                             
                             Button(action: {
                                 if vorname != "" && name != "" {
+                                    
+                                    
+                                    
                                     if isParameterBereich {
+                                        
                                         
                                         personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
                                         // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
@@ -126,7 +131,7 @@ struct ShapeViewAddUser: View {
                                         print("Person wird in die Auswahl hinzugefügt!")
                                         isPresented = false
                                     }else{
-                                        
+                                       
                                         if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
                                             
                                             showWarnung = true

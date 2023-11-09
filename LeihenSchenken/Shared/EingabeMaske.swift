@@ -16,10 +16,13 @@ struct EingabeMaskePhoneAndPadView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
     
-    @ObservedObject var hilfeTexte = HilfeTexte.shared
-    @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
+    //@ObservedObject var hilfeTexte = HilfeTexte.shared
+    //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     
     @StateObject var cameraManager = CameraManager()
+    @State var alertMessageTexte = AlertMessageTexte()
+    
+    @State var hilfeTexte = HilfeTexte()
     
     @State var showParameterHilfe: Bool = false
     //@State var showParameterAllgemeinesInfo: Bool = false // Only in iPhon
@@ -116,6 +119,7 @@ struct EingabeMaskePhoneAndPadView: View {
                     selectedPerson = "Neue Person"
                 }else{
                     selectedPerson = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personPicker
+                  
                 } // Ende if
             } // Ende set
         ) // Ende let
@@ -290,22 +294,29 @@ struct EingabeMaskePhoneAndPadView: View {
                                 Picker("", selection: tapOptionPerson, content: {
                                     ForEach(0..<$globaleVariable.personenParameter.count, id: \.self) { index in
                                         HStack {
-                                            Text("\(globaleVariable.personenParameter[index].personPicker)")//.tag(index)
+                                            Text("\(truncateText(globaleVariable.personenParameter[index].personPicker))")//.tag(index)
+                                                
                                             Spacer()
-                                            genderSymbol(par: globaleVariable.personenParameter[index].personSex)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 20, height: 20)
-                                            
+                                            // Check if the current index matches the selected value. If it does not, display the image.
+                                            if tapOptionPerson.wrappedValue != index {
+                                                genderSymbol(par: globaleVariable.personenParameter[index].personSex)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 20, height: 20)
+                                            } // Ende if
                                         } // Ende HStack
+                                        
                                     } // Ende ForEach
+                                    
                                 }) // Picker
                                 .font(.system(size: 16, weight: .regular))
-                                .frame(width: 150, height: 30)
+                                .frame(width: 175, height: 30)
+                                .truncationMode(.tail)
                                 .padding(.trailing, 5)
                                 .background(Color.blue)
                                 .opacity(0.4)
                                 .cornerRadius(5)
+                                
                                 .applyIf(UIDevice.current.userInterfaceIdiom == .phone,
                                          apply: {
                                     $0.navigationDestination(isPresented: $showSheetPerson, destination: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich)
@@ -315,6 +326,8 @@ struct EingabeMaskePhoneAndPadView: View {
                                 }, else: {
                                     $0.sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
                                 }) // Ende applyIf
+                                
+                                 
                             } // Ende HStack
                             
                             TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
@@ -329,7 +342,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                             .alert(isPresented:$showAlertAbbrechenButton) {
                                                 Alert(
                                                     title: Text("Sie haben folgende Wahl."),
-                                                    message: Text("\(alertMessageTexte.alertTextForEingabemaske)"),
+                                                    message: Text("\(AlertMessageTexte.alertTextForEingabemaske)"),
                                                     primaryButton: .destructive(Text("\(customButton)")) {
                                                         
                                                         // Die Parameterwerte werden gelöscht.
@@ -497,12 +510,51 @@ struct EingabeMaskePhoneAndPadView: View {
         } // Ende onApear
         .interactiveDismissDisabled()  // Disable dismiss with a swipe. Only iPhon
         .alert("Hilfe zu Eingabemaske", isPresented: $showParameterHilfe, actions: {
-        }, message: { Text("\(hilfeTexte.eingabeMaske)") } // Ende message
+        }, message: { Text("\(HilfeTexte.eingabeMaske)") } // Ende message
         ) // Ende alert
     
     } // Ende var body
 
 } // Ende struct
+
+
+
+// What the function do:
+// First, split the string using the comma , as the delimiter.
+// For each side of the split string (left and right), take the first 5 characters and append '...' if there are more than 5 characters.
+// Finally, combine both sides together.
+func truncateText(_ myText: String) -> String {
+    let components = myText.split(separator: ",", maxSplits: 1) // Split by comma
+    
+    guard components.count == 2 else {
+        return myText // Return original text if there's no comma
+    } // Ende guard
+    
+    guard myText.count > 15 else {
+        return myText // Return original text if it is shorter as 15 characters
+    } // Ende guard
+    
+    let left = String(components[0])
+    let right = String(components[1])
+    
+    let truncatedLeft = left.count > 5 ? left.prefix(5) + "..." : left
+    let truncatedRight = right.count > 5 ? right.prefix(5) + "..." : right
+    
+    return truncatedLeft + "," + truncatedRight
+} // Ende func
+
+// What the function do:
+// For the string take the first 5 characters and append '...' if there are more than 5 characters.
+func truncateString(_ myText: String) -> String {
+    
+    guard myText.count > 10 else {
+        return myText // Return original text if it is shorter as 10 characters
+    } // Ende guard
+    
+    let truncatedLeft = myText.count > 5 ? myText.prefix(5) + "..." : myText
+    
+    return truncatedLeft
+} // Ende truncateString
 
 
 struct TextEditorWithPlaceholder: View {

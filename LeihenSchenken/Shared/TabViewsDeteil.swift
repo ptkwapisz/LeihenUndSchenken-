@@ -9,8 +9,9 @@ import SwiftUI
 
 struct deteilTab1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @ObservedObject var alertMessageTexte = AlertMessageTexte.shared
+    //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     
+    @State var alertMessageTexte = AlertMessageTexte()
     @State var zeile: Int = 0
     @State var showEingabeMaske: Bool = false
     @State var showAlert = false
@@ -52,7 +53,8 @@ struct deteilTab1: View {
                         }// Ende Button/label
                         .buttonStyle(.bordered)
                         .font(.system(size: 16, weight: .medium))
-                        .background(Color.blue.opacity(5))
+                        //.background(Color.blue.opacity(5))
+                        .background(globaleVariable.farbenEbene0.opacity(5))
                         .foregroundColor(Color.white)
                         .padding(.leading, 10)
                         .frame(width: 40)
@@ -103,9 +105,9 @@ struct deteilTab1: View {
                                                     let textPrefix = vorgangPrefixDeklination(vorgang:gegVorgang[idx] )
                                                     Text("\(textPrefix)")
                                                     
-                                                    Text(String(objekte[item].personVorname))
+                                                    Text(truncateString(String(objekte[item].personVorname)))
                                                     
-                                                    Text(String(objekte[item].personNachname))
+                                                    Text(truncateString(String(objekte[item].personNachname)))
                                                     
                                                     Spacer()
                                                     
@@ -180,11 +182,11 @@ struct deteilTab1: View {
                     case .leereDBinformationiPhone:
                         return Alert(
                             title: Text("Wichtige Information!"),
-                            message: Text("\(alertMessageTexte.leereDbMessageTextiPhone)"), dismissButton: .default(Text("OK")))
+                            message: Text("\(AlertMessageTexte.leereDbMessageTextiPhone)"), dismissButton: .default(Text("OK")))
                     case .leereDBinformationiPad:
                         return Alert(
                             title: Text("Wichtige Information!"),
-                            message: Text("\(alertMessageTexte.leereDbMessageTextiPad)"), dismissButton: .default(Text("OK")))
+                            message: Text("\(AlertMessageTexte.leereDbMessageTextiPad)"), dismissButton: .default(Text("OK")))
                     case .deleteObject:
                         return Alert(
                             title: Text("Wichtige Information!"),
@@ -239,33 +241,47 @@ struct deteilTab1: View {
 struct deteilTab2: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    //@State var isParameterBereich: Bool = false
-    //@State var gegenstandHinzufuegen: Bool = false
-    //@State var errorMessageText = ""
-   // @State var selectedTypeTmp = ""
+    @FocusState var focused: Bool
     
-    @State private var selectedType: String? = ""
+    @State var selectedRow: String? = ""
     
-    //@State private var showAlert = false
-    //@State private var activeAlert: ActiveAlert = .error
+    @State var editedName: String = ""
+    @State var editedNewName: String = ""
+    @State var showEditGegenstand: Bool = false
+    @State var gegenstandPerKey: String = ""
+    
+    
+    let gegenstaende = querySQLAbfrageClassGegenstaende(queryTmp: "Select * FROM Gegenstaende")
     
     var body: some View {
         
-        let gegenstaende = querySQLAbfrageClassGegenstaende(queryTmp: "Select * FROM Gegenstaende")
-       
-            GeometryReader { geometry in
+        GeometryReader { geometry in
+            
                 VStack {
                     Text("")
                     Text("Favoritenliste").bold()
                     
-                    List(gegenstaende, id: \.gegenstandName, selection: $selectedType) { index in
+                    List(gegenstaende, id: \.gegenstandName, selection: $selectedRow) { index in
                         Text(index.gegenstandName)
-                        
+                            .swipeActions (edge: .leading) {
+                                if selectedRow == index.gegenstandName && index.gegenstandName != "Buch" && index.gegenstandName != "CD/DVD" && index.gegenstandName != "Geld" && index.gegenstandName != "Werkzeug"{
+                                    Button{
+                                        showEditGegenstand = true
+                                        editedName = index.gegenstandName
+                                        //editedNewName = index.gegenstandName
+                                        gegenstandPerKey = index.perKey
+                                    } label: {
+                                        Label("Bearbeiten", systemImage: "pencil")
+                                    } // Ende Button Label
+                                } // Ende if
+                            } // Ende swpeAction
+                            .tint(.blue)
                     } // Ende List
                     .cornerRadius(10)
-                    .onChange(of: selectedType){
-                        GlobalStorage.selectedGegenstandTab2 = selectedType!
+                    .onChange(of: selectedRow){
+                        GlobalStorage.selectedGegenstandTab2 = selectedRow!
                     } // Ende onChange
+                    
                     
                 } // Ende Vstack
                 .background(globaleVariable.farbenEbene1)
@@ -274,29 +290,45 @@ struct deteilTab2: View {
                     // Wenn die Datenbank nicht leer ist:
                     // wird der Wert zugewiesen damit in der Liste die erste Zeile markiert wird
                     if gegenstaende.count != 0 {
-                        selectedType = gegenstaende[0].gegenstandName
+                        selectedRow = gegenstaende[0].gegenstandName
                     } // Ende if
                 } // Ende onAppear
-                
-            } // Ende GeometryReader
+            
+        } // Ende GeometryReader
+        .applyIf(UIDevice.current.userInterfaceIdiom == .phone,
+                 apply: {$0.navigationDestination(isPresented: $showEditGegenstand, destination: { ShapeViewEditGegenstand(isPresented: $showEditGegenstand, gegenstandAlt: $editedName, gegenstandPerKey: $gegenstandPerKey  )
+                .navigationBarBackButtonHidden()
+                .navigationBarTitleDisplayMode(.inline)
+        }) },
+                 else: {
+            
+            $0.sheet(isPresented: $showEditGegenstand, content: { ShapeViewEditGegenstand(isPresented: $showEditGegenstand, gegenstandAlt: $editedName, gegenstandPerKey: $gegenstandPerKey )})
+        } // Ende else
+        ) // Ende applyIf
         
-    }// Ende var body
+    } // Ende var body
     
 } // Ende struct
+
+
 
 struct deteilTab3: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
 
     @State private var showAlert = false
-    
+    @State var showingEditPersonView: Bool = false
     @State var selectedType: String? = GlobalStorage.selectedPersonPickerTab3
+    
+    @State var personPickerTmp: String = "Nachname, Vorname"
+    @State var tabelleDB: String = "Personen"
+    @State var neuePersonTmp: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
     
     var body: some View {
       
         let person = querySQLAbfrageClassPerson(queryTmp: "Select * from Personen", isObjectTabelle: true)
-        //let person = querySQLAbfrageClassPersonen(queryTmp: "Select * from Personen")
+       
         
-        NavigationStack {
+        //NavigationStack {
             GeometryReader { geometry in
                 
                 VStack {
@@ -310,9 +342,25 @@ struct deteilTab3: View {
                             genderSymbol(par: index.personSex)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 25, height: 25)
                             
                         } // Ende HStack
+                        .swipeActions (edge: .leading) {
+                           // if ...
+                                Button{
+                                    neuePersonTmp[0].perKey = index.perKey
+                                    neuePersonTmp[0].personVorname = index.personVorname
+                                    neuePersonTmp[0].personNachname = index.personNachname
+                                    neuePersonTmp[0].personSex = index.personSex
+                                    showingEditPersonView = true
+                                    
+                                } label: {
+                                    Label("Bearbeiten", systemImage: "pencil")
+                                } // Ende Button Label
+                           // } // Ende if
+                        } // Ende swpeAction
+                        .tint(.blue)
+                        
                     } // Ende List
                     .cornerRadius(10)
                     .onChange(of: selectedType){
@@ -336,7 +384,12 @@ struct deteilTab3: View {
                     
                 } // Ende alert
             } // Ende GeometryReader
-        } // Ende NAvigationStack
+            .applyIf(UIDevice.current.userInterfaceIdiom == .phone, apply: { $0.navigationDestination(isPresented: $showingEditPersonView, destination: { ShapeViewEditUser(isPresentedShapeViewEditUser: $showingEditPersonView, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp, tabelleDB: $tabelleDB)
+                    .navigationBarBackButtonHidden()
+                    .navigationBarTitleDisplayMode(.large)
+            })}, else: {$0.sheet(isPresented: $showingEditPersonView, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $showingEditPersonView, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp, tabelleDB: $tabelleDB)})})
+        
+       // } // Ende NAvigationStack
     
     }// Ende var body
     

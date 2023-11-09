@@ -12,8 +12,7 @@ import Contacts
 
 struct ShapeViewAddGegenstand: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
+   
     @Binding var isPresented: Bool
     @Binding var isParameterBereich: Bool
     
@@ -57,7 +56,7 @@ struct ShapeViewAddGegenstand: View {
                         Text("Gegenstand hinzufügen").bold()
                             .padding(.leading, 20)
                         
-                    }
+                    } // Ende HStack
                     
                     List {
                         Section(){
@@ -158,6 +157,7 @@ struct ShapeViewAddGegenstand: View {
                                     gegenstandNeu = ""
                                     
                                 } // Ende Button
+                                .buttonStyle(.bordered)
                             } // Ende HStack
                             
                         } // Ende ToolbarItemGroup
@@ -173,6 +173,174 @@ struct ShapeViewAddGegenstand: View {
             .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
             .background(globaleVariable.farbenEbene0)
             .navigationTitle("Neuer Gegenstand")
+            
+        } // Ende GeometryReader
+        .interactiveDismissDisabled()  // Disable dismiss with a swipe
+        .navigationBarItems(leading: btnBack)
+        
+    } // Ende var body
+} // Ende struct
+
+
+// Diese View wird aufgerufen wenn in der Tab2 (Favoritenliste der Gegenstände)
+// ein Gegenstand bearbeitet wird.
+struct ShapeViewEditGegenstand: View {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
+    @Binding var isPresented: Bool
+    @Binding var gegenstandAlt: String
+    @Binding var gegenstandPerKey: String
+    
+    @State var gegenstandNeu: String = ""
+    @State var showWarnung: Bool = false
+    
+    @FocusState var isInputActive: Bool
+    
+    // Das ist eigenes Button
+    // Ohne dieses Button wird der Name der View angezeigt (Gegenstandsname)
+    // Wenn man aber den Gegenstandsname ändert bleibt es in der Anzeige als zurück der alte Name.
+    var btnBack : some View { Button(action: {
+        isPresented = false
+    }) {
+        HStack {
+            Image(systemName: "chevron.left").bold()
+                .offset(x: -7)
+            Text("Zurück")
+                .offset(x: -11)
+            Spacer()
+        } // Ende HStack
+        .onDisappear() {
+            // It is like a Cancel Button
+            print("Disappear in shapeViewEditUser wurde ausgeführt.")
+        } // Ende onDisappear
+        
+    } // Ende Button Label
+    } // Ende some View
+    
+    var body: some View {
+        
+        GeometryReader { geometry in
+            VStack {
+                VStack {
+                    
+                    Text("")
+                    HStack {
+                        Text("Gegenstand bearbeiten").bold()
+                            .padding(.leading, 20)
+                        
+                    } // Ende HStack
+                    
+                    List {
+                        Section(){
+                            TextField("Gegenstand", text: $gegenstandNeu.max(20))
+                                .focused($isInputActive)
+                                .padding(5)
+                                .background(Color.gray.opacity(0.4))
+                                .foregroundColor(.black.opacity(0.4))
+                                .submitLabel(.done)
+                                .cornerRadius(5)
+                                .disableAutocorrection(true)
+                        }
+                        Section(){
+                            
+                            HStack {
+                                
+                                Spacer()
+                                if UIDevice.current.userInterfaceIdiom == .pad {
+                                    Button(action: {
+                                        isPresented = false
+                                        
+                                        //self.presentationMode.wrappedValue.dismiss()
+                                        print("Gegenstand wurde in die Auswahl nicht hinzugefügt!")
+                                    }) {Text("Abbrechen")}
+                                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                                } // Ende if
+                                
+                                Button(action: {
+                                    if gegenstandNeu != "" {
+                                        
+                                        if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
+                                            
+                                            showWarnung = true
+                                            
+                                        }else{
+                                            
+                                            //gegenstandInDatenbankSchreiben(par1: gegenstandNeu)
+                                            
+                                            
+                                            updateSqliteTabellenField(sqliteFeld: "gegenstandName", neueInhalt: gegenstandNeu, perKey: gegenstandPerKey, tabelle: "Gegenstaende")
+                                            globaleVariable.parameterGegenstand.removeAll()
+                                            globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
+                                            
+                                            print("Gegenstand wurde in die Datenbank hinzugefügt!")
+                                            
+                                            isPresented = false
+                                        } // Ende guard/else
+                                        
+                                        
+                                        
+                                    } // Ende if
+                                }) {
+                                    
+                                    Text(" Übernehmen ")
+                                    
+                                }// Ende Button
+                                .disabled(gegenstandNeu == "" || gegenstandNeu == gegenstandAlt ? true : false)
+                                .buttonStyle(.borderedProminent)
+                                .foregroundColor(.white)
+                                .font(.system(size: 16, weight: .regular))
+                                .cornerRadius(10)
+                                
+                                Spacer()
+                                
+                            } // Ende Hstack
+                            Text("Die Taste 'Übernehmen' wird aktiv, wenn der Gegenstand bearbeitet wurde. Dann werden die Änderungen dauerhaft in die Datenbank gespeichert.")
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundColor(.gray)
+                            
+                        } // Ende Section
+                        .alert("Warnung zu neuem Gegenstand", isPresented: $showWarnung, actions: {
+                            Button(" - OK - ") {}
+                        }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Gegenständen gespeichert werden!") } // Ende message
+                        ) // Ende alert
+                        
+                    } // Ende List
+                    //.frame(width: geometry.size.width, height: geometry.size.height)
+                    .font(.system(size: 16, weight: .regular))
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            HStack {
+                                Text("\(gegenstandNeu.count)/20")
+                                    .font(.system(size: 16, weight: .regular))
+                                    .foregroundColor(.gray)
+                                    .padding()
+                                Spacer()
+                                
+                                Button("Abbrechen") {
+                                    isInputActive = false
+                                    gegenstandNeu = gegenstandAlt
+                                }
+                                .buttonStyle(.bordered)
+                            } // Ende HStack
+                            
+                        } // Ende ToolbarItemGroup
+                    } // Ende Toolbar
+                    
+                } // Ende Vstack
+                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbenEbene1)
+                .cornerRadius(10)
+                
+                
+            } // Ende VStack
+            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbenEbene0)
+            .navigationTitle("\(gegenstandAlt)").navigationBarTitleDisplayMode(.large)
+            .onAppear() {
+                
+                gegenstandNeu = gegenstandAlt
+            } // Ende onApear
+            
             
         } // Ende GeometryReader
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
@@ -411,15 +579,28 @@ struct ShapeViewAbfrage: View {
     } // Ende var body
 } // Ende struct
 
-// Wird bei Objekt editieren aufgerufen und nicht bei Tab Personen
+// Wird bei Objekt editieren aufgerufen und bei Tab Personen (edit)
 struct ShapeViewEditUser: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     @Binding var isPresentedShapeViewEditUser: Bool
     @Binding var personPickerTmp: String
     @Binding var neuePersonTmp: [PersonClassVariable]
+    @Binding var tabelleDB: String
     
-    @State var showHilfe: Bool = false
+    @State var showAlertWarnung: Bool = false
+    
+    @State var altePersonTmp: [PersonClassVariable] = [
+        PersonClassVariable(
+            perKey: "",
+            personPicker: "",
+            personVorname: "",
+            personNachname: "",
+            personSex: ""
+        )
+    ]
+    
+    @State var showAlertView: Bool = false
     
     @State var selectedPerson_sexInt: Int = 0
     
@@ -453,99 +634,128 @@ struct ShapeViewEditUser: View {
     } // Ende some View
     
     var body: some View {
-        //NavigationStack {
-        GeometryReader { geometry in
-            VStack {
-                VStack {
-                    Text("")
-                    Text("Person bearbeiten").bold()
-                    
-                    List {
-                        Section() {
-                            
-                            TextField("Vorname", text: $neuePersonTmp[0].personVorname)
-                                .focused($focusedField, equals: .vorname)
-                                .padding(5)
-                                .background(Color.gray.opacity(0.4))
-                                .foregroundColor(.black.opacity(0.4))
-                                .submitLabel(.done)
-                                .disableAutocorrection(true)
-                            
-                            TextField("Namen", text: $neuePersonTmp[0].personNachname)
-                                .focused($focusedField, equals: .name)
-                                .padding(5)
-                                .background(Color.gray.opacity(0.4))
-                                .foregroundColor(.black.opacity(0.4))
-                                .submitLabel(.done)
-                                .disableAutocorrection(true)
-                        } // Ende Section
-                        
-                        
-                        Section() {
-                            Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
-                                
-                                ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
-                                    Text("\(globaleVariable.parameterPersonSex[index])")
-                                    
-                                } // Ende ForEach
-                            } // Ende Picker
-                            
-                        } // Ende Section
-                        
-                        HStack {
-                            Spacer()
-                            
-                            if UIDevice.current.userInterfaceIdiom == .pad {
-                                Button(action: {
-                                    isPresentedShapeViewEditUser = false
-                                }) {Text("Abbrechen")}
-                                    .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
-                            } // Ende if
-                            
-                            Button(action: {
-                                
-                                if neuePersonTmp[0].personVorname != "" || neuePersonTmp[0].personNachname != "" {
-                                    personPickerTmp = " " + neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
-                                    isPresentedShapeViewEditUser = false
-                                    
-                                } else {
-                                    
-                                    print("Die Felder sind leer")
-                                } // Ende if/else
-                                //self.presentationMode.wrappedValue.dismiss()
-                                
-                            }) {
-                                
-                                Text("Speichern")
-                                
-                            } // Ende Button
-                            .buttonStyle(.borderedProminent)
-                            .foregroundColor(.white)
-                            .font(.system(size: 16, weight: .regular))
-                            .cornerRadius(10)
-                            Spacer()
-                        } // Ende HStack
-                    }//Ende List
-                } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
-                .cornerRadius(10)
-                
-                /*
-                .frame(width: geometry.size.width)
-                .background(globaleVariable.farbenEbene1)
-                .cornerRadius(10)
-                */
-            } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
-            .navigationTitle("\(neuePersonTmp[0].personVorname + " " + neuePersonTmp[0].personNachname)").navigationBarTitleDisplayMode(.large)
-            
-            } // Ende Geometry Reader
-        .navigationBarItems(leading: btnBack)
         
-        //} // Ende NavigationStack
-       
+        GeometryReader { geometry in
+           VStack {
+                VStack {
+                    VStack {
+                        Text("")
+                        Text("Person bearbeiten").bold()
+                        
+                        List {
+                            Section() {
+                                Text("Vorname:")
+                                TextField("Vorname", text: $neuePersonTmp[0].personVorname.max(15))
+                                    .focused($focusedField, equals: .vorname)
+                                    .padding(5)
+                                    .background(Color.gray.opacity(0.4))
+                                    .foregroundColor(.black.opacity(0.4))
+                                    .submitLabel(.done)
+                                    .disableAutocorrection(true)
+                                
+                                Text("Nachname:")
+                                TextField("Namen", text: $neuePersonTmp[0].personNachname.max(25))
+                                    .focused($focusedField, equals: .name)
+                                    .padding(5)
+                                    .background(Color.gray.opacity(0.4))
+                                    .foregroundColor(.black.opacity(0.4))
+                                    .submitLabel(.done)
+                                    .disableAutocorrection(true)
+                            } // Ende Section
+                            
+                            Section() {
+                                Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
+                                    ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
+                                        Text("\(globaleVariable.parameterPersonSex[index])")
+                                        
+                                    } // Ende ForEach
+                                    .onChange(of: selectedPerson_sexInt) {
+                                        neuePersonTmp[0].personSex = globaleVariable.parameterPersonSex[selectedPerson_sexInt]
+                                        
+                                        refreshAllViews()
+                                    }
+                                } // Ende Picker
+                                
+                            } // Ende Section
+                            
+                            HStack {
+                                Spacer()
+                                
+                                if UIDevice.current.userInterfaceIdiom == .pad {
+                                    Button(action: {
+                                        isPresentedShapeViewEditUser = false
+                                    }) {Text("Abbrechen")}
+                                        .buttonStyle(.bordered).foregroundColor(.blue).font(.system(size: 16, weight: .regular))
+                                } // Ende if
+                                
+                                Button(action: {
+                                    
+                                    if tabelleDB == "Personen" {
+                                        personPickerTmp = neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
+                                        neuePersonTmp[0].personSex = globaleVariable.parameterPersonSex[selectedPerson_sexInt]
+                                        
+                                        // Die geänderte Personendaten werden in die Table Personen gespeichert
+                                        
+                                        updateSqliteTabellenField(sqliteFeld: "personPicker", neueInhalt: personPickerTmp, perKey: neuePersonTmp[0].perKey, tabelle: "Personen")
+                                        
+                                        updateSqliteTabellenField(sqliteFeld: "personVorname", neueInhalt: neuePersonTmp[0].personVorname, perKey: neuePersonTmp[0].perKey, tabelle: "Personen")
+                                        
+                                        updateSqliteTabellenField(sqliteFeld: "personNachname", neueInhalt: neuePersonTmp[0].personNachname, perKey: neuePersonTmp[0].perKey, tabelle: "Personen")
+                                        
+                                        updateSqliteTabellenField(sqliteFeld: "personSex", neueInhalt: neuePersonTmp[0].personSex, perKey: neuePersonTmp[0].perKey, tabelle: "Personen")
+                                        
+                                        isPresentedShapeViewEditUser = false
+                                        //} // Ende if/else
+                                    } else {
+                                        
+                                        print("Die tabelleDB ist gleich 'Objekte' ")
+                                    } // Ende if/else
+                                    
+                                }) {
+                                    
+                                    Text(" Übernehmen ")
+                                    
+                                } // Ende Button
+                                .disabled(editCheck())
+                                .buttonStyle(.borderedProminent)
+                                .foregroundColor(.white)
+                                .font(.system(size: 16, weight: .regular))
+                                .cornerRadius(10)
+                                
+                                Spacer()
+                            } // Ende HStack
+                            
+                            
+                            VStack{
+                                if tabelleDB == "Personen" {
+                                    Text("Die Taste 'Übernehmen' wird aktiv, wenn der Vorname oder Nachname oder Geschlecht geändert wurden und die geänderte Person sich nicht in der Favoritenliste befindet. Die geänderte Personendaten werden nur in die Favoritenliste gespeichert." )
+                                } else {
+                                    Text("Die Taste 'Übernehmen' wird aktiv, wenn der Vorname oder Nachname oder Geschlecht geändert wurden. Die geänderte Personendaten werden nur nur bei dem ausgewählten Objekt gespeichert.")
+                                } // Ende if/else
+                            }
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundColor(.gray)
+                            
+                        }//Ende List
+                        
+                    } // Ende VStack
+                    .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .background(globaleVariable.farbenEbene1)
+                    .cornerRadius(10)
+                    
+                } // Ende VStack
+                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+                .background(globaleVariable.farbenEbene0)
+                .navigationTitle("\(neuePersonTmp[0].personVorname + " " + neuePersonTmp[0].personNachname)").navigationBarTitleDisplayMode(.large)
+                
+            } // Ende VStack
+        .alert("Warnung!", isPresented: $showAlertView, actions: {
+            Button(" - OK - ") {}
+        }, message: { Text("Die Peerson \(neuePersonTmp[0].personVorname) \(neuePersonTmp[0].personNachname) geschlecht: \(neuePersonTmp[0].personSex) befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
+        ) // Ende alert
+            
+       } // Ende Geometry Reader
+        .navigationBarItems(leading: btnBack)
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
@@ -559,12 +769,12 @@ struct ShapeViewEditUser: View {
                         
                         Spacer()
                         
-                         Button("Abbrechen") {
-                         //neuePersonTmp[0].personVorname = ""
-                         focusedField = nil
-                         print("Abbrechen Button Vorname wurde gedrückt!")
-                         } // Ende Button
-                         
+                        Button("Abbrechen") {
+                            //neuePersonTmp[0].personVorname = ""
+                            focusedField = nil
+                            print("Abbrechen Button Vorname wurde gedrückt!")
+                        } // Ende Button
+                        
                     } // Ende HStack
                 }else if focusedField == .name  {
                     HStack{
@@ -576,12 +786,12 @@ struct ShapeViewEditUser: View {
                         
                         Spacer()
                         
-                         Button("Abbrechen") {
-                         //neuePersonTmp[0].personNachname = ""
-                         focusedField = nil
-                         print("Abbrechen Button Nachname wurde gedrückt!")
-                         } // Ende Button
-                         
+                        Button("Abbrechen") {
+                            //neuePersonTmp[0].personNachname = ""
+                            focusedField = nil
+                            print("Abbrechen Button Nachname wurde gedrückt!")
+                        } // Ende Button
+                        
                     } // Ende HStack
                 } // Ende if/else
                 
@@ -589,8 +799,54 @@ struct ShapeViewEditUser: View {
             
         } // Ende toolbar
         .font(.system(size: 16, weight: .regular))
+        .onAppear() {
+            
+            switch neuePersonTmp[0].personSex {
+                case "Frau":
+                    selectedPerson_sexInt = 0
+                    
+                case "Mann":
+                    selectedPerson_sexInt = 1
+                    
+                case "Divers":
+                    selectedPerson_sexInt = 2
+                    
+                default:
+                    print("Default from switch from onApear")
+                    
+            } // Ende switch
+            
+            altePersonTmp[0].personVorname = neuePersonTmp[0].personVorname
+            altePersonTmp[0].personNachname = neuePersonTmp[0].personNachname
+            altePersonTmp[0].personSex = neuePersonTmp[0].personSex
+            altePersonTmp[0].perKey = neuePersonTmp[0].perKey
+            
+        } // Ende onApear
         
     } // Ende var body
+    
+    func editCheck() -> Bool {
+        var resultat = true
+        
+        if neuePersonTmp[0].personVorname.isEmpty || neuePersonTmp[0].personNachname.isEmpty {
+            resultat = true
+            
+        } else if  neuePersonTmp[0].personNachname.trimmingCharacters(in: .whitespacesAndNewlines) == altePersonTmp[0].personNachname.trimmingCharacters(in: .whitespacesAndNewlines) && neuePersonTmp[0].personVorname.trimmingCharacters(in: .whitespacesAndNewlines) == altePersonTmp[0].personVorname.trimmingCharacters(in: .whitespacesAndNewlines) && neuePersonTmp[0].personSex == altePersonTmp[0].personSex {
+            resultat = true
+            
+        } else  if pruefenDieElementeDerDatenbank(parPerson: ["\(neuePersonTmp[0].personVorname.trimmingCharacters(in: .whitespacesAndNewlines))", "\(neuePersonTmp[0].personNachname.trimmingCharacters(in: .whitespacesAndNewlines))", "\(neuePersonTmp[0].personSex)"], parGegenstand: "") {
+            resultat = true
+            
+        } else {
+           
+            resultat = false
+            
+        } // Ende if
+        
+        return resultat
+        
+    } // Ende func
+    
 } // Ende struct
 
 struct ShapeShowDetailPhoto: View {

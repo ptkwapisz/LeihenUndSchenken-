@@ -159,9 +159,9 @@ func personenDatenInDatenbankSchreiben(par1: String, par2: String, par3: String)
     perKeyFormatter.dateFormat = "y MM dd, HH:mm"
     
     let perKey = erstellePerKey(par1: perKeyFormatter.string(from: globaleVariable.datum))
-    let personPickerTemp: String = par2 + ", " + par1
+    let personPickerTemp: String = par2.trimmingCharacters(in: .whitespacesAndNewlines) + ", " + par1.trimmingCharacters(in: .whitespacesAndNewlines)
     
-    let insertDataToDatenbank = "INSERT INTO Personen(perKey, personPicker, personVorname, personNachname, personSex) VALUES('\(perKey)', '\(personPickerTemp)', '\(par1)', '\(par2)', '\(par3)')"
+    let insertDataToDatenbank = "INSERT INTO Personen(perKey, personPicker, personVorname, personNachname, personSex) VALUES('\(perKey)', '\(personPickerTemp)', '\(par1.trimmingCharacters(in: .whitespacesAndNewlines))', '\(par2.trimmingCharacters(in: .whitespacesAndNewlines))', '\(par3)')"
 
     if sqlite3_exec(db, insertDataToDatenbank, nil, nil, nil) !=
        SQLITE_OK {

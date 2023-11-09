@@ -26,6 +26,7 @@ struct EditSheetView: View {
     @State var gegenstandBildTmp: String = ""
     @State var vorgangTmp: String = ""
     @State var personPickerTmp: String = ""
+    @State var tabelleDB: String = "Objekte"
     @State var neuePersonTmp: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
  
     
@@ -63,7 +64,7 @@ struct EditSheetView: View {
     } // Ende private enum
     
     var body: some View {
-        //NavigationStack {
+ 
             GeometryReader { geometry in
                 VStack {
                     VStack {
@@ -80,8 +81,8 @@ struct EditSheetView: View {
                                 .focused($focusedEditField, equals: .betragKeyboard)
                             EditDatum(par1: $par1, par2: $par2, datumTmp: $datumTmp)
                             EditVorgang(par1: $par1, par2: $par2, vorgangTmp: $vorgangTmp)
-                            EditPerson(par1: $par1, par2: $par2, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
-                            
+                            EditPerson(par1: $par1, par2: $par2, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp, tabelleDB: $tabelleDB)
+                        
                             EditAllgemeinerText(par1: $par1, par2: $par2, allgemeinerTextTmp: $allgemeinerTextTmp)
                                 .focused($focusedEditField, equals: .text2Keyboard)
                             
@@ -100,34 +101,34 @@ struct EditSheetView: View {
                                 } // Ende if
                                 Button("Speichern") {
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: gegenstandTmp, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: gegenstandTmp, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].gegenstand = gegenstandTmp
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "gegenstandText", neueInhalt: gegenstandTextTmp, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstandText", neueInhalt: gegenstandTextTmp, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].gegenstandText = gegenstandTextTmp
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "gegenstandbild", neueInhalt: gegenstandBildTmp, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].gegenstandBild = gegenstandBildTmp
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "preiswert", neueInhalt: preisWertTmp, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "preiswert", neueInhalt: preisWertTmp, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].preisWert = preisWertTmp
                                     
                                     par1[par2].datum = dateToString(parDatum: datumTmp)
-                                    updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "datum", neueInhalt: par1[par2].datum, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "vorgang", neueInhalt: vorgangTmp, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "vorgang", neueInhalt: vorgangTmp, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].vorgang = vorgangTmp
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "personVorname", neueInhalt: neuePersonTmp[0].personVorname, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "personVorname", neueInhalt: neuePersonTmp[0].personVorname, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].personVorname = neuePersonTmp[0].personVorname
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "personNachname", neueInhalt: neuePersonTmp[0].personNachname, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "personNachname", neueInhalt: neuePersonTmp[0].personNachname, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].personNachname = neuePersonTmp[0].personNachname
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "personSex", neueInhalt: neuePersonTmp[0].personSex, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "personSex", neueInhalt: neuePersonTmp[0].personSex, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].personSex = neuePersonTmp[0].personSex
                                     
-                                    updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: allgemeinerTextTmp, perKey: par1[par2].perKey)
+                                    updateSqliteTabellenField(sqliteFeld: "allgemeinerText", neueInhalt: allgemeinerTextTmp, perKey: par1[par2].perKey, tabelle: "Objekte")
                                     par1[par2].allgemeinerText = allgemeinerTextTmp
                                     
                                     globaleVariable.parameterImageString = "Kein Bild"
@@ -144,11 +145,21 @@ struct EditSheetView: View {
                             } // Ende HStack
                             
                         } // Ende List
-                        .onAppear(){
-                            neuePersonTmp[0].personPicker = " " + par1[par2].personNachname + ", " + par1[par2].personVorname
-                            neuePersonTmp[0].personVorname = par1[par2].personVorname
-                            neuePersonTmp[0].personNachname  = par1[par2].personNachname
-                            neuePersonTmp[0].personSex = par1[par2].personSex
+                        .onAppear() {
+                            // The if-Clausel is nesessery for keeping changes.
+                            // Without if-Clausel the onApear delete all changes made in struct ShapeViewEditUser
+                            if neuePersonTmp[0].personPicker.isEmpty {
+                                neuePersonTmp[0].personPicker = " " + par1[par2].personNachname + ", " + par1[par2].personVorname
+                            } // Ende if
+                            if neuePersonTmp[0].personVorname.isEmpty {
+                                neuePersonTmp[0].personVorname = par1[par2].personVorname
+                            } // Ende if
+                            if neuePersonTmp[0].personNachname.isEmpty {
+                                neuePersonTmp[0].personNachname  = par1[par2].personNachname
+                            }
+                            if neuePersonTmp[0].personSex.isEmpty {
+                                neuePersonTmp[0].personSex = par1[par2].personSex
+                            } // Ende if
                         }// Ende onApear
                         
                     } // Ende VStack
@@ -263,9 +274,11 @@ struct EditGegenstand: View {
                 } // Ende onChange
         }// Ende HStack
         
-        //} // Ende NavigationStack
+        // } // Ende NavigationStack
     } // Ende var body
 } // Ende struct EditGegenstand
+
+
 
 struct EditGegenstandText: View {
     
@@ -281,7 +294,7 @@ struct EditGegenstandText: View {
         //NavigationStack {
         VStack{
             
-            TextField("", text: $gegenstandTextTmp, axis: .vertical)
+            TextField("Gegenstandbeschreibung", text: $gegenstandTextTmp, axis: .vertical)
                 .focused($isInputGegenstandTextActive)
                 .padding(.top, 10)
                 .padding(.leading, 6)
@@ -333,14 +346,14 @@ struct EditPreisWert: View {
             Text("Preis/Wert: ")
                 .font(.system(size: 16, weight: .regular))
             Spacer()
-            TextField("€", text: $preisWertTmp)
+            TextField("", text: $preisWertTmp)
                 .modifier(TextFieldEuro(textParameter: $preisWertTmp))
                 .focused($isInputPreisWertActive)
-                .padding(.leading, 6)
+                .frame(width: 150, height: 30, alignment: .trailing)
+                //.padding(.leading, 6)
                 .background(Color.blue.opacity(0.4))
                 .foregroundColor(Color.black.opacity(0.4))
                 .keyboardType(.decimalPad)
-                .frame(width: 150, height: 30, alignment: .trailing)
                 .multilineTextAlignment(.trailing)
                 .submitLabel(.done)
                 .font(.system(size: 16, weight: .regular))
@@ -404,13 +417,13 @@ struct EditDatum: View {
             Spacer()
             DatePicker("", selection: $datumTmp, displayedComponents: [.date])
                 .labelsHidden()
+                .padding(.trailing, -5)
                 .foregroundColor(.gray)
-                .opacity(0.4)
+                .opacity(0.7)
                 .background(Color.blue)
                 .opacity(0.4)
                 .multilineTextAlignment (.center)
                 .environment(\.locale, Locale.init(identifier: "de"))
-                .font(.system(size: 16, weight: .regular))
                 .cornerRadius(5)
                 .id(calendarId)
                 .onChange(of: datumTmp ) {
@@ -441,7 +454,7 @@ struct EditAllgemeinerText: View {
         //NavigationStack {
         VStack{
             
-            TextField("", text: $allgemeinerTextTmp, axis: .vertical)
+            TextField("Allgemeiner Text", text: $allgemeinerTextTmp, axis: .vertical)
                 .focused($isInputAllgemeinerTextActive)
                 .padding(.top, 10)
                 .padding(.leading, 6)
@@ -449,9 +462,8 @@ struct EditAllgemeinerText: View {
                 .frame(height: 90, alignment: .topTrailing)
                 .submitLabel(.done)
                 .font(.system(size: 16, weight: .regular))
-                .foregroundColor(Color.black)
-                .background(Color.blue)
-                .opacity(0.3)
+                .foregroundColor(Color.black.opacity(0.3))
+                .background(Color.blue.opacity(0.3))
                 .cornerRadius(5)
                 .onAppear(){
                     allgemeinerTextTmp = par1[par2].allgemeinerText
@@ -568,7 +580,7 @@ struct EditVorgang: View {
                 } // Ende ForEach
             }) // Ende Picker
             .font(.system(size: 16, weight: .regular))
-            .frame(width: 180, height: 30)
+            .frame(width: 150, height: 30)
             .padding(.trailing, 5)
             .background(Color.blue.opacity(0.4))
             .foregroundColor(.black.opacity(0.4))
@@ -592,8 +604,10 @@ struct EditPerson: View {
     @Binding var par2: Int
     @Binding var personPickerTmp: String
     @Binding var neuePersonTmp: [PersonClassVariable]
-    
+    @Binding var tabelleDB: String
+        
     @State var personEditieren: Bool = false
+    
     
     var body: some View {
         
@@ -609,6 +623,7 @@ struct EditPerson: View {
                 print("Button Person ......")
             }) {
                 Text("\(personPickerTmp)")
+                    .frame(width: 150, height: 30, alignment: .trailing)
                     .font(.system(size: 16, weight: .regular))
                     .frame(height: 30)
                     .background(Color.blue.opacity(0.4))
@@ -619,15 +634,17 @@ struct EditPerson: View {
             
         }// Ende HStack
         .onAppear(){
-            personPickerTmp = " " + par1[par2].personNachname + ", " + par1[par2].personVorname + " "
+            if personPickerTmp.isEmpty {
+                personPickerTmp = " " + par1[par2].personNachname + ", " + par1[par2].personVorname + " "
+            } // Ende if
         } // Ende onAppear
         
         //.sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})
         
-        .applyIf(UIDevice.current.userInterfaceIdiom == .phone, apply: { $0.navigationDestination(isPresented: $personEditieren, destination: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)
+        .applyIf(UIDevice.current.userInterfaceIdiom == .phone, apply: { $0.navigationDestination(isPresented: $personEditieren, destination: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp, tabelleDB: $tabelleDB)
                 .navigationBarBackButtonHidden()
                 .navigationBarTitleDisplayMode(.large)
-        })}, else: {$0.sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp)})})
+        })}, else: {$0.sheet(isPresented: $personEditieren, content: { ShapeViewEditUser(isPresentedShapeViewEditUser: $personEditieren, personPickerTmp: $personPickerTmp, neuePersonTmp: $neuePersonTmp, tabelleDB: $tabelleDB)})})
         
         //} // Ende NavigationStack
     } // Ende var body

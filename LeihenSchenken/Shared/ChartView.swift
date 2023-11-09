@@ -23,7 +23,7 @@ struct ChartView: View {
     
     @State var errorMessageText: String = ""
     @State private var showAlert: Bool = false
-    //@State private var activeAlert: ActiveAlert = .error
+    
     @State var showDetailPhoto: Bool = false
     @State var objektEditieren: Bool = false
     
@@ -116,13 +116,6 @@ struct ChartView: View {
                         HStack {
                             let textPrefix = vorgangPrefixDeklination(vorgang: par1[par2].vorgang )
                             Text("\(textPrefix)")
-                            /*
-                             if par1[par2].vorgang == "Bekommen" {
-                             Text(" von ")
-                             }else{
-                             Text(" an ")
-                             } // Ende if/else
-                             */
                             Spacer()
                             Text("\(par1[par2].personNachname)" + ", " + "\(par1[par2].personVorname)" + " ")
                                 .modifierShowFields()
@@ -165,68 +158,7 @@ struct ChartView: View {
                     .cornerRadius(10)
                     
                     Spacer()
-                    /*
-                    HStack(alignment: .bottom) {
-                        
-                        Button {
-                            objektEditieren = true
-                            
-                        } label: {
-                            Label("", systemImage: "pencil.and.outline") //doc.badge.gearshape.fill
-                            //.font(.system(size: 25))
-                            
-                        } // Ende Button
-                        .font(.system(size: 30, weight: .medium))
-                        .foregroundColor(Color.white)
-                        .offset(x: 10)
-                        
-                        Text("|")
-                            .offset(x:3, y: -7)
-                            .foregroundColor(Color.white)
-                        
-                        Button {
-                            showAlert = true
-                            //activeAlert = .delete
-                            
-                        } label: {
-                            Label("", systemImage: "rectangle.stack.fill.badge.minus")
-                            
-                        } // Ende Button
-                        .font(.system(size: 30, weight: .medium))
-                        .foregroundColor(Color.white)
-                        .offset(x: 10)
-                        .alert(isPresented: $showAlert) {
-                            Alert( title: Text("Wichtige Information!"),
-                                   message: Text("Das Objekt: \(par1[par2].gegenstand) wird unwiederfuflich gelöscht! Man kann diesen Vorgang nicht rückgängich machen!"),
-                                   primaryButton: .destructive(Text("Löschen")) {
-                                
-                                let perKeyTmp = par1[par2].perKey
-                                deleteItemsFromDatabase(tabelle: "Objekte", perKey: perKeyTmp)
-                                print("\(par1[par2].gegenstand)" + " wurde gelöscht")
-                                print(perKeyTmp)
-                                globaleVariable.navigationTabView = 1
-                                refreshAllViews()
-                                showAlert = false
-                                
-                                // Diese Zeile bewirkt, dass die View geschlossen wird
-                                self.presentationMode.wrappedValue.dismiss()
-                            },
-                                   secondaryButton: .cancel(Text("Abbrechen")){
-                                print("\(par1[par2].gegenstand)" + " wurde nicht gelöscht")
-                                print("Abgebrochen ....")
-                                refreshAllViews()
-                                showAlert = false
-                            } // Ende secondary Button
-                                   
-                            ) // Ende Alert
-                            
-                        } // Ende alert
-                        
-                    } // Ende HStack
-                    .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
-                    .background(Color(UIColor.lightGray))
-                    .foregroundColor(Color.black)
-                    */
+                    
                 } // Ende VStack
                 .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                 .background(globaleVariable.farbenEbene1)

@@ -44,11 +44,6 @@ struct Tab2: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    //@State var tmp: CGFloat = 0
-    
-    //let heightFaktor: Double = 0.99
-    
-    
 var body: some View {
     GeometryReader { geometry in
         VStack {
