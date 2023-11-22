@@ -14,7 +14,7 @@ struct ContentView: View {
     //@State private var columnVisibility = NavigationSplitViewVisibility.all
     //@State private var preferredColumn = NavigationSplitViewColumn.detail
     @State private var emptyDatabase:Bool = false
- 
+   
     
     init() {
         
@@ -33,7 +33,12 @@ struct ContentView: View {
         UINavigationBar.appearance().tintColor = .blue
         
         //UITableViewCell.appearance().backgroundColor = .clear
-        
+        /*
+        // Diese drei Zeilen bestimmen die Hintergrundfarbe von dem Badge mit der Anzahl der Objekte bei der ersten TabView "Objekte"
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = UIColor(globaleVariable.farbenEbene0)
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        */
     } // Ende init
     
     var body: some View {
@@ -42,9 +47,8 @@ struct ContentView: View {
             NavigationStack() {
                 
                 DeteilView()
-                
+               
             } // Ende NavigationStack
-
             // Ausschalten des Dark-Modus für die App
             .preferredColorScheme(.light)
             // Das setzt die dynamische Taxtgrösse auf .large.

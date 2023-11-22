@@ -15,6 +15,9 @@
 		DB6E489D2A9F4EC9002AA59F /* StatistikView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */; };
 		DB6E489E2A9F4EC9002AA59F /* StatistikView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */; };
 		DB6E489F2A9F4EC9002AA59F /* StatistikView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */; };
+		DB7F8D8F2B0B73A40051B9A3 /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F8D8E2B0B73A40051B9A3 /* StoreKitManager.swift */; };
+		DB7F8D902B0B73A40051B9A3 /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F8D8E2B0B73A40051B9A3 /* StoreKitManager.swift */; };
+		DB7F8D912B0B73A40051B9A3 /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F8D8E2B0B73A40051B9A3 /* StoreKitManager.swift */; };
 		DB9BCEC72AC05EA6000FEF4C /* EingabeMaske.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9BCEC62AC05EA6000FEF4C /* EingabeMaske.swift */; };
 		DB9BCEC82AC05EA6000FEF4C /* EingabeMaske.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9BCEC62AC05EA6000FEF4C /* EingabeMaske.swift */; };
 		DB9BCEC92AC05EA6000FEF4C /* EingabeMaske.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9BCEC62AC05EA6000FEF4C /* EingabeMaske.swift */; };
@@ -68,6 +71,7 @@
 		DB538A992A437D09001B2781 /* EditFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFields.swift; sourceTree = "<group>"; };
 		DB538A9B2A438393001B2781 /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatistikView.swift; sourceTree = "<group>"; };
+		DB7F8D8E2B0B73A40051B9A3 /* StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitManager.swift; sourceTree = "<group>"; };
 		DB9160B62A79427E00E11ACC /* LeihenSchenken.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LeihenSchenken.entitlements; sourceTree = "<group>"; };
 		DB9BCEC62AC05EA6000FEF4C /* EingabeMaske.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaske.swift; sourceTree = "<group>"; };
 		DBAC3B122A9DC1900061096F /* PrintObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintObjects.swift; sourceTree = "<group>"; };
@@ -144,6 +148,7 @@
 				DBC541392A58B2EB00A8F01B /* ExportImport.swift */,
 				DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */,
 				DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */,
+				DB7F8D8E2B0B73A40051B9A3 /* StoreKitManager.swift */,
 				DBE5D0A62A192DEB006410AD /* Test.swift */,
 				DBE8F9092A63F92B0027E311 /* ContactsView.swift */,
 				DBCCA1122A60AD4200146426 /* CameraView.swift */,
@@ -343,6 +348,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB7F8D8F2B0B73A40051B9A3 /* StoreKitManager.swift in Sources */,
 				DBCEF7FC29D1ED770017A728 /* ContentView.swift in Sources */,
 				DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */,
 				DB4329AF2A003E91006874E8 /* ChartView.swift in Sources */,
@@ -377,6 +383,7 @@
 				DB9BCEC82AC05EA6000FEF4C /* EingabeMaske.swift in Sources */,
 				DB6E489E2A9F4EC9002AA59F /* StatistikView.swift in Sources */,
 				DBCEF80B29D1ED7A0017A728 /* LeihenSchenkenTests.swift in Sources */,
+				DB7F8D902B0B73A40051B9A3 /* StoreKitManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,6 +391,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB7F8D912B0B73A40051B9A3 /* StoreKitManager.swift in Sources */,
 				DBAC3B152A9DC1900061096F /* PrintObjects.swift in Sources */,
 				DB6E489F2A9F4EC9002AA59F /* StatistikView.swift in Sources */,
 				DB9BCEC92AC05EA6000FEF4C /* EingabeMaske.swift in Sources */,
@@ -537,7 +545,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LeihenSchenken/LeihenSchenken.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"LeihenSchenken/Preview Content\"";
 				DEVELOPMENT_TEAM = K42L6ZYYGZ;
 				ENABLE_PREVIEWS = YES;
@@ -577,7 +585,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LeihenSchenken/LeihenSchenken.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"LeihenSchenken/Preview Content\"";
 				DEVELOPMENT_TEAM = K42L6ZYYGZ;
 				ENABLE_PREVIEWS = YES;

@@ -101,7 +101,7 @@ struct Tab3: View {
 } // Ende struc Tab3
 
 
-// Objektenliste
+// Objektliste
 struct Tab4: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -114,7 +114,7 @@ struct Tab4: View {
     
         let _ = print("Struct Tab4 wird aufgerufen!")
         
-        let pdfPath = docDir!.appendingPathComponent("objektenListe.pdf")
+        let pdfPath = docDir!.appendingPathComponent("ObjektListe.pdf")
         
         GeometryReader { geometry in
             VStack {

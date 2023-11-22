@@ -633,7 +633,7 @@ struct ImageSelector: View {
         .screenRecordings,
         .cinematicVideos,
         .timelapseVideos,
-        .screenshots,
+        //.screenshots,
         .depthEffectPhotos
     ]))
     

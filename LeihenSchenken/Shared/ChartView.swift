@@ -173,7 +173,7 @@ struct ChartView: View {
                     
                     Button( action: {
                         objektEditieren = true
-                    }) {Image(systemName: "square.and.pencil")
+                    }) {Image(systemName: "pencil")
                             .imageScale(.large)
                     } // Ende Image
                     

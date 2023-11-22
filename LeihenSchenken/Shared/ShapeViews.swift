@@ -17,7 +17,7 @@ struct ShapeViewAddGegenstand: View {
     @Binding var isParameterBereich: Bool
     
     @State var showHilfe: Bool = false
-    @State var showWarnung: Bool = false
+    //@State var showWarnung: Bool = false
     
     @State var gegenstandNeu: String = ""
     
@@ -92,30 +92,31 @@ struct ShapeViewAddGegenstand: View {
                                             isPresented = false
                                             print("Gegenstand wurde in die Auswahl hinzugefügt!")
                                         }else{
-                                            if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
+                                           // if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
                                                 
-                                                showWarnung = true
+                                             //   showWarnung = true
                                                 
-                                            }else{
+                                            //}else{
                                                 
-                                                gegenstandInDatenbankSchreiben(par1: gegenstandNeu)
+                                                gegenstandInDatenbankSchreiben(par1: gegenstandNeu.trimmingCharacters(in: .whitespacesAndNewlines))
                                                 globaleVariable.parameterGegenstand.removeAll()
                                                 globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
                                                 
                                                 print("Gegenstand wurde in die Datenbank hinzugefügt!")
                                                 
                                                 isPresented = false
-                                            } // Ende guard/else
+                                            //} // Ende guard/else
                                             
                                         } // Ende if/else
                                         
                                     } // Ende if
                                 }) {
                                     
-                                    Text("Speichern")
+                                    Text(" Speichern ")
                                     
                                 }// Ende Button
-                                .disabled(gegenstandNeu != "" ? false : true)
+                                //.disabled(gegenstandNeu != "" ? false : true)
+                                .disabled(checkEdit())
                                 .buttonStyle(.borderedProminent)
                                 .foregroundColor(.white)
                                 .font(.system(size: 16, weight: .regular))
@@ -124,17 +125,18 @@ struct ShapeViewAddGegenstand: View {
                                 Spacer()
                                 
                             } // Ende Hstack
+                            /*
                             .alert("Warnung zu neuem Gegenstand", isPresented: $showWarnung, actions: {
                                 Button(" - OK - ") {}
                             }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Gegenständen gespeichert werden!") } // Ende message
                             ) // Ende alert
-                            
+                            */
                             if isParameterBereich {
-                                Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann mit drücken auf 'Speichern' wird der Gegenstand nur zur Auswahl in die Eingabemaske hinzugefügt. Er wird nach beenden der App entfernt. Möchten Sie ein Gegenstand dauerhaft zur Auswahl in der Eingabemaske hinzufügen, gehen Sie bitte zum Tab 'Gegenstände' und dort unten links auf das '+' Symbol. Auf der entsprechender Maske geben Sie den Gegenstand ein und speichen ihn.")
+                                Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann wird der Gegenstand temporär nur zur Auswahl in der Gegenstandliste in der Eingabemaske hinzugefügt.")
                                     .font(.system(size: 14, weight: .regular))
                                     .foregroundColor(.gray)
                             }else{
-                                Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde. Dann beim drücken auf 'Speichern' wird der neue Gegenstand dauerhaft in die Datenbank hinzugefügt.")
+                                Text("Die Taste 'Speichern' wird aktiv, wenn der Gegenstand erfasst wurde und sich noch nicht in der Datenbank befindet. Der neue Gegenstand wird in die Favoritenliste dauerhaft hinzugefügt.")
                                     .font(.system(size: 12, weight: .regular))
                                     .foregroundColor(.gray)
                                 
@@ -179,6 +181,20 @@ struct ShapeViewAddGegenstand: View {
         .navigationBarItems(leading: btnBack)
         
     } // Ende var body
+    
+    func checkEdit() -> Bool {
+        var resultat: Bool = false
+        if gegenstandNeu.isEmpty {
+            resultat = true
+        }else if pruefenDieElementeDerDatenbank(parPerson: ["", "", ""], parGegenstand: "\(gegenstandNeu.trimmingCharacters(in: .whitespacesAndNewlines))") {
+            resultat = true
+        }else{
+            resultat = false
+        } // Ende if/else
+        
+        return resultat
+    } // Ende func
+    
 } // Ende struct
 
 
@@ -259,11 +275,11 @@ struct ShapeViewEditGegenstand: View {
                                 Button(action: {
                                     if gegenstandNeu != "" {
                                         
-                                        if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
+                                        //if pruefenDieElementeDerDatenbank(parPerson: ["","",""], parGegenstand: gegenstandNeu) {
                                             
-                                            showWarnung = true
+                                            //showWarnung = true
                                             
-                                        }else{
+                                        //}else{
                                             
                                             //gegenstandInDatenbankSchreiben(par1: gegenstandNeu)
                                             
@@ -275,9 +291,7 @@ struct ShapeViewEditGegenstand: View {
                                             print("Gegenstand wurde in die Datenbank hinzugefügt!")
                                             
                                             isPresented = false
-                                        } // Ende guard/else
-                                        
-                                        
+                                        //} // Ende guard/else
                                         
                                     } // Ende if
                                 }) {
@@ -285,7 +299,8 @@ struct ShapeViewEditGegenstand: View {
                                     Text(" Übernehmen ")
                                     
                                 }// Ende Button
-                                .disabled(gegenstandNeu == "" || gegenstandNeu == gegenstandAlt ? true : false)
+                                //.disabled(gegenstandNeu == "" || gegenstandNeu == gegenstandAlt ? true : false)
+                                .disabled(checkEdit())
                                 .buttonStyle(.borderedProminent)
                                 .foregroundColor(.white)
                                 .font(.system(size: 16, weight: .regular))
@@ -294,16 +309,17 @@ struct ShapeViewEditGegenstand: View {
                                 Spacer()
                                 
                             } // Ende Hstack
-                            Text("Die Taste 'Übernehmen' wird aktiv, wenn der Gegenstand bearbeitet wurde. Dann werden die Änderungen dauerhaft in die Datenbank gespeichert.")
+                            Text("Die Taste 'Übernehmen' wird aktiv, wenn der Gegenstand bearbeitet wurde und sich noch nicht in der Datenbank befindet. Der geänderte Gegenstand wird dann in die Favoritenliste dauerhaft hinzugefügt.")
                                 .font(.system(size: 12, weight: .regular))
                                 .foregroundColor(.gray)
                             
                         } // Ende Section
+                        /*
                         .alert("Warnung zu neuem Gegenstand", isPresented: $showWarnung, actions: {
                             Button(" - OK - ") {}
                         }, message: { Text("Der Gegenstand: '\(gegenstandNeu)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Gegenständen gespeichert werden!") } // Ende message
                         ) // Ende alert
-                        
+                        */
                     } // Ende List
                     //.frame(width: geometry.size.width, height: geometry.size.height)
                     .font(.system(size: 16, weight: .regular))
@@ -347,6 +363,23 @@ struct ShapeViewEditGegenstand: View {
         .navigationBarItems(leading: btnBack)
         
     } // Ende var body
+    
+    func checkEdit() -> Bool {
+        var resultat: Bool = false
+        if gegenstandNeu.isEmpty {
+            resultat = true
+        }else if pruefenDieElementeDerDatenbank(parPerson: ["", "", ""], parGegenstand: "\(gegenstandNeu.trimmingCharacters(in: .whitespacesAndNewlines))") {
+            resultat = true
+        }else{
+            resultat = false
+        } // Ende if/else
+        
+        return resultat
+    } // Ende func
+    
+    
+    
+    
 } // Ende struct
 
 
@@ -381,15 +414,16 @@ struct ShapeViewSettings: View {
                         .frame(width: 300, height: 40)
                     
                 }// Ende Section Farben
-                Section {
-                    Toggle("Handbuch/Hilfen anzeigen", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                
+                Section(header: Text("Handbuch und Hilfetexte")) {
+                    Toggle("Anzeigen", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
                 } // Ende Section
                 
                 // Prüfen, ob iClaud verfügbar ist
                 if isICloudContainerAvailable() {
                     Section {
-                        Toggle("iCloud Sicherung", isOn: $userSettingsDefaults.iCloudSwitch ).toggleStyle(SwitchToggleStyle(tint: .blue))
-                        
+                        Toggle("iCloud DB Sicherung", isOn: $userSettingsDefaults.iCloudSwitch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                    } header: { Text("Sicherung der Datenbank")
                     } footer: {
                         
                         Text("Beim einschalten der iCloud Sicherung, wird die Datensicherung in der iCloud gespeichert. Dadurch wird es möglich sein, diese Datensicherung auf Ihrem anderen Gerät (iPhone oder iPad) einzuspielen.")
@@ -564,7 +598,7 @@ struct ShapeViewAbfrage: View {
                     } // Ende HStack
                     
                     //Section {
-                    Text("Hier können Sie eine Abfrage für Darstellung der Objektenabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
+                    Text("Hier können Sie eine Abfrage für Darstellung der Objekttabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
                         .font(.system(size: 12, weight: .regular))
                         .foregroundColor(.gray)
                     

@@ -180,7 +180,7 @@ struct serchFullTextInObjekten: View {
         let _ = print("struct serchFullTextInObjekten wird aufgerufen!")
         TextField("", text: $globaleVariable.searchTextObjekte)
             .focused($isInputSarchFullTextInObjektenActive)
-            .frame(height: GlobalStorage.bottonToolBarHight - 36)
+            .frame( height: GlobalStorage.bottonToolBarHight - 36)
             .font(.system(size: 18, weight: .medium))
             .disableAutocorrection (true)
             .submitLabel(.done)
@@ -248,6 +248,8 @@ struct serchFullTextInObjekten: View {
 // Filter für die Fulltextsuche der Objekte
 // Diese func war notwändig weil if-Abfrage in der View nicht zuläsig ist.
 // Diese Funktion wird in der Tab1 View aufgerufen
+// Bei der Suche werden von der Variable "globalenVariable.searchTextObjekte" alle leerzeichen,
+// die sich am Anfang oder am Ende befinden, gelöscht.
 func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     let _ = print("Funktion serchObjectArray() wird aufgerufen!")
@@ -257,13 +259,13 @@ func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
         resultat = parameter
     }else{
         resultat = parameter.filter {
-            $0.gegenstandText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
-            $0.allgemeinerText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
-            //$0.datum.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
-            //$0.preisWert.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
-            $0.gegenstand.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
-            $0.personVorname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte) ||
-            $0.personNachname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte)
+            $0.gegenstandText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
+            $0.allgemeinerText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
+            //$0.datum.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
+            //$0.preisWert.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
+            $0.gegenstand.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
+            $0.personVorname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
+            $0.personNachname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines))
             
         }// Ende par.filter
     }// Ende if/else

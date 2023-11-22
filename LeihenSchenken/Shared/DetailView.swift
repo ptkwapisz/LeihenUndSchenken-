@@ -11,8 +11,7 @@ import SwiftUI
 struct DeteilView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
-    //@ObservedObject var hilfeTexte = HilfeTexte.shared
+    
     @State var hilfeTexte = HilfeTexte()
     @State var alertMessageTexte = AlertMessageTexte()
     
@@ -37,12 +36,15 @@ struct DeteilView: View {
     
     @State var gegenstandHinzufuegen: Bool = false
     @State var selectedTypeTmp = ""
-    
+  
+
     var body: some View {
         
-            // Prüfen, ob sich Objekte in der Datenbank befinden
-           let anzahlDerObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: false)
-            
+        // Prüfen, ob sich Objekte in der Datenbank befinden
+        let anzahlDerObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: false)
+        let _ = setColorOfBadge(numberOfObjects: anzahlDerObjekte.count)
+       
+        
             VStack(spacing: 10) {
                 
                 TabView(selection: $globaleVariable.navigationTabView) {
@@ -52,14 +54,16 @@ struct DeteilView: View {
                         Text("Objekte")
                     } // Ende Tab
                     .tag(1) // Die Tags identifizieren die Tab und füren zum richtigen Titel
-                    
+                    .badge(anzahlDerObjekte.count)
                     
                     Tab2(selectedTabView: $globaleVariable.navigationTabView).tabItem {
+                        
                         Image(systemName: "archivebox.fill")
                         Text("Gegenstände")
-                        
+                          
                     } // Ende Tab
                     .tag(2) // Die Tags identifizieren die Tab und füren zum richtigen Titel
+                    
                     
                     Tab3(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                         Image(systemName: "person.2.fill")
@@ -86,6 +90,7 @@ struct DeteilView: View {
                     } // Ende if
                     
                 } // Ende TabView
+                
                 
             } // Ende VStack
             .navigationTitle(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabName)
@@ -151,14 +156,33 @@ struct DeteilView: View {
                 
                 MyToolbarItemsHilfeButton()
                 
-              
             } // Ende toolbar
             //.toolbarRole(.editor) // Bei dieser Rolle ist der back Button < ohne Text
             
-    } // var body
+    } // Ende var body
+   
+    func setColorOfBadge(numberOfObjects: Int){
+        
+        var badgeColor: UIColor
+    
+        if numberOfObjects < 20 {
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Unter 6")
+            
+            badgeColor = UIColor(Color.red)
+        }else{
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Über 6")
+           
+            badgeColor = UIColor(globaleVariable.farbenEbene0)
+        } // Ende if/else
+    
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = badgeColor
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+    
+
+    } // Ende func
+
 } // Ende struct
-
-
 
 func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String) {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -169,13 +193,13 @@ func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String
     
     switch tabNummer {
     case 1:
-            returnWert = (tabName: "Die Liste der Objekte", tabHilfe: "\(HilfeTexte.tabObjektenListe)")
+            returnWert = (tabName: "Die Liste der Objekte", tabHilfe: "\(HilfeTexte.tabObjektListe)")
     case 2:
             returnWert = (tabName: "Gegenstände", tabHilfe: "\(HilfeTexte.tabGegenstandListe)")
     case 3:
             returnWert = (tabName: "Personen", tabHilfe: "\(HilfeTexte.tabPersonenListe)")
     case 4:
-            returnWert = (tabName: "PDF-Liste", tabHilfe: "\(HilfeTexte.tabObjektenPDFListe)")
+            returnWert = (tabName: "PDF-Liste", tabHilfe: "\(HilfeTexte.tabObjektPDFListe)")
     case 5:
             returnWert = (tabName: "Handbuch", tabHilfe: "\(HilfeTexte.tabHandbuch)")
     default:
@@ -427,7 +451,7 @@ struct MyToolbarItemsPrintButton: ToolbarContent {
                 Button(action:{
                     if globaleVariable.navigationTabView == 4 {
                         let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-                        let pdfPath = docDir!.appendingPathComponent("objektenListe.pdf")
+                        let pdfPath = docDir!.appendingPathComponent("ObjektListe.pdf")
                         printingHandbuchFile(pdfPath: pdfPath, pdfName: " PDF Liste")
                     } // Ende if
                     
@@ -522,7 +546,10 @@ struct MyToolbarItemsEditButton: ToolbarContent {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button( action: {
                     isSheetPresented.toggle()
-                }) {Image(systemName: "pencil.and.list.clipboard").imageScale(.large)}  // PDF-List
+                }) {
+                    //Text("Bearbeiten")
+                    Image(systemName: "pencil").imageScale(.large)
+                }  // PDF-List
                     .navigationDestination(isPresented: $isSheetPresented, destination: { ObjektListeParameter(data: data, isPresented: $isSheetPresented)})
                     //.navigationBarBackButtonHidden()
                     //.navigationBarTitleDisplayMode(.large)

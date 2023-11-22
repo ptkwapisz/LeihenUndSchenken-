@@ -53,15 +53,29 @@ struct deteilTab1: View {
                         }// Ende Button/label
                         .buttonStyle(.bordered)
                         .font(.system(size: 16, weight: .medium))
-                        //.background(Color.blue.opacity(5))
                         .background(globaleVariable.farbenEbene0.opacity(5))
                         .foregroundColor(Color.white)
                         .padding(.leading, 10)
-                        .frame(width: 40)
+                        .frame( width: 36, height:  36)
                         .cornerRadius(10)
                         .padding(.trailing, 20)
                     }// Ende if
                 }// Ende HStack
+                // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
+                if alleObjekte.count > 1 {
+                    HStack(alignment: .bottom) {
+                        
+                        // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
+                        //if alleObjekte.count > 0 {
+                        serchFullTextInObjekten()
+                        //}// Ende if
+                        
+                    } // Ende HStack
+                    .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
+                    //.background(Color(UIColor.lightGray))
+                    .foregroundColor(Color.black)
+                }// Ende if
+            
                 
                 List {
                     
@@ -144,6 +158,7 @@ struct deteilTab1: View {
                                 } // Ende ForEach
                                 .listRowSeparatorTint(.white)
                                 
+                                
                             } // Ende Section
                         
                     } // Ende ForEach
@@ -152,21 +167,6 @@ struct deteilTab1: View {
                 .cornerRadius(10)
                 Spacer()
                 
-                // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
-                if alleObjekte.count > 1 {
-                    HStack(alignment: .bottom) {
-                        
-                        // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
-                        //if alleObjekte.count > 0 {
-                     serchFullTextInObjekten()
-                        //}// Ende if
-                        
-                    } // Ende HStack
-                    .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
-                    .background(Color(UIColor.lightGray))
-                    .foregroundColor(Color.black)
-                }// Ende if
-            
             } // Ende VStack
             .background(globaleVariable.farbenEbene1)
             .cornerRadius(10)
@@ -231,9 +231,7 @@ struct deteilTab1: View {
             
         } // Ende if
         
-        
     } // Ende func
-    
     
 } // Ende struct
 
@@ -249,7 +247,6 @@ struct deteilTab2: View {
     @State var editedNewName: String = ""
     @State var showEditGegenstand: Bool = false
     @State var gegenstandPerKey: String = ""
-    
     
     let gegenstaende = querySQLAbfrageClassGegenstaende(queryTmp: "Select * FROM Gegenstaende")
     

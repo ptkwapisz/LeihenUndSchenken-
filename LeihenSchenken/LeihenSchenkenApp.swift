@@ -21,16 +21,16 @@ struct LeihenSchenkenApp: App {
         let _: Bool = ifDatabaseExist()
         
         WindowGroup {
-            GeometryReader { geometry in
+           // GeometryReader { geometry in
                
                ContentView()
                     // Diese Zeilen unterdrücken den Constrain Feheler
                     .onAppear {
-                   #if DEBUG
+                   //#if DEBUG
                      UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-                   #endif
+                   //#endif
                 } // Ende onAppear
-            } // Ende GeometryReader
+            //} // Ende GeometryReader
         } // Ende WindowGroup
     } // Ende var body
 } // Ende struckt

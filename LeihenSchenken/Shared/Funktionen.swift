@@ -309,8 +309,7 @@ func printingHandbuchFile(pdfPath: URL, pdfName: String) {
         printInfo.outputType = UIPrintInfo.OutputType.general
         printInfo.duplex = UIPrintInfo.Duplex.longEdge
         printInfo.accessibilityViewIsModal = true
-        
-        
+       
         let printController = UIPrintInteractionController.shared
         printController.printInfo = printInfo
         printController.showsNumberOfCopies = true

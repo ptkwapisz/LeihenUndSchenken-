@@ -125,7 +125,7 @@ struct PDFKitView: View {
             }// Ende onChange
             
             .onAppear() {
-                if tabNumber == 4 { // Objektenliste
+                if tabNumber == 4 { // Objektliste
                     versionCounter += 1
                     print("Das ist die Anzahl von onAppear in PDFKitView: \(versionCounter)")
                     let _: Bool = createObjektenListe(parTitel: data.titel, parUnterTitel: data.unterTitel)
@@ -173,7 +173,7 @@ func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
     
     // Save the PDF data to the Document directory.
     if let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-        let pdfPath = docDir.appendingPathComponent("objektenListe.pdf")
+        let pdfPath = docDir.appendingPathComponent("ObjektListe.pdf")
         pdfData.write(to: pdfPath, atomically: true)
         print("PDF saved at path: \(pdfPath)")
         
