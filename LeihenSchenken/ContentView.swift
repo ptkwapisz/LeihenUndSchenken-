@@ -10,11 +10,12 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    
-    //@State private var columnVisibility = NavigationSplitViewVisibility.all
-    //@State private var preferredColumn = NavigationSplitViewColumn.detail
     @State private var emptyDatabase:Bool = false
-   
+    @State private var needsRefresh: Bool = false
+    
+    @StateObject var statusManager = StatusManager()
+    let purchaseManager = PurchaseManager()
+    
     
     init() {
         
@@ -33,12 +34,7 @@ struct ContentView: View {
         UINavigationBar.appearance().tintColor = .blue
         
         //UITableViewCell.appearance().backgroundColor = .clear
-        /*
-        // Diese drei Zeilen bestimmen die Hintergrundfarbe von dem Badge mit der Anzahl der Objekte bei der ersten TabView "Objekte"
-        let tabBarAppearance = UITabBarAppearance()
-        tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = UIColor(globaleVariable.farbenEbene0)
-        UITabBar.appearance().standardAppearance = tabBarAppearance
-        */
+        
     } // Ende init
     
     var body: some View {
@@ -61,25 +57,26 @@ struct ContentView: View {
                 if isICloudContainerAvailable() == false {
                     userSettingsDefaults.iCloudSwitch = false
                 } // Ende if
-            
+                // Check of the purchased status of this App
+                statusManager.handlePurchaseStatusUpdate(with: purchaseManager, needsRefresh: false) { needsRefresh.toggle() }
+                
             } // Ende onApear
         }else{
             
             NavigationSplitView(columnVisibility: $globaleVariable.columnVisibility) {
              
                     EingabeMaskePhoneAndPadView()
-                    //.navigationSplitViewColumnWidth(350)
-                    //.frame(minWidth: 300, idealWidth: 350, maxWidth: 350, minHeight: 800, idealHeight: 835, maxHeight: 835)
-                    //.offset(y: -23)
+                    .navigationSplitViewColumnWidth(320)
+                    .frame(minWidth: 320, idealWidth: 320, maxWidth: 320, minHeight: 835, idealHeight: 835, maxHeight: 835)
+                    .offset(x: 2, y: -23)
                     .applyModifier(UIDevice.current.userInterfaceIdiom == .pad){$0.toolbar(removing: .sidebarToggle)}
-                
                 
             } detail: {
                 // NavigationStack ist notwändig, damit die Toolbars für Keyboard gezeigt werden.
                 NavigationStack {
                     
                     DeteilView()
-                    
+                        
                 } // Ende NavigationStack
             } // Ende NavigationSplitView
             
@@ -96,6 +93,8 @@ struct ContentView: View {
                 if isICloudContainerAvailable() == false {
                     userSettingsDefaults.iCloudSwitch = false
                 } // Ende if
+                // Check of the purchased status of this App
+                statusManager.handlePurchaseStatusUpdate(with: purchaseManager, needsRefresh: false) { needsRefresh.toggle() }
                 
             } // Ende onApear
             

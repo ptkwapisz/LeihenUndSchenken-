@@ -59,6 +59,8 @@ class GlobaleVariable: ObservableObject {
    
     @Published var columnVisibility = NavigationSplitViewVisibility.all
     
+    @Published var numberOfObjects: Int = anzahlDerDatensaetze(tableName: "Objekte")
+    
 } // ende class
 
 // Wird in der PrintObjects Struckts aufgerufen
@@ -265,6 +267,23 @@ class AlertMessageTexte  {
     
 } // Ende class
 
+/*
+// This class will be used in Eingabemaske by Picker for Personen
+class PersonPickerWithGender: Identifiable {
+    var id = UUID()
+    var picker: String
+    var personSex: String
+    var gender: String
+    
+    init(id: UUID = UUID(), picker: String, personSex: String, gender: String) {
+        self.id = UUID()
+        self.picker = picker
+        self.personSex = personSex
+        self.gender = gender
+    } // Ende init
+} // Ende class
+
+*/
 
 class Contact: Identifiable {
     var id = UUID()
@@ -301,9 +320,9 @@ enum ActiveAlertTab1 {
 class GlobalStorage {
     
     static var widthFaktorEbene1: Double = 0.97
-    static var bottonToolBarHight: Double = tabViewBottomToolbarHight()
+    //static var bottonToolBarHight: Double = tabViewBottomToolbarHight()
     static var selectedGegenstandTab2: String = ""
     static var selectedPersonPickerTab3: String = ""
-    
-    
+    static var numberOfObjectsFree: Int = 10
+
 } // Ende class

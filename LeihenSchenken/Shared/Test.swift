@@ -171,16 +171,16 @@ func subStringOfTextField(parameter: String) -> String {
 
 // Das ist die View für den Full Search in den Objekten
 // Aufgerufen in der Tab1 View
-struct serchFullTextInObjekten: View {
+struct SerchFullTextInObjekten: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     @FocusState var isInputSarchFullTextInObjektenActive: Bool
     
     var body: some View {
-        let _ = print("struct serchFullTextInObjekten wird aufgerufen!")
+        let _ = print("struct SerchFullTextInObjekten wird aufgerufen!")
         TextField("", text: $globaleVariable.searchTextObjekte)
             .focused($isInputSarchFullTextInObjektenActive)
-            .frame( height: GlobalStorage.bottonToolBarHight - 36)
+            .frame( height: tabViewBottomToolbarHight() - 36)
             .font(.system(size: 18, weight: .medium))
             .disableAutocorrection (true)
             .submitLabel(.done)
@@ -261,7 +261,7 @@ func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
         resultat = parameter.filter {
             $0.gegenstandText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
             $0.allgemeinerText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
-            //$0.datum.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
+            $0.datum.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
             //$0.preisWert.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
             $0.gegenstand.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
             $0.personVorname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
@@ -319,26 +319,5 @@ func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
     return resultat
 } // Ende func
 
-
-
-// Diese Funktion zeigt bei der Personenliste die Gender-Symbole
-func genderSymbol(par: String) -> Image {
-   
-    var resultat: Image = Image("")
-    
-    if par == "Mann" {
-        resultat = Image("customMan")
-            
-    } else if par == "Frau" {
-        resultat = Image("cusomFemal")
-            
-    } else if par == "Divers" {
-        resultat = Image("customDiverse")
-           
-    } // Ende if
-    
-    return resultat
-    
-} // Ende func
 
 

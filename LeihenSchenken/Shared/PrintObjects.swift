@@ -56,7 +56,11 @@ struct ObjektListeParameter: View {
                     Text("Parameter").bold()
                     List {
                         Section(header: Text("Kopfzeilen der Liste").foregroundColor(.gray).font(.system(size: 16, weight: .regular))) {
-                            VStack {
+                           // VStack {
+                                
+                                CustomTextField(text: $data.titel, isMultiLine: false, placeholder: "Listentitel")
+                                    .focused($focusedFields, equals: .titel)
+                                /*
                                 TextField("Listentitel", text: $data.titel)
                                     .padding(5)
                                     .background(Color(.systemGray6))
@@ -64,7 +68,11 @@ struct ObjektListeParameter: View {
                                     .submitLabel(.done)
                                     .disableAutocorrection(true)
                                     .focused($focusedFields, equals: .titel)
+                                */
                                 
+                                CustomTextField(text: $data.unterTitel, isMultiLine: false, placeholder: "Listenuntertitel")
+                                    .focused($focusedFields, equals: .unterTitel)
+                                /*
                                 TextField("Listenuntertitel", text: $data.unterTitel)
                                     .padding(5)
                                     .background(Color(.systemGray6))
@@ -72,38 +80,14 @@ struct ObjektListeParameter: View {
                                     .submitLabel(.done)
                                     .disableAutocorrection(true)
                                     .focused($focusedFields, equals: .unterTitel)
-                            } // Ende VStack
-                            .toolbar {
-                                ToolbarItemGroup(placement: .keyboard) {
-                                    
-                                    if focusedFields == .titel {
-                                        HStack{
-                                            Spacer()
-                                            Button("Abbrechen") {
-                                                
-                                                print("Abbrechen Button titel wurde gedrückt!")
-                                                focusedFields = nil
-                                            } // Ende Button
-                                        } // Ende HStack
-                                    }else if focusedFields == .unterTitel {
-                                        HStack{
-                                            Spacer()
-                                            Button("Abbrechen") {
-                                                
-                                                print("Abbrechen Button unterTitel wurde gedrückt!")
-                                                focusedFields = nil
-                                            } // Ende Button
-                                        } // Ende HStack
-                                        
-                                    } // Ende if/else
-                                    
-                                } // Ende ToolbarItemGroup
-                            }// Ende toolbar
+                                 */
+                                
+                            //} // Ende VStack
                             
                             
                         }// Ende Section
                         .font(.system(size: 16, weight: .regular))
-                        
+                       
                         Section {
                             Toggle("Das Feld Preis/Wert:", isOn: $globaleVariable.preisOderWert ).toggleStyle(SwitchToggleStyle(tint: .blue)).font(.system(size: 16, weight: .regular))
                         } footer: {
@@ -112,7 +96,6 @@ struct ObjektListeParameter: View {
                             
                         } // Ende Section
                         
-                            
                             HStack {
                                 Spacer()
                                
@@ -131,6 +114,7 @@ struct ObjektListeParameter: View {
                                 .foregroundColor(Color.white)
                                 .buttonStyle(.borderedProminent)
                                 .cornerRadius(10)
+                                .disabled(data.titel.isEmpty && data.unterTitel.isEmpty)
                                 
                                 Spacer()
                             } // Ende HStack
@@ -159,6 +143,32 @@ struct ObjektListeParameter: View {
         } // Ende GeometryReader
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         //.navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                
+                if focusedFields == .titel {
+                    HStack{
+                        Spacer()
+                        Button("Abbrechen") {
+                            
+                            print("Abbrechen Button titel wurde gedrückt!")
+                            focusedFields = nil
+                        } // Ende Button
+                    } // Ende HStack
+                }else if focusedFields == .unterTitel {
+                    HStack{
+                        Spacer()
+                        Button("Abbrechen") {
+                            
+                            print("Abbrechen Button unterTitel wurde gedrückt!")
+                            focusedFields = nil
+                        } // Ende Button
+                    } // Ende HStack
+                    
+                } // Ende if/else
+                
+            } // Ende ToolbarItemGroup
+        }// Ende toolbar
         
     } // Ende var body
     

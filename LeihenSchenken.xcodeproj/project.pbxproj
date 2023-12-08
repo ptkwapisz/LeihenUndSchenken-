@@ -12,6 +12,9 @@
 		DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E9F32A023BB000CBC354 /* Extention.swift */; };
 		DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A992A437D09001B2781 /* EditFields.swift */; };
 		DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A9B2A438393001B2781 /* ViewModifier.swift */; };
+		DB67B4E22B14E32200DBB2FC /* StoreKitConfigFile.storekit in Resources */ = {isa = PBXBuildFile; fileRef = DB67B4E12B14E32200DBB2FC /* StoreKitConfigFile.storekit */; };
+		DB67B4E32B14E32200DBB2FC /* StoreKitConfigFile.storekit in Resources */ = {isa = PBXBuildFile; fileRef = DB67B4E12B14E32200DBB2FC /* StoreKitConfigFile.storekit */; };
+		DB67B4E42B14E32200DBB2FC /* StoreKitConfigFile.storekit in Resources */ = {isa = PBXBuildFile; fileRef = DB67B4E12B14E32200DBB2FC /* StoreKitConfigFile.storekit */; };
 		DB6E489D2A9F4EC9002AA59F /* StatistikView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */; };
 		DB6E489E2A9F4EC9002AA59F /* StatistikView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */; };
 		DB6E489F2A9F4EC9002AA59F /* StatistikView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */; };
@@ -70,6 +73,7 @@
 		DB51E9F32A023BB000CBC354 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		DB538A992A437D09001B2781 /* EditFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFields.swift; sourceTree = "<group>"; };
 		DB538A9B2A438393001B2781 /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
+		DB67B4E12B14E32200DBB2FC /* StoreKitConfigFile.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StoreKitConfigFile.storekit; sourceTree = "<group>"; };
 		DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatistikView.swift; sourceTree = "<group>"; };
 		DB7F8D8E2B0B73A40051B9A3 /* StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitManager.swift; sourceTree = "<group>"; };
 		DB9160B62A79427E00E11ACC /* LeihenSchenken.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LeihenSchenken.entitlements; sourceTree = "<group>"; };
@@ -153,6 +157,7 @@
 				DBE8F9092A63F92B0027E311 /* ContactsView.swift */,
 				DBCCA1122A60AD4200146426 /* CameraView.swift */,
 				DBE5D0A82A1930A9006410AD /* L&S Handbuch.pdf */,
+				DB67B4E12B14E32200DBB2FC /* StoreKitConfigFile.storekit */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -322,6 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBCEF80129D1ED790017A728 /* Preview Assets.xcassets in Resources */,
+				DB67B4E22B14E32200DBB2FC /* StoreKitConfigFile.storekit in Resources */,
 				DBE5D0A92A1930A9006410AD /* L&S Handbuch.pdf in Resources */,
 				DBCEF7FE29D1ED790017A728 /* Assets.xcassets in Resources */,
 			);
@@ -331,6 +337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB67B4E32B14E32200DBB2FC /* StoreKitConfigFile.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +345,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB67B4E42B14E32200DBB2FC /* StoreKitConfigFile.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

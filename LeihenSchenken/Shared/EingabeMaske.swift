@@ -95,7 +95,10 @@ struct EingabeMaskePhoneAndPadView: View {
     
     var body: some View {
         
-        let _ = print("Struct EingabeMaskePhoneAndPadView wird aufgerufen!")
+        let _ = print("Struct EingabeMaskePhoneAndPadView: wird aufgerufen!")
+        
+       // let test = querySQLAbfrageClassPersonenGender()
+        
         
         let tapOptionGegenstand = Binding<Int>(
             get: { globaleVariable.selectedGegenstandInt }, set: { globaleVariable.selectedGegenstandInt = $0
@@ -103,9 +106,9 @@ struct EingabeMaskePhoneAndPadView: View {
                 //Add the onTapGesture contents here
                 if globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt] == "Neuer Gegenstand" {
                     showSheetGegenstand = true
-                    selectedGegenstand = "Neuer Gegenstand"
-                }else{
-                    selectedGegenstand = globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt]
+                   // selectedGegenstand = "Neuer Gegenstand"
+                //}else{
+                  //  selectedGegenstand = globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt]
                 } // Ende if
             } // Ende set
         ) // Ende let
@@ -116,9 +119,9 @@ struct EingabeMaskePhoneAndPadView: View {
                 //Add the onTapGesture contents here
                 if globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personPicker == "Neue Person" {
                     showSheetPerson = true
-                    selectedPerson = "Neue Person"
-                }else{
-                    selectedPerson = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personPicker
+                    //selectedPerson = "Neue Person"
+                //}else{
+                  //  selectedPerson = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personPicker
                   
                 } // Ende if
             } // Ende set
@@ -149,10 +152,10 @@ struct EingabeMaskePhoneAndPadView: View {
                                     
                                 })
                                 .font(.system(size: 16, weight: .regular))
-                                .frame(width: 160, height: 45)
+                                .frame(width: 180, height: 36)
                                 .padding(.trailing, 5)
-                                .background(Color.blue)
-                                .opacity(0.4)
+                                //.background(Color.blue)
+                                //.opacity(0.4)
                                 .cornerRadius(5)
                                 .applyIf(UIDevice.current.userInterfaceIdiom == .phone,
                                          apply: {$0.navigationDestination(isPresented: $showSheetGegenstand, destination: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich)
@@ -166,14 +169,17 @@ struct EingabeMaskePhoneAndPadView: View {
                                 ) // Ende applyIf
                             } // Ende HStack
                             
+                            CustomTextField(text: $globaleVariable.textGegenstandbeschreibung, isMultiLine: true, placeholder: "Gegenstandbeschreibung")
+                                .focused($focusedField, equals: .str1)
+                            /*
                             TextEditorWithPlaceholder(text: $globaleVariable.textGegenstandbeschreibung, platz: $platzText1)
                                 .focused($focusedField, equals: .str1)
-                            
+                            */
                             HStack {
                                 Text("Gegenstandsbild:   ")
                                     .frame(height: 30)
                                     .font(.system(size: 16, weight: .regular))
-                                
+                                Spacer()
                                 ImageSelector()
                                 Text(" ")
                                 if cameraManager.permissionGranted {
@@ -186,9 +192,9 @@ struct EingabeMaskePhoneAndPadView: View {
                                     
                                     Image(uiImage: image)
                                         .resizable()
-                                        .cornerRadius(50)
+                                        .cornerRadius(36)
                                         .padding(.all, 4)
-                                        .frame(width: 50, height: 50)
+                                        .frame(width: 36, height: 36)
                                         .background(Color.black.opacity(0.2))
                                         .aspectRatio(contentMode: .fill)
                                         .clipShape(Circle())
@@ -212,9 +218,9 @@ struct EingabeMaskePhoneAndPadView: View {
                                 TextField("", text: $globaleVariable.preisWert)
                                     .modifier(TextFieldEuro(textParameter: $globaleVariable.preisWert))
                                     .multilineTextAlignment(.trailing)
-                                    .frame(width: 115, height: 35, alignment: .trailing)
-                                    .background(Color.blue.opacity(0.4))
-                                    .cornerRadius(5)
+                                    .frame(width: 100, height: 30, alignment: .trailing)
+                                    .background(Color.gray.opacity(0.09))
+                                    .cornerRadius(10)
                                     .font(.system(size: 18, weight: .regular).bold())
                                     .foregroundColor(Color.black.opacity(0.4))
                                     .keyboardType(.decimalPad)
@@ -257,8 +263,8 @@ struct EingabeMaskePhoneAndPadView: View {
                                     .padding(.trailing, -5)
                                     .foregroundColor(.gray)
                                     .opacity(0.4)
-                                    .background(Color.blue)
-                                    .opacity(0.4)
+                                    //.background(Color.blue)
+                                    //.opacity(0.4)
                                     .multilineTextAlignment (.center)
                                     .environment(\.locale, Locale.init(identifier: "de"))
                                     .cornerRadius(5)
@@ -281,8 +287,8 @@ struct EingabeMaskePhoneAndPadView: View {
                                 .font(.system(size: 16, weight: .regular))
                                 .frame(width: 150, height: 30)
                                 .padding(.trailing, 5)
-                                .background(Color.blue)
-                                .opacity(0.4)
+                                //.background(Color.blue)
+                                //.opacity(0.4)
                                 .cornerRadius(5)
                             } // Ende HStack
                             
@@ -293,19 +299,28 @@ struct EingabeMaskePhoneAndPadView: View {
                                 
                                 Picker("", selection: tapOptionPerson, content: {
                                     ForEach(0..<$globaleVariable.personenParameter.count, id: \.self) { index in
-                                        HStack {
+                                        //HStack {
+                                            
                                             Text("\(truncateText(globaleVariable.personenParameter[index].personPicker))")//.tag(index)
-                                                
+                                          /*
                                             Spacer()
+                                            
                                             // Check if the current index matches the selected value. If it does not, display the image.
-                                            if tapOptionPerson.wrappedValue != index {
-                                                genderSymbol(par: globaleVariable.personenParameter[index].personSex)
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(width: 20, height: 20)
+                                            // and if personPicker = "Neue Person" then don't display image
+                                            if tapOptionPerson.wrappedValue != index  {
+                                               if globaleVariable.personenParameter[index].personPicker != "Neue Person" {
+                                                    
+                                                    Image( globaleVariable.personenParameter[index].personSex)
+                                                        .renderingMode(Image.TemplateRenderingMode.original)
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 10, height: 10)
+                                                        .clipped()
+                                                    
+                                                } // Ende if
                                             } // Ende if
-                                        } // Ende HStack
-                                        
+                                        //} // Ende HStack
+                                        */
                                     } // Ende ForEach
                                     
                                 }) // Picker
@@ -313,10 +328,12 @@ struct EingabeMaskePhoneAndPadView: View {
                                 .frame(width: 175, height: 30)
                                 .truncationMode(.tail)
                                 .padding(.trailing, 5)
-                                .background(Color.blue)
-                                .opacity(0.4)
                                 .cornerRadius(5)
-                                
+                                /*
+                                .onChange(of: tapOptionPerson.wrappedValue ){
+                                    print("\(globaleVariable.personenParameter[tapOptionPerson.wrappedValue].personPicker)")
+                                }
+                                */
                                 .applyIf(UIDevice.current.userInterfaceIdiom == .phone,
                                          apply: {
                                     $0.navigationDestination(isPresented: $showSheetPerson, destination: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich)
@@ -327,12 +344,14 @@ struct EingabeMaskePhoneAndPadView: View {
                                     $0.sheet(isPresented: $showSheetPerson, content: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich) })
                                 }) // Ende applyIf
                                 
-                                 
                             } // Ende HStack
                             
+                            CustomTextField(text: $globaleVariable.textAllgemeineNotizen, isMultiLine: true, placeholder: "Allgemeine Notitzen")
+                                .focused($focusedField, equals: .str2)
+                            /*
                             TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
                                 .focused($focusedField, equals: .str2)
-                            
+                            */
                             VStack{
                                 
                                 HStack {
@@ -357,7 +376,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                             } // Ende alert
                                     } // Ende if
                                     Button(action: {showAlertSpeichernButton = true}) { Text("Speichern")}
-                                        .disabled(parameterCheck(parGegenstand: "\(globaleVariable.parameterGegenstand)", parPerson: "\(globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personVorname)"))
+                                        .disabled(parameterCheck(parGegenstand: "\(globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt])", parPerson: "\(globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personVorname)"))
                                         .buttonStyle(.borderedProminent)
                                         .foregroundColor(.white).font(.system(size: 16, weight: .regular))
                                         .alert(isPresented:$showAlertSpeichernButton) {
@@ -390,6 +409,8 @@ struct EingabeMaskePhoneAndPadView: View {
                                                             // Diese Zeile bewirkt, dass die View in iPhone geschlossen wird
                                                             self.presentationMode.wrappedValue.dismiss() // Only iPhon
                                                         } // Ende if
+                                                        
+                                                        globaleVariable.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
                                                         
                                                         print("In der Tabelle Gespeichert...")
                                                         
@@ -524,6 +545,7 @@ struct EingabeMaskePhoneAndPadView: View {
 // For each side of the split string (left and right), take the first 5 characters and append '...' if there are more than 5 characters.
 // Finally, combine both sides together.
 func truncateText(_ myText: String) -> String {
+    let _ = print("func truncateText() wird aufgerufen!")
     let components = myText.split(separator: ",", maxSplits: 1) // Split by comma
     
     guard components.count == 2 else {
@@ -546,6 +568,7 @@ func truncateText(_ myText: String) -> String {
 // What the function do:
 // For the string take the first 5 characters and append '...' if there are more than 5 characters.
 func truncateString(_ myText: String) -> String {
+    let _ = print("func truncateString() wird aufgerufen!")
     
     guard myText.count > 10 else {
         return myText // Return original text if it is shorter as 10 characters
@@ -555,71 +578,6 @@ func truncateString(_ myText: String) -> String {
     
     return truncatedLeft
 } // Ende truncateString
-
-
-struct TextEditorWithPlaceholder: View {
-    @Binding var text: String
-    @Binding var platz: String
-    
-    @State var lastText: String = ""
-    
-    @FocusState private var textIsFocussed: Bool
-    
-    @State var totalCHarsText: Int = 100
-    var body: some View {
-        let _ = print("Struct TextEditorWithPlaceHolder wird aufgerufen!")
-        
-        ZStack(alignment: .leading) {
-            if text.isEmpty {
-                VStack {
-                    Text("\(platz)")
-                        .padding(.top, 10)
-                        .padding(.leading, 6)
-                        .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(Color.black)
-                        .opacity(0.4)
-                        
-                    Spacer()
-                } // Ende VStack
-            } // Ende if
-            
-            //VStack {
-                TextField("\(platz)", text: $text, axis: .vertical)
-                    .focused($textIsFocussed)
-                    .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(Color.black)
-                    .opacity(0.4)
-                    .background(Color.blue)
-                    .opacity(0.4)
-                    .cornerRadius(5)
-                    .disableAutocorrection(true)
-                    .lineLimit(3, reservesSpace: true)
-                    .textFieldStyle(.roundedBorder)
-                    .submitLabel(.done)
-                    .onChange(of: text) {
-                        if text.count <= 100 {
-                            lastText = text
-                            //print(lastText.count)
-                        }else{
-                            self.text = lastText
-                        } // Ende else
-                        
-                        guard let newValueLastChar = text.last else { return }
-                        
-                        if newValueLastChar == "\n" {
-                            text.removeLast()
-                            textIsFocussed = false
-                        } // Ende if
-                        
-                    } // Ende onChange
-                
-            //} // Ende VStack
-            
-        } // Ende ZStack
-        
-    }// Ende var body
-}// Ende struckt
-
 
 struct ImageSelector: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
@@ -638,7 +596,7 @@ struct ImageSelector: View {
     ]))
     
     var body: some View {
-        let _ = print("Struct ImageSelector wird aufgerufen!")
+        let _ = print("Struct ImageSelector: wird aufgerufen!")
         PhotosPicker(selection: $selectedItem, matching: filter, photoLibrary: .shared()) {
             Image(systemName: "photo.fill.on.rectangle.fill")
                 .symbolRenderingMode(.multicolor)
@@ -670,4 +628,118 @@ struct ImageSelector: View {
 
 
 
+struct CustomTextField: View {
+    
+    @Binding var text: String
+    
+    let isMultiLine: Bool
+    let placeholder: String
+    
+    @State var lastText: String = ""
+    @FocusState private var textIsFocused: Bool
 
+    var body: some View {
+        let _ = print("Struct CustomTextField: wird aufgerufen!")
+        
+        // Check if the text field is active (focused) or has content
+        let isActive = textIsFocused || text.count > 0
+        
+        
+        // Create a ZStack to overlay the button and the text field content
+        ZStack(alignment: .center) {
+            // Button to trigger focus on the whole text field frame
+            Button(action: {
+                textIsFocused = true
+            }) {
+                EmptyView()
+            } // Ende Button
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .opacity(0) // Make the button transparent
+            
+            // Main content of the CustomTextField
+            TextField("", text: $text, axis: isMultiLine ? .vertical : .horizontal)
+                .frame(height: 24)
+                .font(.system(size: 16, weight: .regular))
+                .disableAutocorrection(true)
+                .lineLimit(isMultiLine ? 3 : 1, reservesSpace: true)
+                .opacity(isActive ? 1 : 0)
+                .offset(y: isMultiLine ? 5 : 7)
+                .submitLabel(.done)
+                .focused($textIsFocused)
+                .onChange(of: text) {
+                    // Ensure the text length is within a limit (100 characters)
+                    if text.count <= 100 {
+                        lastText = text
+                    } else {
+                        self.text = lastText
+                    } // Ende if/else
+                    
+                    // Check if the user pressed the return key (newline character)
+                    guard let newValueLastChar = text.last else { return }
+                    
+                    if newValueLastChar == "\n" {
+                        text.removeLast()
+                        textIsFocused = false
+                    } // Ende if newValue...
+                } // Ende onChange
+            
+            // Placeholder text displayed with font sitze 16 when the text field is not active
+            // Placeholder text displayed with font sitze 12 when the text field is active
+            
+            HStack {
+                Text(placeholder)
+                    .foregroundColor(.black.opacity(0.3))
+                    .frame(height: 12)
+                    .font(.system(size: isActive ? 12 : 16, weight: .regular))
+                    .offset(y: isActive ? isMultiLine ? -30 : -14 : isMultiLine ? -30 : 0)
+                Spacer()
+            } // Ende HStack
+        } // Ende ZStack
+        .animation(.linear(duration: 0.2), value: textIsFocused)
+        .frame(height: isMultiLine ? 96 : 56) // Set the overall height of the CustomTextField
+        .padding(.horizontal, 16)
+        .background(.white) // Apply a white background
+        .cornerRadius(10) // Round the corners of the text field
+        .overlay {
+            // Add a border around the text field when it's focused
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(textIsFocused ? .black.opacity(0.6) : .black.opacity(0.2), lineWidth: 2)
+        } // Ende overlay
+    } // Ende var body
+} // Ende struct
+
+/*
+// Diese Funktion zeigt bei der Personenliste die Gender-Symbole
+func genderSymbol(par: String) -> Image {
+    let _ = print("func genderSymbol() wird aufgerufen!")
+    var resultat: Image = Image("")
+    
+    if par == "Mann" {
+        resultat = Image("Mann")
+        
+    } else if par == "Frau" {
+        resultat = Image("Frau")
+            
+    } else if par == "Divers" {
+        resultat = Image("Divers")
+           
+    } // Ende if
+    
+    return resultat
+    
+} // Ende func
+*/
+
+func parameterCheck(parGegenstand: String, parPerson: String) -> Bool {
+    var resultat: Bool = true
+    
+    if parGegenstand == "Neuer Gegenstand" || parPerson == "Neue Person" {
+        resultat = true
+        
+    } else {
+        resultat = false
+        
+    }// Ende if/else
+
+    return resultat
+} // Ende func

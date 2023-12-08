@@ -16,7 +16,7 @@ struct EditSheetView: View {
     @Binding var par1: [ObjectVariable]
     @Binding var par2: Int
     
-    @State var disableSpeichern: Bool = false
+   // @State var disableSpeichern: Bool = false
     @State var showChartHilfe: Bool = false
     @State var gegenstandTmp: String = ""
     @State var gegenstandTextTmp: String = ""
@@ -99,6 +99,7 @@ struct EditSheetView: View {
                                     .fontWeight(.semibold)
                                     .font(.system(size: 16, weight: .regular))
                                 } // Ende if
+                                
                                 Button("Speichern") {
                                     
                                     updateSqliteTabellenField(sqliteFeld: "gegenstand", neueInhalt: gegenstandTmp, perKey: par1[par2].perKey, tabelle: "Objekte")
@@ -140,7 +141,7 @@ struct EditSheetView: View {
                                 .foregroundColor(.white)
                                 .fontWeight(.semibold)
                                 .font(.system(size: 16, weight: .regular))
-                                .disabled(disableSpeichern)
+                                .disabled(gegenstandTmp.isEmpty)
                                 Spacer()
                             } // Ende HStack
                             
@@ -252,15 +253,25 @@ struct EditGegenstand: View {
     
     var body: some View {
         //NavigationStack {
+        VStack {
+            CustomTextField(text: $gegenstandTmp.max(25), isMultiLine: false, placeholder: "Gegenstandname")
+                .focused($isInputGegenstandActive)
+        }
+        .onAppear(){
+            gegenstandTmp = par1[par2].gegenstand
+        } // Ende onAppear
         
+        /*
         HStack{
             Text("Gegenstand: ")
                 .font(.system(size: 16, weight: .regular))
             Spacer()
+            
             TextField("", text: $gegenstandTmp)
                 .focused($isInputGegenstandActive)
                 .padding(.leading, 6)
                 .modifierEditFields()
+            
                 .onAppear(){
                     gegenstandTmp = par1[par2].gegenstand
                 } // Ende onAppear
@@ -273,7 +284,7 @@ struct EditGegenstand: View {
                     
                 } // Ende onChange
         }// Ende HStack
-        
+        */
         // } // Ende NavigationStack
     } // Ende var body
 } // Ende struct EditGegenstand
@@ -294,6 +305,9 @@ struct EditGegenstandText: View {
         //NavigationStack {
         VStack{
             
+            CustomTextField(text: $gegenstandTextTmp.max(100), isMultiLine: true, placeholder: "Gegenstandbeschreibung")
+                .focused($isInputGegenstandTextActive)
+            /*
             TextField("Gegenstandbeschreibung", text: $gegenstandTextTmp, axis: .vertical)
                 .focused($isInputGegenstandTextActive)
                 .padding(.top, 10)
@@ -323,7 +337,12 @@ struct EditGegenstandText: View {
                     } // Ende if
                     
                 } // Ende onChange
-        }// Ende HStack
+             */
+        }// Ende VStack
+        .onAppear(){
+            gegenstandTextTmp = par1[par2].gegenstandText
+        } // Ende onAppear
+        
         // } // Ende NavigationStack
     } // Ende var body
 } // Ende struct EditGegenstandText
@@ -349,15 +368,20 @@ struct EditPreisWert: View {
             TextField("", text: $preisWertTmp)
                 .modifier(TextFieldEuro(textParameter: $preisWertTmp))
                 .focused($isInputPreisWertActive)
-                .frame(width: 150, height: 30, alignment: .trailing)
-                //.padding(.leading, 6)
-                .background(Color.blue.opacity(0.4))
+                .frame(width: 100, height: 30, alignment: .trailing)
+                .background(Color.gray.opacity(0.09))
+                .cornerRadius(10)
+                .font(.system(size: 18, weight: .regular).bold())
                 .foregroundColor(Color.black.opacity(0.4))
+            
+                //.padding(.leading, 6)
+                //.background(Color.blue.opacity(0.4))
+                //.foregroundColor(Color.black.opacity(0.4))
                 .keyboardType(.decimalPad)
                 .multilineTextAlignment(.trailing)
                 .submitLabel(.done)
-                .font(.system(size: 16, weight: .regular))
-                .cornerRadius(5)
+                //.font(.system(size: 16, weight: .regular))
+                //.cornerRadius(5)
                 .onReceive(Just(preisWertTmp)) { newValue in
                     // Es soll verhindert werden mit cut/past nicht numerische Werte einzugeben. Zum Beispiel beim iPad
                     let allowedCharacters = "0123456789,"
@@ -419,12 +443,12 @@ struct EditDatum: View {
                 .labelsHidden()
                 .padding(.trailing, -5)
                 .foregroundColor(.gray)
-                .opacity(0.7)
-                .background(Color.blue)
                 .opacity(0.4)
+                //.background(Color.blue)
+                //.opacity(0.4)
                 .multilineTextAlignment (.center)
                 .environment(\.locale, Locale.init(identifier: "de"))
-                .cornerRadius(5)
+                .cornerRadius(10)
                 .id(calendarId)
                 .onChange(of: datumTmp ) {
                     calendarId += 1
@@ -454,6 +478,9 @@ struct EditAllgemeinerText: View {
         //NavigationStack {
         VStack{
             
+            CustomTextField(text: $allgemeinerTextTmp.max(100), isMultiLine: true, placeholder: "Allgemeine Notitzen")
+                .focused($isInputAllgemeinerTextActive)
+            /*
             TextField("Allgemeiner Text", text: $allgemeinerTextTmp, axis: .vertical)
                 .focused($isInputAllgemeinerTextActive)
                 .padding(.top, 10)
@@ -483,7 +510,12 @@ struct EditAllgemeinerText: View {
                     } // Ende if
                     
                 } // Ende onChange
-        }// Ende HStack
+             */
+        }// Ende VStack
+        .onAppear(){
+            allgemeinerTextTmp = par1[par2].allgemeinerText
+        } // Ende onAppear
+        
         //} // Ende NavigationStack
     } // Ende var body
 } // Ende struct EditAllgemeinerText
@@ -501,28 +533,33 @@ struct EditGegenstandBild: View {
     var body: some View {
         //NavigationStack {
         HStack{
+            
             Text("Neues Bild: ")
                 .font(.system(size: 16, weight: .regular))
             Spacer()
             
             if gegenstandBildTmp == "Kein Bild" {
-                Text("X")
-                    .scaledToFit()
-                    .frame(width: 30, height: 30, alignment: .center)
-                    .background(Color.gray.gradient)
-                    .cornerRadius(5)
-                Text(" ")
+                
                 ImageSelector()
                 Text(" ")
                 PhotoSelector()
+               // Text(" ")
+                
+                Text("X")
+                    .scaledToFit()
+                    .frame(width: 25, height: 25, alignment: .center)
+                    .background(Color.gray.gradient)
+                    .cornerRadius(5)
             }else{
+                
                 Image(base64Str: gegenstandBildTmp)?
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 30, height: 30)
+                    .frame(width: 28, height: 28)
                     .clipped()
                     .cornerRadius(5)
                 Text(" ")
+                
                 Button(action: {
                     gegenstandBildTmp = "Kein Bild"
                 }, label: {
@@ -543,8 +580,7 @@ struct EditGegenstandBild: View {
         .onChange(of: globaleVariable.parameterImageString) {
             print("Foto ausgesucht!")
             gegenstandBildTmp = globaleVariable.parameterImageString
-            //par1[par2].gegenstandBild = bildTmp
-            //globaleVariable.parameterImageString = "Kein Bild"
+
             print("\(gegenstandBildTmp)")
         } // Ende onChange
         
@@ -582,7 +618,7 @@ struct EditVorgang: View {
             .font(.system(size: 16, weight: .regular))
             .frame(width: 150, height: 30)
             .padding(.trailing, 5)
-            .background(Color.blue.opacity(0.4))
+            //.background(Color.blue.opacity(0.4))
             .foregroundColor(.black.opacity(0.4))
             .cornerRadius(5)
             .onAppear(){
@@ -626,7 +662,7 @@ struct EditPerson: View {
                     .frame(width: 150, height: 30, alignment: .trailing)
                     .font(.system(size: 16, weight: .regular))
                     .frame(height: 30)
-                    .background(Color.blue.opacity(0.4))
+                    //.background(Color.blue.opacity(0.4))
                     .foregroundColor(.black.opacity(0.4))
                     .cornerRadius(5)
                 

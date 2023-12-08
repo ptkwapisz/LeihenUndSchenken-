@@ -10,6 +10,8 @@ import Foundation
 import SwiftUI
 import Contacts
 
+
+// Diese View wird aufgerufen beim Hinzufügen des Gegenstandes in der Parameterlist Tab 2
 struct ShapeViewAddGegenstand: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
    
@@ -60,6 +62,10 @@ struct ShapeViewAddGegenstand: View {
                     
                     List {
                         Section(){
+                            
+                            CustomTextField(text: $gegenstandNeu.max(20), isMultiLine: false, placeholder: "Gegenstandname")
+                                .focused($isInputActive)
+                            /*
                             TextField("Gegenstand", text: $gegenstandNeu.max(20))
                                 .focused($isInputActive)
                                 .padding(5)
@@ -68,6 +74,7 @@ struct ShapeViewAddGegenstand: View {
                                 .submitLabel(.done)
                                 .cornerRadius(5)
                                 .disableAutocorrection(true)
+                             */
                         }
                         Section(){
                             
@@ -248,6 +255,9 @@ struct ShapeViewEditGegenstand: View {
                     
                     List {
                         Section(){
+                            CustomTextField(text: $gegenstandNeu.max(20), isMultiLine: false, placeholder: "Gegenstandname")
+                                .focused($isInputActive)
+                            /*
                             TextField("Gegenstand", text: $gegenstandNeu.max(20))
                                 .focused($isInputActive)
                                 .padding(5)
@@ -256,6 +266,7 @@ struct ShapeViewEditGegenstand: View {
                                 .submitLabel(.done)
                                 .cornerRadius(5)
                                 .disableAutocorrection(true)
+                             */
                         }
                         Section(){
                             
@@ -668,7 +679,7 @@ struct ShapeViewEditUser: View {
     } // Ende some View
     
     var body: some View {
-        
+        let _ = print("struct ShapeViewEditUser: wird aufgerufen!")
         GeometryReader { geometry in
            VStack {
                 VStack {
@@ -678,6 +689,9 @@ struct ShapeViewEditUser: View {
                         
                         List {
                             Section() {
+                                CustomTextField(text: $neuePersonTmp[0].personVorname.max(15), isMultiLine: false, placeholder: "Vorname")
+                                    .focused($focusedField, equals: .vorname)
+                                /*
                                 Text("Vorname:")
                                 TextField("Vorname", text: $neuePersonTmp[0].personVorname.max(15))
                                     .focused($focusedField, equals: .vorname)
@@ -686,7 +700,11 @@ struct ShapeViewEditUser: View {
                                     .foregroundColor(.black.opacity(0.4))
                                     .submitLabel(.done)
                                     .disableAutocorrection(true)
+                                */
                                 
+                                CustomTextField(text: $neuePersonTmp[0].personNachname.max(25), isMultiLine: false, placeholder: "Nachname")
+                                    .focused($focusedField, equals: .name)
+                                /*
                                 Text("Nachname:")
                                 TextField("Namen", text: $neuePersonTmp[0].personNachname.max(25))
                                     .focused($focusedField, equals: .name)
@@ -695,6 +713,7 @@ struct ShapeViewEditUser: View {
                                     .foregroundColor(.black.opacity(0.4))
                                     .submitLabel(.done)
                                     .disableAutocorrection(true)
+                                 */
                             } // Ende Section
                             
                             Section() {
@@ -741,7 +760,10 @@ struct ShapeViewEditUser: View {
                                         isPresentedShapeViewEditUser = false
                                         //} // Ende if/else
                                     } else {
+                                        personPickerTmp = neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
+                                        neuePersonTmp[0].personSex = globaleVariable.parameterPersonSex[selectedPerson_sexInt]
                                         
+                                        isPresentedShapeViewEditUser = false
                                         print("Die tabelleDB ist gleich 'Objekte' ")
                                     } // Ende if/else
                                     

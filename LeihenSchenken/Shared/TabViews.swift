@@ -22,12 +22,12 @@ var body: some View {
         VStack {
             
             if UIDevice.current.userInterfaceIdiom == .phone {
-                deteilTab1()
+                DeteilTab1()
                 .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
                 
             } else {
                 
-                deteilTab1()
+                DeteilTab1()
                     .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                     .background(globaleVariable.farbenEbene1)
                     .cornerRadius(10)

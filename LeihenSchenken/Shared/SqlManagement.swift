@@ -186,6 +186,7 @@ func extrahierenString(arrayTemp: [String]) -> String  {
     
 } // Ende func extrahiereString
 
+
 func anzahlDerDatensaetze(tableName: String) -> Int {
     var resultat: Int = 0
     //let query = "select count(*) from '\(tableName)';"
@@ -198,7 +199,12 @@ func anzahlDerDatensaetze(tableName: String) -> Int {
 
 func datenbankReset(){
     
-    print("Datenbank wird zurückgesetzt!")
+    @State var statusManager = StatusManager()
+    @State var purchaseManager = PurchaseManager()
+    @State var needsRefresh: Bool = false
+    
+    print("func datenbankReset() wird aufgerufen")
+    
     
     sqlite3_close(db)
     db = nil
@@ -212,6 +218,11 @@ func datenbankReset(){
     
     // Hier werden die globale Arrays neu erstellt
     refreschParameter()
+    
+    purchaseManager.deletePurchase()
+    
+    statusManager.handlePurchaseStatusUpdate(with: purchaseManager, needsRefresh: false) { needsRefresh.toggle() }
+    //statusManager.handlePurchaseStatusUpdate(with: purchaseManager)
     
 } // Ende func
 
@@ -262,10 +273,10 @@ func refreschParameter(){
     
     globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
     
-    //globaleVariable.parameterPerson = personenArray()
+    // Update the number of Objects
+    globaleVariable.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
     
 } // Ende refreschParameter
-
 
 
 // Dierse Funktion fügt in eine Variable (Type Class) die Tabelle aus einer Datenbank
@@ -512,16 +523,18 @@ func querySQLAbfrageClassPerson(queryTmp: String, isObjectTabelle: Bool) -> [Per
 } // Ende func querySQLAbfrageClassPerson
 
 
- /*
+/*
 // Dierse Funktion fügt in eine Variable (Type Class) die Personentabelle aus der Datenbank
 // Der erste parameter ist die Query-String
-func querySQLAbfrageClassPersonen(queryTmp: String) -> [PersonClassVariable]  {
+func querySQLAbfrageClassPersonenGender() -> [PersonPickerWithGender]  {
     //@ObservedObject var globaleVariable = GlobaleVariable.shared
-    let _ = print("Funktion querySQLAbfrageClassPersonen() wird aufgerufen!")
-    var name: [String] = ["","","","",""]
-    let queryString: String = queryTmp
+    let _ = print("Funktion querySQLAbfrageClassPersonenGender() wird aufgerufen!")
+    var name: [String] = ["", ""]
+    var nameTmp: String = ""
+  
+    let queryString: String = "Select personPicker, personSex FROM Personen "
     
-    var resultatClass: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
+    var resultatClass: [PersonPickerWithGender] = [PersonPickerWithGender(picker: "", personSex: "", gender: "")]
     
     var statement: OpaquePointer?
     
@@ -543,8 +556,19 @@ func querySQLAbfrageClassPersonen(queryTmp: String) -> [PersonClassVariable]  {
             } // End if else
         } // Ende for n
         
+        switch name[1] {
+            case "Mann":
+                nameTmp = "customMan"
+            case "Frau":
+                nameTmp = "cusomFemal"
+            case "Divers":
+                nameTmp = "customDiverse"
+            default:
+                print("")
+        } // Ende switch
         
-        resultatClass.append(PersonClassVariable(perKey: name[0], personPicker: name[1], personVorname: name[2], personNachname: name[3], personSex: name[4]))
+        
+        resultatClass.append(PersonPickerWithGender(picker: name[0], personSex: name[1], gender: nameTmp))
         
     } // Ende while
     
@@ -597,7 +621,17 @@ func pruefenDieElementeDerDatenbank(parPerson: [String], parGegenstand: String) 
         print(parPersonTmp1)
         print(parPersonTmp2)
         print(parPerson[2])
-        let ergebnis = querySQLAbfrageArray(queryTmp: "SELECT count() personPicker from Personen WHERE personPicker = '\(parPersonTmp2)' AND personSex = '\(parPerson[2])'")
+        var ergebnis: [String] = []
+        
+        if parPerson[2] != "" {
+           // Wenn Geschlecht angegeben wurde
+           ergebnis = querySQLAbfrageArray(queryTmp: "SELECT count() personPicker from Personen WHERE personPicker = '\(parPersonTmp2)' AND personSex = '\(parPerson[2])'")
+        } else {
+            // Ohne Geschlecht
+            ergebnis = querySQLAbfrageArray(queryTmp: "SELECT count() personPicker from Personen WHERE personPicker = '\(parPersonTmp2)'")
+            
+        } // Ende if/else
+        
         if Int(ergebnis[0])! > 0 {
             resultat = true
         }else{

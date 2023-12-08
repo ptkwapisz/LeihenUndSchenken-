@@ -26,7 +26,7 @@ struct DeteilView: View {
     @State var showSetupEdit: Bool = false
     @State var showSetupReset: Bool = false
     @State var showDBReset: Bool = false
-    
+    @State var showPremiumStatus: Bool = false
     
     @State var showAppInfo: Bool = false
     @State var showTabHilfe: Bool = false
@@ -37,14 +37,12 @@ struct DeteilView: View {
     @State var gegenstandHinzufuegen: Bool = false
     @State var selectedTypeTmp = ""
   
-
     var body: some View {
-        
-        // Prüfen, ob sich Objekte in der Datenbank befinden
-        let anzahlDerObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: false)
-        let _ = setColorOfBadge(numberOfObjects: anzahlDerObjekte.count)
        
-        
+        // Prüfen, ob sich Objekte in der Datenbank befinden
+        //let anzahlDerObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: false)
+        let _ = setColorOfBadge(numberOfObjects: globaleVariable.numberOfObjects)
+       
             VStack(spacing: 10) {
                 
                 TabView(selection: $globaleVariable.navigationTabView) {
@@ -54,7 +52,7 @@ struct DeteilView: View {
                         Text("Objekte")
                     } // Ende Tab
                     .tag(1) // Die Tags identifizieren die Tab und füren zum richtigen Titel
-                    .badge(anzahlDerObjekte.count)
+                    .badge(globaleVariable.numberOfObjects)
                     
                     Tab2(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                         
@@ -72,7 +70,7 @@ struct DeteilView: View {
                     } // Ende Tab
                     .tag(3) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                     
-                    if anzahlDerObjekte.count > 0 {
+                    if globaleVariable.numberOfObjects > 0 {
                         Tab4(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                             Image(systemName: "list.dash")
                             Text("PDF-Liste")
@@ -94,7 +92,6 @@ struct DeteilView: View {
                 
             } // Ende VStack
             .navigationTitle(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabName)
-            
             .toolbar {
                 
                 MyToolbarItemsHausButton()
@@ -114,6 +111,8 @@ struct DeteilView: View {
                                 Button("Einstellungen bearbeiten", action: {showSetupEdit.toggle()})
                                 Button("Einstellungen zurücksetzen", action: {showSetupReset.toggle()})
                             } // Ende Menu
+                            
+                            Button("In-App-Käufe", action: {showPremiumStatus.toggle()})
                             
                             Divider()
                             
@@ -141,6 +140,7 @@ struct DeteilView: View {
                         ) // Ende alert
                         .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
                         .sheet(isPresented: $showStatistikenView, content: {Statistik()})
+                        .sheet(isPresented: $showPremiumStatus, content: {StroreAccessPremium(isPresented: $showPremiumStatus)})
                         
                     } // Ende ToolbarItemGroup
                 
@@ -157,25 +157,25 @@ struct DeteilView: View {
                 MyToolbarItemsHilfeButton()
                 
             } // Ende toolbar
-            //.toolbarRole(.editor) // Bei dieser Rolle ist der back Button < ohne Text
+            
             
     } // Ende var body
    
     func setColorOfBadge(numberOfObjects: Int){
         
         var badgeColor: UIColor
-    
-        if numberOfObjects < 20 {
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Unter 6")
+        let tabBarAppearance = UITabBarAppearance()
+        
+        if numberOfObjects < GlobalStorage.numberOfObjectsFree {
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Unter 10")
             
             badgeColor = UIColor(Color.red)
         }else{
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Über 6")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Über 10")
            
             badgeColor = UIColor(globaleVariable.farbenEbene0)
         } // Ende if/else
     
-        let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = badgeColor
         UITabBar.appearance().standardAppearance = tabBarAppearance
     
@@ -193,7 +193,7 @@ func naviTitleUndHilfeText(tabNummer: Int) -> (tabName: String, tabHilfe: String
     
     switch tabNummer {
     case 1:
-            returnWert = (tabName: "Die Liste der Objekte", tabHilfe: "\(HilfeTexte.tabObjektListe)")
+            returnWert = (tabName: "Liste der Objekte", tabHilfe: "\(HilfeTexte.tabObjektListe)")
     case 2:
             returnWert = (tabName: "Gegenstände", tabHilfe: "\(HilfeTexte.tabGegenstandListe)")
     case 3:
@@ -411,29 +411,44 @@ struct MyToolbarItemsHilfeButton: ToolbarContent {
 struct MyToolbarPlusButtonTab1: ToolbarContent {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    //@StateObject var productManager = ProductManager()
     
     @State var showEingabeMaske: Bool = false
+    @State var showStoreAlert: Bool = false
+    
+    
+    //let statusManager = StatusManager()
+    let purchaseManager = PurchaseManager()
     
     var body: some ToolbarContent {
         
         if globaleVariable.navigationTabView == 1 && UIDevice.current.userInterfaceIdiom == .phone {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button(action:{
-                    showEingabeMaske = true
+                    
+                    if globaleVariable.numberOfObjects < GlobalStorage.numberOfObjectsFree || purchaseManager.isPremium() == true {
+                    //if globaleVariable.numberOfObjects < GlobalStorage.numberOfObjectsFree || statusManager.isProductPurchased == true {
+                        showEingabeMaske = true
+                    }else{
+                        showStoreAlert = true
+                    } // Ende if/else
                     
                 }) {
                     Image(systemName: "plus")
                 } // Ende Button
                 .applyModifier(UIDevice.current.userInterfaceIdiom == .phone) {
                     $0.navigationDestination(isPresented: $showEingabeMaske, destination: { EingabeMaskePhoneAndPadView()
-                        
+                           
                     })
                 } // Ende .applyModifier
-               
+                .alert("Status Information", isPresented: $showStoreAlert, actions: {
+                }, message: { Text("Sie haben eine Standarversion. Sie erlaubt es nicht mehr als 10 Objekte zu verwalten. Bitte klicken Sie auf das Menue-Icon oben links und wählen Sie die Menuezeile 'In-App-Käufe' aus. Dort können Sie einmahlig die Premiumversion kaufen und dadurch die Objektsperre ausschalten.") } // Ende message
+                ) // Ende alert
+                
             } // Ende ToolbarItemGroup
-        
+            
         } // Ende if
-    
+        
     } // Ende var body
 } // Ende struct
 

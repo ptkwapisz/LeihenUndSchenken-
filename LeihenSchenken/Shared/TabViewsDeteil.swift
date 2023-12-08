@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct deteilTab1: View {
+struct DeteilTab1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     
@@ -22,7 +22,7 @@ struct deteilTab1: View {
     @State var objectPerKey: String = ""
     
     var body: some View {
-        let _ = print("Struct deteilTab1 wird aufgerufen!")
+        let _ = print("Struct DeteilTab1: wird aufgerufen!")
         
         let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
         
@@ -67,11 +67,11 @@ struct deteilTab1: View {
                         
                         // Wenn es keine Objekte gibt wird auch keine Suchzeile angezeigt.
                         //if alleObjekte.count > 0 {
-                        serchFullTextInObjekten()
+                        SerchFullTextInObjekten()
                         //}// Ende if
                         
                     } // Ende HStack
-                    .frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
+                    //.frame(width: geometry.size.width, height: GlobalStorage.bottonToolBarHight, alignment: .leading)
                     //.background(Color(UIColor.lightGray))
                     .foregroundColor(Color.black)
                 }// Ende if
@@ -336,7 +336,7 @@ struct deteilTab3: View {
                         HStack{
                             Text(index.personPicker)
                             Spacer()
-                            genderSymbol(par: index.personSex)
+                            Image(index.personSex)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 25, height: 25)

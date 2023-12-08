@@ -73,6 +73,9 @@
             ReferencedContainer = "container:LeihenSchenken.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <StoreKitConfigurationFileReference
+         identifier = "../../LeihenSchenken/Shared/StoreKitConfigFile.storekit">
+      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

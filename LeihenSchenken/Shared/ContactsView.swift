@@ -73,7 +73,13 @@ struct ShapeViewAddUser: View {
                     
                     List {
                         Section() {
+                            CustomTextField(text: $vorname.max(15), isMultiLine: false, placeholder: "Vorname")
+                                .focused($focusedField, equals: .vornameFokus)
                             
+                            CustomTextField(text: $name.max(25), isMultiLine: false, placeholder: "Nachname")
+                                .focused($focusedField, equals: .nameFokus)
+                            
+                            /*
                             TextField("Vorname", text: $vorname.max(15))
                                 .focused($focusedField, equals: .vornameFokus)
                                 .padding(5)
@@ -91,7 +97,7 @@ struct ShapeViewAddUser: View {
                                 .cornerRadius(5)
                                 .submitLabel(.done)
                                 .disableAutocorrection(true)
-                            
+                            */
                             Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
                                 
                                 ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
@@ -119,10 +125,7 @@ struct ShapeViewAddUser: View {
                             Button(action: {
                                 if vorname != "" && name != "" {
                                     
-                                    
-                                    
                                     if isParameterBereich {
-                                        
                                         
                                         personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
                                         // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
@@ -157,7 +160,7 @@ struct ShapeViewAddUser: View {
                                 Text("Speichern")
                                 
                             } // Ende Button
-                            .disabled(vorname != "" && name != "" ? false : true)
+                            .disabled(editCheck())
                             .buttonStyle(.borderedProminent)
                             .foregroundColor(.white)
                             .font(.system(size: 16, weight: .regular))
@@ -322,6 +325,23 @@ struct ShapeViewAddUser: View {
         } // Ende if/else
     } // Ende private func
     
+    func editCheck() -> Bool {
+        var resultat = true
+        
+        if vorname == "" || name == "" {
+            resultat = true
+            
+        } else  if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname.trimmingCharacters(in: .whitespacesAndNewlines))", "\(name.trimmingCharacters(in: .whitespacesAndNewlines))", ""], parGegenstand: "") {
+            resultat = true
+            
+        } else {
+            resultat = false
+        }
+        
+        return resultat
+        
+    } // Ende func
+    
 } // Ende struct
 
 
@@ -342,7 +362,7 @@ struct SerchFullTextInAdressbook: View {
         
         TextField("", text: $globaleVariable.searchTextAdressBook)
             .focused($isInputActive)
-            .frame(height: GlobalStorage.bottonToolBarHight - 36)
+            .frame(height: tabViewBottomToolbarHight() - 36)
             .font(.system(size: 18, weight: .medium))
             .disableAutocorrection (true)
             .submitLabel(.done)
@@ -405,8 +425,6 @@ struct SerchFullTextInAdressbook: View {
                 } // Ende ToolbarItemGroup
             } // Ende toolbar
         
-        
-        
     } // Ende var body
     
 } // Ende struct
@@ -431,7 +449,7 @@ func serchInAdressBookArray(parameter:  [Contact]) ->  [Contact]{
     }// Ende if/else
     
     return resultat
-}// Ende func
+} // Ende func
 
 func fetchAllContacts(completion: @escaping ([Contact]) -> Void) {
     DispatchQueue.global(qos: .background).async {
@@ -460,4 +478,4 @@ func fetchAllContacts(completion: @escaping ([Contact]) -> Void) {
             }// Ende DispatchQueue
         } // Ende catch
     } // Ende DispatchQueue
-}// Ende func
+} // Ende func

@@ -15,7 +15,7 @@ struct PhotoSelector: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @State private var image = UIImage()
     @State private var showSheet = false
-    @State private var selectedPhotoData: Data?
+    //@State private var selectedPhotoData: Data?
     //@StateObject var cameraManager = CameraManager()
     
     var body: some View {

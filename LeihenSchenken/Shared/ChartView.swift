@@ -32,7 +32,7 @@ struct ChartView: View {
     @State var isPresentedTestView: Bool = true
     
     var body: some View {
-      
+    
         GeometryReader { geometry in
             
             let gegenstandTextWidth = geometry.size.width / 2.6
@@ -59,7 +59,6 @@ struct ChartView: View {
                                         .scaledToFill()
                                         .frame(width: 150, height: 150)
                                         .clipped()
-                                        .cornerRadius(10)
                                         .padding(5)
                                         .border(.blue, width: 4)
                                         .cornerRadius(10)
@@ -78,6 +77,7 @@ struct ChartView: View {
                                 
                             } // Ende if/else
                             
+                            Spacer()
                             
                             Text("\(par1[par2].gegenstandText)")
                                 .padding(.top, 10)
@@ -197,6 +197,7 @@ struct ChartView: View {
                             print(perKeyTmp)
                             globaleVariable.navigationTabView = 1
                             refreshAllViews()
+                            globaleVariable.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
                             showAlert = false
                             
                             // Diese Zeile bewirkt, dass die View geschlossen wird
