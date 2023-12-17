@@ -77,7 +77,6 @@ func standartWerteSchreiben() {
 
 func erstellenDatenbankUndTabellen() -> Bool {
     
-    
     let createTableObjekte = "CREATE TABLE IF NOT EXISTS Objekte (perKey TEXT PRIMARY KEY, gegenstand TEXT, gegenstandText TEXT, gegenstandBild TEXT, preisWert TEXT, datum TEXT, vorgang TEXT, personVorname TEXT, personNachname TEXT, personSex TEXT, allgemeinerText TEXT)"
     
     let createTablePersonen = "CREATE TABLE IF NOT EXISTS Personen (perKey TEXT PRIMARY KEY, personPicker Text, personVorname TEXT, personNachname TEXT, personSex TEXT)"
@@ -203,7 +202,7 @@ func datenbankReset(){
     @State var purchaseManager = PurchaseManager()
     @State var needsRefresh: Bool = false
     
-    print("func datenbankReset() wird aufgerufen")
+    print("Funktion datenbankReset() wird aufgerufen")
     
     
     sqlite3_close(db)

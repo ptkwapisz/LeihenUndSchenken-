@@ -10,10 +10,6 @@ import SwiftUI
 import StoreKit
 import Security
 
-
-
-
-
 // Das isr einige Hilfsfunktionen, um den Umgang mit der Keychain zu vereinfachen.
 // Diese Funktionen ermöglicht das Speichern, Abrufen und Löschen von Daten in der Keychain:
 class KeychainHelper {
@@ -53,7 +49,7 @@ class KeychainHelper {
         ]
         SecItemDelete(query as CFDictionary)
     } // Ende func delete
-}
+} // Ende class
 
 // Kaufstatus speichern und abrufen
 class PurchaseManager {
@@ -89,7 +85,7 @@ struct StroreAccessPremium: View {
     let statusManager = StatusManager()
     let purchaseManager = PurchaseManager()
    
-    let footerTextStandard: String = "Bei der Standard-Version ist die Anzahl der Objekte auf 10 begrenzt. Die Funktionalität der App ist aber nicht eingeschränkt. Man kann dadurch die App auf eigene Belange testen. Mit dem Kauf der Premium-Version fehlt die Begrenzung auf 10 Objekte. Den oben angezeigten Betrag zahlt man nur ein Mal."
+    let footerTextStandard: String = "Bei der Standard-Version ist die Anzahl der Objekte auf \(GlobalStorage.numberOfObjectsFree) begrenzt. Die Funktionalität der App ist aber nicht eingeschränkt. Man kann dadurch die App auf eigene Belange testen. Mit dem Kauf der Premium-Version fehlt die Begrenzung auf 10 Objekte. Den oben angezeigten Betrag zahlt man nur ein Mal."
     let footerTextPremium: String = "Bei der Premium-Version ist die Anzahl der Objekte unbegrenzt. Die Funktionalität der App ist nicht eingeschränkt. Der Kauf war einmalig und ist zeitlich unbegrnzt."
    
     @State private var heightOfTextinForm: CGFloat = 0.0 // Is needed for calculation of footer position
@@ -112,8 +108,8 @@ struct StroreAccessPremium: View {
                             
                         } // Ende Section
                         
-                        Section (footer: FooterView(heightOfTextinForm: $heightOfTextinForm)) {
-                           
+                        //Section (footer: FooterView(heightOfTextinForm: $heightOfTextinForm)) {
+                        Section {
                             HStack{
                                 Spacer()
                                 Button {
@@ -146,6 +142,11 @@ struct StroreAccessPremium: View {
                             heightOfTextinForm = geometry.size.height
                            
                         } // Ende onAppear
+          
+                        FooterView()
+                        .listRowInsets(EdgeInsets())
+                        .frame(width: geometry.size.width, height: 45, alignment: .top)
+                        .background(Color(red: 0.95, green: 0.95, blue: 0.95))
                         
                     } // Ende Form
                     .cornerRadius(10)
@@ -156,7 +157,7 @@ struct StroreAccessPremium: View {
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
+            .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
             .background(globaleVariable.farbenEbene0)
             
         } // Ende GeometryReader
@@ -185,7 +186,7 @@ struct InAppPurchasePremiumView: View {
                 Spacer()
                 Text("Sie haben die Standard-Version!")
                 Spacer()
-            }
+            } // Ende if/else
         } // Ende HStack
         
         ZStack {
@@ -222,14 +223,10 @@ struct InAppPurchasePremiumView: View {
     } // Ende var body
 } // Ende struct InAppPurchasePremiumView
 
-
-
-
-
 // This struct show footer in the Section for "Käufe wiederherstellen"
 // This footer will be show when premium ist false
 struct FooterView: View {
-    @Binding var heightOfTextinForm: CGFloat
+    //@Binding var heightOfTextinForm: CGFloat
     let purchaseManager = PurchaseManager()
     //let statusManager = StatusManager()
     
@@ -254,16 +251,15 @@ struct FooterView: View {
                         Text("Einkäufe wiederherstellen")
                         Spacer()
                     } // Ende HStack
-                    .frame(height: heightOfTextinForm * 0.83)
+                    //.frame(height: heightOfTextinForm * 0.83)
                     
                 } // Ende Button
+                
                 Spacer()
             } // Ende if
         } // Ende HStack
     } // Ende var body
 } // Ende struct
-
-
 
 class StatusManager: NSObject, ObservableObject, SKPaymentTransactionObserver {
     @Published var isProductPurchased: Bool = false
@@ -274,12 +270,12 @@ class StatusManager: NSObject, ObservableObject, SKPaymentTransactionObserver {
     override init() {
         super.init()
         SKPaymentQueue.default().add(self)
-    }
+    } // Ende override
     
     func checkPurchaseStatus(completion: @escaping (Bool) -> Void) {
         self.checkCompletion = completion
         SKPaymentQueue.default().restoreCompletedTransactions()
-    }
+    } // Ende func
     
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
@@ -295,22 +291,22 @@ class StatusManager: NSObject, ObservableObject, SKPaymentTransactionObserver {
                     checkCompletion?(false)
                 default:
                     break
-            }
-        }
-    }
+            } // Ende switch
+        } // Ende for
+    } // Ende func
     
     func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
         checkCompletion?(isProductPurchased)
-    }
+    } // Ende func
     
     func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
         checkCompletion?(false)
-    }
+    } // Ende func
 
     func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool {
         return true
-    }
-}
+    } // Ende func
+} // Ende class
 
 
 extension StatusManager {
@@ -321,7 +317,7 @@ extension StatusManager {
             if isPurchased {
                 if !purchaseManager.isPremium() {
                     purchaseManager.savePurchase(isPremium: true)
-                }
+                } // Ende if
                 print("----------------------------")
                 print("CheckPurchaseStatus: Produkt ist Premium")
                 print("----------------------------")
@@ -332,7 +328,7 @@ extension StatusManager {
                 print("----------------------------")
                 print("CheckPurchaseStatus: Produkt ist Standard")
                 print("----------------------------")
-            }
+            } // Ende if/else
             
             if self.isProductPurchased {
                 
@@ -345,16 +341,14 @@ extension StatusManager {
                 print("isProductPurchased: Produkt ist Standard")
                 print("----------------------------")
                 
-            }
-            
-            
+            } // Ende if/else
             
             if needsRefresh {
                 completion()
-            }
-        }
-    }
-}
+            } // Ende if
+        } // Ende checkPurchaseStatus
+    } // Ende func
+} // Ende extension
 
 class PurchaseStatusNotifier: ObservableObject {
     // Diese Variable wird aktualisiert, wenn ein Kauf abgeschlossen wird
@@ -362,5 +356,7 @@ class PurchaseStatusNotifier: ObservableObject {
     
     func notifyPurchaseCompletion() {
         purchaseCompleted = true
-    }
-}
+    } // Ende func
+} // Ende class
+
+

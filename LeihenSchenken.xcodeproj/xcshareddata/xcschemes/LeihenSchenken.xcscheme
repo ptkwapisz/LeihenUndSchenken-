@@ -74,7 +74,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <StoreKitConfigurationFileReference
-         identifier = "../../LeihenSchenken/Shared/StoreKitConfigFile.storekit">
+         identifier = "../../LeihenSchenken/Shared/StoreKitConfigFileConnect.storekit">
       </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction

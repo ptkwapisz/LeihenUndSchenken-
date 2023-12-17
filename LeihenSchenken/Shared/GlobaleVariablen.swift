@@ -28,8 +28,8 @@ class GlobaleVariable: ObservableObject {
     @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
    
     
-    @Published var disableDBLadenMenueItem: Bool = ifExistLeiheUndSchenkeDbCopy()
-    @Published var disableDBSpeichernMenueItem: Bool = ifExistSpaceForLeiheUndSchenkeDbCopy()
+    //@Published var disableDBLadenMenueItem: Bool = ifExistLeiheUndSchenkeDbCopy()
+    //@Published var disableDBSpeichernMenueItem: Bool = ifExistSpaceForLeiheUndSchenkeDbCopy()
     
     @Published var navigationTabView = 1
     @Published var farbenEbene0: Color = loadColor0A()

@@ -112,7 +112,7 @@ struct DeteilTab1: View {
                                             
                                             HStack {
                                                 
-                                                NavigationLink(destination: ChartView(par1: objekte, par2: item)
+                                                NavigationLink(destination: ObjectDeteilView(par1: objekte, par2: item)
                                                     .applyModifier(UIDevice.current.userInterfaceIdiom == .pad){$0.navigationBarBackButtonHidden()}
                                                 ) {
                                                     

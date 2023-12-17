@@ -1,5 +1,5 @@
 {
-  "identifier" : "7262319B",
+  "identifier" : "BA358C5F",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -7,11 +7,11 @@
     {
       "displayPrice" : "1.99",
       "familyShareable" : false,
-      "internalID" : "AD45CF51",
+      "internalID" : "6474078349",
       "localizations" : [
         {
-          "description" : "Einmalzahlung",
-          "displayName" : "Premium Lifetime",
+          "description" : "Verwaltung der Gegenstände ",
+          "displayName" : "Leihen und Schenken",
           "locale" : "de"
         }
       ],
@@ -21,7 +21,10 @@
     }
   ],
   "settings" : {
+    "_applicationInternalID" : "6451158558",
+    "_developerTeamID" : "K42L6ZYYGZ",
     "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 724151195.96467996,
     "_locale" : "de",
     "_storefront" : "DEU",
     "_storeKitErrors" : [

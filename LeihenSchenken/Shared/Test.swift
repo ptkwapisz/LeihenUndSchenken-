@@ -9,7 +9,8 @@ import SwiftUI
 import Swift
 import Foundation
 
-// Höhe des unteren Toolbarstreifes bei den Tabs
+
+// Höhe des oberen Fulltext-Serch Feldes in der ersten Tab (Objekte)
 func tabViewBottomToolbarHight() -> CGFloat {
     let _ = print("Funktion detailViewBottomToolbarHight() wird aufgerufen!")
     var resultat: CGFloat = 0.0
@@ -24,132 +25,6 @@ func tabViewBottomToolbarHight() -> CGFloat {
     
 }// Ende func
 
-// Ermitteln von der Erstellungsdatum der Backup-Datei
-func getfileCreatedDate() -> String {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    let _ = print("Funktion getfileCreatedDate() wird aufgerufen!")
-    var theCreationDate: String = ""
-    var documentsUrl: URL
-  
-    let fileManager = FileManager.default
-    // Wenn iCloud ist ausgeschaltet (nicht verfügbar) ist wird Datensicherung local gespeichert
-    if userSettingsDefaults.iCloudSwitch == false {
-        //filePath = "Lokal-"
-        documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-    }else{
-        //filePath = "iCloud-"
-        documentsUrl = (fileManager.url(forUbiquityContainerIdentifier:
-                                            nil)?.appendingPathComponent("Documents"))!
-    }// Ende if/else
-    
-    let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
-    
-    if fileManager.fileExists(atPath: backupDatabaseURL.path) {
-        //let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
-        let attributes = try? FileManager.default.attributesOfItem(atPath: backupDatabaseURL.path)
-        
-        theCreationDate = dateToStringWithTime(parDatum: (attributes?[.creationDate])! as! Date)
-    }// Ende if
-
-    return theCreationDate
-    
-} // Ende func
-
-// Diese function verändert die File Attribute (Datum) bei der BackupDatei
-// Die Backupdatei wird erstellt durch kopieren der Datenbank. Dadurch werden
-// die Attribute der Datenbank übernohmen. Das kann dazufüren, dass das Erstellungsdatum oder
-// Modifikationsdatum weit in der Vergangenheit liegen.
-func changeFileAttributes(){
-    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    
-    let _ = print("Funktion changeFileAttributes() wird aufgerufen!")
-    
-    let myDateObject = Date()
-    
-    let fileManager = FileManager.default
-    //var filePath: String = ""
-    var documentsUrl: URL
-    
-    // Wenn iClud nicht verfügbar ist wird Datensicherung local gespeichert
-    if userSettingsDefaults.iCloudSwitch == false {
-      //  filePath = "Lokal - "
-        documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-    }else{
-        documentsUrl = (fileManager.url(forUbiquityContainerIdentifier:
-                                            nil)?.appendingPathComponent("Documents"))!
-        //filePath = "iCloud - "
-    }// Ende if/else
-    
-    let backupDatabaseURL = documentsUrl.appendingPathComponent("LeiheUndSchenkeDbCopy.db")
-    
-    let attributesCreationDate =  [FileAttributeKey.creationDate: myDateObject]
-    let attributesModificationDate =  [FileAttributeKey.modificationDate: myDateObject]
-    
-    do {
-        try FileManager.default.setAttributes(attributesModificationDate, ofItemAtPath: backupDatabaseURL.path)
-        try FileManager.default.setAttributes(attributesCreationDate, ofItemAtPath: backupDatabaseURL.path)
-    }
-    catch {
-        print(error)
-    } // Ende catch
-    
-    //print("\(filePath)" + "\(attributesCreationDate)")
-} // Ende func
-
-func getFlieSitze() -> (numMB: UInt64, strMB: String) {
-    let _ = print("Funktion getFlieSitze() wird aufgerufen!")
-    
-    var numValueMB: UInt64
-    var strValueMB: String
-    
-    var userDatabaseURL: URL
-    let fileManager = FileManager.default
-    
-    let documentsUrlDB = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
-    
-    userDatabaseURL = documentsUrlDB!.appendingPathComponent("LeiheUndSchenkeDb.db")
-    
-    numValueMB = userDatabaseURL.fileSize
-    strValueMB = userDatabaseURL.fileSizeString
-    
-    return (numValueMB, strValueMB)
-    
-} // Ende func getFile....
-
-// Diese Funktion prüft ob es lokal genügt Speicher für die Backupdatei gibt
-func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
-    let _ = print("Funktion ifExistSpaceForLeiheUndSchenkeDbCopy() wird aufgerufen!")
-    var resultat: Bool = true
-    let dbFileSitze = getFlieSitze()
-    
-    //print(dbFileSitze.numMB)
-    //print(dbFileSitze.strMB)
-    
-    //print(UIDevice.current.totalDiskSpaceInMB)
-    //print(UIDevice.current.freeDiskSpaceInMB)
-    //print(UIDevice.current.usedDiskSpaceInMB)
-    
-    let totalSpeicher = UIDevice.current.totalDiskSpaceInBytes/1000
-    let usedSpeicher = UIDevice.current.usedDiskSpaceInBytes/1000
-    
-    let freeSpeicher = totalSpeicher - usedSpeicher
-    
-    //print(freeSpeicher)
-    
-    if dbFileSitze.numMB < freeSpeicher {
-        
-        resultat = false
-        
-    }else{
-        
-        resultat = true
-        
-    }// Ende if/else
-    
-    return resultat
-    
-} // Ende func
 
 // Zweite Zeile bei der Liste der Objekte
 func subStringOfTextField(parameter: String) -> String {
@@ -172,12 +47,12 @@ func subStringOfTextField(parameter: String) -> String {
 // Das ist die View für den Full Search in den Objekten
 // Aufgerufen in der Tab1 View
 struct SerchFullTextInObjekten: View {
+
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
     @FocusState var isInputSarchFullTextInObjektenActive: Bool
     
     var body: some View {
-        let _ = print("struct SerchFullTextInObjekten wird aufgerufen!")
+        let _ = print("Struct SerchFullTextInObjekten: wird aufgerufen!")
         TextField("", text: $globaleVariable.searchTextObjekte)
             .focused($isInputSarchFullTextInObjektenActive)
             .frame( height: tabViewBottomToolbarHight() - 36)

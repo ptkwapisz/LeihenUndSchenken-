@@ -427,13 +427,17 @@ struct ShapeViewSettings: View {
                 }// Ende Section Farben
                 
                 Section(header: Text("Handbuch und Hilfetexte")) {
-                    Toggle("Anzeigen", isOn: $userSettingsDefaults.showHandbuch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                    Toggle("Anzeigen", isOn: $userSettingsDefaults.showHandbuch )
+                        .toggleStyle(SwitchToggleStyle(tint: .blue))
+                        
                 } // Ende Section
                 
                 // Prüfen, ob iClaud verfügbar ist
                 if isICloudContainerAvailable() {
                     Section {
-                        Toggle("iCloud DB Sicherung", isOn: $userSettingsDefaults.iCloudSwitch ).toggleStyle(SwitchToggleStyle(tint: .blue))
+                        Toggle("iCloud DB Sicherung", isOn: $userSettingsDefaults.iCloudSwitch )
+                            .toggleStyle(SwitchToggleStyle(tint: .blue))
+                            
                     } header: { Text("Sicherung der Datenbank")
                     } footer: {
                         
@@ -442,6 +446,8 @@ struct ShapeViewSettings: View {
                     } // Ende Section
                     
                 } // Ende if
+                    
+                
                 HStack {
                     Spacer()
                     
@@ -485,7 +491,7 @@ struct ShapeViewSettings: View {
 
 struct ShapeViewAbfrage: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+    //@ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
     
     @Binding var isPresented: Bool
     

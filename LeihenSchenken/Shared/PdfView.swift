@@ -25,7 +25,7 @@ struct PDFKitRepresentedView: UIViewRepresentable {
     } //Ende init
     
     func makeUIView(context: UIViewRepresentableContext<PDFKitRepresentedView>) -> PDFKitRepresentedView.UIViewType {
-        let _ = print("Function makeUIView() wird von Struct PDFKitRepresentedView aufgerufen!")
+        let _ = print("Funktion makeUIView() wird von Struct PDFKitRepresentedView aufgerufen!")
         
         let pdfView = PDFView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: UIScreen.screenHeight))
         loadPDF(into: pdfView)
@@ -41,12 +41,12 @@ struct PDFKitRepresentedView: UIViewRepresentable {
     } // Ende func
     
     func updateUIView(_ uiView: PDFView, context: UIViewRepresentableContext<PDFKitRepresentedView>) {
-        let _ = print("Function updateUIView() wird von Struct PDFKitRepresentedView aufgerufen!")
+        let _ = print("Funktion updateUIView() wird von Struct PDFKitRepresentedView aufgerufen!")
         loadPDF(into: uiView)
     } // Ende func
     
     private func loadPDF(into pdfView: PDFView) {
-        let _ = print("Function loadPDF() wird von Struct PDFKitRepresentedView aufgerufen!")
+        let _ = print("Funktion loadPDF() wird von Struct PDFKitRepresentedView aufgerufen!")
         fetchPDFData { data in
             if let data = data {
                 pdfView.document = PDFDocument(data: data)
@@ -64,7 +64,7 @@ struct PDFKitRepresentedView: UIViewRepresentable {
     } // Ende private func
     
     private func fetchPDFData(completion: @escaping (Data?) -> Void) {
-        let _ = print("Function fetchPDFData() wird von Struct PDFKitRepresentedView aufgerufen!")
+        let _ = print("Funktion fetchPDFData() wird von Struct PDFKitRepresentedView aufgerufen!")
         URLSession.shared.dataTask(with: self.url) { data, response, error in
             if let data = data {
                 DispatchQueue.main.async {
@@ -142,7 +142,7 @@ struct PDFKitView: View {
 // Call fom func createObjektListe
 
 func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
-    let _ = print("Function generatePDF() wird aufgerufen!")
+    let _ = print("Funktion generatePDF() wird aufgerufen!")
     
     //@ObservedObject var globaleVariable = GlobaleVariable.shared
     

@@ -16,7 +16,6 @@ struct ContentView: View {
     @StateObject var statusManager = StatusManager()
     let purchaseManager = PurchaseManager()
     
-    
     init() {
         
         let coloredAppearance = UINavigationBarAppearance()

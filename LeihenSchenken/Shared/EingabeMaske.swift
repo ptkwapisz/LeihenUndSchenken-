@@ -15,8 +15,8 @@ struct EingabeMaskePhoneAndPadView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode> // Only in iPhon
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
+   
     
-    //@ObservedObject var hilfeTexte = HilfeTexte.shared
     //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     
     @StateObject var cameraManager = CameraManager()
@@ -139,7 +139,7 @@ struct EingabeMaskePhoneAndPadView: View {
                     }
                     
                     List {
-                        Section {
+                        //Section {
                             HStack {
                                 Text("Gegenstand:")
                                 Spacer()
@@ -153,9 +153,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                 })
                                 .font(.system(size: 16, weight: .regular))
                                 .frame(width: 180, height: 36)
-                                .padding(.trailing, 5)
-                                //.background(Color.blue)
-                                //.opacity(0.4)
+                                //.padding(.trailing, 5)
                                 .cornerRadius(5)
                                 .applyIf(UIDevice.current.userInterfaceIdiom == .phone,
                                          apply: {$0.navigationDestination(isPresented: $showSheetGegenstand, destination: { ShapeViewAddGegenstand(isPresented: $showSheetGegenstand, isParameterBereich: $isParameterBereich)
@@ -426,12 +424,17 @@ struct EingabeMaskePhoneAndPadView: View {
                                 } // Ende HStack
                                 
                             } // Ende VStack
-                            
-                            // Only iPhon
-                            Text("Um ein Objekt speichern zu können müssen mimdestens ein Gegenstand und eine Person erfast werden.")
-                                .font(.system(size: 12, weight: .regular))
-                                .foregroundColor(.gray)
-                        } // Ende Section
+                            if UIDevice.current.userInterfaceIdiom == .phone {
+                                // Only iPhon
+                                Text("Um ein Objekt speichern zu können müssen mimdestens ein Gegenstand und eine Person erfast werden.")
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundColor(.gray)
+                            }else{
+                                Text("Um ein Objekt speichern zu können müssen mimdestens ein Gegenstand und eine Person erfast werden. Zusätzlich ab \(GlobalStorage.numberOfObjectsFree) Objekte muss die Premium Version einmahlig gekauft werden.")
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundColor(.gray)
+                            }
+                        //} // Ende Section
                         
                     } // Ende List
                     //.navigationTitle("Eingabemaske")

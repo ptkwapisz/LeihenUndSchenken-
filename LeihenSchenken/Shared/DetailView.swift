@@ -32,7 +32,7 @@ struct DeteilView: View {
     @State var showTabHilfe: Bool = false
     
     @State var showStatistikenView: Bool = false
-    @State var backupTargetStr: String = backupTarget()
+    //@State var backupTargetStr: String = backupTarget()
     
     @State var gegenstandHinzufuegen: Bool = false
     @State var selectedTypeTmp = ""
@@ -102,8 +102,8 @@ struct DeteilView: View {
                         Menu(content: {
                             
                             Menu("Datensicherung") { // Menue 1
-                                Button("DB sichern", action: {showDBSichern.toggle()}).disabled(globaleVariable.disableDBSpeichernMenueItem)
-                                Button("DB zurückspielen", action: {showDBLaden.toggle()}).disabled(globaleVariable.disableDBLadenMenueItem)
+                                Button("DB sichern", action: {showDBSichern.toggle()}).disabled(ifExistSpaceForLeiheUndSchenkeDbCopy())
+                                Button("DB zurückspielen", action: {showDBLaden.toggle()}).disabled(ifExistLeiheUndSchenkeDbCopy())
                                 //Button("Export der Objekte to CSV", action: {showExportToCSV.toggle()}).disabled(globaleVariable.showDBSpeichernMenueItem)
                             } // Ende Menu
                             
@@ -132,11 +132,11 @@ struct DeteilView: View {
                         ) // Ende alert
                         .alert("Trefen Sie eine Wahl!", isPresented: $showDBSichern, actions: {
                             Button("Abbrechen") {}; Button("DB Sichern") {backupDatabase()}
-                        }, message: { Text(backupTargetStr + ". \(AlertMessageTexte.showDBSichernMessageText)") } // Ende message
+                        }, message: { Text(String(backupTarget()) + ". \(AlertMessageTexte.showDBSichernMessageText)") } // Ende message
                         ) // Ende alert
                         .alert("Trefen Sie eine Wahl!", isPresented: $showDBLaden, actions: {
                             Button("Abbrechen") {}; Button("DB Laden") {loadDatabase()}
-                        }, message: { Text(backupTargetStr + " vom " + getfileCreatedDate() + ". \(AlertMessageTexte.showDBLadenMessageText)") } // Ende message
+                        }, message: { Text(String(backupTarget()) + " vom " + getfileCreatedDate() + ". \(AlertMessageTexte.showDBLadenMessageText)") } // Ende message
                         ) // Ende alert
                         .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
                         .sheet(isPresented: $showStatistikenView, content: {Statistik()})
@@ -167,11 +167,11 @@ struct DeteilView: View {
         let tabBarAppearance = UITabBarAppearance()
         
         if numberOfObjects < GlobalStorage.numberOfObjectsFree {
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Unter 10")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Unter \(GlobalStorage.numberOfObjectsFree)")
             
             badgeColor = UIColor(Color.red)
         }else{
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Über 10")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Über \(GlobalStorage.numberOfObjectsFree)")
            
             badgeColor = UIColor(globaleVariable.farbenEbene0)
         } // Ende if/else
