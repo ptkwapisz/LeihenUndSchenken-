@@ -16,25 +16,18 @@ struct EingabeMaskePhoneAndPadView: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
    
-    
-    //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
-    
     @StateObject var cameraManager = CameraManager()
     @State var alertMessageTexte = AlertMessageTexte()
     
     @State var hilfeTexte = HilfeTexte()
     
     @State var showParameterHilfe: Bool = false
-    //@State var showParameterAllgemeinesInfo: Bool = false // Only in iPhon
-    //@State var showAlerOKButton: Bool = false
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
     @State var showSheetPerson: Bool = false
     @State var showSheetGegenstand: Bool = false
     @State var isParameterBereich: Bool = true
     @State var paddingHeight: CGFloat = 0.0
-    
-    //@State private var amountText: String = ""
     
     @FocusState private var focusedField: Field?
     
@@ -51,9 +44,6 @@ struct EingabeMaskePhoneAndPadView: View {
     @State var platzText2: String = "Allgemeine Notizen"
     @State var selectedGegenstand: String = ""
     @State var selectedPerson: String = ""
-    
-    //@State private var text: String = ""
-    //@State private var platz: String = ""
     
     @State var imageData = UIImage()
     
