@@ -63,18 +63,19 @@ class GlobaleVariable: ObservableObject {
     
 } // ende class
 
-// Wird in der PrintObjects Struckts aufgerufen
+// Wird in der ObjektenListParameter struct aufgerufen
 class SharedData: ObservableObject {
     static let shared = SharedData()
     
     @Published var titel: String = ""
     @Published var unterTitel: String = ""
     @Published var didSave: Bool = false
-
+/*
     func save() {
         // Function to trigger changes
         didSave.toggle()
     } // Ende func
+ */
 }// Ende class
 
 class UserSettingsDefaults: ObservableObject {
@@ -220,21 +221,21 @@ class PersonClassVariable: Identifiable {
 class HilfeTexte {
     
     // Aus dem Parameterbereich
-    static var allgemeineAppInfo: String = "Das ‚Schenk und Leih‘ App (eigentlich ‚Verschenk und Verleih‘ App) ist für die einfache Verwaltung von verliehenen, verschenkten oder auch erhaltenen Gegenständen konzipiert. Sie soll dabei helfen, mit Hilfe der Zuordnung zu festgelegten Personen, den Überblick über diese Gegenstände zu behalten. Informationen, wie: Gegenstandsbeschreibung, Gegenstandsbild, den Preis, das Datum können eingegeben und verwaltet werden. So hat man immer einen Überblick über alles, was man verliehen, verschenkt oder bekommen hat."
+    static var allgemeineAppInfo: String = "Das ‚Schenk und Leih‘ App (eigentlich‚ Verschenk und Verleih‘ App) ist für die einfache Verwaltung von verliehenen, verschenkten oder auch erhaltenen Gegenständen konzipiert. Mit dieser App können sie auch die Geschenkideen oder Dinge, die Sie aufbewahren erfassen. Diese App soll dabei helfen, mit Hilfe der Zuordnung zu festgelegten Personen, den Überblick über Ihre Gegenstände zu behalten. Informationen, wie: Gegenstandsbeschreibung, Gegenstandsbild, den Preis, das Datum können eingegeben und verwaltet werden. So hat man immer einen Überblick über alles, was man verliehen, verschenkt oder bekommen hat."
     
-    static var eingabeMaske: String = "Die App beginnt mit der Eingabemaske, wo Sie verschenkte, verliehene oder erhaltene Gegenstände, wie Bücher, CDs, Werkzeuge oder Geld, erfassen können. Vier Standardgegenstände sind voreingestellt, aber Sie können auch eigene hinzufügen. Für zusätzliche Informationen nutzen Sie das Feld 'Gegenstandsbeschreibung', z.B. ISBN oder Genre bei Büchern. Fotos von Gegenständen lassen sich aus Ihrer iPhone-Mediathek ins Feld 'Gegenstandsbild' importieren. Geben Sie den ausgegebenen Betrag oder den verliehenen Geldbetrag im Feld 'Preis/Wert' ein. Im Feld 'Datum' vermerken Sie, wann Sie den Gegenstand verschenkt oder verliehen haben. Wählen Sie im Feld 'Was möchten Sie tun?' zwischen 'verschenken', 'verleihen' oder 'bekommen'. Geben Sie im Feld 'Person' ein, wer den Gegenstand erhalten hat. Im Feld 'Allgemeine Notizen' können Sie den Anlass oder die Situation beschreiben. Durch Abbrechen können Sie die Eingabemaske leeren und neu beginnen."
+    static var eingabeMaske: String = "Die App beginnt mit der Eingabemaske, wo Sie z. B. verschenkte, verliehene oder erhaltene Gegenstände, wie Bücher, CDs, Werkzeuge oder Geld, erfassen können. Vier Standardgegenstände sind voreingestellt, aber Sie können auch eigene hinzufügen. Für zusätzliche Informationen nutzen Sie das Feld 'Gegenstandsbeschreibung', z.B. ISBN oder Genre bei Büchern. Fotos von Gegenständen lassen sich aus Ihrer iPhone-Mediathek ins Feld 'Gegenstandsbild' importieren. Geben Sie den ausgegebenen Betrag oder den verliehenen Geldbetrag im Feld 'Preis/Wert' ein. Im Feld 'Datum' vermerken Sie, wann Sie den Gegenstand verschenkt oder verliehen haben. Wählen Sie im Feld 'Was möchten Sie tun?' zwischen 'verschenken', 'verleihen' oder 'bekommen'. Geben Sie im Feld 'Person' ein, wer den Gegenstand erhalten hat. Im Feld 'Allgemeine Notizen' können Sie den Anlass oder die Situation beschreiben. Durch Abbrechen können Sie die Eingabemaske leeren und neu beginnen."
     
-    static var tabObjektListe: String = "In diesem Fenster sehen sie alle Ihre erfasten Objekte gruppiert nach den Vorgängen, wie 'verlien', 'verschenkt', 'bekommen', 'aufbewahren' oder die 'Ideenliste'. Sie können jede Zeile anklicken, um in die Deteilsicht des Objektes zu gelangen. Um ein neues Objekt hinzufügen drücken Sie den Button mit dem Stappel (und dem + Zeichen) unten Links."
+    static var tabObjektListe: String = "In diesem Fenster sehen sie alle von Ihnen erfasten Objekte, gruppiert nach den Vorgängen, wie 'verlien', 'verschenkt', 'bekommen', 'aufbewahren' oder die 'Ideenliste'. Sie können jede Zeile anklicken, um in die Deteilsicht des Objektes zu gelangen. Um ein neues Objekt hinzufügen drücken Sie den Button mit dem Stappel (und dem + Zeichen) unten Links."
     
-    static var tabGegenstandListe: String = "In diesem Fenster können Sie Ihre Gegenstände verwalten. Hier können Sie die Gegenstände löschen (das Icon mit dem Minuszeichen) oder neue Gegenstände eingeben (das Icon mit dem Pluszeichen. Diese Liste der Gegenstände erscheint dann in der Eingabemaske. Die vier Standardgegenstände, wie Buch, Werkzeug, Geld ... können nicht gelöscht werden."
+    static var tabGegenstandListe: String = "In diesem Fenster können Sie die Favoritenliste Ihrer Gegenstände verwalten. Sie können die Gegenstände löschen (das Icon mit dem Mühleimer) oder neue Gegenstände eingeben (das Icon mit dem Pluszeichen. Um ein Gegenstand zu bearbeiten markieren sie den gewünschten Gegenstand und wischen nach rechts. Diese Favoritenliste erscheint in der Eingabemaske, wenn Sie ein Gegenstand eingeben möchten. Die vier Standardgegenstände, das Buch, das Werkzeug, das Geld und die CD/DVD können nicht gelöscht und können nicht bearbeiten werden."
     
-    static var tabPersonenListe: String = "In diesem Fenster können Sie die Personen verwalten, die Sie beschänken, an die Sie Sachen verleihen und von denen Sie Geschänke erhalten. Sie können die Personen löschen (das Icon mit dem Minuszeichen oder neue Personen eingeben (das Icon mit dem Pluszeichen). Diese Personenliste erscheint dann auch in der Eingabemaske, wenn Sie eine Person eingeben möchten."
+    static var tabPersonenListe: String = "In diesem Fenster können Sie die Favoritenliste der Personen verwalten. Sie können die Personen löschen (das Icon mit dem Mühleimer) oder neue Personen eingeben (das Icon mit dem Pluszeichen). Um eine Person zu bearbeiten markieren sie diese Person und wischen nach rechts. Diese Favoritenliste erscheint in der Eingabemaske, wenn Sie eine Person eingeben möchten."
     
-    static var tabObjektPDFListe: String = "In diesem Fenster wird die Objektliste gezeigt, die Sie auch von hier drucken können. Die Kopfzeilen können Sie anpassen indem Sie den Button mit dem Stift unten Links anklicken."
+    static var tabObjektPDFListe: String = "In diesem Fenster wird die Objektliste gezeigt, die Sie auch von hier drucken können. Die Kopfzeilen können Sie anpassen indem Sie den Button mit dem Stift oben rechts anklicken."
     
-    static var tabStatistiken: String = "In diesem Fenster werden die Anzahl allen Gegenstände und die Anzahl der Vorgänge angezeigt. Die zahlen sind ungefiltert, das heißt, dass sie den gesamten Bestand also alle Objekte, die in dem Datenbank gespeichert sind, zeigen."
+    static var tabStatistiken: String = "In diesem Fenster werden die Anzahl allen Gegenstände und die Anzahl der Vorgänge angezeigt. Die zahlen sind ungefiltert, das heißt, dass Sie den gesamten Bestand also alle Objekte, die in dem Datenbank gespeichert sind, sehen."
     
-    static var tabHandbuch: String = "Das Handbuch beinhaltet alle Hilfetexte von dieser App und zusätzliche Informationen. Mann kann es auf dem Device lesen oder auch ausdrucken."
+    static var tabHandbuch: String = "Das Handbuch beinhaltet alle Hilfetexte von dieser App und zusätzliche Informationen. Mann kann es auf Ihrem Gerät lesen oder es auch ausdrucken."
     
 } // Ende class
 
@@ -324,5 +325,7 @@ class GlobalStorage {
     static var selectedGegenstandTab2: String = ""
     static var selectedPersonPickerTab3: String = ""
     static var numberOfObjectsFree: Int = 10
-
+    // Number of Objects that is fitered by abfrage
+    static var numberOfObjectsFiltered: Int = 0
+    
 } // Ende class

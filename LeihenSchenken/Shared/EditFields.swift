@@ -544,12 +544,13 @@ struct EditGegenstandBild: View {
                 Text(" ")
                 PhotoSelector()
                // Text(" ")
-                
+                /*
                 Text("X")
                     .scaledToFit()
                     .frame(width: 25, height: 25, alignment: .center)
                     .background(Color.gray.gradient)
                     .cornerRadius(5)
+                 */
             }else{
                 
                 Image(base64Str: gegenstandBildTmp)?

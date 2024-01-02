@@ -19,8 +19,6 @@ struct EditFields: ViewModifier {
             .foregroundColor(.black.opacity(0.4))
             .cornerRadius(5)
             
-            
-        
     } // Ende func
 } // Ende struct
 

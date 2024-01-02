@@ -32,8 +32,7 @@ struct DeteilView: View {
     @State var showTabHilfe: Bool = false
     
     @State var showStatistikenView: Bool = false
-    //@State var backupTargetStr: String = backupTarget()
-    
+   
     @State var gegenstandHinzufuegen: Bool = false
     @State var selectedTypeTmp = ""
   
@@ -52,7 +51,11 @@ struct DeteilView: View {
                         Text("Objekte")
                     } // Ende Tab
                     .tag(1) // Die Tags identifizieren die Tab und füren zum richtigen Titel
-                    .badge(globaleVariable.numberOfObjects)
+                    // Wenn die Abfrage aktiviert wurde wird in der Badge die Anzahl der gefilterten Datensätze
+                    // gefolgt von Schregstrich und dem gesamten Zahl der Objekte angezeigt: 3 / 7.
+                    .applyIf(GlobalStorage.numberOfObjectsFiltered > 0, apply: {$0.badge("\(GlobalStorage.numberOfObjectsFiltered ) / \(globaleVariable.numberOfObjects)")}, else: {$0.badge(globaleVariable.numberOfObjects)})
+                    
+                    //.badge(globaleVariable.numberOfObjects)
                     
                     Tab2(selectedTabView: $globaleVariable.navigationTabView).tabItem {
                         
@@ -135,7 +138,8 @@ struct DeteilView: View {
                         }, message: { Text(String(backupTarget()) + ". \(AlertMessageTexte.showDBSichernMessageText)") } // Ende message
                         ) // Ende alert
                         .alert("Trefen Sie eine Wahl!", isPresented: $showDBLaden, actions: {
-                            Button("Abbrechen") {}; Button("DB Laden") {loadDatabase()}
+                            Button("Abbrechen") {}; Button("DB Laden") {loadDatabase()
+                                globaleVariable.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte") }
                         }, message: { Text(String(backupTarget()) + " vom " + getfileCreatedDate() + ". \(AlertMessageTexte.showDBLadenMessageText)") } // Ende message
                         ) // Ende alert
                         .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
@@ -548,7 +552,7 @@ struct MyToolbarItemsHausButton: ToolbarContent {
 
 struct MyToolbarItemsEditButton: ToolbarContent {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    @ObservedObject var data = SharedData.shared
+    @ObservedObject var sheredData = SharedData.shared
     @State private var isSheetPresented: Bool = false
     @State var showAllgemeinesInfo: Bool = false
     @State var versionCounter: Int = 0
@@ -565,13 +569,10 @@ struct MyToolbarItemsEditButton: ToolbarContent {
                     //Text("Bearbeiten")
                     Image(systemName: "pencil").imageScale(.large)
                 }  // PDF-List
-                    .navigationDestination(isPresented: $isSheetPresented, destination: { ObjektListeParameter(data: data, isPresented: $isSheetPresented)})
-                    //.navigationBarBackButtonHidden()
-                    //.navigationBarTitleDisplayMode(.large)
-                
+                    .navigationDestination(isPresented: $isSheetPresented, destination: { ObjektListeParameter(sheredData: sheredData, isPresented: $isSheetPresented)})
+                    
             } // Ende ToolbarItemGroup
         } // Ende if globaleVariable
-        
         
     } // Ende var body
 } // Ende struct

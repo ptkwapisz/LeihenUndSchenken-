@@ -79,7 +79,7 @@ func distingtArray(par1: [ObjectVariable], par2: String) -> [String]{
 
 
 // Das ist die funktion zum Bereinigen der Eingabemaske
-func cleanEingabeMaske () {
+func cleanEingabeMaske() {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     globaleVariable.parameterImageString = "Kein Bild"
@@ -282,17 +282,16 @@ func stringToDate(parDatum: String) -> Date {
     return result
 } // Ende func
 
-
 // Diese Funktion erstellt den Titel mit dem hinweis
 // ob der Abfragefilter ein- oder ausgeschaltet ist.
 func erstelleTitel(par: Bool) -> String {
     var resultat: String = ""
     
-        if par == true {
-            resultat = "Die Objekte sind gefiltert"
-        }else{
-            resultat = "Alle Objekte ungefiltert"
-        } // Ende if/else
+    if par == true {
+        resultat = "Die Abfrage ist eingeschaltet"
+    }else{
+        resultat = "Die Abfrage ist ausgeschaltet"
+    } // Ende if/else
     
     return resultat
     
@@ -339,7 +338,6 @@ func zeilenFarbe(par: Int) -> Color {
     return zeilenFarbe
     
 } // Ende func
-
 
 func perKeyBestimmenGegenstand(par: String) -> [String] {
     var result: [String] = [""]

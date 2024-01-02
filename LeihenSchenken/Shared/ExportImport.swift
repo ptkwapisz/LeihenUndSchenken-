@@ -188,7 +188,7 @@ func backupDatabase() {
 
 func loadDatabase() {
     let _ = print("Funktion loadDatabase() wird aufgerufen!")
-    
+
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
     
     var backupDatabaseURL: URL
@@ -241,6 +241,7 @@ func loadDatabase() {
                 return
             } // Ende guard
             
+            //anzahlDerDatensaetze(tableName: "Objekte")
             refreschParameter()
             
         } // Ende if/else

@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		DB0160FB2A17CE15000A34CE /* PdfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0160FA2A17CE15000A34CE /* PdfView.swift */; };
+		DB445E1E2B3B01C800F59C90 /* ObjektenListeParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB445E1D2B3B01C800F59C90 /* ObjektenListeParameter.swift */; };
+		DB445E1F2B3B01C800F59C90 /* ObjektenListeParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB445E1D2B3B01C800F59C90 /* ObjektenListeParameter.swift */; };
+		DB445E202B3B01C800F59C90 /* ObjektenListeParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB445E1D2B3B01C800F59C90 /* ObjektenListeParameter.swift */; };
+		DB445E222B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB445E212B3B023000F59C90 /* GeneratePdfObjektenListe.swift */; };
+		DB445E232B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB445E212B3B023000F59C90 /* GeneratePdfObjektenListe.swift */; };
+		DB445E242B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB445E212B3B023000F59C90 /* GeneratePdfObjektenListe.swift */; };
 		DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E9F32A023BB000CBC354 /* Extention.swift */; };
 		DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A992A437D09001B2781 /* EditFields.swift */; };
 		DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB538A9B2A438393001B2781 /* ViewModifier.swift */; };
@@ -29,9 +35,6 @@
 		DB9DC2C12B245E5700FCB886 /* ObjectDeteilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9DC2C02B245E5700FCB886 /* ObjectDeteilView.swift */; };
 		DB9DC2C22B245E5700FCB886 /* ObjectDeteilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9DC2C02B245E5700FCB886 /* ObjectDeteilView.swift */; };
 		DB9DC2C32B245E5700FCB886 /* ObjectDeteilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9DC2C02B245E5700FCB886 /* ObjectDeteilView.swift */; };
-		DBAC3B132A9DC1900061096F /* PrintObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAC3B122A9DC1900061096F /* PrintObjects.swift */; };
-		DBAC3B142A9DC1900061096F /* PrintObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAC3B122A9DC1900061096F /* PrintObjects.swift */; };
-		DBAC3B152A9DC1900061096F /* PrintObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAC3B122A9DC1900061096F /* PrintObjects.swift */; };
 		DBAD5E012A7707F1009AAF62 /* iCloudAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */; };
 		DBC5413A2A58B2EB00A8F01B /* ExportImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC541392A58B2EB00A8F01B /* ExportImport.swift */; };
 		DBCCA1132A60AD4200146426 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCA1122A60AD4200146426 /* CameraView.swift */; };
@@ -74,6 +77,8 @@
 
 /* Begin PBXFileReference section */
 		DB0160FA2A17CE15000A34CE /* PdfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfView.swift; sourceTree = "<group>"; };
+		DB445E1D2B3B01C800F59C90 /* ObjektenListeParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjektenListeParameter.swift; sourceTree = "<group>"; };
+		DB445E212B3B023000F59C90 /* GeneratePdfObjektenListe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratePdfObjektenListe.swift; sourceTree = "<group>"; };
 		DB51E9F32A023BB000CBC354 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		DB538A992A437D09001B2781 /* EditFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFields.swift; sourceTree = "<group>"; };
 		DB538A9B2A438393001B2781 /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
@@ -84,7 +89,6 @@
 		DB9160B62A79427E00E11ACC /* LeihenSchenken.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LeihenSchenken.entitlements; sourceTree = "<group>"; };
 		DB9BCEC62AC05EA6000FEF4C /* EingabeMaske.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaske.swift; sourceTree = "<group>"; };
 		DB9DC2C02B245E5700FCB886 /* ObjectDeteilView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDeteilView.swift; sourceTree = "<group>"; };
-		DBAC3B122A9DC1900061096F /* PrintObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintObjects.swift; sourceTree = "<group>"; };
 		DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudAccess.swift; sourceTree = "<group>"; };
 		DBC541392A58B2EB00A8F01B /* ExportImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImport.swift; sourceTree = "<group>"; };
 		DBCCA1122A60AD4200146426 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
@@ -153,7 +157,8 @@
 				DBCCBB862A1826D300EDF087 /* TabViews.swift */,
 				DBD0BAB02A69D04C006CB53A /* TabViewsDeteil.swift */,
 				DB0160FA2A17CE15000A34CE /* PdfView.swift */,
-				DBAC3B122A9DC1900061096F /* PrintObjects.swift */,
+				DB445E212B3B023000F59C90 /* GeneratePdfObjektenListe.swift */,
+				DB445E1D2B3B01C800F59C90 /* ObjektenListeParameter.swift */,
 				DB538A9B2A438393001B2781 /* ViewModifier.swift */,
 				DBC541392A58B2EB00A8F01B /* ExportImport.swift */,
 				DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */,
@@ -366,6 +371,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB445E1E2B3B01C800F59C90 /* ObjektenListeParameter.swift in Sources */,
 				DB7F8D8F2B0B73A40051B9A3 /* StoreKitManager.swift in Sources */,
 				DBCEF7FC29D1ED770017A728 /* ContentView.swift in Sources */,
 				DB538A9C2A438393001B2781 /* ViewModifier.swift in Sources */,
@@ -380,12 +386,12 @@
 				DB538A9A2A437D09001B2781 /* EditFields.swift in Sources */,
 				DBC5413A2A58B2EB00A8F01B /* ExportImport.swift in Sources */,
 				DBD0BAB12A69D04C006CB53A /* TabViewsDeteil.swift in Sources */,
-				DBAC3B132A9DC1900061096F /* PrintObjects.swift in Sources */,
 				DBF6A33129E6D489001A01BC /* SqlManagement.swift in Sources */,
 				DB6E489D2A9F4EC9002AA59F /* StatistikView.swift in Sources */,
 				DB51E9F42A023BB000CBC354 /* Extention.swift in Sources */,
 				DBCCBB832A18266D00EDF087 /* ShapeViews.swift in Sources */,
 				DBAD5E012A7707F1009AAF62 /* iCloudAccess.swift in Sources */,
+				DB445E222B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */,
 				DBCCBB872A1826D300EDF087 /* TabViews.swift in Sources */,
 				DBCCBB7D2A1825D200EDF087 /* GlobaleVariablen.swift in Sources */,
 				DBCCBB7F2A18260B00EDF087 /* Funktionen.swift in Sources */,
@@ -398,9 +404,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB9DC2C22B245E5700FCB886 /* ObjectDeteilView.swift in Sources */,
-				DBAC3B142A9DC1900061096F /* PrintObjects.swift in Sources */,
+				DB445E232B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */,
 				DB9BCEC82AC05EA6000FEF4C /* EingabeMaske.swift in Sources */,
 				DB6E489E2A9F4EC9002AA59F /* StatistikView.swift in Sources */,
+				DB445E1F2B3B01C800F59C90 /* ObjektenListeParameter.swift in Sources */,
 				DBCEF80B29D1ED7A0017A728 /* LeihenSchenkenTests.swift in Sources */,
 				DB7F8D902B0B73A40051B9A3 /* StoreKitManager.swift in Sources */,
 			);
@@ -412,7 +419,8 @@
 			files = (
 				DB7F8D912B0B73A40051B9A3 /* StoreKitManager.swift in Sources */,
 				DB9DC2C32B245E5700FCB886 /* ObjectDeteilView.swift in Sources */,
-				DBAC3B152A9DC1900061096F /* PrintObjects.swift in Sources */,
+				DB445E242B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */,
+				DB445E202B3B01C800F59C90 /* ObjektenListeParameter.swift in Sources */,
 				DB6E489F2A9F4EC9002AA59F /* StatistikView.swift in Sources */,
 				DB9BCEC92AC05EA6000FEF4C /* EingabeMaske.swift in Sources */,
 				DBCEF81729D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift in Sources */,
@@ -565,7 +573,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LeihenSchenken/LeihenSchenken.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"LeihenSchenken/Preview Content\"";
 				DEVELOPMENT_TEAM = K42L6ZYYGZ;
 				ENABLE_PREVIEWS = YES;
@@ -605,7 +613,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LeihenSchenken/LeihenSchenken.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"LeihenSchenken/Preview Content\"";
 				DEVELOPMENT_TEAM = K42L6ZYYGZ;
 				ENABLE_PREVIEWS = YES;

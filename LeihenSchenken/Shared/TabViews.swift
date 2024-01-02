@@ -106,6 +106,7 @@ struct Tab4: View {
     @Binding var selectedTabView: Int
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
+    
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     
     //let _: Bool = createObjektenListe()
@@ -120,11 +121,12 @@ struct Tab4: View {
             VStack {
                 
                 if UIDevice.current.userInterfaceIdiom == .phone {
-                    
+                   
                     PDFKitView(url: pdfPath, tabNumber: 4)
                         .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1)
-                    
+                        
                 } else {
+                    
                     PDFKitView(url: pdfPath, tabNumber: 4)
                         .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                         .background(globaleVariable.farbenEbene1)
@@ -133,12 +135,29 @@ struct Tab4: View {
             } // Ende VStack
             .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
             .background(globaleVariable.farbenEbene0)
+            
         } // Ende GeometryReader
         
     } // Ende var body
 
 } // Ende struc Tab4
-
+/*
+struct ProgressViewModal: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            ProgressView("Loading...")
+                //.scaleEffect(1.5) // Optionally make the ProgressView larger
+            Text("Please wait...")
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(15)
+        .shadow(radius: 10)
+        //.frame(maxWidth: .infinity, maxHeight: .infinity)
+        //.background(Color.black.opacity(0.5)) // Semi-transparent background
+    }
+}
+*/
 
 // Das Handburch
 struct Tab5: View {
@@ -160,11 +179,14 @@ struct Tab5: View {
                     
                     
                 } else {
+                    
                     PDFKitView(url: pdfPath!, tabNumber: 5)
                         .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
                         .background(globaleVariable.farbenEbene1)
                         .cornerRadius(10)
+                     
                 }
+                 
             } // Ende VStack
             .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
             .background(globaleVariable.farbenEbene0)

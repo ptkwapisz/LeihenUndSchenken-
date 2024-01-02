@@ -131,6 +131,52 @@ func erstellenDatenbankUndTabellen() -> Bool {
     
 } // Ende func erstellenDatenbankUndTabellen
 
+func querySQLAbfrageArrayPerson(queryTmp: String) -> Array<String>  {
+    
+    var resultatArray = [String]()
+    var name0:String = ""
+    var name1:String = ""
+    var statement: OpaquePointer?
+    
+    if sqlite3_prepare_v2(db, "\(queryTmp)", -1, &statement, nil) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error preparing query select: \(errmsg)")
+    } // End if
+    
+    while sqlite3_step(statement) == SQLITE_ROW {
+        
+        name0 = ""
+        name1 = ""
+        if let cString0 = sqlite3_column_text(statement, 0) {
+            name0 = String(cString: cString0)
+            
+        } else {
+            print("Die Werte in der Tabelle wurden nicht gefunden")
+        } // End if else
+        
+        if let cString1 = sqlite3_column_text(statement, 1) {
+            name1 = String(cString: cString1)
+            
+        } else {
+            print("Die Werte in der Tabelle wurden nicht gefunden")
+        } // End if else
+        
+        resultatArray.append(name0+", " + name1)
+        
+    } // Ende while
+    
+    if sqlite3_finalize(statement) != SQLITE_OK {
+        let errmsg = String(cString: sqlite3_errmsg(db)!)
+        print("Error finalizing prepared statement: \(errmsg)")
+    } // End if
+    
+    statement = nil
+    
+    return resultatArray
+    
+} // Ende func querySQLAbfrageArray
+
+
 
 func querySQLAbfrageArray(queryTmp: String) -> Array<String>  {
     
@@ -146,10 +192,9 @@ func querySQLAbfrageArray(queryTmp: String) -> Array<String>  {
 
         if let cString0 = sqlite3_column_text(statement, 0) {
             let name0 = String(cString: cString0)
-            // print("Das erste Feld die Summe = \(name0) ", terminator: "")
-            //if name0 != "" {
+            
             resultatArray.append(name0)
-            //}
+            
         } else {
             print("Die Werte in der Tabelle wurden nicht gefunden")
         } // End if else
@@ -327,6 +372,12 @@ func querySQLAbfrageClassObjecte(queryTmp: String, abfrage: Bool) -> [ObjectVari
 
     statement = nil
     
+    if !globaleVariable.abfrageQueryString.isEmpty {
+        GlobalStorage.numberOfObjectsFiltered = resultatClass.count
+    }else{
+        GlobalStorage.numberOfObjectsFiltered = 0
+    } // Ende if
+            
     return resultatClass
     
 } // Ende func querySQLAbfrageClassObjekte
@@ -695,9 +746,13 @@ func abfrageField3(field1: String)->[String] {
         case "Vorname":
             result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personVorname FROM Objekte ORDER BY personVorname")
             //print("Vorname " + "\(selectedAbfrageFeld3)")
+        case "Person":
+            result = querySQLAbfrageArrayPerson(queryTmp: "SELECT DISTINCT personNachname, personVorname FROM Objekte ORDER BY personNachname")
+            //print("Vorname " + "\(selectedAbfrageFeld3)")
         default:
             print("Keine Wahl")
     } // Ende switch
 
     return result
+    
 } // Ende func

@@ -499,7 +499,7 @@ struct ShapeViewAbfrage: View {
     @State var showAlertAbbrechenButton: Bool = false
     @State var showAlertSpeichernButton: Bool = false
     
-    @State var abfrageFeld1: [String] = ["Gegenstand", "Vorgang","Name", "Vorname"]
+    @State var abfrageFeld1: [String] = ["Gegenstand", "Vorgang","Name", "Vorname", "Person"]
     @State var selectedAbfrageFeld1 = "Gegenstand"
     @State var abfrageFeld2: [String] = ["gleich", "ungleich"]
     @State var selectedAbfrageFeld2 = "gleich"
@@ -573,7 +573,8 @@ struct ShapeViewAbfrage: View {
                         Spacer()
                         
                         Button {
-                            var tmpFeld1 = ""
+                            var tmpFeld1: String = ""
+                            var temp: String = ""
                             if globaleVariable.abfrageFilter == true {
                                 
                                 switch selectedAbfrageFeld1 {
@@ -586,17 +587,31 @@ struct ShapeViewAbfrage: View {
                                         tmpFeld1 = "personNachname"
                                     case "Vorname":
                                         tmpFeld1 = "personVorname"
+                                    case "Person":
+                                        tmpFeld1 = "personNachname AND personVorname"
                                     default:
                                         tmpFeld1 = ""
                                         
                                 } // Ende switch
                                 
-                                let temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
+                                
+                                if selectedAbfrageFeld1 == "Person" {
+                                    
+                                    let components = selectedAbfrageFeld3.split(separator: ",").map(String.init)
+                                    let tmpN: String = components[0].trimmingCharacters(in: .whitespaces)
+                                    let tmpV: String = components[1].trimmingCharacters(in: .whitespaces)
+                                    
+                                    temp = " WHERE personNachname = '\(tmpN)' AND personVorname = '\(tmpV)'"
+                                }else{
+                                    temp = " WHERE " + "\(tmpFeld1)" + " = " + "'" + "\(selectedAbfrageFeld3)" + "'"
+                                } // Ende if/else
+                                
                                 globaleVariable.abfrageQueryString = temp
                                 
                             }else{
                                 globaleVariable.abfrageQueryString = ""
                             } // Ende if
+                            
                             globaleVariable.navigationTabView = 1
                             
                             isPresented = false
@@ -615,7 +630,7 @@ struct ShapeViewAbfrage: View {
                     } // Ende HStack
                     
                     //Section {
-                    Text("Hier können Sie eine Abfrage für Darstellung der Objekttabelle definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneutem Start dieser Darstellung.")
+                    Text("Hier können Sie eine Abfrage für die Darstellung der Liste der Objekte definieren und speichern. Die Abfrage behält ihre Gültigkeit bis zum erneuten Start dieser Darstellung.")
                         .font(.system(size: 12, weight: .regular))
                         .foregroundColor(.gray)
                     
@@ -628,6 +643,7 @@ struct ShapeViewAbfrage: View {
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
     } // Ende var body
+
 } // Ende struct
 
 // Wird bei Objekt editieren aufgerufen und bei Tab Personen (edit)

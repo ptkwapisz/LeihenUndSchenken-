@@ -57,8 +57,21 @@ struct StatistikView: View {
         
         VStack{
             Text("")
-            Text("Statistiken").bold()
-            
+            HStack{
+                Spacer()
+                Text("Statistiken").bold()
+                Spacer()
+                if statistikenVariable.count > 15 {
+                    Button(action:{
+                        // Diese Zeile bewirkt, dass die View geschlossen wird
+                        self.presentationMode.wrappedValue.dismiss()
+                        
+                    }) {
+                        Image(systemName: "arrowshape.turn.up.backward.circle")
+                    } // Ende Button
+                    .offset(x: -15)
+                } // Ende if
+            }
             List {
                 
                 ForEach(stSection.indices, id: \.self) { idx in
@@ -111,6 +124,8 @@ struct StatistikView: View {
         } // Ende Vstack
         .background(globaleVariable.farbenEbene1)
         .cornerRadius(10)
+        
+        
         
     } // Ende var body
     

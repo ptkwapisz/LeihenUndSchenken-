@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DeteilTab1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
     //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
     
     @State var alertMessageTexte = AlertMessageTexte()
@@ -44,6 +45,8 @@ struct DeteilTab1: View {
                     Text("\(tempErgaenzung)").bold()  // arrow.up.arrow.down
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 20)
+                    //Text("\(GlobalStorage.numberOfObjectsFiltered)")
+                    
                     if anzahl > 1 {
                         Button() {
                             sortObjekte.toggle()
@@ -176,6 +179,7 @@ struct DeteilTab1: View {
                 performeAction(alleObjekte: alleObjekte)
                 
             } // Ende onAppear
+            
             .alert(isPresented: $showAlert) {
                 switch activeAlertTab1 {
                         
@@ -216,6 +220,7 @@ struct DeteilTab1: View {
     
     } // Ende var body
     
+
     func performeAction(alleObjekte: [ObjectVariable]) {
         
         if alleObjekte.count == 0  {
