@@ -10,15 +10,13 @@ import SwiftUI
 struct DeteilTab1: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
-    //@ObservedObject var alertMessageTexte = AlertMessageTexte.shared
-    
-    @State var alertMessageTexte = AlertMessageTexte()
-    @State var zeile: Int = 0
-    @State var showEingabeMaske: Bool = false
-    @State var showAlert = false
+    @State private var alertMessageTexte = AlertMessageTexte()
+    @State private var zeile: Int = 0
+    @State private var showEingabeMaske: Bool = false
+    @State private var showAlert = false
    
-    @State var activeAlertTab1: ActiveAlertTab1 = .leereDBinformationiPhone
-    @State var sortObjekte: Bool = true
+    @State private var activeAlertTab1: ActiveAlertTab1 = .leereDBinformationiPhone
+    @State private var sortObjekte: Bool = true
     
     @State var objectPerKey: String = ""
     
@@ -33,7 +31,7 @@ struct DeteilTab1: View {
         
         let objekte = sortiereObjekte(par1: objektWithFilter, par2: sortObjekte)
         
-        let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen, Schänken oder Bekommen
+        let gegVorgang = distingtArray(par1: objekte, par2: "Vorgang") // Leihen, Schenken oder Bekommen ...
         
         let anzahl: Int = objekte.count
         
@@ -56,7 +54,7 @@ struct DeteilTab1: View {
                         }// Ende Button/label
                         .buttonStyle(.bordered)
                         .font(.system(size: 16, weight: .medium))
-                        .background(globaleVariable.farbenEbene0.opacity(5))
+                        .background(GlobalStorage.farbEbene0.opacity(5))
                         .foregroundColor(Color.white)
                         .padding(.leading, 10)
                         .frame( width: 36, height:  36)
@@ -171,7 +169,7 @@ struct DeteilTab1: View {
                 Spacer()
                 
             } // Ende VStack
-            .background(globaleVariable.farbenEbene1)
+            .background(GlobalStorage.farbEbene1)
             .cornerRadius(10)
             .onAppear() {
                 print ("Run onApear from struct deteilTab1")
@@ -246,16 +244,18 @@ struct deteilTab2: View {
     
     @FocusState var focused: Bool
     
-    @State var selectedRow: String? = ""
+    @State private var selectedRow: String? = ""
     
-    @State var editedName: String = ""
-    @State var editedNewName: String = ""
-    @State var showEditGegenstand: Bool = false
-    @State var gegenstandPerKey: String = ""
+    @State private var editedName: String = ""
+    @State private var editedNewName: String = ""
+    @State private var showEditGegenstand: Bool = false
+    @State private var gegenstandPerKey: String = ""
     
-    let gegenstaende = querySQLAbfrageClassGegenstaende(queryTmp: "Select * FROM Gegenstaende")
+    //let gegenstaende = querySQLAbfrageClassGegenstaende(queryTmp: "Select * FROM Gegenstaende")
     
     var body: some View {
+        let _ = print("Struct DeteilTab2: wird aufgerufen!")
+        let gegenstaende = querySQLAbfrageClassGegenstaende(queryTmp: "Select * FROM Gegenstaende")
         
         GeometryReader { geometry in
             
@@ -286,7 +286,7 @@ struct deteilTab2: View {
                     
                     
                 } // Ende Vstack
-                .background(globaleVariable.farbenEbene1)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 .onAppear() {
                     // Wenn die Datenbank nicht leer ist:
@@ -318,15 +318,15 @@ struct deteilTab3: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
 
     @State private var showAlert = false
-    @State var showingEditPersonView: Bool = false
-    @State var selectedType: String? = GlobalStorage.selectedPersonPickerTab3
+    @State private var showingEditPersonView: Bool = false
+    @State private var selectedType: String? = GlobalStorage.selectedPersonPickerTab3
     
-    @State var personPickerTmp: String = "Nachname, Vorname"
-    @State var tabelleDB: String = "Personen"
-    @State var neuePersonTmp: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
+    @State private var personPickerTmp: String = "Nachname, Vorname"
+    @State private var tabelleDB: String = "Personen"
+    @State private var neuePersonTmp: [PersonClassVariable] = [PersonClassVariable(perKey: "", personPicker: "", personVorname: "", personNachname: "", personSex: "")]
     
     var body: some View {
-      
+        let _ = print("Struct DeteilTab3: wird aufgerufen!")
         let person = querySQLAbfrageClassPerson(queryTmp: "Select * from Personen", isObjectTabelle: true)
        
         
@@ -372,7 +372,7 @@ struct deteilTab3: View {
                     
                     
                 } // Ende Vstack
-                .background(globaleVariable.farbenEbene1)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 .onAppear() {
                     
@@ -409,6 +409,5 @@ struct deteilTab3: View {
         } // Ende if
         
     } // Ende func
-    
     
 } // Ende struct

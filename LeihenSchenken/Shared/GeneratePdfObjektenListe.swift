@@ -8,83 +8,246 @@
 import SwiftUI
 import PDFKit
 
-
-
-struct PDFKitRepresentedView: UIViewRepresentable {
+func deletePdfList(){
     
-    let url: URL
+    print("func deletPdfList wird aufgerufen")
     
-    // Introduce a state dependency, e.g., a version counter.
-    // This should be incremented whenever the content of the PDF changes.
+    let fileManager = FileManager.default
+    var objektenListeURL: URL
     
-    var version: Int
+    let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+    objektenListeURL = documentsUrl!.appendingPathComponent("ObjektenListe.pdf")
     
-    init(_ url: URL, version: Int) {
-        self.url = url
-        self.version = version
-    } //Ende init
-    
-    func makeUIView(context: UIViewRepresentableContext<PDFKitRepresentedView>) -> PDFKitRepresentedView.UIViewType {
-        let _ = print("Funktion makeUIView() wird von Struct PDFKitRepresentedView aufgerufen!")
+    if fileManager.fileExists(atPath: objektenListeURL.path) {
+        deleteFile(fileNameToDelete: "ObjektenListe.pdf")
         
-        let pdfView = PDFView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: UIScreen.screenHeight))
-        loadPDF(into: pdfView)
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            pdfView.displayDirection = .vertical
-            pdfView.autoScales = true
-            pdfView.minScaleFactor = 0.5
-            pdfView.maxScaleFactor = 5.0
+    } // Ende if
+    
+} // Ende deletePdfList
+
+func existPdfList()-> Bool {
+    
+    print("func deletPdfList wird aufgerufen")
+    var resultat: Bool
+    
+    let fileManager = FileManager.default
+    var objektenListeURL: URL
+    
+    let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+    objektenListeURL = documentsUrl!.appendingPathComponent("ObjektenListe.pdf")
+    
+    if fileManager.fileExists(atPath: objektenListeURL.path) {
+        resultat = true
+    }else{
+        resultat = false
+    } // Ende if
+    
+    return resultat
+    
+} // Ende deletePdfList
+
+struct PDFGeneratorTab: View {
+    @StateObject private var progressTracker = ProgressTracker.shared
+    @State private var isCreatingPDF = false
+    @Binding var isPDFGenerated: Bool
+    @Binding var showProgressView: Bool // Hinzugefügte Variable zur Steuerung der Anzeige der ProgressView
+    
+    var body: some View {
+        VStack {
+            if isCreatingPDF && showProgressView {
+                ProgressViewModalLinear()
+            } // Ende if
+        } // Ende VStack
+        .onAppear {
+            startPDFCreation()
+        } // Ende onAppear
+    } // Ende var body
+    
+
+    func startPDFCreation() {
+        if showProgressView {
+            isCreatingPDF = true
+            progressTracker.reset()
+            
+            let updateInterval = 0.5 // Sekunden
+            let totalDuration = 2.0 // Gesamtdauer der Simulation
+            let totalSteps = totalDuration / updateInterval
+            var currentStep = 0.0
+            
+            Timer.scheduledTimer(withTimeInterval: updateInterval, repeats: true) { timer in
+                currentStep += 1
+                let currentProgress = Float(currentStep) / Float(totalSteps)
+                self.progressTracker.updateProgress(currentProgress)
+                
+                if currentProgress >= 1.0 {
+                    timer.invalidate()
+                    DispatchQueue.main.asyncAfter(deadline: .now()) {
+                        self.generatePDF()
+                    }
+                }
+            } // Ende Timer
         } else {
-            pdfView.maxScaleFactor = 0.8
+            isCreatingPDF = true
+            // Wenn showProgressView false ist, starte die PDF-Erstellung direkt ohne Timer und Fortschrittsanzeige
+            generatePDF()
         } // Ende if/else
-        return pdfView
     } // Ende func
     
-    func updateUIView(_ uiView: PDFView, context: UIViewRepresentableContext<PDFKitRepresentedView>) {
-        let _ = print("Funktion updateUIView() wird von Struct PDFKitRepresentedView aufgerufen!")
-        loadPDF(into: uiView)
-    } // Ende func
+    func generatePDF() {
     
-    private func loadPDF(into pdfView: PDFView) {
-        let _ = print("Funktion loadPDF() wird von Struct PDFKitRepresentedView aufgerufen!")
-        fetchPDFData { data in
-            if let data = data {
-                pdfView.document = PDFDocument(data: data)
-                if UIDevice.current.userInterfaceIdiom == .phone {
-                    pdfView.displayDirection = .vertical
-                    pdfView.autoScales = true
-                    pdfView.minScaleFactor = 0.5
-                    pdfView.maxScaleFactor = 5.0
-                } else {
-                    pdfView.maxScaleFactor = 0.8
-                } // Ende if/else
-                print("Pdf wurde geladen von Funktion loadPDF 'PDFKitRepresentedView'")
-            } // Ende if let
-        } // Ende fetchPDFData
-    } // Ende private func
+        print("Funktion generatePDF() wird aufgerufen")
+        let alleObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: true)
+        let objektWithFilter = serchObjectArray(parameter: alleObjekte)
+        let objekte = sortiereObjekte(par1: objektWithFilter, par2: true)
+        
+        createPDF(from: objekte) { pdfFilePath in
+            if let pdfFilePath = pdfFilePath {
+                print("PDF wurde gespeichert in: \(pdfFilePath)")
+            }
+            DispatchQueue.main.async {
+                self.isCreatingPDF = false // Verberge die ProgressView, wenn fertig
+                self.isPDFGenerated = true // Aktualisiere den Zustand, um anzuzeigen, dass die PDF generiert wurde
+            } // Ende DispatchQ
+        } // Ende createPDF
+    } // Ende func generatePDF
     
-    private func fetchPDFData(completion: @escaping (Data?) -> Void) {
-        let _ = print("Funktion fetchPDFData() wird von Struct PDFKitRepresentedView aufgerufen!")
-        URLSession.shared.dataTask(with: self.url) { data, response, error in
-            if let data = data {
-                DispatchQueue.main.async {
-                    completion(data)
-                } // Ende DispatchQueue
-            } else {
-                print("Failed to fetch PDF data: \(error?.localizedDescription ?? "Unknown error")")
-                completion(nil)
-            } // Ende if/else
-        }.resume()
-    } // Ende private func
 } // Ende struct
 
-
-// Diese Funktion generiert eine PDF File from ObjektenListe
-// Call fom func createObjektListe
-func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
-    let _ = print("Funktion generatePDF() wird aufgerufen!")
+func createPDF(from objekte: [ObjectVariable], completion: @escaping (_ pdfFilePath: URL?) -> Void) {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    @ObservedObject var sheredData = SharedData.shared
     
-    //@ObservedObject var globaleVariable = GlobaleVariable.shared
+    let appName = "Leih&SchenkApp" // Setze hier den Namen deiner App ein
+    
+    let pdfMetaData = [
+        kCGPDFContextCreator: appName,
+        kCGPDFContextAuthor: "Piotr T. Kwapisz",
+        kCGPDFContextTitle: "PDF-Liste"
+    ]
+    let format = UIGraphicsPDFRendererFormat()
+    format.documentInfo = pdfMetaData as [String: Any]
+
+    let pageWidth = 8.5 * 72.0
+    let pageHeight = 11 * 72.0
+    let margin: CGFloat = 20.0
+    let lineHeight: CGFloat = 14.0
+    let itemsPerPage = 45 // Maximal erlaubte Zeilen pro Seite und pro objekt.vorgang
+    let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
+    
+    let outputFileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("ObjektenListe.pdf")
+
+    do {
+        try autoreleasepool {
+            try renderer.writePDF(to: outputFileURL) { context in
+                let groupedObjekte = Dictionary(grouping: objekte, by: { $0.vorgang })
+                let pageCount = groupedObjekte.count
+                
+                var currentPage = 0
+                for (vorgang, vorgangObjekte) in groupedObjekte {
+                    currentPage += 1
+                    context.beginPage()
+                    
+                    let title1 = sheredData.titel //"Erste Titelzeile"
+                    let title2 = sheredData.unterTitel //"Zweite Titelzeile"
+                    let titleFont = UIFont.boldSystemFont(ofSize: 18)
+                    let titleAttributes: [NSAttributedString.Key: Any] = [.font: titleFont]
+                    let title1Size = title1.size(withAttributes: titleAttributes)
+                    let title2Size = title2.size(withAttributes: titleAttributes)
+                    let titleYPosition = margin
+                    title1.draw(at: CGPoint(x: (pageWidth - title1Size.width) / 2.0, y: titleYPosition), withAttributes: titleAttributes)
+                    title2.draw(at: CGPoint(x: (pageWidth - title2Size.width) / 2.0, y: titleYPosition + titleFont.lineHeight), withAttributes: titleAttributes)
+                    
+                    let vorgangTitleFont = UIFont.boldSystemFont(ofSize: 16)
+                    let vorgangTitleAttributes: [NSAttributedString.Key: Any] = [.font: vorgangTitleFont]
+                    //let vorgangTitleSize = vorgang.size(withAttributes: vorgangTitleAttributes)
+                    let vorgangYPosition = titleYPosition + 2 * titleFont.lineHeight + 2 * lineHeight // 2 Zeilen unter der zweiten Titelzeile
+                    vorgang.draw(at: CGPoint(x: margin, y: vorgangYPosition), withAttributes: vorgangTitleAttributes)
+                    
+                    var currentLine = 0
+                    for objekt in vorgangObjekte {
+                        let euroZeichen = (objekt.preisWert.isEmpty) ? "": " €"
+                        
+                        var text1: String = ""
+                        
+                        if globaleVariable.preisOderWert == true {
+                            text1 = "\(objekt.gegenstand), \(objekt.gegenstandText), \(objekt.preisWert)\(euroZeichen)"
+                        }else{
+                            text1 = "\(objekt.gegenstand), \(objekt.gegenstandText) "
+                        } // Ende if/else
+                        
+                        let text2 = "\(objekt.vorgang), \(objekt.datum), \(objekt.personNachname), \(objekt.personVorname), \(objekt.allgemeinerText)"
+                        
+                        let textAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
+                        let text1YPosition = vorgangYPosition + vorgangTitleFont.lineHeight + lineHeight * CGFloat(currentLine) + 20 // +20 für Abstand nach dem Titel
+                        let text2YPosition = text1YPosition + lineHeight + 5 // zusätzlicher Abstand zwischen den Zeilen
+                        
+                        text1.draw(at: CGPoint(x: margin, y: text1YPosition), withAttributes: textAttributes)
+                        text2.draw(at: CGPoint(x: margin, y: text2YPosition), withAttributes: textAttributes)
+                        
+                        currentLine += 2
+                        
+                        // Füge eine leere Zeile ein
+                        let emptyLineYPosition = text2YPosition + 2 * lineHeight // verdopple die Höhe der leeren Zeile
+                        let emptyLineRect = CGRect(x: margin, y: emptyLineYPosition, width: pageWidth - 2 * margin, height: 2 * lineHeight)
+                        UIColor.white.setFill() // Ändere die Farbe für die leere Zeile
+                        UIRectFill(emptyLineRect)
+                        currentLine += 2
+                        
+                        if currentLine >= itemsPerPage {
+                            context.beginPage()
+                            currentLine = 0
+                            title1.draw(at: CGPoint(x: (pageWidth - title1Size.width) / 2.0, y: titleYPosition), withAttributes: titleAttributes)
+                            title2.draw(at: CGPoint(x: (pageWidth - title2Size.width) / 2.0, y: titleYPosition + titleFont.lineHeight), withAttributes: titleAttributes)
+                            vorgang.draw(at: CGPoint(x: margin, y: vorgangYPosition), withAttributes: vorgangTitleAttributes)
+                        }// Ende if
+                    } // Ende for objekt
+                    
+                    let footerText = "Seite \(currentPage) von \(pageCount) - \(appName)"
+                    let footerAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)]
+                    let footerSize = footerText.size(withAttributes: footerAttributes)
+                    let footerYPosition = pageHeight - margin - footerSize.height
+                    footerText.draw(at: CGPoint(x: (pageWidth - footerSize.width) / 2.0, y: footerYPosition), withAttributes: footerAttributes)
+                } // Ende for
+            } // Ende try
+        } // Ende try
+        completion(outputFileURL)
+    } catch {
+        print("Could not save PDF: \(error)")
+        completion(nil)
+    } // Ende do
+} // Ende finc
+
+
+/*
+
+func createObjektenListe(parTitel: String, parUnterTitel: String) {
+    print("Funktion createObjektenListe() wird aufgerufen!")
+    
+    
+    
+    // Setup your initial variables and data
+    let titelString = parTitel.isEmpty ? "Das ist Header-Titel - First Line" : parTitel
+    let unterTitelString = parUnterTitel.isEmpty ? "Das ist Header-Untertitel - Second Line" : parUnterTitel
+    
+    let alleObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: true)
+    let objektWithFilter = serchObjectArray(parameter: alleObjekte)
+    let objekte = sortiereObjekte(par1: objektWithFilter, par2: true)
+    let pageHeader = "\(titelString)\n\(unterTitelString)"
+    
+    deleteFile(fileNameToDelete: "ObjektenListe.pdf")
+    
+    generatePDF(pageHeader: pageHeader, objektenArray: objekte)
+    
+} // Ende func createObjektenListe
+
+ 
+ 
+// Diese Funktion generiert eine PDF File from ObjektenListe
+// Call fom func createObjektenListe
+func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
+    
+    
+    let _ = print("Funktion generatePDF() wird aufgerufen!")
     
     // Create an instance of the PrintPageRenderer with the provided items and header.
     let renderer = PrintPageRenderer(items: objektenArray, headerText: pageHeader)
@@ -113,17 +276,21 @@ func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
     
     // Save the PDF data to the Document directory.
     if let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-        let pdfPath = docDir.appendingPathComponent("ObjektListe.pdf")
+        let pdfPath = docDir.appendingPathComponent("ObjektenListe.pdf")
         pdfData.write(to: pdfPath, atomically: true)
         print("PDF saved at path: \(pdfPath)")
         
     } // Ende if let
+    
+    
     
 } // Ende func
 
 
 // A custom class that subclasses UIPrintPageRenderer to handle the layout and rendering of content for printing.
 class PrintPageRenderer: UIPrintPageRenderer {
+    
+    //@ObservedObject var progressTracker = ProgressTracker.shared
     
     // Array of PrintItem objects representing each printable item.
     //let items: [PrintItem]
@@ -241,7 +408,9 @@ class PrintPageRenderer: UIPrintPageRenderer {
         // Calculate the range of items to be drawn on the current page.
         let start = pageIndex * itemsPerPage
         let end = min(start + itemsPerPage, items.count)
-       
+        
+        let itemsNumber = items.count
+        
         // Iterate through the items and draw each one in its corresponding location.
         for i in start..<end {
             let item = items[i]
@@ -253,8 +422,14 @@ class PrintPageRenderer: UIPrintPageRenderer {
             // Draw the item in the calculated rectangle.
             drawItem(item, in: itemRect)
             
+            // Aktualisiere den Fortschritt
+            DispatchQueue.main.async {
+                let currentProgress = Float(i + 1) / Float(itemsNumber)
+                ProgressTracker.shared.updateProgress(currentProgress)
+            
+            } // Ende Dispatch
+            
         } // Ende for i
-        
         
     } // Ende override func
     
@@ -409,44 +584,4 @@ func createUIImage(from label: UILabel) -> UIImage? {
     
     return nil
 } // Ende func
-
-
-func createObjektenListe( parTitel: String, parUnterTitel: String) -> Bool {
-    print("Funktion createObjektenListe() wird aufgerufen!")
-    
-    // Setup your initial variables and data
-    let titelString = parTitel.isEmpty ? "Das ist Header-Titel - First Line" : parTitel
-    let unterTitelString = parUnterTitel.isEmpty ? "Das ist Header-Untertitel - Second Line" : parUnterTitel
-    
-    let alleObjekte = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: true)
-    let objektWithFilter = serchObjectArray(parameter: alleObjekte)
-    let objekte = sortiereObjekte(par1: objektWithFilter, par2: true)
-    let pageHeader = "\(titelString)\n\(unterTitelString)"
-    
-    generatePDF(pageHeader: pageHeader, objektenArray: objekte)
-    
-    return true
-} // Ende func createObjektenListe
-
-
-struct ProgressViewModal: View {
-    var body: some View {
-        VStack(spacing: 20) {
-            ProgressView("Erstelle ...")
-            //.scaleEffect(1.5)
-            Text("Bitte warten ...")
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(15)
-        .shadow(radius: 10)
-        .frame(width: 200, height: 150) // Adjust size as needed
-        .overlay(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(Color.gray, lineWidth: 0)
-        )
-    }
-}
-
-
-
+*/

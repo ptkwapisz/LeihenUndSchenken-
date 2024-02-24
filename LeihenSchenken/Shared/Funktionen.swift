@@ -16,9 +16,9 @@ func deleteUserDefaults() {
     
     let colorData = ColorData()
     
-    globaleVariable.farbenEbene0 = Color.blue
-    globaleVariable.farbenEbene1 = Color.green
-    colorData.saveColor(color0: globaleVariable.farbenEbene0, color1: globaleVariable.farbenEbene1)
+    GlobalStorage.farbEbene0 = Color.blue
+    GlobalStorage.farbEbene1 = Color.green
+    colorData.saveColor(color0: GlobalStorage.farbEbene0, color1: GlobalStorage.farbEbene1)
     refreshAllViews()
     
 } // Ende func
@@ -98,7 +98,7 @@ func cleanEingabeMaske() {
     
 } // Ende func
 
-// Diese Funktion dekliniert das Verb für die Objektliste
+// Diese Funktion dekliniert das Verb für die Objektenliste
 func vorgangDeklination(vorgang: String)-> String {
     var resultat: String = ""
     
@@ -123,7 +123,7 @@ func vorgangDeklination(vorgang: String)-> String {
     return resultat
 }// Ende func
 
-// Diese Funktion dekliniert das Verb für die Objektliste
+// Diese Funktion dekliniert das Verb für die Objektenliste
 func vorgangPrefixDeklination(vorgang: String)-> String {
     var resultat: String = ""
     
@@ -322,16 +322,16 @@ func printingHandbuchFile(pdfPath: URL, pdfName: String) {
 } // Ende func
 
 
-// Zeilenfarbe der Objektliste im ersten Tab
+// Zeilenfarbe der Objektenliste im ersten Tab
 func zeilenFarbe(par: Int) -> Color {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     var zeilenFarbe: Color
     if par % 2 == 0 {
-        zeilenFarbe = globaleVariable.farbenEbene0
+        zeilenFarbe = GlobalStorage.farbEbene0
         
     }else{
-        zeilenFarbe = globaleVariable.farbenEbene0.opacity(0.5)
+        zeilenFarbe = GlobalStorage.farbEbene0.opacity(0.5)
         
     } // Ende if/else
    

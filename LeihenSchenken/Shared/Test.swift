@@ -28,7 +28,7 @@ func tabViewBottomToolbarHight() -> CGFloat {
 
 // Zweite Zeile bei der Liste der Objekte
 func subStringOfTextField(parameter: String) -> String {
-    let _ = print("Funktion subStringOfTextField() wird aufgerufen!")
+    //let _ = print("Funktion subStringOfTextField() wird aufgerufen!")
     var resultat: String = ""
     
     if UIDevice.current.userInterfaceIdiom == .phone {
@@ -152,7 +152,7 @@ func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
 // Par1: Objektvariable mit gefilterten objekten
 // Per2: Logischer Operator true: aufsteigend, false: absteigend
 func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    //@ObservedObject var globaleVariable = GlobaleVariable.shared
     let _ = print("Funktion sortiereObjekte() wird aufgerufen!")
     var resultat: [ObjectVariable] = []
     

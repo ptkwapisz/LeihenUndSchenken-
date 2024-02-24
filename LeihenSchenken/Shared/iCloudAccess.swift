@@ -136,13 +136,6 @@ func ifExistSpaceForLeiheUndSchenkeDbCopy() -> Bool {
     var resultat: Bool = true
     let dbFileSitze = getFlieSitze()
     
-    //print(dbFileSitze.numMB)
-    //print(dbFileSitze.strMB)
-    
-    //print(UIDevice.current.totalDiskSpaceInMB)
-    //print(UIDevice.current.freeDiskSpaceInMB)
-    //print(UIDevice.current.usedDiskSpaceInMB)
-    
     let totalSpeicher = UIDevice.current.totalDiskSpaceInBytes/1000
     let usedSpeicher = UIDevice.current.usedDiskSpaceInBytes/1000
     

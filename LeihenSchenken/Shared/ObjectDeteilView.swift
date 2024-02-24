@@ -158,13 +158,13 @@ struct ObjectDeteilView: View {
                     Spacer()
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
+                .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
+            .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+            .background(GlobalStorage.farbEbene0)
             .navigationTitle("\(par1[par2].gegenstand)")
             .toolbar{
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -193,9 +193,9 @@ struct ObjectDeteilView: View {
                             deleteItemsFromDatabase(tabelle: "Objekte", perKey: perKeyTmp)
                             print("\(par1[par2].gegenstand)" + " wurde gelöscht")
                             print(perKeyTmp)
-                            globaleVariable.navigationTabView = 1
+                            //globaleVariable.navigationTabView = 1
                             refreshAllViews()
-                            globaleVariable.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
+                            GlobalStorage.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
                             showAlert = false
                             
                             // Diese Zeile bewirkt, dass die View geschlossen wird

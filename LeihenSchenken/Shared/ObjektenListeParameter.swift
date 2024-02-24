@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct ObjektListeParameter: View {
+struct ObjektenListeParameter: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var sheredData = SharedData.shared
     @Binding var isPresented: Bool
     
-    @State var tmpTitel: String = ""
-    @State var tmpUnterTitel: String = ""
+    @State private var tmpTitel: String = ""
+    @State private var tmpUnterTitel: String = ""
     // Diese Variable zeigt, ob man die View mit dem 'Daten übernehmen' Taste verläst.
     // Wenn man die View mit der Taste 'Zurück' (var btnBack) verlässt werden die Änderungen verworfen
-    @State var endeSaveButton: Bool = false
+    @State private var endeSaveButton: Bool = false
     
     @FocusState private var focusedFields: Field?
     
@@ -41,35 +41,36 @@ struct ObjektListeParameter: View {
         } // Ende HStack
         .onDisappear() {
             // It is like a Cancel Button
-            if !endeSaveButton {
-                sheredData.titel = tmpTitel
-                sheredData.unterTitel = tmpUnterTitel
-            }
-            print("Disappear in ObjektListeParameter wurde ausgeführt.")
+            if endeSaveButton == false {
+                //sheredData.titel = tmpTitel
+                //sheredData.unterTitel = tmpUnterTitel
+                
+            } // Ende if
+            
+            print("Disappear in ObjektenListeParameter wurde ausgeführt.")
             
         } // Ende onDisappear
     } // Ende Button Label
     } // Ende some View
     
-    
     var body: some View {
-        let _ = print("Struct ObjektListParameter wird aufgerufen!")
+        let _ = print("Struct ObjektenListParameter wird aufgerufen!")
         
         GeometryReader { geometry in
             
             VStack {
                 VStack {
                     Text("")
-                    Text("Parameter").bold()
+                    Text("Parameter für die Objektenliste").bold()
                     List {
                         Section(header: Text("Kopfzeilen der Liste").foregroundColor(.gray).font(.system(size: 16, weight: .regular))) {
                             
                             
-                            CustomTextField(text: $sheredData.titel, isMultiLine: false, placeholder: "Listentitel")
+                            CustomTextField(text: $tmpTitel, isMultiLine: false, placeholder: "Listentitel")
                                 .focused($focusedFields, equals: .titel)
                             
                             
-                            CustomTextField(text: $sheredData.unterTitel, isMultiLine: false, placeholder: "Listenuntertitel")
+                            CustomTextField(text: $tmpUnterTitel, isMultiLine: false, placeholder: "Listenuntertitel")
                                 .focused($focusedFields, equals: .unterTitel)
                             
                         }// Ende Section
@@ -88,10 +89,19 @@ struct ObjektListeParameter: View {
                             
                             Button {
                                 print("Titel und Untertitel wurden übernohmen!")
-                                // Is defined in GlobaleVariablen
-                               
-                                endeSaveButton = true
                                 
+                                if tmpTitel.isEmpty == false  {
+                                    // Is defined in GlobaleVariablen
+                                    sheredData.titel = tmpTitel
+                                } // Ende if
+                                
+                                if tmpUnterTitel.isEmpty == false {
+                                    // Is defined in GlobaleVariablen
+                                    sheredData.unterTitel = tmpUnterTitel
+                                } // Ende if
+                                
+                                endeSaveButton = true
+                                sheredData.didSave.toggle()
                                 isPresented.toggle()
                                 
                             } label: {
@@ -102,7 +112,7 @@ struct ObjektListeParameter: View {
                             .foregroundColor(Color.white)
                             .buttonStyle(.borderedProminent)
                             .cornerRadius(10)
-                            .disabled(sheredData.titel.isEmpty && sheredData.unterTitel.isEmpty)
+                            //.disabled(tmpTitel.isEmpty && tmpUnterTitel.isEmpty)
                             
                             Spacer()
                         } // Ende HStack
@@ -116,26 +126,26 @@ struct ObjektListeParameter: View {
                     
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
+                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
-            .navigationTitle("PDF Objektliste").navigationBarTitleDisplayMode(.large)
+            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+            .background(GlobalStorage.farbEbene0)
+            .navigationTitle("PDF Objektenliste").navigationBarTitleDisplayMode(.large)
             .navigationBarBackButtonHidden()
             .navigationBarItems(leading: btnBack)
             
             
         } // Ende GeometryReader
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
-        .onAppear {
+        //.onAppear {
             
-            tmpTitel = sheredData.titel
-            tmpUnterTitel = sheredData.unterTitel
+            //tmpTitel = sheredData.titel
+            //tmpUnterTitel = sheredData.unterTitel
             
-        } // Ende onAppear
+        //} // Ende onAppear
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 
@@ -144,7 +154,7 @@ struct ObjektListeParameter: View {
                         Spacer()
                         Button("Abbrechen") {
                             
-                            print("Abbrechen Button titel wurde gedrückt!")
+                            print("Abbrechen Button beim Titel wurde gedrückt!")
                             focusedFields = nil
                         } // Ende Button
                     } // Ende HStack
@@ -153,7 +163,7 @@ struct ObjektListeParameter: View {
                         Spacer()
                         Button("Abbrechen") {
                             
-                            print("Abbrechen Button unterTitel wurde gedrückt!")
+                            print("Abbrechen Button beim UnterTitel wurde gedrückt!")
                             focusedFields = nil
                         } // Ende Button
                     } // Ende HStack

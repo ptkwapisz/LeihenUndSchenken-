@@ -23,19 +23,19 @@ struct Statistik: View {
                 
                 if UIDevice.current.userInterfaceIdiom == .phone {
                     StatistikView()
-                        .frame(height: geometry.size.height * globaleVariable.heightFaktorEbene1)
+                        .frame(height: geometry.size.height * GlobalStorage.heightFaktorEbene1)
                     
                 } else {
                     StatistikView()
-                        .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                        .background(globaleVariable.farbenEbene1)
+                        .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                        .background(GlobalStorage.farbEbene1)
                         .cornerRadius(10)
                     
                 } // Ende if/else
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+            .background(GlobalStorage.farbEbene0)
             
             Spacer()
             
@@ -62,6 +62,9 @@ struct StatistikView: View {
                 Text("Statistiken").bold()
                 Spacer()
                 if statistikenVariable.count > 15 {
+                    // Mit dieser Tase (Pfeil nach links) kann man auch die View verlassen.
+                    // Dadurch muss man nicht bis zum Ende der Liste scrollen, um die View zu schlissen.
+                    // Diese Taste erscheint oben rechts und hat die gleiche Funktion, wie die Taste am Ende der Statistikliste 'Ansicht verlassen'
                     Button(action:{
                         // Diese Zeile bewirkt, dass die View geschlossen wird
                         self.presentationMode.wrappedValue.dismiss()
@@ -122,7 +125,7 @@ struct StatistikView: View {
             Spacer()
             
         } // Ende Vstack
-        .background(globaleVariable.farbenEbene1)
+        .background(GlobalStorage.farbEbene1)
         .cornerRadius(10)
         
         
@@ -138,8 +141,6 @@ func ladeStatistiken() -> [Statistiken] {
     let z1s0: String = "Objekte"
     let z1s1: String = "Alle Objekte:"
     let z1S2: [String]  = querySQLAbfrageArray(queryTmp: "Select count() From Objekte")
-    
-    
     
     let z2s0: String = "Objekte"
     let z2s1: String = "Verschenkte Objekte:"

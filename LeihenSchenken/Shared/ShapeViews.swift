@@ -18,10 +18,9 @@ struct ShapeViewAddGegenstand: View {
     @Binding var isPresented: Bool
     @Binding var isParameterBereich: Bool
     
-    @State var showHilfe: Bool = false
-    //@State var showWarnung: Bool = false
+    @State private var showHilfe: Bool = false
     
-    @State var gegenstandNeu: String = ""
+    @State private var gegenstandNeu: String = ""
     
     @FocusState var isInputActive: Bool
     
@@ -65,17 +64,9 @@ struct ShapeViewAddGegenstand: View {
                             
                             CustomTextField(text: $gegenstandNeu.max(20), isMultiLine: false, placeholder: "Gegenstandname")
                                 .focused($isInputActive)
-                            /*
-                            TextField("Gegenstand", text: $gegenstandNeu.max(20))
-                                .focused($isInputActive)
-                                .padding(5)
-                                .background(Color.gray.opacity(0.4))
-                                .foregroundColor(.black.opacity(0.4))
-                                .submitLabel(.done)
-                                .cornerRadius(5)
-                                .disableAutocorrection(true)
-                             */
-                        }
+                            
+                        } // Ende Section
+                        
                         Section(){
                             
                             HStack {
@@ -109,7 +100,7 @@ struct ShapeViewAddGegenstand: View {
                                                 globaleVariable.parameterGegenstand.removeAll()
                                                 globaleVariable.parameterGegenstand = querySQLAbfrageArray(queryTmp: "Select gegenstandName FROM Gegenstaende")
                                                 
-                                                print("Gegenstand wurde in die Datenbank hinzugefügt!")
+                                                print("Gegenstand wurde in die Datenbank hinzugefügt!!!")
                                                 
                                                 isPresented = false
                                             //} // Ende guard/else
@@ -173,14 +164,14 @@ struct ShapeViewAddGegenstand: View {
                     } // Ende Toolbar
                     
                 } // Ende Vstack
-                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
+                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+            .background(GlobalStorage.farbEbene0)
             .navigationTitle("Neuer Gegenstand")
             
         } // Ende GeometryReader
@@ -354,14 +345,14 @@ struct ShapeViewEditGegenstand: View {
                     } // Ende Toolbar
                     
                 } // Ende Vstack
-                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
+                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+            .background(GlobalStorage.farbEbene0)
             .navigationTitle("\(gegenstandAlt)").navigationBarTitleDisplayMode(.large)
             .onAppear() {
                 
@@ -388,9 +379,6 @@ struct ShapeViewEditGegenstand: View {
         return resultat
     } // Ende func
     
-    
-    
-    
 } // Ende struct
 
 
@@ -401,9 +389,10 @@ struct ShapeViewSettings: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
     
-    @State var showSettingsHilfe: Bool = false
-    
-    @State var colorData = ColorData()
+    @State private var showSettingsHilfe: Bool = false
+    @State private var colorData = ColorData()
+    @State private var color0 = GlobalStorage.farbEbene0
+    @State private var color1 = GlobalStorage.farbEbene1
     
     var body: some View {
        
@@ -416,12 +405,12 @@ struct ShapeViewSettings: View {
             Form {
                 
                 Section(header: Text("Farbeinstellung")) {
-                    ColorPicker("Farben für Ebene 0", selection:  $globaleVariable.farbenEbene0, supportsOpacity: false)
-                        .onAppear ( perform: {globaleVariable.farbenEbene0 = colorData.loadColor0()})
+                    ColorPicker("Farben für Ebene 0", selection: $color0, supportsOpacity: false)
+                        .onAppear ( perform: {GlobalStorage.farbEbene0 = colorData.loadColor0()})
                         .frame(width: 300, height: 40)
                     
-                    ColorPicker("Farben für Ebene 1", selection: $globaleVariable.farbenEbene1, supportsOpacity: false)
-                        .onAppear ( perform: {globaleVariable.farbenEbene1 = colorData.loadColor1()})
+                    ColorPicker("Farben für Ebene 1", selection: $color1, supportsOpacity: false)
+                        .onAppear ( perform: {GlobalStorage.farbEbene1 = colorData.loadColor1()})
                         .frame(width: 300, height: 40)
                     
                 }// Ende Section Farben
@@ -453,7 +442,7 @@ struct ShapeViewSettings: View {
                     
                     Button() {
                         
-                        colorData.saveColor(color0: globaleVariable.farbenEbene0, color1: globaleVariable.farbenEbene1)
+                        colorData.saveColor(color0: GlobalStorage.farbEbene0, color1: GlobalStorage.farbEbene1)
                         //presentationMode.wrappedValue.dismiss()
                         isPresented = false
                     }label: {
@@ -476,7 +465,7 @@ struct ShapeViewSettings: View {
             .font(.system(size: 14, weight: .regular))
             
         } // Ende Vstack
-        .background(globaleVariable.farbenEbene1)
+        .background(GlobalStorage.farbEbene1)
         .cornerRadius(10)
             
             
@@ -492,12 +481,12 @@ struct ShapeViewSettings: View {
 struct ShapeViewAbfrage: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     //@ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
-    
+    @ObservedObject var sheredData = SharedData.shared
     @Binding var isPresented: Bool
     
-    @State var showAbfrageHilfe: Bool = false
-    @State var showAlertAbbrechenButton: Bool = false
-    @State var showAlertSpeichernButton: Bool = false
+    @State private var showPDFGenerator = true // Initial auf true setzen, um direkt zu zeigen
+    @State private var isPDFGenerated = false // Zustand, der angibt, ob die PDF generiert wurde
+    @State private var showProgressViewModallLinear: Bool = false
     
     @State var abfrageFeld1: [String] = ["Gegenstand", "Vorgang","Name", "Vorname", "Person"]
     @State var selectedAbfrageFeld1 = "Gegenstand"
@@ -594,7 +583,6 @@ struct ShapeViewAbfrage: View {
                                         
                                 } // Ende switch
                                 
-                                
                                 if selectedAbfrageFeld1 == "Person" {
                                     
                                     let components = selectedAbfrageFeld3.split(separator: ",").map(String.init)
@@ -608,18 +596,18 @@ struct ShapeViewAbfrage: View {
                                 
                                 globaleVariable.abfrageQueryString = temp
                                 
-                            }else{
+                            } else {
                                 globaleVariable.abfrageQueryString = ""
+                                
                             } // Ende if
                             
-                            globaleVariable.navigationTabView = 1
+                            // Wichtig für das Anzeigen der Badge
+                            sheredData.didSave.toggle()
                             
                             isPresented = false
-                            
                         } label: {
                             //Text("Abfrage verlassen")
                             Label("Abfrage verlassen", systemImage: "arrowshape.turn.up.backward.circle")
-                            
                             
                         } // Ende Button/label
                         .buttonStyle(.borderedProminent)
@@ -638,7 +626,7 @@ struct ShapeViewAbfrage: View {
                 } // Ende Form
                 
         } // Ende VStack
-        .background(globaleVariable.farbenEbene1)
+        .background(GlobalStorage.farbEbene1)
         .cornerRadius(10)
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
@@ -740,12 +728,12 @@ struct ShapeViewEditUser: View {
                             
                             Section() {
                                 Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
-                                    ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
-                                        Text("\(globaleVariable.parameterPersonSex[index])")
+                                    ForEach(0..<GlobalStorage.parameterPersonSex.count, id: \.self) { index in
+                                        Text("\(GlobalStorage.parameterPersonSex[index])")
                                         
                                     } // Ende ForEach
                                     .onChange(of: selectedPerson_sexInt) {
-                                        neuePersonTmp[0].personSex = globaleVariable.parameterPersonSex[selectedPerson_sexInt]
+                                        neuePersonTmp[0].personSex = GlobalStorage.parameterPersonSex[selectedPerson_sexInt]
                                         
                                         refreshAllViews()
                                     }
@@ -767,7 +755,7 @@ struct ShapeViewEditUser: View {
                                     
                                     if tabelleDB == "Personen" {
                                         personPickerTmp = neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
-                                        neuePersonTmp[0].personSex = globaleVariable.parameterPersonSex[selectedPerson_sexInt]
+                                        neuePersonTmp[0].personSex = GlobalStorage.parameterPersonSex[selectedPerson_sexInt]
                                         
                                         // Die geänderte Personendaten werden in die Table Personen gespeichert
                                         
@@ -783,7 +771,7 @@ struct ShapeViewEditUser: View {
                                         //} // Ende if/else
                                     } else {
                                         personPickerTmp = neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
-                                        neuePersonTmp[0].personSex = globaleVariable.parameterPersonSex[selectedPerson_sexInt]
+                                        neuePersonTmp[0].personSex = GlobalStorage.parameterPersonSex[selectedPerson_sexInt]
                                         
                                         isPresentedShapeViewEditUser = false
                                         print("Die tabelleDB ist gleich 'Objekte' ")
@@ -817,13 +805,13 @@ struct ShapeViewEditUser: View {
                         }//Ende List
                         
                     } // Ende VStack
-                    .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                    .background(globaleVariable.farbenEbene1)
+                    .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                    .background(GlobalStorage.farbEbene1)
                     .cornerRadius(10)
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-                .background(globaleVariable.farbenEbene0)
+                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+                .background(GlobalStorage.farbEbene0)
                 .navigationTitle("\(neuePersonTmp[0].personVorname + " " + neuePersonTmp[0].personNachname)").navigationBarTitleDisplayMode(.large)
                 
             } // Ende VStack

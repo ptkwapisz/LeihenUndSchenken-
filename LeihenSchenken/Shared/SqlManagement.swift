@@ -270,6 +270,7 @@ func datenbankReset(){
     
 } // Ende func
 
+
 func deleteFile(fileNameToDelete: String) {
     
     // 1. Find a Documents directory on the device,
@@ -307,6 +308,8 @@ func deleteFile(fileNameToDelete: String) {
     
 } // End func deleteFile()
 
+
+ 
 // Die Arrays von der Eingabemaske werden neu erstellt
 // Diese Function wird nach import oder neuerstellung des Datenbankes aufgerufen
 func refreschParameter(){
@@ -318,7 +321,7 @@ func refreschParameter(){
     globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
     
     // Update the number of Objects
-    globaleVariable.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
+    GlobalStorage.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
     
 } // Ende refreschParameter
 
@@ -738,7 +741,7 @@ func abfrageField3(field1: String)->[String] {
             result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
             //print("Gegenstand " + "\(selectedAbfrageFeld3)")
         case "Vorgang":
-            result = globaleVariable.parameterVorgang
+            result = GlobalStorage.parameterVorgang
             //print("Vorgang " + "\(selectedAbfrageFeld3)")
         case "Name":
             result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")

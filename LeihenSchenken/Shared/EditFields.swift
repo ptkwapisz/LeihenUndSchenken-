@@ -164,14 +164,14 @@ struct EditSheetView: View {
                         }// Ende onApear
                         
                     } // Ende VStack
-                    .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
+                    .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
                     //.frame(width: geometry.size.width)
-                    .background(globaleVariable.farbenEbene1)
+                    .background(GlobalStorage.farbEbene1)
                     .cornerRadius(10)
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-                .background(globaleVariable.farbenEbene0)
+                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+                .background(GlobalStorage.farbEbene0)
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
                         

@@ -12,8 +12,7 @@ import SwiftUI
 class GlobaleVariable: ObservableObject {
     static let shared = GlobaleVariable()
     
-    @Published var parameterPersonSex: [String] =  ["Frau", "Mann", "Divers"]
-    @Published var parameterVorgang: [String] =  ["Verleihen", "Verschenken", "Bekommen", "Aufbewahren", "Geschenkidee"]
+    //@Published var parameterVorgang: [String] =  ["Verleihen", "Verschenken", "Bekommen", "Aufbewahren", "Geschenkidee"]
     @Published var parameterGegenstand: [String] = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
     
     @Published var searchTextObjekte: String = ""
@@ -27,17 +26,7 @@ class GlobaleVariable: ObservableObject {
     
     @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
    
-    
-    //@Published var disableDBLadenMenueItem: Bool = ifExistLeiheUndSchenkeDbCopy()
-    //@Published var disableDBSpeichernMenueItem: Bool = ifExistSpaceForLeiheUndSchenkeDbCopy()
-    
-    @Published var navigationTabView = 1
-    @Published var farbenEbene0: Color = loadColor0A()
-    @Published var farbenEbene1: Color = loadColor1B()
-    
-    @Published var heightFaktorEbene0: Double = 0.99
-    
-    @Published var heightFaktorEbene1: Double = 0.97
+    //@Published var navigationTabView = 1
     
     @Published var refreshViews: Bool = false
     
@@ -51,15 +40,9 @@ class GlobaleVariable: ObservableObject {
     @Published var textAllgemeineNotizen: String = ""
     @Published var datum: Date = Date()
     
-    // Variable for the pdf List
-    @Published var titel: String = ""
-    @Published var unterTitel: String = ""
-    @Published var versionCounter: Int = 0
     @Published var preisOderWert: Bool = false
    
     @Published var columnVisibility = NavigationSplitViewVisibility.all
-    
-    @Published var numberOfObjects: Int = anzahlDerDatensaetze(tableName: "Objekte")
     
 } // ende class
 
@@ -67,15 +50,10 @@ class GlobaleVariable: ObservableObject {
 class SharedData: ObservableObject {
     static let shared = SharedData()
     
-    @Published var titel: String = ""
-    @Published var unterTitel: String = ""
+    @Published var titel: String = "Erste Zeile"
+    @Published var unterTitel: String = "Zweite Zeile"
     @Published var didSave: Bool = false
-/*
-    func save() {
-        // Function to trigger changes
-        didSave.toggle()
-    } // Ende func
- */
+
 }// Ende class
 
 class UserSettingsDefaults: ObservableObject {
@@ -105,7 +83,6 @@ class UserSettingsDefaults: ObservableObject {
         } // Ende didSet
     } // Ende @Published
     
-    
     @Published var selectedFilterField2: String {
         didSet {
             UserDefaults.standard.set(selectedFilterField2, forKey: "selectedFilterField2")
@@ -117,7 +94,6 @@ class UserSettingsDefaults: ObservableObject {
             UserDefaults.standard.set(selectedFilterField3, forKey: "selectedFilterField3")
         } // Ende didSet
     } // Ende @Published
-    
     
     init() {
         
@@ -197,7 +173,6 @@ class Statistiken: Identifiable {
     
 } // Ende class
 
-
 class PersonClassVariable: Identifiable {
     
     @Published var perKey: String
@@ -225,13 +200,13 @@ class HilfeTexte {
     
     static var eingabeMaske: String = "Die App beginnt mit der Eingabemaske, wo Sie z. B. verschenkte, verliehene oder erhaltene Gegenstände, wie Bücher, CDs, Werkzeuge oder Geld, erfassen können. Vier Standardgegenstände sind voreingestellt, aber Sie können auch eigene hinzufügen. Für zusätzliche Informationen nutzen Sie das Feld 'Gegenstandsbeschreibung', z.B. ISBN oder Genre bei Büchern. Fotos von Gegenständen lassen sich aus Ihrer iPhone-Mediathek ins Feld 'Gegenstandsbild' importieren. Geben Sie den ausgegebenen Betrag oder den verliehenen Geldbetrag im Feld 'Preis/Wert' ein. Im Feld 'Datum' vermerken Sie, wann Sie den Gegenstand verschenkt oder verliehen haben. Wählen Sie im Feld 'Was möchten Sie tun?' zwischen 'verschenken', 'verleihen' oder 'bekommen'. Geben Sie im Feld 'Person' ein, wer den Gegenstand erhalten hat. Im Feld 'Allgemeine Notizen' können Sie den Anlass oder die Situation beschreiben. Durch Abbrechen können Sie die Eingabemaske leeren und neu beginnen."
     
-    static var tabObjektListe: String = "In diesem Fenster sehen sie alle von Ihnen erfasten Objekte, gruppiert nach den Vorgängen, wie 'verlien', 'verschenkt', 'bekommen', 'aufbewahren' oder die 'Ideenliste'. Sie können jede Zeile anklicken, um in die Deteilsicht des Objektes zu gelangen. Um ein neues Objekt hinzufügen drücken Sie den Button mit dem Stappel (und dem + Zeichen) unten Links."
+    static var tabObjektenListe: String = "In diesem Fenster sehen sie alle von Ihnen erfasten Objekte, gruppiert nach den Vorgängen, wie 'verlien', 'verschenkt', 'bekommen', 'aufbewahren' oder die 'Ideenliste'. Sie können jede Zeile anklicken, um in die Deteilsicht des Objektes zu gelangen. Um ein neues Objekt hinzufügen drücken Sie den Button mit dem Stappel (und dem + Zeichen) unten Links."
     
     static var tabGegenstandListe: String = "In diesem Fenster können Sie die Favoritenliste Ihrer Gegenstände verwalten. Sie können die Gegenstände löschen (das Icon mit dem Mühleimer) oder neue Gegenstände eingeben (das Icon mit dem Pluszeichen. Um ein Gegenstand zu bearbeiten markieren sie den gewünschten Gegenstand und wischen nach rechts. Diese Favoritenliste erscheint in der Eingabemaske, wenn Sie ein Gegenstand eingeben möchten. Die vier Standardgegenstände, das Buch, das Werkzeug, das Geld und die CD/DVD können nicht gelöscht und können nicht bearbeiten werden."
     
     static var tabPersonenListe: String = "In diesem Fenster können Sie die Favoritenliste der Personen verwalten. Sie können die Personen löschen (das Icon mit dem Mühleimer) oder neue Personen eingeben (das Icon mit dem Pluszeichen). Um eine Person zu bearbeiten markieren sie diese Person und wischen nach rechts. Diese Favoritenliste erscheint in der Eingabemaske, wenn Sie eine Person eingeben möchten."
     
-    static var tabObjektPDFListe: String = "In diesem Fenster wird die Objektliste gezeigt, die Sie auch von hier drucken können. Die Kopfzeilen können Sie anpassen indem Sie den Button mit dem Stift oben rechts anklicken."
+    static var tabObjektPDFListe: String = "In diesem Fenster wird die Objektenliste gezeigt, die Sie auch von hier drucken können. Die Kopfzeilen können Sie anpassen indem Sie den Button mit dem Stift oben rechts anklicken."
     
     static var tabStatistiken: String = "In diesem Fenster werden die Anzahl allen Gegenstände und die Anzahl der Vorgänge angezeigt. Die zahlen sind ungefiltert, das heißt, dass Sie den gesamten Bestand also alle Objekte, die in dem Datenbank gespeichert sind, sehen."
     
@@ -260,7 +235,7 @@ class AlertMessageTexte  {
     
     init() {
         if UIDevice.current.userInterfaceIdiom == .phone {
-            AlertMessageTexte.alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken bleiben Sie bei der Eingabemaske. Wenn Sie 'Verlassen' drücken, werden alle Angaben, fall Sie welche gemacht haben gelöscht. Sie verlassen dann die Eingabemaske und kehren zurück zu der Objektliste."
+            AlertMessageTexte.alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken bleiben Sie bei der Eingabemaske. Wenn Sie 'Verlassen' drücken, werden alle Angaben, fall Sie welche gemacht haben gelöscht. Sie verlassen dann die Eingabemaske und kehren zurück zu der Objekentliste."
         } else {
             AlertMessageTexte.alertTextForEingabemaske = "Wenn Sie 'Abbrechen' drücken können Sie weiter Ihre Daten auf der Eingabemaske einfügen. Wenn Sie 'Löschen' drücken, werden alle Felder der Eingabemaske gelöscht und Sie können mit der Eingabe neu anfangen."
         } // Ende if/else
@@ -310,14 +285,14 @@ enum ActiveAlertTab3 {
 } // Ende enum
 
 
-// Diese enum wird für Alertmeldung bei der Tab1 (Objektliste) aufgerufen, wenn db leer ist
+// Diese enum wird für Alertmeldung bei der Tab1 (Objektenliste) aufgerufen, wenn db leer ist
 // oder wenn bei löschen durch swip nach links
 enum ActiveAlertTab1 {
     case leereDBinformationiPad, leereDBinformationiPhone, deleteObject
 } // Ende enum
 
 
-// Diese Class definiert globale Variable die bei Änderung keinene refresh der View verursachen
+// Diese Class definiert globale Variable bei denen die Änderung des Wertes keinen Refresh/Redraw der Views verursacht
 class GlobalStorage {
     
     static var widthFaktorEbene1: Double = 0.97
@@ -328,4 +303,19 @@ class GlobalStorage {
     // Number of Objects that is fitered by abfrage
     static var numberOfObjectsFiltered: Int = 0
     
+    // The Number of selected TabView
+    static var navigationTabView: Int = 1
+    
+    static var farbEbene0: Color = loadColor0A()
+    static var farbEbene1: Color = loadColor1B()
+    
+    static var heightFaktorEbene0: Double = 0.99
+    static var heightFaktorEbene1: Double = 0.97
+    
+    static var numberOfObjects: Int = anzahlDerDatensaetze(tableName: "Objekte")
+    
+    static var parameterPersonSex: [String] =  ["Frau", "Mann", "Divers"]
+    static var parameterVorgang: [String] =  ["Verleihen", "Verschenken", "Bekommen", "Aufbewahren", "Geschenkidee"]
+    
+   
 } // Ende class

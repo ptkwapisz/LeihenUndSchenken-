@@ -18,6 +18,7 @@ struct LeihenSchenkenApp: App {
     var body: some Scene {
         
         let _: Bool = ifDatabaseExist()
+        let _ = deletePdfList()
         
         WindowGroup {
             

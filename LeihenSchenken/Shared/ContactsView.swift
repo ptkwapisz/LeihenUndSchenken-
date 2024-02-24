@@ -14,17 +14,17 @@ struct ShapeViewAddUser: View {
     @Binding var isPresented: Bool
     @Binding var isParameterBereich: Bool
     
-    @State var showHilfe: Bool = false
-    @State var showWarnung: Bool = false
+    @State private var showHilfe: Bool = false
+    //@State private var showWarnung: Bool = false
     
-    @State var selectedPerson_sexInt: Int = 0
-    @State var isPresentedShapeAccessContacts: Bool = false
+    @State private var selectedPerson_sexInt: Int = 0
+    @State private var isPresentedShapeAccessContacts: Bool = false
     
-    @State var vorname: String = ""
-    @State var name: String = ""
+    @State private var vorname: String = ""
+    @State private var name: String = ""
     
     // Das laden der Kontakte erfolgt in .onAppear
-    @State var myContactsTmp: [Contact] = []
+    @State private var myContactsTmp: [Contact] = []
     
     var myContacts: [Contact] {
         return serchInAdressBookArray(parameter: myContactsTmp)
@@ -79,29 +79,11 @@ struct ShapeViewAddUser: View {
                             CustomTextField(text: $name.max(25), isMultiLine: false, placeholder: "Nachname")
                                 .focused($focusedField, equals: .nameFokus)
                             
-                            /*
-                            TextField("Vorname", text: $vorname.max(15))
-                                .focused($focusedField, equals: .vornameFokus)
-                                .padding(5)
-                                .background(Color.gray.opacity(0.4))
-                                .foregroundColor(.black.opacity(0.4))
-                                .cornerRadius(5)
-                                .submitLabel(.done)
-                                .disableAutocorrection(true)
                             
-                            TextField("Name", text: $name.max(25))
-                                .focused($focusedField, equals: .nameFokus)
-                                .padding(5)
-                                .background(Color.gray.opacity(0.4))
-                                .foregroundColor(.black.opacity(0.4))
-                                .cornerRadius(5)
-                                .submitLabel(.done)
-                                .disableAutocorrection(true)
-                            */
                             Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
                                 
-                                ForEach(0..<globaleVariable.parameterPersonSex.count, id: \.self) { index in
-                                    Text("\(globaleVariable.parameterPersonSex[index])")
+                                ForEach(0..<GlobalStorage.parameterPersonSex.count, id: \.self) { index in
+                                    Text("\(GlobalStorage.parameterPersonSex[index])")
                                     
                                 } // Ende ForEach
                             } // Ende Picker
@@ -127,7 +109,7 @@ struct ShapeViewAddUser: View {
                                     
                                     if isParameterBereich {
                                         
-                                        personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                        personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: GlobalStorage.parameterPersonSex[selectedPerson_sexInt])
                                         // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
                                         globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
                                         globaleVariable.searchTextAdressBook = ""
@@ -135,13 +117,13 @@ struct ShapeViewAddUser: View {
                                         isPresented = false
                                     }else{
                                        
-                                        if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(globaleVariable.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
+                                        //if pruefenDieElementeDerDatenbank(parPerson: ["\(vorname)","\(name)","\(GlobalStorage.parameterPersonSex[selectedPerson_sexInt])"], parGegenstand: "") {
                                             
-                                            showWarnung = true
+                                            //showWarnung = true
                                             
-                                        }else{
+                                        //}else{
                                             
-                                            personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: globaleVariable.parameterPersonSex[selectedPerson_sexInt])
+                                            personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: GlobalStorage.parameterPersonSex[selectedPerson_sexInt])
                                             globaleVariable.personenParameter.removeAll()
                                             globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
                                             
@@ -149,7 +131,7 @@ struct ShapeViewAddUser: View {
                                             print("Person wurde in die Datenbank hinzugefügt!")
                                             isPresented = false
                                             
-                                        } // Ende if/else
+                                        //} // Ende if/else
                                         
                                     }// Ende if/else
                                     
@@ -168,11 +150,12 @@ struct ShapeViewAddUser: View {
                             Spacer()
                         } // Ende HStack
                         
+                        /*
                         .alert("Warnung zu neuer Person", isPresented: $showWarnung, actions: {
                             Button("OK") {}
                         }, message: { Text("Die Person: '\(vorname)' '\(name)' befindet sich schon in der Datenbank. In der Datenbank können keine Duplikate von Personen gespeichert werden!") } // Ende message
                         ) // Ende alert
-                        
+                        */
                         VStack{
                             if isParameterBereich {
                                 
@@ -195,13 +178,13 @@ struct ShapeViewAddUser: View {
                     
                     //.scrollDisabled(true)
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
+                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende Vstack
-            .frame(width: geometry.size.width,height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+            .background(GlobalStorage.farbEbene0)
             .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.large)
             
         } // Ende GeometryReader

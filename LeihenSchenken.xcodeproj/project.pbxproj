@@ -36,6 +36,9 @@
 		DB9DC2C22B245E5700FCB886 /* ObjectDeteilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9DC2C02B245E5700FCB886 /* ObjectDeteilView.swift */; };
 		DB9DC2C32B245E5700FCB886 /* ObjectDeteilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9DC2C02B245E5700FCB886 /* ObjectDeteilView.swift */; };
 		DBAD5E012A7707F1009AAF62 /* iCloudAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */; };
+		DBAD9E712B48AA79000229EE /* ProgressViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAD9E702B48AA79000229EE /* ProgressViews.swift */; };
+		DBAD9E722B48AA79000229EE /* ProgressViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAD9E702B48AA79000229EE /* ProgressViews.swift */; };
+		DBAD9E732B48AA79000229EE /* ProgressViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAD9E702B48AA79000229EE /* ProgressViews.swift */; };
 		DBC5413A2A58B2EB00A8F01B /* ExportImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC541392A58B2EB00A8F01B /* ExportImport.swift */; };
 		DBCCA1132A60AD4200146426 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCA1122A60AD4200146426 /* CameraView.swift */; };
 		DBCCBB7D2A1825D200EDF087 /* GlobaleVariablen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCBB7C2A1825D200EDF087 /* GlobaleVariablen.swift */; };
@@ -90,6 +93,7 @@
 		DB9BCEC62AC05EA6000FEF4C /* EingabeMaske.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EingabeMaske.swift; sourceTree = "<group>"; };
 		DB9DC2C02B245E5700FCB886 /* ObjectDeteilView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDeteilView.swift; sourceTree = "<group>"; };
 		DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudAccess.swift; sourceTree = "<group>"; };
+		DBAD9E702B48AA79000229EE /* ProgressViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViews.swift; sourceTree = "<group>"; };
 		DBC541392A58B2EB00A8F01B /* ExportImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImport.swift; sourceTree = "<group>"; };
 		DBCCA1122A60AD4200146426 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		DBCCBB7C2A1825D200EDF087 /* GlobaleVariablen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobaleVariablen.swift; sourceTree = "<group>"; };
@@ -164,6 +168,7 @@
 				DBAD5E002A7707F1009AAF62 /* iCloudAccess.swift */,
 				DB6E489C2A9F4EC9002AA59F /* StatistikView.swift */,
 				DB7F8D8E2B0B73A40051B9A3 /* StoreKitManager.swift */,
+				DBAD9E702B48AA79000229EE /* ProgressViews.swift */,
 				DBE5D0A62A192DEB006410AD /* Test.swift */,
 				DBE8F9092A63F92B0027E311 /* ContactsView.swift */,
 				DBCCA1122A60AD4200146426 /* CameraView.swift */,
@@ -394,6 +399,7 @@
 				DB445E222B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */,
 				DBCCBB872A1826D300EDF087 /* TabViews.swift in Sources */,
 				DBCCBB7D2A1825D200EDF087 /* GlobaleVariablen.swift in Sources */,
+				DBAD9E712B48AA79000229EE /* ProgressViews.swift in Sources */,
 				DBCCBB7F2A18260B00EDF087 /* Funktionen.swift in Sources */,
 				DB0160FB2A17CE15000A34CE /* PdfView.swift in Sources */,
 			);
@@ -404,6 +410,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB9DC2C22B245E5700FCB886 /* ObjectDeteilView.swift in Sources */,
+				DBAD9E722B48AA79000229EE /* ProgressViews.swift in Sources */,
 				DB445E232B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */,
 				DB9BCEC82AC05EA6000FEF4C /* EingabeMaske.swift in Sources */,
 				DB6E489E2A9F4EC9002AA59F /* StatistikView.swift in Sources */,
@@ -421,6 +428,7 @@
 				DB9DC2C32B245E5700FCB886 /* ObjectDeteilView.swift in Sources */,
 				DB445E242B3B023000F59C90 /* GeneratePdfObjektenListe.swift in Sources */,
 				DB445E202B3B01C800F59C90 /* ObjektenListeParameter.swift in Sources */,
+				DBAD9E732B48AA79000229EE /* ProgressViews.swift in Sources */,
 				DB6E489F2A9F4EC9002AA59F /* StatistikView.swift in Sources */,
 				DB9BCEC92AC05EA6000FEF4C /* EingabeMaske.swift in Sources */,
 				DBCEF81729D1ED7A0017A728 /* LeihenSchenkenUITestsLaunchTests.swift in Sources */,

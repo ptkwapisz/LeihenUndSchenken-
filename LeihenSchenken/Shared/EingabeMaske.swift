@@ -17,17 +17,18 @@ struct EingabeMaskePhoneAndPadView: View {
     @ObservedObject var userSettingsDefaults = UserSettingsDefaults.shared
    
     @StateObject var cameraManager = CameraManager()
-    @State var alertMessageTexte = AlertMessageTexte()
+    @State private var alertMessageTexte = AlertMessageTexte()
     
-    @State var hilfeTexte = HilfeTexte()
+    @State private var hilfeTexte = HilfeTexte()
     
-    @State var showParameterHilfe: Bool = false
-    @State var showAlertAbbrechenButton: Bool = false
-    @State var showAlertSpeichernButton: Bool = false
-    @State var showSheetPerson: Bool = false
-    @State var showSheetGegenstand: Bool = false
-    @State var isParameterBereich: Bool = true
-    @State var paddingHeight: CGFloat = 0.0
+    @State private var showParameterHilfe: Bool = false
+    @State private var showAlertAbbrechenButton: Bool = false
+    @State private var showAlertSpeichernButton: Bool = false
+    @State private var showSheetPerson: Bool = false
+    @State private var showSheetGegenstand: Bool = false
+    @State private var isParameterBereich: Bool = true
+    @State private var paddingHeight: CGFloat = 0.0
+    @State private var parameterVorgang = GlobalStorage.parameterVorgang
     
     @FocusState private var focusedField: Field?
     
@@ -268,8 +269,8 @@ struct EingabeMaskePhoneAndPadView: View {
                                 Spacer()
                                 
                                 Picker("", selection: $globaleVariable.selectedVorgangInt, content: {
-                                    ForEach(0..<$globaleVariable.parameterVorgang.count, id: \.self) { index in
-                                        Text("\(globaleVariable.parameterVorgang[index])")//.tag(index)
+                                    ForEach(0..<$parameterVorgang.count, id: \.self) { index in
+                                        Text("\(GlobalStorage.parameterVorgang[index])")//.tag(index)
                                     } // Ende ForEach
                                 }) // Picker
                                 .font(.system(size: 16, weight: .regular))
@@ -380,7 +381,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                                     let personNachnameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personNachname
                                                     let persoSexTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personSex
                                                     
-                                                    let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt])', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(globaleVariable.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(personVornameTmp)', '\(personNachnameTmp)', '\(persoSexTmp)', '\(globaleVariable.textAllgemeineNotizen)')"
+                                                    let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt])', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(GlobalStorage.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(personVornameTmp)', '\(personNachnameTmp)', '\(persoSexTmp)', '\(globaleVariable.textAllgemeineNotizen)')"
                                                     
                                                     
                                                     // Die Parameterwerte werden in die SQL Tabelle Objekte geschrieben.
@@ -398,7 +399,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                                             self.presentationMode.wrappedValue.dismiss() // Only iPhon
                                                         } // Ende if
                                                         
-                                                        globaleVariable.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
+                                                        GlobalStorage.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
                                                         
                                                         print("In der Tabelle Gespeichert...")
                                                         
@@ -498,13 +499,13 @@ struct EingabeMaskePhoneAndPadView: View {
                     } // Ende toolbar
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene1, alignment: .center)
-                .background(globaleVariable.farbenEbene1)
+                .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
+            .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+            .background(GlobalStorage.farbEbene0)
             
             
         } // Ende GeometryReader
@@ -538,7 +539,7 @@ struct EingabeMaskePhoneAndPadView: View {
 // For each side of the split string (left and right), take the first 5 characters and append '...' if there are more than 5 characters.
 // Finally, combine both sides together.
 func truncateText(_ myText: String) -> String {
-    let _ = print("func truncateText() wird aufgerufen!")
+    //let _ = print("func truncateText() wird aufgerufen!")
     let components = myText.split(separator: ",", maxSplits: 1) // Split by comma
     
     guard components.count == 2 else {
@@ -561,7 +562,7 @@ func truncateText(_ myText: String) -> String {
 // What the function do:
 // For the string take the first 5 characters and append '...' if there are more than 5 characters.
 func truncateString(_ myText: String) -> String {
-    let _ = print("func truncateString() wird aufgerufen!")
+    //let _ = print("func truncateString() wird aufgerufen!")
     
     guard myText.count > 10 else {
         return myText // Return original text if it is shorter as 10 characters

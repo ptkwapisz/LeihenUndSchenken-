@@ -153,12 +153,12 @@ struct StroreAccessPremium: View {
                     
                     
                 } // Ende VStack
-                .background(globaleVariable.farbenEbene1)
+                .background(GlobalStorage.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width, height: geometry.size.height * globaleVariable.heightFaktorEbene0, alignment: .center)
-            .background(globaleVariable.farbenEbene0)
+            .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
+            .background(GlobalStorage.farbEbene0)
             
         } // Ende GeometryReader
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
