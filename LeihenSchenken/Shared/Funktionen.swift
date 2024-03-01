@@ -16,9 +16,9 @@ func deleteUserDefaults() {
     
     let colorData = ColorData()
     
-    GlobalStorage.farbEbene0 = Color.blue
-    GlobalStorage.farbEbene1 = Color.green
-    colorData.saveColor(color0: GlobalStorage.farbEbene0, color1: GlobalStorage.farbEbene1)
+    globaleVariable.farbEbene0 = Color.blue
+    globaleVariable.farbEbene1 = Color.green
+    colorData.saveColor(color0: globaleVariable.farbEbene0, color1:globaleVariable.farbEbene1)
     refreshAllViews()
     
 } // Ende func
@@ -77,27 +77,7 @@ func distingtArray(par1: [ObjectVariable], par2: String) -> [String]{
     return resultat
 } // Ende func
 
-
-// Das ist die funktion zum Bereinigen der Eingabemaske
-func cleanEingabeMaske() {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
-    
-    globaleVariable.parameterImageString = "Kein Bild"
-    globaleVariable.selectedGegenstandInt = 0
-    globaleVariable.selectedVorgangInt = 0
-    globaleVariable.selectedPersonInt = 0
-    globaleVariable.textGegenstandbeschreibung = ""
-    globaleVariable.preisWert = ""
-    globaleVariable.datum = Date()
-    globaleVariable.textAllgemeineNotizen = ""
-    globaleVariable.personenParameter.removeAll()
-    globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false)
-    
-    
-    print("Die Eingabe-Variablen wurden zurückgesetzt.")
-    
-} // Ende func
-
+ 
 // Diese Funktion dekliniert das Verb für die Objektenliste
 func vorgangDeklination(vorgang: String)-> String {
     var resultat: String = ""
@@ -284,10 +264,12 @@ func stringToDate(parDatum: String) -> Date {
 
 // Diese Funktion erstellt den Titel mit dem hinweis
 // ob der Abfragefilter ein- oder ausgeschaltet ist.
-func erstelleTitel(par: Bool) -> String {
+func erstelleTitel() -> String {
+    @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
     var resultat: String = ""
     
-    if par == true {
+    if globaleVariable.abfrageFilter == true {
         resultat = "Die Abfrage ist eingeschaltet"
     }else{
         resultat = "Die Abfrage ist ausgeschaltet"
@@ -328,10 +310,10 @@ func zeilenFarbe(par: Int) -> Color {
     
     var zeilenFarbe: Color
     if par % 2 == 0 {
-        zeilenFarbe = GlobalStorage.farbEbene0
+        zeilenFarbe = globaleVariable.farbEbene0
         
     }else{
-        zeilenFarbe = GlobalStorage.farbEbene0.opacity(0.5)
+        zeilenFarbe = globaleVariable.farbEbene0.opacity(0.5)
         
     } // Ende if/else
    

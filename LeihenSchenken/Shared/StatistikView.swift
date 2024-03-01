@@ -23,19 +23,19 @@ struct Statistik: View {
                 
                 if UIDevice.current.userInterfaceIdiom == .phone {
                     StatistikView()
-                        .frame(height: geometry.size.height * GlobalStorage.heightFaktorEbene1)
+                        .frame(height: geometry.size.height * heightFaktorEbene1)
                     
                 } else {
                     StatistikView()
-                        .frame(width: geometry.size.width * GlobalStorage.widthFaktorEbene1,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
-                        .background(GlobalStorage.farbEbene1)
+                        .frame(width: geometry.size.width * widthFaktorEbene1,height: geometry.size.height * heightFaktorEbene1, alignment: .center)
+                        .background(globaleVariable.farbEbene1)
                         .cornerRadius(10)
                     
                 } // Ende if/else
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-            .background(GlobalStorage.farbEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbEbene0)
             
             Spacer()
             
@@ -125,7 +125,7 @@ struct StatistikView: View {
             Spacer()
             
         } // Ende Vstack
-        .background(GlobalStorage.farbEbene1)
+        .background(globaleVariable.farbEbene1)
         .cornerRadius(10)
         
         

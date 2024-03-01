@@ -8,7 +8,7 @@
 import SwiftUI
 import Swift
 import Foundation
-
+import PDFKit
 
 // Höhe des oberen Fulltext-Serch Feldes in der ersten Tab (Objekte)
 func tabViewBottomToolbarHight() -> CGFloat {
@@ -123,30 +123,36 @@ struct SerchFullTextInObjekten: View {
 // Filter für die Fulltextsuche der Objekte
 // Diese func war notwändig weil if-Abfrage in der View nicht zuläsig ist.
 // Diese Funktion wird in der Tab1 View aufgerufen
-// Bei der Suche werden von der Variable "globalenVariable.searchTextObjekte" alle leerzeichen,
+// Bei der Suche werden von der Variable "globaleVariable.searchTextObjekte" alle leerzeichen,
 // die sich am Anfang oder am Ende befinden, gelöscht.
 func serchObjectArray(parameter: [ObjectVariable]) -> [ObjectVariable]{
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     let _ = print("Funktion serchObjectArray() wird aufgerufen!")
     var resultat: [ObjectVariable] = []
     
+    var temp: String = globaleVariable.searchTextObjekte
+    temp = temp.trimmingCharacters(in: .whitespacesAndNewlines)
+    
     if globaleVariable.searchTextObjekte.isEmpty {
         resultat = parameter
+        
     }else{
+        
         resultat = parameter.filter {
-            $0.gegenstandText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
-            $0.allgemeinerText.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
-            $0.datum.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
-            //$0.preisWert.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
-            $0.gegenstand.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
-            $0.personVorname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines)) ||
-            $0.personNachname.localizedCaseInsensitiveContains(globaleVariable.searchTextObjekte.trimmingCharacters(in: .whitespacesAndNewlines))
+            $0.gegenstandText.localizedCaseInsensitiveContains(temp) ||
+            $0.allgemeinerText.localizedCaseInsensitiveContains(temp) ||
+            $0.datum.localizedCaseInsensitiveContains(temp) ||
+            //$0.preisWert.localizedCaseInsensitiveContains(temp) ||
+            $0.gegenstand.localizedCaseInsensitiveContains(temp) ||
+            $0.personVorname.localizedCaseInsensitiveContains(temp) ||
+            $0.personNachname.localizedCaseInsensitiveContains(temp)
             
-        }// Ende par.filter
-    }// Ende if/else
+        } // Ende par.filter
+        
+    } // Ende if/else
     
     return resultat
-}// Ende func
+} // Ende func
 
 // Funktion für die sortierung der Objekte nach Datum
 // Par1: Objektvariable mit gefilterten objekten
@@ -194,5 +200,67 @@ func sortiereObjekte(par1: [ObjectVariable], par2: Bool ) -> [ObjectVariable] {
     return resultat
 } // Ende func
 
+// ----------------------------------------- Pdfkit
 
 
+/*
+struct PDFViewWrapper: View {
+    let url: URL
+    
+    var body: some View {
+        PDFKitRepresentedView2(url: url)
+            .aspectRatio(contentMode: .fit)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct PDFKitRepresentedView2: UIViewRepresentable {
+    let url: URL
+    
+    func makeUIView(context: Context) -> PDFView {
+        let pdfView = PDFView()
+        pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        loadPDF(into: pdfView)
+        return pdfView
+    }
+    
+    func updateUIView(_ uiView: PDFView, context: Context) {
+        loadPDF(into: uiView)
+    }
+    
+    private func loadPDF(into pdfView: PDFView) {
+        if let document = PDFDocument(url: url) {
+            pdfView.document = document
+            pdfView.displayMode = .singlePageContinuous
+            pdfView.autoScales = true
+            pdfView.maxScaleFactor = 5.0
+            print("PDF wurde geladen von Funktion loadPDF 'PDFKitRepresentedView'")
+        } else {
+            print("Fehler: PDF-Dokument konnte nicht geladen werden.")
+        }
+    }
+}
+*/
+
+/*
+func existPdfList()-> Bool {
+    
+    print("Funktion deletPdfList wird aufgerufen")
+    var resultat: Bool
+    
+    let fileManager = FileManager.default
+    var objektenListeURL: URL
+    
+    let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+    objektenListeURL = documentsUrl!.appendingPathComponent("ObjektenListe.pdf")
+    
+    if fileManager.fileExists(atPath: objektenListeURL.path) {
+        resultat = true
+    }else{
+        resultat = false
+    } // Ende if
+    
+    return resultat
+    
+} // Ende existPdfList
+*/

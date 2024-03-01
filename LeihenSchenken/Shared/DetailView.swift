@@ -38,19 +38,26 @@ struct DeteilView: View {
     
     @State private var navigationTabViewNo: Int = 1
     
+    // Diese Variable wird als Binding and die untere Views gesendet
+    // In dieser Variable wird der Wert für die .badge für TabView1 (Objekte) geschrieben
+    @State private var badgeString: String = ""
+    
     var body: some View {
         let _ = print("Struct DeteilView wird aufgerufen")
         
         // Prüfen, ob sich Objekte in der Datenbank befinden
-        let _ = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: true)
-        let _ = setColorOfBadge(numberOfObjects: GlobalStorage.numberOfObjects)
+        //let _ = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: false) // Alle Objekte
+        //let tmp2 = querySQLAbfrageClassObjecte(queryTmp: "SELECT * FROM Objekte", abfrage: true) // Objekte mit Abfrage
+        //let tmp3 = serchObjectArray(parameter: tmp2) // Objekte mit Abfrage falls es sie gibt.
+        //let tmp4: Int = tmp3.count == tmp1.count ? 0 : 1
+        
+        let _ = setColorOfBadge(numberOfObjects: numberOfObjects)
         
         VStack(spacing: 10) {
             
-            //TabView(selection: $globaleVariable.navigationTabView) {
             TabView(selection: $navigationTabViewNo) {
-                //Tab1(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                Tab1(selectedTabView: $navigationTabViewNo).tabItem {
+                //Tab1(selectedTabView: $navigationTabViewNo, badgeString: $badgeString).tabItem {
+                Tab1(badgeString: $badgeString).tabItem {
                     Image(systemName: "tablecells.fill")
                     Text("Objekte")
                     
@@ -58,27 +65,27 @@ struct DeteilView: View {
                 .tag(1) // Die Tags identifizieren die Tab und führen zum richtigen Titel
                 // Wenn die Abfrage aktiviert wurde wird in der Badge die Anzahl der gefilterten Datensätze
                 // gefolgt von Schregstrich und dem gesamten Zahl der Objekte angezeigt: 3 / 7.
-                .applyIf(GlobalStorage.numberOfObjectsFiltered > 0, apply: {$0.badge("\(GlobalStorage.numberOfObjectsFiltered ) / \(GlobalStorage.numberOfObjects)")}, else: {$0.badge(GlobalStorage.numberOfObjects)})
+                .badge(badgeString)
                 
-                //Tab2(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                Tab2(selectedTabView: $navigationTabViewNo).tabItem {
+                //Tab2(selectedTabView: $navigationTabViewNo).tabItem {
+                Tab2().tabItem {
                     Image(systemName: "archivebox.fill")
                     Text("Gegenstände")
                     
                 } // Ende Tab
                 .tag(2) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 
-                //Tab3(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                Tab3(selectedTabView: $navigationTabViewNo).tabItem {
+                //Tab3(selectedTabView: $navigationTabViewNo).tabItem {
+                Tab3().tabItem {
                     Image(systemName: "person.2.fill")
                     Text("Personen")
                     
                 } // Ende Tab
                 .tag(3) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 
-                if GlobalStorage.numberOfObjects > 0 {
-                    //Tab4(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Tab4(selectedTabView: $navigationTabViewNo).tabItem {
+                if numberOfObjects > 0 {
+                    //Tab4(selectedTabView: $navigationTabViewNo).tabItem {
+                    Tab4().tabItem {
                         Image(systemName: "list.dash")
                         Text("PDF-Liste")
                         
@@ -87,23 +94,27 @@ struct DeteilView: View {
                 } // Ende if
                 
                 if userSettingsDefaults.showHandbuch == true {
-                    //Tab5(selectedTabView: $globaleVariable.navigationTabView).tabItem {
-                    Tab5(selectedTabView: $navigationTabViewNo).tabItem {
+                    //Tab5(selectedTabView: $navigationTabViewNo).tabItem {
+                    Tab5().tabItem {
                         Image(systemName: "h.circle.fill")
                         Text("Handbuch")
                     } // Ende Tab
                     .tag(5) // Die Tags identifizieren die Tab und füren zum richtigen Titel
                 } // Ende if
                 
-                // Tab number wird in die StorageData.navigationTabView gespeichert
-                // Das ist notwändig für unterscheiden der Hilfetexte für die einzehlne Tabs
-                let _ = setupNavigationTabViewNo()
-                
             } // Ende TabView
+            
             
         } // Ende VStack
         //.navigationTitle(naviTitleUndHilfeText(tabNummer: globaleVariable.navigationTabView).tabName)
         .navigationTitle(naviTitleUndHilfeText(tabNummer: navigationTabViewNo).tabName)
+        .onChange(of: navigationTabViewNo ){
+            
+            // Tab number wird in die StorageData.navigationTabView gespeichert
+            // Das ist notwändig für unterscheiden der Hilfetexte für die einzehlne Tabs
+           
+            navigationTabView = navigationTabViewNo
+        }
         .toolbar {
             
             ToolbarItemGroup(placement: .navigationBarLeading) {
@@ -144,7 +155,7 @@ struct DeteilView: View {
                 ) // Ende alert
                 .alert("Trefen Sie eine Wahl!", isPresented: $showDBLaden, actions: {
                     Button("Abbrechen") {}; Button("DB Laden") {loadDatabase()
-                        GlobalStorage.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte") }
+                        numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte") }
                 }, message: { Text(String(backupTarget()) + " vom " + getfileCreatedDate() + ". \(AlertMessageTexte.showDBLadenMessageText)") } // Ende message
                 ) // Ende alert
                 .sheet(isPresented: $showSetupEdit, content: { ShapeViewSettings(isPresented: $showSetupEdit)})
@@ -191,25 +202,19 @@ struct DeteilView: View {
         var badgeColor: UIColor
         let tabBarAppearance = UITabBarAppearance()
         
-        if numberOfObjects < GlobalStorage.numberOfObjectsFree {
+        if numberOfObjects < numberOfObjectsFree {
             //print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Unter \(GlobalStorage.numberOfObjectsFree)")
             
             badgeColor = UIColor(Color.red)
         }else{
             //print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Über \(GlobalStorage.numberOfObjectsFree)")
             
-            badgeColor = UIColor(GlobalStorage.farbEbene0)
+            badgeColor = UIColor(globaleVariable.farbEbene0)
         } // Ende if/else
         
         tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = badgeColor
         UITabBar.appearance().standardAppearance = tabBarAppearance
         
-        
-    } // Ende func
-    
-    func setupNavigationTabViewNo() {
-        
-        GlobalStorage.navigationTabView = navigationTabViewNo
         
     } // Ende func
     
@@ -266,7 +271,7 @@ struct MyToolbarItemsPlusAndTrashTab2: ToolbarContent {
             })
             
             Button(action:{
-                selectedTypeTmp = GlobalStorage.selectedGegenstandTab2
+                selectedTypeTmp = selectedGegenstandTab2
                 
                 if selectedTypeTmp == "Buch" || selectedTypeTmp == "Geld" || selectedTypeTmp == "CD/DVD" || selectedTypeTmp == "Werkzeug"{
                     errorMessageText = "Standard Gegenstände, wie Buch, Geld, CD/DVD und Werkzeug können nicht gelöscht werden!"
@@ -345,7 +350,7 @@ struct MyToolbarItemsPlusAndTrashTab3: ToolbarContent {
             
             if anzahlDerPersonen.count > 1 {
                 Button(action:{
-                    selectedPickerTmp = "\(GlobalStorage.selectedPersonPickerTab3 )"
+                    selectedPickerTmp = "\(selectedPersonPickerTab3 )"
                     
                     if selectedPickerTmp == "" {
                         errorMessageText = "Bitte markieren Sie zuerst eine Person, die Sie löschen möchten. Das tun sie durch das Klicken auf die entsprechende Zeile. Danach betätigen Sie noch mal das Minuszeichen, um die markierte Person zu löschen ."
@@ -379,7 +384,7 @@ struct MyToolbarItemsPlusAndTrashTab3: ToolbarContent {
                                     print("\(selectedPickerTmp)" + " wurde gelöscht")
                                     print(perKeyTmp)
                                     
-                                    GlobalStorage.selectedPersonPickerTab3 = ""
+                                    selectedPersonPickerTab3 = ""
                                     
                                     refreshAllViews()
                                     
@@ -417,7 +422,7 @@ struct MyToolbarItemsHilfeButton: ToolbarContent {
                     Image(systemName: "questionmark.circle.fill")
                 } // Ende Button
                 
-                .alert("Hilfe für \(naviTitleUndHilfeText(tabNummer: GlobalStorage.navigationTabView).tabName)", isPresented: $showTabHilfe, actions: {}, message: { Text("\(naviTitleUndHilfeText(tabNummer: GlobalStorage.navigationTabView).tabHilfe)")
+                .alert("Hilfe für \(naviTitleUndHilfeText(tabNummer: navigationTabView).tabName)", isPresented: $showTabHilfe, actions: {}, message: { Text("\(naviTitleUndHilfeText(tabNummer: navigationTabView).tabHilfe)")
                     
                 } // Ende message
                        
@@ -445,7 +450,7 @@ struct MyToolbarPlusButtonTab1: ToolbarContent {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button(action:{
                     
-                    if GlobalStorage.numberOfObjects < GlobalStorage.numberOfObjectsFree || purchaseManager.isPremium() == true {
+                    if numberOfObjects < numberOfObjectsFree || purchaseManager.isPremium() == true {
                     //if globaleVariable.numberOfObjects < GlobalStorage.numberOfObjectsFree || statusManager.isProductPurchased == true {
                         showEingabeMaske = true
                     }else{

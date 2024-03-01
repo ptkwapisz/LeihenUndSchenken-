@@ -12,7 +12,6 @@ import SwiftUI
 class GlobaleVariable: ObservableObject {
     static let shared = GlobaleVariable()
     
-    //@Published var parameterVorgang: [String] =  ["Verleihen", "Verschenken", "Bekommen", "Aufbewahren", "Geschenkidee"]
     @Published var parameterGegenstand: [String] = querySQLAbfrageArray(queryTmp: "select gegenstandName FROM Gegenstaende")
     
     @Published var searchTextObjekte: String = ""
@@ -24,20 +23,21 @@ class GlobaleVariable: ObservableObject {
     @Published var parameterDatum: Date = Date()
     @Published var parameterImageString: String = "Kein Bild"
     
+    @Published var farbEbene0: Color = loadColor0A()
+    @Published var farbEbene1: Color = loadColor1B()
+    
     @Published var personenParameter: [PersonClassVariable] = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
    
-    //@Published var navigationTabView = 1
-    
     @Published var refreshViews: Bool = false
     
     @Published var selectedGegenstand: String = "Neuer ..."
     @Published var selectedGegenstandInt: Int = 0
-    @Published var textGegenstandbeschreibung: String = ""
+    //@Published var textGegenstandbeschreibung: String = ""
     @Published var selectedVorgangInt: Int = 0
     @Published var selectedPersonInt: Int = 0
     
     @Published var preisWert: String = ""
-    @Published var textAllgemeineNotizen: String = ""
+    //@Published var textAllgemeineNotizen: String = ""
     @Published var datum: Date = Date()
     
     @Published var preisOderWert: Bool = false
@@ -45,6 +45,16 @@ class GlobaleVariable: ObservableObject {
     @Published var columnVisibility = NavigationSplitViewVisibility.all
     
 } // ende class
+
+/*
+// Hier werden die Variablen definiert die in der Eingabemaske benutzt werden
+class EingabeFields {
+    
+    var textGegenstandbeschreibung: String = ""
+    var textAllgemeineNotizen: String = ""
+    
+} // Ende class
+*/
 
 // Wird in der ObjektenListParameter struct aufgerufen
 class SharedData: ObservableObject {
@@ -227,7 +237,7 @@ class AlertMessageTexte  {
     
     static var showDBLadenMessageText: String = "Die Datenbank inklusiwe aller Tabellen wird zurückgeladen. Diese Rücksicherung überschreibt unwiederuflich die jetzige Datenbank und ihre alle Tabellen, wie Objekte, Personen und Gegenstände. Dieser Vorgang kann nicht rückgängig gemacht Werden."
     
-    static var leereDbMessageTextiPhone: String = "Es befinden sich keine Objekte in der Datenbank. Drücken Sie unten links auf den Stappel mit + Zeichen, um ein neues Objekt zu erfassen und dann in die Datenbank zu speichern."
+    static var leereDbMessageTextiPhone: String = "Es befinden sich keine Objekte in der Datenbank. Drücken Sie oben auf das + Zeichen, um ein neues Objekt zu erfassen und dann in die Datenbank zu speichern."
    
     static var leereDbMessageTextiPad: String = "Es befinden sich keine Objekte in der Datenbank. Bitte erfassen Sie ein neues Objekt in der Eingabemaske und speichern es in die Datenbank."
     
@@ -243,23 +253,6 @@ class AlertMessageTexte  {
     
 } // Ende class
 
-/*
-// This class will be used in Eingabemaske by Picker for Personen
-class PersonPickerWithGender: Identifiable {
-    var id = UUID()
-    var picker: String
-    var personSex: String
-    var gender: String
-    
-    init(id: UUID = UUID(), picker: String, personSex: String, gender: String) {
-        self.id = UUID()
-        self.picker = picker
-        self.personSex = personSex
-        self.gender = gender
-    } // Ende init
-} // Ende class
-
-*/
 
 class Contact: Identifiable {
     var id = UUID()
@@ -291,31 +284,3 @@ enum ActiveAlertTab1 {
     case leereDBinformationiPad, leereDBinformationiPhone, deleteObject
 } // Ende enum
 
-
-// Diese Class definiert globale Variable bei denen die Änderung des Wertes keinen Refresh/Redraw der Views verursacht
-class GlobalStorage {
-    
-    static var widthFaktorEbene1: Double = 0.97
-    //static var bottonToolBarHight: Double = tabViewBottomToolbarHight()
-    static var selectedGegenstandTab2: String = ""
-    static var selectedPersonPickerTab3: String = ""
-    static var numberOfObjectsFree: Int = 10
-    // Number of Objects that is fitered by abfrage
-    static var numberOfObjectsFiltered: Int = 0
-    
-    // The Number of selected TabView
-    static var navigationTabView: Int = 1
-    
-    static var farbEbene0: Color = loadColor0A()
-    static var farbEbene1: Color = loadColor1B()
-    
-    static var heightFaktorEbene0: Double = 0.99
-    static var heightFaktorEbene1: Double = 0.97
-    
-    static var numberOfObjects: Int = anzahlDerDatensaetze(tableName: "Objekte")
-    
-    static var parameterPersonSex: [String] =  ["Frau", "Mann", "Divers"]
-    static var parameterVorgang: [String] =  ["Verleihen", "Verschenken", "Bekommen", "Aufbewahren", "Geschenkidee"]
-    
-   
-} // Ende class

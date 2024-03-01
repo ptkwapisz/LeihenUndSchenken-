@@ -16,6 +16,7 @@ struct EditSheetView: View {
     @Binding var par1: [ObjectVariable]
     @Binding var par2: Int
     
+    
    // @State var disableSpeichern: Bool = false
     @State var showChartHilfe: Bool = false
     @State var gegenstandTmp: String = ""
@@ -164,14 +165,14 @@ struct EditSheetView: View {
                         }// Ende onApear
                         
                     } // Ende VStack
-                    .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
+                    .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene1, alignment: .center)
                     //.frame(width: geometry.size.width)
-                    .background(GlobalStorage.farbEbene1)
+                    .background(globaleVariable.farbEbene1)
                     .cornerRadius(10)
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-                .background(GlobalStorage.farbEbene0)
+                .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+                .background(globaleVariable.farbEbene0)
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
                         

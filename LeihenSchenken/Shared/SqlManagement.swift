@@ -321,7 +321,7 @@ func refreschParameter(){
     globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
     
     // Update the number of Objects
-    GlobalStorage.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
+    numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
     
 } // Ende refreschParameter
 
@@ -375,12 +375,18 @@ func querySQLAbfrageClassObjecte(queryTmp: String, abfrage: Bool) -> [ObjectVari
 
     statement = nil
     
+    //let tmpResultatClass = serchObjectArray(parameter: resultatClass)
+    /*
     if !globaleVariable.abfrageQueryString.isEmpty {
-        GlobalStorage.numberOfObjectsFiltered = resultatClass.count
+        
+        //GlobalStorage.numberOfObjectsFiltered = tmpResultatClass.count
+        GlobalStorage.numberOfObjectsFilteredAbfrage = resultatClass.count
     }else{
-        GlobalStorage.numberOfObjectsFiltered = 0
+        
+            GlobalStorage.numberOfObjectsFilteredAbfrage = 0
+        
     } // Ende if
-            
+    */
     return resultatClass
     
 } // Ende func querySQLAbfrageClassObjekte
@@ -741,7 +747,7 @@ func abfrageField3(field1: String)->[String] {
             result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT Gegenstand FROM Objekte ORDER BY Gegenstand")
             //print("Gegenstand " + "\(selectedAbfrageFeld3)")
         case "Vorgang":
-            result = GlobalStorage.parameterVorgang
+            result = parameterVorgang
             //print("Vorgang " + "\(selectedAbfrageFeld3)")
         case "Name":
             result = querySQLAbfrageArray(queryTmp: "SELECT DISTINCT personNachname FROM Objekte ORDER BY personNachname")

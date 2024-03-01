@@ -21,14 +21,13 @@ struct PDFKitView: View {
     var body: some View {
         let _ = print("Struct PDFKitView wird aufgerufen!")
         
-        
         GeometryReader { geometry in
             VStack{
                 
                 // PDF-Objektenliste wird gezeigt
                 if tabNumber == 4 {
                     
-                    let tempErgaenzung: String = erstelleTitel(par: globaleVariable.abfrageFilter)
+                    let tempErgaenzung: String = erstelleTitel()
                     Text("")
                     Text("\(tempErgaenzung)").bold()
                     
@@ -42,7 +41,7 @@ struct PDFKitView: View {
                 } // Ende if/else
                 
             } // Ende VStack
-            .background(GlobalStorage.farbEbene1)
+            .background(globaleVariable.farbEbene1)
             .cornerRadius(10)
             .onChange(of: sheredData.didSave) {
                 // This will run every time "didSave" changes.
@@ -57,7 +56,7 @@ struct PDFKitView: View {
                 if tabNumber == 4 { // Objektenliste
                     
                     versionCounter += 1
-                    print("Das ist die Anzahl von onAppear in PDFKitView: §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
+                    print("Das ist die Anzahl von versionCounter in onAppear in PDFKitView: \(versionCounter)")
                     
                 } // Ende if
             }
@@ -68,7 +67,7 @@ struct PDFKitView: View {
 } // Ende struct
 
 struct PDFKitRepresentedView: UIViewRepresentable {
-    @ObservedObject var sheredData = SharedData.shared
+    //@ObservedObject var sheredData = SharedData.shared
     
     let url: URL
     

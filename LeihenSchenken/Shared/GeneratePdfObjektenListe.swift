@@ -25,26 +25,6 @@ func deletePdfList(){
     
 } // Ende deletePdfList
 
-func existPdfList()-> Bool {
-    
-    print("func deletPdfList wird aufgerufen")
-    var resultat: Bool
-    
-    let fileManager = FileManager.default
-    var objektenListeURL: URL
-    
-    let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
-    objektenListeURL = documentsUrl!.appendingPathComponent("ObjektenListe.pdf")
-    
-    if fileManager.fileExists(atPath: objektenListeURL.path) {
-        resultat = true
-    }else{
-        resultat = false
-    } // Ende if
-    
-    return resultat
-    
-} // Ende deletePdfList
 
 struct PDFGeneratorTab: View {
     @StateObject private var progressTracker = ProgressTracker.shared
@@ -53,6 +33,8 @@ struct PDFGeneratorTab: View {
     @Binding var showProgressView: Bool // Hinzugefügte Variable zur Steuerung der Anzeige der ProgressView
     
     var body: some View {
+        let _ = print("Struct PDFGeneratorTab wird aufgerufen")
+        
         VStack {
             if isCreatingPDF && showProgressView {
                 ProgressViewModalLinear()
@@ -117,6 +99,8 @@ func createPDF(from objekte: [ObjectVariable], completion: @escaping (_ pdfFileP
     @ObservedObject var globaleVariable = GlobaleVariable.shared
     @ObservedObject var sheredData = SharedData.shared
     
+    print("Funktion createPDF wird aufgerufen")
+    
     let appName = "Leih&SchenkApp" // Setze hier den Namen deiner App ein
     
     let pdfMetaData = [
@@ -131,7 +115,7 @@ func createPDF(from objekte: [ObjectVariable], completion: @escaping (_ pdfFileP
     let pageHeight = 11 * 72.0
     let margin: CGFloat = 20.0
     let lineHeight: CGFloat = 14.0
-    let itemsPerPage = 45 // Maximal erlaubte Zeilen pro Seite und pro objekt.vorgang
+    let itemsPerPage = 11 // Maximal erlaubte Zeilen pro Seite und pro objekt.vorgang
     let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
     
     let outputFileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("ObjektenListe.pdf")
@@ -144,69 +128,69 @@ func createPDF(from objekte: [ObjectVariable], completion: @escaping (_ pdfFileP
                 
                 var currentPage = 0
                 for (vorgang, vorgangObjekte) in groupedObjekte {
-                    currentPage += 1
-                    context.beginPage()
+                    let positionCount = vorgangObjekte.count
+                    let requiredPages = Int(ceil(Double(positionCount) / Double(itemsPerPage)))
                     
-                    let title1 = sheredData.titel //"Erste Titelzeile"
-                    let title2 = sheredData.unterTitel //"Zweite Titelzeile"
-                    let titleFont = UIFont.boldSystemFont(ofSize: 18)
-                    let titleAttributes: [NSAttributedString.Key: Any] = [.font: titleFont]
-                    let title1Size = title1.size(withAttributes: titleAttributes)
-                    let title2Size = title2.size(withAttributes: titleAttributes)
-                    let titleYPosition = margin
-                    title1.draw(at: CGPoint(x: (pageWidth - title1Size.width) / 2.0, y: titleYPosition), withAttributes: titleAttributes)
-                    title2.draw(at: CGPoint(x: (pageWidth - title2Size.width) / 2.0, y: titleYPosition + titleFont.lineHeight), withAttributes: titleAttributes)
-                    
-                    let vorgangTitleFont = UIFont.boldSystemFont(ofSize: 16)
-                    let vorgangTitleAttributes: [NSAttributedString.Key: Any] = [.font: vorgangTitleFont]
-                    //let vorgangTitleSize = vorgang.size(withAttributes: vorgangTitleAttributes)
-                    let vorgangYPosition = titleYPosition + 2 * titleFont.lineHeight + 2 * lineHeight // 2 Zeilen unter der zweiten Titelzeile
-                    vorgang.draw(at: CGPoint(x: margin, y: vorgangYPosition), withAttributes: vorgangTitleAttributes)
-                    
-                    var currentLine = 0
-                    for objekt in vorgangObjekte {
-                        let euroZeichen = (objekt.preisWert.isEmpty) ? "": " €"
+                    for pageIndex in 0..<requiredPages {
+                        currentPage += 1
+                        context.beginPage()
                         
-                        var text1: String = ""
+                        let title1 = sheredData.titel //"Erste Titelzeile"
+                        let title2 = sheredData.unterTitel //"Zweite Titelzeile"
+                        let titleFont = UIFont.boldSystemFont(ofSize: 18)
+                        let titleAttributes: [NSAttributedString.Key: Any] = [.font: titleFont]
+                        let title1Size = title1.size(withAttributes: titleAttributes)
+                        let title2Size = title2.size(withAttributes: titleAttributes)
+                        let titleYPosition = margin
+                        title1.draw(at: CGPoint(x: (pageWidth - title1Size.width) / 2.0, y: titleYPosition), withAttributes: titleAttributes)
+                        title2.draw(at: CGPoint(x: (pageWidth - title2Size.width) / 2.0, y: titleYPosition + titleFont.lineHeight), withAttributes: titleAttributes)
                         
-                        if globaleVariable.preisOderWert == true {
-                            text1 = "\(objekt.gegenstand), \(objekt.gegenstandText), \(objekt.preisWert)\(euroZeichen)"
-                        }else{
-                            text1 = "\(objekt.gegenstand), \(objekt.gegenstandText) "
-                        } // Ende if/else
+                        let vorgangTitleFont = UIFont.boldSystemFont(ofSize: 16)
+                        let vorgangTitleAttributes: [NSAttributedString.Key: Any] = [.font: vorgangTitleFont]
+                        let vorgangYPosition = titleYPosition + 2 * titleFont.lineHeight + 2 * lineHeight // 2 Zeilen unter der zweiten Titelzeile
+                        vorgang.draw(at: CGPoint(x: margin, y: vorgangYPosition), withAttributes: vorgangTitleAttributes)
                         
-                        let text2 = "\(objekt.vorgang), \(objekt.datum), \(objekt.personNachname), \(objekt.personVorname), \(objekt.allgemeinerText)"
+                        var currentLine = 0
+                        let startIndex = pageIndex * itemsPerPage
+                        let endIndex = min((pageIndex + 1) * itemsPerPage, positionCount)
                         
-                        let textAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
-                        let text1YPosition = vorgangYPosition + vorgangTitleFont.lineHeight + lineHeight * CGFloat(currentLine) + 20 // +20 für Abstand nach dem Titel
-                        let text2YPosition = text1YPosition + lineHeight + 5 // zusätzlicher Abstand zwischen den Zeilen
+                        for index in startIndex..<endIndex {
+                            let objekt = vorgangObjekte[index]
+                            let euroZeichen = (objekt.preisWert.isEmpty) ? "" : " €"
+                            
+                            var text1: String = ""
+                            
+                            if globaleVariable.preisOderWert == true {
+                                text1 = "\(objekt.gegenstand), \(objekt.gegenstandText), \(objekt.preisWert)\(euroZeichen)"
+                            } else {
+                                text1 = "\(objekt.gegenstand), \(objekt.gegenstandText) "
+                            } // Ende if/else
+                            
+                            let text2 = "\(objekt.vorgang), \(objekt.datum), \(objekt.personNachname), \(objekt.personVorname), \(objekt.allgemeinerText)"
+                            
+                            let textAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
+                            let text1YPosition = vorgangYPosition + vorgangTitleFont.lineHeight + lineHeight * CGFloat(currentLine) + 20 // +20 für Abstand nach dem Titel
+                            let text2YPosition = text1YPosition + lineHeight + 5 // zusätzlicher Abstand zwischen den Zeilen
+                            
+                            text1.draw(at: CGPoint(x: margin, y: text1YPosition), withAttributes: textAttributes)
+                            text2.draw(at: CGPoint(x: margin, y: text2YPosition), withAttributes: textAttributes)
+                            
+                            currentLine += 2
+                            
+                            // Füge eine leere Zeile ein
+                            let emptyLineYPosition = text2YPosition + 2 * lineHeight // verdopple die Höhe der leeren Zeile
+                            let emptyLineRect = CGRect(x: margin, y: emptyLineYPosition, width: pageWidth - 2 * margin, height: 2 * lineHeight)
+                            UIColor.white.setFill() // Ändere die Farbe für die leere Zeile
+                            UIRectFill(emptyLineRect)
+                            currentLine += 2
+                        }
                         
-                        text1.draw(at: CGPoint(x: margin, y: text1YPosition), withAttributes: textAttributes)
-                        text2.draw(at: CGPoint(x: margin, y: text2YPosition), withAttributes: textAttributes)
-                        
-                        currentLine += 2
-                        
-                        // Füge eine leere Zeile ein
-                        let emptyLineYPosition = text2YPosition + 2 * lineHeight // verdopple die Höhe der leeren Zeile
-                        let emptyLineRect = CGRect(x: margin, y: emptyLineYPosition, width: pageWidth - 2 * margin, height: 2 * lineHeight)
-                        UIColor.white.setFill() // Ändere die Farbe für die leere Zeile
-                        UIRectFill(emptyLineRect)
-                        currentLine += 2
-                        
-                        if currentLine >= itemsPerPage {
-                            context.beginPage()
-                            currentLine = 0
-                            title1.draw(at: CGPoint(x: (pageWidth - title1Size.width) / 2.0, y: titleYPosition), withAttributes: titleAttributes)
-                            title2.draw(at: CGPoint(x: (pageWidth - title2Size.width) / 2.0, y: titleYPosition + titleFont.lineHeight), withAttributes: titleAttributes)
-                            vorgang.draw(at: CGPoint(x: margin, y: vorgangYPosition), withAttributes: vorgangTitleAttributes)
-                        }// Ende if
-                    } // Ende for objekt
-                    
-                    let footerText = "Seite \(currentPage) von \(pageCount) - \(appName)"
-                    let footerAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)]
-                    let footerSize = footerText.size(withAttributes: footerAttributes)
-                    let footerYPosition = pageHeight - margin - footerSize.height
-                    footerText.draw(at: CGPoint(x: (pageWidth - footerSize.width) / 2.0, y: footerYPosition), withAttributes: footerAttributes)
+                        let footerText = "Seite \(currentPage) von \(pageCount) - \(appName)"
+                        let footerAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)]
+                        let footerSize = footerText.size(withAttributes: footerAttributes)
+                        let footerYPosition = pageHeight - margin - footerSize.height
+                        footerText.draw(at: CGPoint(x: (pageWidth - footerSize.width) / 2.0, y: footerYPosition), withAttributes: footerAttributes)
+                    }
                 } // Ende for
             } // Ende try
         } // Ende try
@@ -218,12 +202,16 @@ func createPDF(from objekte: [ObjectVariable], completion: @escaping (_ pdfFileP
 } // Ende finc
 
 
+
+
+
 /*
+
+ 
+// Alte routine
 
 func createObjektenListe(parTitel: String, parUnterTitel: String) {
     print("Funktion createObjektenListe() wird aufgerufen!")
-    
-    
     
     // Setup your initial variables and data
     let titelString = parTitel.isEmpty ? "Das ist Header-Titel - First Line" : parTitel
@@ -240,12 +228,9 @@ func createObjektenListe(parTitel: String, parUnterTitel: String) {
     
 } // Ende func createObjektenListe
 
- 
- 
 // Diese Funktion generiert eine PDF File from ObjektenListe
 // Call fom func createObjektenListe
 func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
-    
     
     let _ = print("Funktion generatePDF() wird aufgerufen!")
     
@@ -281,8 +266,6 @@ func generatePDF(pageHeader: String, objektenArray: [ObjectVariable]) {
         print("PDF saved at path: \(pdfPath)")
         
     } // Ende if let
-    
-    
     
 } // Ende func
 

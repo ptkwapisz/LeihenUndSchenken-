@@ -158,13 +158,13 @@ struct ObjectDeteilView: View {
                     Spacer()
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
-                .background(GlobalStorage.farbEbene1)
+                .frame(width: geometry.size.width, height: geometry.size.height * heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-            .background(GlobalStorage.farbEbene0)
+            .frame(width: geometry.size.width, height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbEbene0)
             .navigationTitle("\(par1[par2].gegenstand)")
             .toolbar{
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -195,7 +195,7 @@ struct ObjectDeteilView: View {
                             print(perKeyTmp)
                             //globaleVariable.navigationTabView = 1
                             refreshAllViews()
-                            GlobalStorage.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
+                            numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
                             showAlert = false
                             
                             // Diese Zeile bewirkt, dass die View geschlossen wird

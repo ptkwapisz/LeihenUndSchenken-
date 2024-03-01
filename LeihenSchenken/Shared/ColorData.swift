@@ -11,7 +11,6 @@ import Foundation
 import SwiftUI
 
 struct ColorData {
-    @ObservedObject var globaleVariable = GlobaleVariable.shared
     
     private var COLOR_KEY0 = "COLOR_KEY0"
     private var COLOR_KEY1 = "COLOR_KEY1"
@@ -19,6 +18,8 @@ struct ColorData {
     private let userDefaults = UserDefaults.standard
     
     func saveColor(color0: Color, color1: Color) {
+        print("Funktion saveColor from struct ColorData  wird aufgerufen!")
+        
         let color0 = UIColor(color0).cgColor
         let color1 = UIColor(color1).cgColor
         
@@ -37,7 +38,7 @@ struct ColorData {
     } // Ende func saveColor
 
     func loadColor0() -> Color {
-        
+        print("Funktion loadColor0 from struct ColorData  wird aufgerufen!")
         guard let array0 = userDefaults.object(forKey: COLOR_KEY0) as? [CGFloat] else {return Color.gray}
         let color0 = Color(.sRGB, red: array0[0], green: array0[1], blue: array0[2], opacity: array0[3])
         print(color0)
@@ -46,7 +47,7 @@ struct ColorData {
     } // Ende func loadColor
     
     func loadColor1() -> Color {
-        
+        print("Funktion loadColor1 from struct ColorData  wird aufgerufen!")
         guard let array1 = userDefaults.object(forKey: COLOR_KEY1) as? [CGFloat] else {return Color.blue}
         let color1 = Color(.sRGB, red: array1[0], green: array1[1], blue: array1[2], opacity: array1[3])
         print(color1)
@@ -58,8 +59,10 @@ struct ColorData {
 } // Ende struc ColorData
 
 func loadColor0A() -> Color {
-    let COLOR_KEY0 = "COLOR_KEY0"
     
+    print("Funktion loadColor0A wird aufgerufen!")
+    
+    let COLOR_KEY0 = "COLOR_KEY0"
     let userDefaults = UserDefaults.standard
     
     guard let array0 = userDefaults.object(forKey: COLOR_KEY0) as? [CGFloat] else {return Color.blue}
@@ -71,6 +74,8 @@ func loadColor0A() -> Color {
 
 
 func loadColor1B() -> Color {
+    print("Funktion loadColor1B wird aufgerufen!")
+    
     let COLOR_KEY1 = "COLOR_KEY1"
     
     let userDefaults = UserDefaults.standard
@@ -82,6 +87,7 @@ func loadColor1B() -> Color {
 } // Ende func loadColor
 
 func saveColors(color0: Color, color1: Color) {
+    print("Funktion saveColors wird aufgerufen!")
     let COLOR_KEY0 = "COLOR_KEY0"
     let COLOR_KEY1 = "COLOR_KEY1"
     

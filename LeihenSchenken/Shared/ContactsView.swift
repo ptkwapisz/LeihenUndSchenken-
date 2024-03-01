@@ -82,8 +82,8 @@ struct ShapeViewAddUser: View {
                             
                             Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
                                 
-                                ForEach(0..<GlobalStorage.parameterPersonSex.count, id: \.self) { index in
-                                    Text("\(GlobalStorage.parameterPersonSex[index])")
+                                ForEach(0..<parameterPersonSex.count, id: \.self) { index in
+                                    Text("\(parameterPersonSex[index])")
                                     
                                 } // Ende ForEach
                             } // Ende Picker
@@ -109,7 +109,7 @@ struct ShapeViewAddUser: View {
                                     
                                     if isParameterBereich {
                                         
-                                        personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: GlobalStorage.parameterPersonSex[selectedPerson_sexInt])
+                                        personenDatenInVariableSchreiben(par1: vorname, par2: name, par3: parameterPersonSex[selectedPerson_sexInt])
                                         // Es wird in der Eingabemaske bei Personen die neue Person ausgewählt
                                         globaleVariable.selectedPersonInt = globaleVariable.personenParameter.count-1
                                         globaleVariable.searchTextAdressBook = ""
@@ -123,7 +123,7 @@ struct ShapeViewAddUser: View {
                                             
                                         //}else{
                                             
-                                            personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: GlobalStorage.parameterPersonSex[selectedPerson_sexInt])
+                                            personenDatenInDatenbankSchreiben(par1: vorname, par2: name, par3: parameterPersonSex[selectedPerson_sexInt])
                                             globaleVariable.personenParameter.removeAll()
                                             globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false )
                                             
@@ -178,13 +178,13 @@ struct ShapeViewAddUser: View {
                     
                     //.scrollDisabled(true)
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
-                .background(GlobalStorage.farbEbene1)
+                .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende Vstack
-            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-            .background(GlobalStorage.farbEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbEbene0)
             .navigationTitle("Neue Person").navigationBarTitleDisplayMode(.large)
             
         } // Ende GeometryReader

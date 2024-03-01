@@ -62,8 +62,6 @@ class PurchaseManager {
 
     func isPremium() -> Bool {
         
-        //return purchasedProductIdentifiers.contains(productIdentifier)
-
         return KeychainHelper.get(forKey: premiumKey) == "true"
     } // Ende func isPremium
     
@@ -77,7 +75,6 @@ class PurchaseManager {
 
 struct StroreAccessPremium: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
-    //@ObservedObject private var purchaseStatusNotifier = PurchaseStatusNotifier()
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject private var purchaseStatusNotifier = PurchaseStatusNotifier()
     @Binding var isPresented: Bool
@@ -85,7 +82,7 @@ struct StroreAccessPremium: View {
     let statusManager = StatusManager()
     let purchaseManager = PurchaseManager()
    
-    let footerTextStandard: String = "Bei der Standard-Version ist die Anzahl der Objekte auf \(GlobalStorage.numberOfObjectsFree) begrenzt. Die Funktionalität der App ist aber nicht eingeschränkt. Man kann dadurch die App auf eigene Belange testen. Mit dem Kauf der Premium-Version fehlt die Begrenzung auf 10 Objekte. Den oben angezeigten Betrag zahlt man nur ein Mal."
+    let footerTextStandard: String = "Bei der Standard-Version ist die Anzahl der Objekte auf \(numberOfObjectsFree) begrenzt. Die Funktionalität der App ist aber nicht eingeschränkt. Man kann dadurch die App auf eigene Belange testen. Mit dem Kauf der Premium-Version fehlt die Begrenzung auf 10 Objekte. Den oben angezeigten Betrag zahlt man nur ein Mal. Um Premium-Version zu kaufen drücken Sie bitte auf den Betrag."
     let footerTextPremium: String = "Bei der Premium-Version ist die Anzahl der Objekte unbegrenzt. Die Funktionalität der App ist nicht eingeschränkt. Der Kauf war einmalig und ist zeitlich unbegrnzt."
    
     @State private var heightOfTextinForm: CGFloat = 0.0 // Is needed for calculation of footer position
@@ -101,7 +98,7 @@ struct StroreAccessPremium: View {
                 VStack{
                     Text("")
                     Text ("App Status").bold()
-                    Form {
+                   Form {
                         Section(footer: Text("\(footerText)")) {
                            
                             InAppPurchasePremiumView()
@@ -132,9 +129,9 @@ struct StroreAccessPremium: View {
                                     statusManager.handlePurchaseStatusUpdate(with: purchaseManager, needsRefresh: true) {
                                         needsRefresh.toggle()
                                     }
-                                    print("complited ist true")
+                                    print("Complited ist truefrom struct StroreAccessPremium")
                                 }else{
-                                    print("complited ist false")
+                                    print("Complited ist false from struct StroreAccessPremium")
                                 }
                             }
                         } // Ende Section
@@ -142,23 +139,23 @@ struct StroreAccessPremium: View {
                             heightOfTextinForm = geometry.size.height
                            
                         } // Ende onAppear
-          
+                        
                         FooterView()
                         .listRowInsets(EdgeInsets())
-                        .frame(width: geometry.size.width, height: 45, alignment: .top)
+                        .frame(width: geometry.size.width, height: 265, alignment: .bottom)
                         .background(Color(red: 0.95, green: 0.95, blue: 0.95))
                         
                     } // Ende Form
                     .cornerRadius(10)
-                    
+                   
                     
                 } // Ende VStack
-                .background(GlobalStorage.farbEbene1)
+                .background(globaleVariable.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-            .background(GlobalStorage.farbEbene0)
+            .frame(width: geometry.size.width, height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbEbene0)
             
         } // Ende GeometryReader
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
@@ -234,7 +231,6 @@ struct FooterView: View {
         
         HStack {
             if purchaseManager.isPremium() != true {
-            //if statusManager.isProductPurchased != true {
                 Spacer()
                 Button(action: {
                     Task {

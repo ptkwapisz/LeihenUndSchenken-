@@ -28,7 +28,10 @@ struct EingabeMaskePhoneAndPadView: View {
     @State private var showSheetGegenstand: Bool = false
     @State private var isParameterBereich: Bool = true
     @State private var paddingHeight: CGFloat = 0.0
-    @State private var parameterVorgang = GlobalStorage.parameterVorgang
+    @State private var tempParameterVorgang = parameterVorgang
+    
+    @State private var textAllgemeineNotizen: String = ""
+    @State private var textGegenstandbeschreibung: String = ""
     
     @FocusState private var focusedField: Field?
     
@@ -62,6 +65,7 @@ struct EingabeMaskePhoneAndPadView: View {
         perKeyFormatter.dateFormat = "y MM dd, HH:mm"
         
     } // Ende init
+    
     
     // Das ist eigenes Button
     // Ohne dieses Button wird der Name der View angezeigt (Gegenstandsname)
@@ -157,13 +161,10 @@ struct EingabeMaskePhoneAndPadView: View {
                                 } // Ende else
                                 ) // Ende applyIf
                             } // Ende HStack
-                            
-                            CustomTextField(text: $globaleVariable.textGegenstandbeschreibung, isMultiLine: true, placeholder: "Gegenstandbeschreibung")
-                                .focused($focusedField, equals: .str1)
-                            /*
-                            TextEditorWithPlaceholder(text: $globaleVariable.textGegenstandbeschreibung, platz: $platzText1)
-                                .focused($focusedField, equals: .str1)
-                            */
+                        
+                            CustomTextField(text: $textGegenstandbeschreibung, isMultiLine: true, placeholder: "Gegenstandbeschreibung")
+                            .focused($focusedField, equals: .str1)
+                        
                             HStack {
                                 Text("Gegenstandsbild:   ")
                                     .frame(height: 30)
@@ -242,7 +243,6 @@ struct EingabeMaskePhoneAndPadView: View {
                                  
                             } // Ende HStack
                             
-                            
                             HStack{
                                 Text("Datum:")
                                     .font(.system(size: 16, weight: .regular))
@@ -269,8 +269,8 @@ struct EingabeMaskePhoneAndPadView: View {
                                 Spacer()
                                 
                                 Picker("", selection: $globaleVariable.selectedVorgangInt, content: {
-                                    ForEach(0..<$parameterVorgang.count, id: \.self) { index in
-                                        Text("\(GlobalStorage.parameterVorgang[index])")//.tag(index)
+                                    ForEach(0..<$tempParameterVorgang.count, id: \.self) { index in
+                                        Text("\(parameterVorgang[index])")//.tag(index)
                                     } // Ende ForEach
                                 }) // Picker
                                 .font(.system(size: 16, weight: .regular))
@@ -318,11 +318,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                 .truncationMode(.tail)
                                 .padding(.trailing, 5)
                                 .cornerRadius(5)
-                                /*
-                                .onChange(of: tapOptionPerson.wrappedValue ){
-                                    print("\(globaleVariable.personenParameter[tapOptionPerson.wrappedValue].personPicker)")
-                                }
-                                */
+                                
                                 .applyIf(UIDevice.current.userInterfaceIdiom == .phone,
                                          apply: {
                                     $0.navigationDestination(isPresented: $showSheetPerson, destination: { ShapeViewAddUser(isPresented: $showSheetPerson, isParameterBereich: $isParameterBereich)
@@ -335,12 +331,9 @@ struct EingabeMaskePhoneAndPadView: View {
                                 
                             } // Ende HStack
                             
-                            CustomTextField(text: $globaleVariable.textAllgemeineNotizen, isMultiLine: true, placeholder: "Allgemeine Notitzen")
+                            CustomTextField(text: $textAllgemeineNotizen, isMultiLine: true, placeholder: "Allgemeine Notitzen")
                                 .focused($focusedField, equals: .str2)
-                            /*
-                            TextEditorWithPlaceholder(text: $globaleVariable.textAllgemeineNotizen, platz: $platzText2)
-                                .focused($focusedField, equals: .str2)
-                            */
+                                
                             VStack{
                                 
                                 HStack {
@@ -381,7 +374,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                                     let personNachnameTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personNachname
                                                     let persoSexTmp = globaleVariable.personenParameter[globaleVariable.selectedPersonInt].personSex
                                                     
-                                                    let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt])', '\(globaleVariable.textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(GlobalStorage.parameterVorgang[globaleVariable.selectedVorgangInt])', '\(personVornameTmp)', '\(personNachnameTmp)', '\(persoSexTmp)', '\(globaleVariable.textAllgemeineNotizen)')"
+                                                    let insertDataToDatenbank = "INSERT INTO Objekte(perKey, gegenstand, gegenstandText, gegenstandBild, preisWert, datum, vorgang, personVorname, personNachname, personSex, allgemeinerText) VALUES('\(perKey)','\(globaleVariable.parameterGegenstand[globaleVariable.selectedGegenstandInt])', '\(textGegenstandbeschreibung)','\(globaleVariable.parameterImageString)','\(globaleVariable.preisWert)', '\(dateToString(parDatum: globaleVariable.datum))', '\(parameterVorgang[globaleVariable.selectedVorgangInt])', '\(personVornameTmp)', '\(personNachnameTmp)', '\(persoSexTmp)', '\(textAllgemeineNotizen)')"
                                                     
                                                     
                                                     // Die Parameterwerte werden in die SQL Tabelle Objekte geschrieben.
@@ -399,7 +392,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                                             self.presentationMode.wrappedValue.dismiss() // Only iPhon
                                                         } // Ende if
                                                         
-                                                        GlobalStorage.numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
+                                                        numberOfObjects = anzahlDerDatensaetze(tableName: "Objekte")
                                                         
                                                         print("In der Tabelle Gespeichert...")
                                                         
@@ -421,7 +414,7 @@ struct EingabeMaskePhoneAndPadView: View {
                                     .font(.system(size: 12, weight: .regular))
                                     .foregroundColor(.gray)
                             }else{
-                                Text("Um ein Objekt speichern zu können müssen mimdestens ein Gegenstand und eine Person erfast werden. Zusätzlich ab \(GlobalStorage.numberOfObjectsFree) Objekte muss die Premium Version einmahlig gekauft werden.")
+                                Text("Um ein Objekt speichern zu können müssen mimdestens ein Gegenstand und eine Person erfast werden. Zusätzlich ab \(numberOfObjectsFree) Objekte muss die Premium Version einmahlig gekauft werden.")
                                     .font(.system(size: 12, weight: .regular))
                                     .foregroundColor(.gray)
                             }
@@ -445,14 +438,14 @@ struct EingabeMaskePhoneAndPadView: View {
                                 //.font(.system(size: 16, weight: .regular))
                             }else if focusedField == .str1 {
                                 HStack {
-                                    Text("\(globaleVariable.textGegenstandbeschreibung.count)/100")
+                                    Text("\(textGegenstandbeschreibung.count)/100")
                                         .font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.brown)
                                         .padding()
                                     Spacer()
                                     Button("Abbrechen") {
                                         //preisWertIsFocused = false
-                                        globaleVariable.textGegenstandbeschreibung = ""
+                                        textGegenstandbeschreibung = ""
                                         focusedField = nil
                                         print("Abbrechen Button Str1 wurde gedrückt!")
                                     } // Ende Button
@@ -460,13 +453,14 @@ struct EingabeMaskePhoneAndPadView: View {
                                 } // Ende HStack
                             }else if focusedField == .str2  {
                                 HStack{
-                                    Text("\(globaleVariable.textAllgemeineNotizen.count)/100")
+                                    Text("\(textAllgemeineNotizen.count)/100")
                                     //.font(.system(size: 16, weight: .regular))
                                         .foregroundColor(.gray)
                                     Spacer()
                                     Button("Abbrechen") {
                                         //preisWertIsFocused = false
-                                        globaleVariable.textAllgemeineNotizen = ""
+                                        
+                                        textAllgemeineNotizen = ""
                                         focusedField = nil
                                         print("Abbrechen Button Str2 wurde gedrückt!")
                                     } // Ende Button
@@ -499,13 +493,13 @@ struct EingabeMaskePhoneAndPadView: View {
                     } // Ende toolbar
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
-                .background(GlobalStorage.farbEbene1)
+                .frame(width: geometry.size.width, height: geometry.size.height * heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width, height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-            .background(GlobalStorage.farbEbene0)
+            .frame(width: geometry.size.width, height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbEbene0)
             
             
         } // Ende GeometryReader
@@ -530,6 +524,32 @@ struct EingabeMaskePhoneAndPadView: View {
     
     } // Ende var body
 
+    // Das ist die funktion zum Bereinigen der Eingabemaske
+    func cleanEingabeMaske() {
+        @ObservedObject var globaleVariable = GlobaleVariable.shared
+        
+        //let eingabeFields = EingabeFields()
+        
+        globaleVariable.parameterImageString = "Kein Bild"
+        globaleVariable.selectedGegenstandInt = 0
+        globaleVariable.selectedVorgangInt = 0
+        globaleVariable.selectedPersonInt = 0
+        //globaleVariable.textGegenstandbeschreibung = ""
+        globaleVariable.preisWert = ""
+        globaleVariable.datum = Date()
+        //globaleVariable.textAllgemeineNotizen = ""
+        globaleVariable.personenParameter.removeAll()
+        globaleVariable.personenParameter = querySQLAbfrageClassPerson(queryTmp: "Select * From Personen", isObjectTabelle: false)
+        
+        textGegenstandbeschreibung = ""
+        textAllgemeineNotizen = ""
+        
+        print("Die Eingabe-Variablen wurden zurückgesetzt.")
+        
+    } // Ende func
+    
+    
+    
 } // Ende struct
 
 
@@ -575,8 +595,10 @@ func truncateString(_ myText: String) -> String {
 
 struct ImageSelector: View {
     @ObservedObject var globaleVariable = GlobaleVariable.shared
+    
     @State private var selectedItem: PhotosPickerItem?
     @State private var selectedPhotoData: Data?
+    
     let filter: PHPickerFilter = .not(.any( of: [
         .videos,
         .slomoVideos,
@@ -637,7 +659,6 @@ struct CustomTextField: View {
         
         // Check if the text field is active (focused) or has content
         let isActive = textIsFocused || text.count > 0
-        
         
         // Create a ZStack to overlay the button and the text field content
         ZStack(alignment: .center) {

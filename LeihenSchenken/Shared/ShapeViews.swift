@@ -164,14 +164,14 @@ struct ShapeViewAddGegenstand: View {
                     } // Ende Toolbar
                     
                 } // Ende Vstack
-                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
-                .background(GlobalStorage.farbEbene1)
+                .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbEbene1)
                 .cornerRadius(10)
                 
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-            .background(GlobalStorage.farbEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbEbene0)
             .navigationTitle("Neuer Gegenstand")
             
         } // Ende GeometryReader
@@ -345,14 +345,14 @@ struct ShapeViewEditGegenstand: View {
                     } // Ende Toolbar
                     
                 } // Ende Vstack
-                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
-                .background(GlobalStorage.farbEbene1)
+                .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbEbene1)
                 .cornerRadius(10)
                 
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-            .background(GlobalStorage.farbEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbEbene0)
             .navigationTitle("\(gegenstandAlt)").navigationBarTitleDisplayMode(.large)
             .onAppear() {
                 
@@ -391,26 +391,23 @@ struct ShapeViewSettings: View {
     
     @State private var showSettingsHilfe: Bool = false
     @State private var colorData = ColorData()
-    @State private var color0 = GlobalStorage.farbEbene0
-    @State private var color1 = GlobalStorage.farbEbene1
     
     var body: some View {
-       
-        //NavigationStack {
+        let _ = print("Struct ShapeViewSettings: wird aufgerufen!")
+        
         VStack{
             Text("")
             Text("App-Einstellungen").bold()
             
-            
             Form {
                 
                 Section(header: Text("Farbeinstellung")) {
-                    ColorPicker("Farben für Ebene 0", selection: $color0, supportsOpacity: false)
-                        .onAppear ( perform: {GlobalStorage.farbEbene0 = colorData.loadColor0()})
+                    ColorPicker("Farben für Ebene 0", selection: $globaleVariable.farbEbene0, supportsOpacity: false)
+                        .onAppear ( perform: {globaleVariable.farbEbene0 = colorData.loadColor0()})
                         .frame(width: 300, height: 40)
                     
-                    ColorPicker("Farben für Ebene 1", selection: $color1, supportsOpacity: false)
-                        .onAppear ( perform: {GlobalStorage.farbEbene1 = colorData.loadColor1()})
+                    ColorPicker("Farben für Ebene 1", selection: $globaleVariable.farbEbene1, supportsOpacity: false)
+                        .onAppear ( perform: {globaleVariable.farbEbene1 = colorData.loadColor1()})
                         .frame(width: 300, height: 40)
                     
                 }// Ende Section Farben
@@ -442,7 +439,7 @@ struct ShapeViewSettings: View {
                     
                     Button() {
                         
-                        colorData.saveColor(color0: GlobalStorage.farbEbene0, color1: GlobalStorage.farbEbene1)
+                        colorData.saveColor(color0: globaleVariable.farbEbene0, color1: globaleVariable.farbEbene1)
                         //presentationMode.wrappedValue.dismiss()
                         isPresented = false
                     }label: {
@@ -465,15 +462,10 @@ struct ShapeViewSettings: View {
             .font(.system(size: 14, weight: .regular))
             
         } // Ende Vstack
-        .background(GlobalStorage.farbEbene1)
+        .background(globaleVariable.farbEbene1)
         .cornerRadius(10)
-            
-            
-        //} // Ende NavigationStack
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
-            
-            
     } // Ende var body
 } // Ende struct ShapeViewSettings
 
@@ -626,7 +618,7 @@ struct ShapeViewAbfrage: View {
                 } // Ende Form
                 
         } // Ende VStack
-        .background(GlobalStorage.farbEbene1)
+        .background(globaleVariable.farbEbene1)
         .cornerRadius(10)
         .interactiveDismissDisabled()  // Disable dismiss with a swipe
         
@@ -728,12 +720,12 @@ struct ShapeViewEditUser: View {
                             
                             Section() {
                                 Picker("Geschlecht:", selection: $selectedPerson_sexInt) {
-                                    ForEach(0..<GlobalStorage.parameterPersonSex.count, id: \.self) { index in
-                                        Text("\(GlobalStorage.parameterPersonSex[index])")
+                                    ForEach(0..<parameterPersonSex.count, id: \.self) { index in
+                                        Text("\(parameterPersonSex[index])")
                                         
                                     } // Ende ForEach
                                     .onChange(of: selectedPerson_sexInt) {
-                                        neuePersonTmp[0].personSex = GlobalStorage.parameterPersonSex[selectedPerson_sexInt]
+                                        neuePersonTmp[0].personSex = parameterPersonSex[selectedPerson_sexInt]
                                         
                                         refreshAllViews()
                                     }
@@ -755,7 +747,7 @@ struct ShapeViewEditUser: View {
                                     
                                     if tabelleDB == "Personen" {
                                         personPickerTmp = neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
-                                        neuePersonTmp[0].personSex = GlobalStorage.parameterPersonSex[selectedPerson_sexInt]
+                                        neuePersonTmp[0].personSex = parameterPersonSex[selectedPerson_sexInt]
                                         
                                         // Die geänderte Personendaten werden in die Table Personen gespeichert
                                         
@@ -771,7 +763,7 @@ struct ShapeViewEditUser: View {
                                         //} // Ende if/else
                                     } else {
                                         personPickerTmp = neuePersonTmp[0].personNachname + ", " + neuePersonTmp[0].personVorname + " "
-                                        neuePersonTmp[0].personSex = GlobalStorage.parameterPersonSex[selectedPerson_sexInt]
+                                        neuePersonTmp[0].personSex = parameterPersonSex[selectedPerson_sexInt]
                                         
                                         isPresentedShapeViewEditUser = false
                                         print("Die tabelleDB ist gleich 'Objekte' ")
@@ -805,13 +797,13 @@ struct ShapeViewEditUser: View {
                         }//Ende List
                         
                     } // Ende VStack
-                    .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
-                    .background(GlobalStorage.farbEbene1)
+                    .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene1, alignment: .center)
+                    .background(globaleVariable.farbEbene1)
                     .cornerRadius(10)
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-                .background(GlobalStorage.farbEbene0)
+                .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+                .background(globaleVariable.farbEbene0)
                 .navigationTitle("\(neuePersonTmp[0].personVorname + " " + neuePersonTmp[0].personNachname)").navigationBarTitleDisplayMode(.large)
                 
             } // Ende VStack

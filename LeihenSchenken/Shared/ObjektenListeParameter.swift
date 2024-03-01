@@ -126,13 +126,13 @@ struct ObjektenListeParameter: View {
                     
                     
                 } // Ende VStack
-                .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene1, alignment: .center)
-                .background(GlobalStorage.farbEbene1)
+                .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene1, alignment: .center)
+                .background(globaleVariable.farbEbene1)
                 .cornerRadius(10)
                 
             } // Ende VStack
-            .frame(width: geometry.size.width,height: geometry.size.height * GlobalStorage.heightFaktorEbene0, alignment: .center)
-            .background(GlobalStorage.farbEbene0)
+            .frame(width: geometry.size.width,height: geometry.size.height * heightFaktorEbene0, alignment: .center)
+            .background(globaleVariable.farbEbene0)
             .navigationTitle("PDF Objektenliste").navigationBarTitleDisplayMode(.large)
             .navigationBarBackButtonHidden()
             .navigationBarItems(leading: btnBack)
